@@ -1,0 +1,91 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Enrolment widget local capabilities.
+ *
+ * @package    dashaddon_course_enrols
+ * @copyright  2022 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+$capabilities = [
+    'dashaddon/course_enrols:editenrolment' => [
+        'riskbitmask'  => RISK_MANAGETRUST,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes'   => [
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'student' => CAP_PREVENT,
+            'user'    => CAP_ALLOW
+        ]
+    ],
+    'dashaddon/course_enrols:viewdetails' => [
+        'riskbitmask'  => RISK_MANAGETRUST,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes'   => [
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'student' => CAP_ALLOW,
+            'user'    => CAP_ALLOW
+        ]
+    ],
+    'dashaddon/course_enrols:unenrol' => [
+        'riskbitmask'  => RISK_MANAGETRUST,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes'   => [
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'user'    => CAP_ALLOW,
+            'student' => CAP_PREVENT
+        ]
+    ],
+    'dashaddon/course_enrols:enrol' => [
+        'riskbitmask'  => RISK_MANAGETRUST,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes'   => [
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'user'    => CAP_ALLOW,
+            'student' => CAP_PREVENT
+        ]
+    ],
+    'dashaddon/course_enrols:viewprofiledash' => [
+        'riskbitmask'  => RISK_MANAGETRUST,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes'   => [
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'user'    => CAP_ALLOW,
+            'student' => CAP_PREVENT
+        ]
+    ],
+    'dashaddon/course_enrols:viewotherprofiledash' => [
+        'riskbitmask' => RISK_SPAM,
+        'captype'      => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes'   => array(
+            'manager'  => CAP_ALLOW,
+        )
+    ],
+];

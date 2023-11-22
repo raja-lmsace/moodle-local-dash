@@ -1,0 +1,52 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template dashaddon_course_enrols/addcourseform
+
+    Example context (json):
+    {
+        "sitefullname": "Moodle - 311",
+		"courseurl": "https://localhost/moodle/course/view.php?id=2"
+    }
+}}
+{{#data.addcourseform}}
+<div class="add-course-block">
+    <form class="widget-course_enrols-form course_enrol-enrolmentform">
+        <div class="add-icon">
+            <a href="#"></a>
+        </div>
+        <div class="form-group">
+            {{#data.availablecoursestoenrolstatus}}
+            <select name="courses[]" data-width="100%" class="form-control select2 norefresh" id="exampleFormControlSelect1" multiple required>
+                {{#data.availablecoursestoenrol}}
+                <option value="{{id}}">{{name}}</option>
+                {{/data.availablecoursestoenrol}}
+            </select>
+            {{/data.availablecoursestoenrolstatus}}
+            {{^data.availablecoursestoenrolstatus}}
+                <span>{{#str}} nocourses, block_dash{{/str}}</span>
+            {{/data.availablecoursestoenrolstatus}}
+            <input type="hidden" name="enroluserid" value="{{data.userid}}">
+        </div>
+
+        <div class="btn-block">
+            <button type="submit" class="btn btn-primary" {{^data.availablecoursestoenrolstatus}}
+            disabled {{/data.availablecoursestoenrolstatus}}>{{#str}}enrolnow, block_dash{{/str}}</button>
+        </div>
+    </form>
+</div>
+{{/data.addcourseform}}

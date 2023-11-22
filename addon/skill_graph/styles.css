@@ -1,0 +1,16 @@
+.skill-graph-legend li span {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 8px;
+    vertical-align: middle;
+}
+
+.skill-graph-legend ul {
+    font-weight: 500;
+    list-style: none;
+    text-align: left;
+}
+
+.skill-graph-legend {
+    float: right;
+}
