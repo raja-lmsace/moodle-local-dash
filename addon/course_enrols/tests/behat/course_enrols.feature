@@ -43,12 +43,14 @@ Feature: Add course enrol widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn block editing mode on
     And I add the "Dash" block
-    And I configure the "New Dash" block
     And I click on "#id_config_data_source_idnumber_dashaddon_course_enrolswidgetenrolments_widget" "css_element"
+    And I configure the "New Dash" block
     And I set the following fields to these values:
       | Region  | content |
     And I press "Save changes"
-    And I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Filters" "link"
     And I set the field "User" to "1"
     And I set the field "Status" to "1"
@@ -65,7 +67,9 @@ Feature: Add course enrol widget in dash block
     Then I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn block editing mode on
-    And I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Conditions" "link"
     And I set the field "Course categories" to "1"
     And I set the field "config_preferences[filters][c_course_categories_condition][coursecategories][]" to "Category 2"
@@ -81,37 +85,51 @@ Feature: Add course enrol widget in dash block
     And ".dash-block-content .pagination" "css_element" should not exist
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn block editing mode on
-    Then I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Per page" to "3"
     And I press "Save changes"
     Then ".dash-block-content .pagination" "css_element" should exist
     And I should not see "Course 4" in the "Dash" "block"
-    Then I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Display progress" to "0"
     And I press "Save changes"
     And ".course-enrol-block .course-section-block .section-element" "css_element" should not exist
-    Then I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Expandable" to "0"
     And I press "Save changes"
     And ".course-enrol-block .course-section-block .mb-0 button.btn" "css_element" should not exist
-    Then I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Display add course form" to "Above the courses"
     And I press "Save changes"
-    Then I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Display add course form" to "Above the courses"
     And I press "Save changes"
     Then ".course-enrols-courses-list .add-course-block + #accordion" "css_element" should exist
-    Then I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Display add course form" to "Below the courses"
     And I press "Save changes"
     Then ".course-enrols-courses-list #accordion + .add-course-block" "css_element" should exist
-    Then I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Display add course form" to "Disable"
     And I press "Save changes"
@@ -121,7 +139,9 @@ Feature: Add course enrol widget in dash block
     Given I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn block editing mode on
-    Then I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Display add course form" to "Above the courses"
     And I press "Save changes"

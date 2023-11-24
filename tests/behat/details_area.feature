@@ -22,9 +22,9 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn block editing mode on
     And I add the "Dash" block
+    And I click on "#id_config_data_source_idnumber_local_dashlocalblock_dashcourses_data_source" "css_element"
     And I configure the "New Dash" block
     And I set the field "Block title" to "Course datasource"
-    And I click on "#id_config_data_source_idnumber_local_dashlocalblock_dashcourses_data_source" "css_element"
     And I press "Save changes"
     And I click on "Preferences" "button" in the "Course datasource" "block"
     Then I click on "Fields" "link"

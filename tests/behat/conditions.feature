@@ -45,8 +45,8 @@ Feature: Add conditions to the datasource in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn block editing mode on
     And I add the "Dash" block
-    And I configure the "New Dash" block
     And I click on "#id_config_data_source_idnumber_local_dashlocalblock_dashcourses_data_source" "css_element"
+    And I configure the "New Dash" block
     And I set the following fields to these values:
       | Region  | content |
     And I press "Save changes"
@@ -57,7 +57,9 @@ Feature: Add conditions to the datasource in dash block
     Given I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn block editing mode on
-    And I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Course: Full name" to "1"
     Then I click on "Conditions" "link"
@@ -75,7 +77,9 @@ Feature: Add conditions to the datasource in dash block
     Given I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn block editing mode on
-    And I click on "Preferences" "button" in the "Dash" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Course: Full name" to "1"
     Then I click on "Conditions" "link"
