@@ -26,7 +26,9 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
     And I configure the "New Dash" block
     And I set the field "Block title" to "Course datasource"
     And I press "Save changes"
-    And I click on "Preferences" "button" in the "Course datasource" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     Then I click on "General" "link"
     And I set the field "Layout" to "Grid layout"
@@ -49,7 +51,9 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
     Then ".card-layout-default.card-layout-row" "css_element" should exist
     Then ".card-layout-default .card-block:nth-child(1) .card .card-body" "css_element" should exist
     Then I should see "C1" in the ".card-layout-default .card-block:nth-child(1) .card-title-sub" "css_element"
-    And I click on "Preferences" "button" in the "Course datasource" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     And I set the field "Details area" to "Expanding"
     Then I set the field "config_preferences[details_bg_color]" to "#030096"
@@ -67,7 +71,9 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
     Given I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn block editing mode on
-    And I click on "Preferences" "button" in the "Course datasource" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     Then I should see "Details area"
     And I set the field "Details area" to "Floating"
@@ -82,7 +88,9 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
     Given I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn block editing mode on
-    And I click on "Preferences" "button" in the "Course datasource" "block"
+    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
+    And I should see "Preferences"
+    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
     Then I click on "Fields" "link"
     Then I should see "Details area"
     And I set the field "Details area" to "Modal"
