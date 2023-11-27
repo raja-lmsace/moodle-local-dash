@@ -249,14 +249,14 @@ body.path-local-dash-dashboard:not(.editing) .dash-block-width-16 {
 .block_dash .dash-container .dash-block-content .card {
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
     border: 0;
     position: relative;
     z-index: 0;
 }
-.block_dash .dash-container .dash-block-content .courses-list .card {
+/* .block_dash .dash-container .dash-block-content .courses-list .card {
     overflow: auto;
-}
+} */
 .block_dash .dash-container .dash-block-content .card .badge {
     white-space: pre-wrap;
 }
@@ -800,7 +800,8 @@ form fieldset .fitem.fitem_f .felement {
     content: '';
     width: 40px;
     height: 40px;
-    font-family: fontawesome;
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
+    font-weight: var(--fa-style, 900);
     line-height: 40px;
     text-indent: 0;
     border: 0;

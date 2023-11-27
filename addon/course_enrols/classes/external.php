@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/externallib.php");
 require_once($CFG->dirroot.'/local/dash/addon/course_enrols/locallib.php');
 
-use external_api;
+use core_external\external_api;
 use external_function_parameters;
 use external_value;
 use external_multiple_structure;

@@ -61,7 +61,8 @@
 }
 .course-enrol-block .add-course-block .add-icon a:before {
     content: '\f055';
-    font-family: fontawesome;
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
+    font-weight: var(--fa-style, 900);
     font-size: 26px;
     color: #121212;
     opacity: .2;
@@ -265,7 +266,8 @@
 }
 .course-enrol-block .section-element-block .course-section-block .right-block h5 button:after {
     content: '\f103';
-    font-family: fontawesome;
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
+    font-weight: var(--fa-style, 900);
 }
 .course-enrol-block .section-element-block .course-section-block .right-block .edit-option-block .dropdown
 .course-enrol-actionmenu {
@@ -280,7 +282,8 @@
 }
 .course-enrol-block .section-element-block .course-section-block .right-block .edit-option-block .dropdown button:after {
     content: '\f142';
-    font-family: fontawesome;
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
+    font-weight: var(--fa-style, 900);
     border: 0;
     margin: 0;
 }
