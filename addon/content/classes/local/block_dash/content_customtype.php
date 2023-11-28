@@ -366,4 +366,42 @@ class content_customtype extends abstract_custom_type {
         return true;
     }
 
+    /**
+     * Copy any block-specific data when copying to a new block instance.
+     * 
+     * @param int $fromid the id number of the block instance to copy from
+     * @return boolean
+     */
+    public function instance_copy($frominstanceid, $currentcontextid) {
+
+        // Blockid.
+        $blockid = $this->get_block_instance()->instance->id;
+
+        // From context.
+        $fromcontext = \context_block::instance($frominstanceid);
+
+        // Find the layout counts.
+        $layout = $this->get_preferences('contentlayout');
+        $count = (in_array($layout, [self::LAYOUTDOUBLEEQUAL, self::LAYOUTDOUBLELEFT, self::LAYOUTDOUBLERIGHT])) ? 2 : 1;
+        $count = ($layout == self::LAYOUTTRIPLE) ? 3 : $count;
+
+        $fs = get_file_storage();
+        // Do not use draft files hacks outside of forms.
+        for ($i = 1; $i <= $count; $i++) {
+            $fileareas = ['backgroundimage_', 'content_'];
+            foreach ($fileareas as $filearea) {
+                $filearea = $filearea . 'layout'.$i; // Filearea name.
+
+                $files = $fs->get_area_files($fromcontext->id, 'dashaddon_content', $filearea, $frominstanceid, 'id ASC', false);
+
+                foreach ($files as $file) {
+                    $filerecord = ['contextid' => $currentcontextid, 'itemid' => $blockid];
+                    $fs->create_file_from_storedfile($filerecord, $file);
+                }
+            }
+        }
+
+        return true;
+    }
+
 }
