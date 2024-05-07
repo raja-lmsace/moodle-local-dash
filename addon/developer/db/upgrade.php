@@ -158,7 +158,6 @@ function xmldb_dashaddon_developer_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2020020600, 'dashaddon', 'developer');
     }
 
-
     if ($oldversion < 2024042500) {
         set_config('enabled', 1, 'dashaddon_developer');
     }

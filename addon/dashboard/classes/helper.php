@@ -26,9 +26,6 @@ namespace dashaddon_dashboard;
 use stdClass;
 use context_system;
 
-defined('MOODLE_INTERNAL') || die();
-
-
 /**
  * Class dashboard helper.
  */
@@ -39,7 +36,6 @@ class helper {
      * @param object $dashboard
      */
     public static function postupdate_filemanager_files($dashboard) {
-
     }
 
     /**
@@ -63,12 +59,11 @@ class helper {
      */
     public static function get_filemanager_options() {
         global $CFG;
-        return array(
+        return [
             'maxfiles' => 1,
             'maxbytes' => $CFG->maxbytes,
             'context' => \context_system::instance(),
-            'noclean' => true
-        );
+            'noclean' => true,
+        ];
     }
-
 }

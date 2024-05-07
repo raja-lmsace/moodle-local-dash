@@ -37,7 +37,11 @@ function dashaddon_course_completions_register_widget() : array {
     ];
 }
 
-
+/**
+ * The require plugin dependencies added for the soft dependencies in the course completions dash addon.
+ *
+ * @return string
+ */
 function dashaddon_course_completions_extend_added_dependencies() {
     global $OUTPUT;
     $manager = \core_plugin_manager::instance();

@@ -22,9 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Stub for database installation.
  */
@@ -34,4 +31,3 @@ function xmldb_dashaddon_dashboard_install() {
     set_config('enabled', 1, 'dashaddon_dashboard');
     dashaddon_dashboard_create_core_dashboard();
 }
-

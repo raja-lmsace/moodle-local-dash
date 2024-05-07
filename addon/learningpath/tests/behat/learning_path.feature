@@ -55,12 +55,12 @@ Feature: Add learning path widget in dash block
       | teacher1 | C1     | teacher | 0           | 0       |
       | teacher1 | C2     | teacher | 0           | 0       |
       | teacher1 | C3     | teacher | 0           | 0       |
-    
+
   Scenario:Widgets: Learning path
     Given I log in as "admin"
-#--Course page--    
+#--Course page--
     And I am on "Course 5" course homepage
-    And I turn dash block editing mode on    
+    And I turn dash block editing mode on
     And I add the "Dash" block
     And I click on "Learning Path" "radio"
     Then I open the "New Dash" block preference
@@ -145,4 +145,3 @@ Feature: Add learning path widget in dash block
     And "li.grid-block[data-title='Course 15'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
     And "li.grid-block[data-title='Course 16'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
     And I log out
- 

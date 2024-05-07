@@ -125,7 +125,8 @@ class smart_button_test extends \advanced_testcase {
         $instanceid1 = $selfplugin->add_instance($this->course1, ['status' => ENROL_INSTANCE_ENABLED,
                                                                 'name' => 'Test instance 1',
                                                                 'customint6' => 1,
-                                                                'roleid' => $studentrole->id]);
+                                                                'roleid' => $studentrole->id,
+                                                                ]);
         $this->setUser($user);
 
         $data = $this->create_instance();

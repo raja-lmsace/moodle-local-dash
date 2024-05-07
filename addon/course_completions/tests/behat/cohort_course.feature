@@ -71,57 +71,57 @@ Feature: Dash program to show the list of cohort course
       | student6 | cohortid2 |
       | student7 | cohortid2 |
 
-      Given I log in as "admin"
-      And I am on "Course 1" course homepage
-      And I turn editing mode on
-      And I add the "Course completion status" block
-      And I navigate to "Course completion" in current page administration
-      And I expand all fieldsets
-      And I click on "Assignment - Assignment 1" "checkbox"
-      And I click on "Chat - Students chat room" "checkbox"
-      And I set the field "activity_aggregation" to "2"
-      #And I click on "criteria_self" "checkbox" in the "#id_manualselfcompletioncontainer" "css_element"
-      And I press "Save changes"
-      And I am on "Course 3" course homepage
-      And I add the "Course completion status" block
-      And I navigate to "Course completion" in current page administration
-      And I expand all fieldsets
-      And I click on "Assignment - Assignment 2" "checkbox"
-      And I click on "Choice - My quiz B" "checkbox"
-      And I click on "Choice - Quiz 1" "checkbox"
-      And I set the field "activity_aggregation" to "2"
-      #And I click on "criteria_self" "checkbox" in the "#id_manualselfcompletioncontainer" "css_element"
-      And I press "Save changes"
-      And I log out
-      And I log in as "student1"
-      And I am on "Course 1" course homepage
-      And I click on "Assignment 1" "link" in the "#page-content" "css_element"
-      And I click on "Mark as done" "button"
-      And I am on "Course 1" course homepage
-      And I click on "Students chat room" "link" in the "#page-content" "css_element"
-      And I click on "Mark as done" "button"
-      And I log out
-      And I log in as "student3"
-      And I am on "Course 1" course homepage
-      And I click on "Assignment 1" "link" in the "#page-content" "css_element"
-      And I click on "Mark as done" "button"
-      And I log out
-      And I log in as "student4"
-      And I am on "Course 1" course homepage
-      And I click on "Assignment 1" "link" in the "#page-content" "css_element"
-      And I click on "Mark as done" "button"
-      And I log out
-      And I log in as "student5"
-      And I am on "Course 3" course homepage
-      And I click on "Assignment 2" "link" in the "#page-content" "css_element"
-      And I click on "Mark as done" "button"
-      And I am on "Course 3" course homepage
-      And I click on "My quiz B" "link" in the "#page-content" "css_element"
-      And I click on "Mark as done" "button"
-      And I am on "Course 3" course homepage
-      And I click on "Quiz 1" "link" in the "#page-content" "css_element"
-      And I click on "Mark as done" "button"
-      And I log out
+    Given I log in as "admin"
+    And I am on "Course 1" course homepage
+    And I turn editing mode on
+    And I add the "Course completion status" block
+    And I navigate to "Course completion" in current page administration
+    And I expand all fieldsets
+    And I click on "Assignment - Assignment 1" "checkbox"
+    And I click on "Chat - Students chat room" "checkbox"
+    And I set the field "activity_aggregation" to "2"
+    #And I click on "criteria_self" "checkbox" in the "#id_manualselfcompletioncontainer" "css_element"
+    And I press "Save changes"
+    And I am on "Course 3" course homepage
+    And I add the "Course completion status" block
+    And I navigate to "Course completion" in current page administration
+    And I expand all fieldsets
+    And I click on "Assignment - Assignment 2" "checkbox"
+    And I click on "Choice - My quiz B" "checkbox"
+    And I click on "Choice - Quiz 1" "checkbox"
+    And I set the field "activity_aggregation" to "2"
+    #And I click on "criteria_self" "checkbox" in the "#id_manualselfcompletioncontainer" "css_element"
+    And I press "Save changes"
+    And I log out
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    And I click on "Assignment 1" "link" in the "#page-content" "css_element"
+    And I click on "Mark as done" "button"
+    And I am on "Course 1" course homepage
+    And I click on "Students chat room" "link" in the "#page-content" "css_element"
+    And I click on "Mark as done" "button"
+    And I log out
+    And I log in as "student3"
+    And I am on "Course 1" course homepage
+    And I click on "Assignment 1" "link" in the "#page-content" "css_element"
+    And I click on "Mark as done" "button"
+    And I log out
+    And I log in as "student4"
+    And I am on "Course 1" course homepage
+    And I click on "Assignment 1" "link" in the "#page-content" "css_element"
+    And I click on "Mark as done" "button"
+    And I log out
+    And I log in as "student5"
+    And I am on "Course 3" course homepage
+    And I click on "Assignment 2" "link" in the "#page-content" "css_element"
+    And I click on "Mark as done" "button"
+    And I am on "Course 3" course homepage
+    And I click on "My quiz B" "link" in the "#page-content" "css_element"
+    And I click on "Mark as done" "button"
+    And I am on "Course 3" course homepage
+    And I click on "Quiz 1" "link" in the "#page-content" "css_element"
+    And I click on "Mark as done" "button"
+    And I log out
 
   Scenario:Show cohort course in dashboard
     And I log in as "admin"
@@ -131,7 +131,7 @@ Feature: Dash program to show the list of cohort course
     Then I configure the "New Dash" block
     And I set the field "Block title" to "course completion cohort"
     And I press "Save changes"
-#--student login-- Enable condition 1 
+#--student login-- Enable condition 1
     Then I open the "course completion cohort" block preference
     And I click on "Fields" "link"
     And I set the field "Course completion: Progress bar (completed / total activities)" to "0"

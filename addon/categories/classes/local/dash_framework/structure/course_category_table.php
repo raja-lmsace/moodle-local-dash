@@ -42,7 +42,7 @@ use moodle_url;
 /**
  * Class course_category_table.
  *
- * @package block_dash
+ * @package dashaddon_categories
  */
 class course_category_table extends table {
 
@@ -79,7 +79,7 @@ class course_category_table extends table {
             // Category name linked.
             new field('categoryurl', new lang_string('categoryurl', 'block_dash'), $this, 'cc.name', [
                 new moodle_url_attribute(['url' => new moodle_url('/course/management.php', ['categoryid' => 'cc_id'])]),
-                new link_attribute(['label_field' => 'cc_name'])
+                new link_attribute(['label_field' => 'cc_name']),
             ]),
 
             // Category ID number.
@@ -95,14 +95,14 @@ class course_category_table extends table {
                             $descriptionformat = $coursecat->cc_descriptionformat;
                         }
 
-                        $options = array('noclean' => true, 'overflowdiv' => true);
+                        $options = ['noclean' => true, 'overflowdiv' => true];
                         $context = \context_coursecat::instance($coursecat->cc_id);
                         $options['context'] = $context;
                         $text = file_rewrite_pluginfile_urls($coursecat->description,
                                 'pluginfile.php', $context->id, 'coursecat', 'description', null);
                         return format_text($text, $descriptionformat, $options);
-                    }
-                ])
+                    },
+                ]),
             ]),
 
             // Category image linked.
@@ -118,7 +118,7 @@ class course_category_table extends table {
 
             // Category image.
             new field('imageurl', new lang_string('categoryimageurl', 'block_dash'), $this, 'cc.id', [
-                new category_image_url_attribute(), new image_url_attribute()
+                new category_image_url_attribute(), new image_url_attribute(),
             ]),
 
             // Number of courses.
@@ -126,7 +126,7 @@ class course_category_table extends table {
 
             // Most recent course name (by created date).
             new field('mostrecentcourse', new lang_string('recentcoursename', 'block_dash'), $this, 'cc.id', [
-                new category_recent_course_attribute()
+                new category_recent_course_attribute(),
             ]),
 
         ];

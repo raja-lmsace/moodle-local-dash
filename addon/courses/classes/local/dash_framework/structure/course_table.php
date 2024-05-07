@@ -50,7 +50,7 @@ use local_dash\data_grid\field\attribute\smart_course_button_attribute;
 /**
  * Class course_table.
  *
- * @package local_dash
+ * @package dashaddon_courses
  */
 class course_table extends table {
 

@@ -177,14 +177,17 @@ function dashaddon_activities_get_designer_purpose($purposes) {
     return $values;
 }
 
-
-
+/**
+ * The require plugin dependencies added for the soft dependencies in the activities dash addon.
+ *
+ * @return string
+ */
 function dashaddon_activities_extend_added_dependencies() {
     global $OUTPUT;
     $manager = \core_plugin_manager::instance();
     $dependencies = [
         'dashaddon_courses',
-        'dashaddon_categories'
+        'dashaddon_categories',
     ];
     foreach ($dependencies as $dependency) {
         $plugin = $manager->get_plugin_info($dependency);

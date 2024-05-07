@@ -22,14 +22,19 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- function dashaddon_certificates_extend_added_dependencies() {
+/**
+ * The require plugin dependencies added for the soft dependencies in the certificates dash addon.
+ *
+ * @return string
+ */
+function dashaddon_certificates_extend_added_dependencies() {
     global $OUTPUT;
     $manager = \core_plugin_manager::instance();
     $dependencies = [
         'dashaddon_courses',
         'dashaddon_categories',
         'dashaddon_course_completions',
-        'mod_coursecertificate'
+        'mod_coursecertificate',
     ];
     foreach ($dependencies as $dependency) {
         $plugin = $manager->get_plugin_info($dependency);

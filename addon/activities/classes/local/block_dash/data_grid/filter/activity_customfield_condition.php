@@ -95,7 +95,8 @@ class activity_customfield_condition extends condition {
     public function get_field_data(&$mform) {
         global $DB;
         $field = $DB->get_record('local_metadata_field', ['shortname' => $this->get_name(),
-            'contextlevel' => CONTEXT_MODULE]);
+            'contextlevel' => CONTEXT_MODULE,
+        ]);
         if ($field) {
             $newfield = "\\metadatafieldtype_{$field->datatype}\\metadata";
             $data = new $newfield($field->id, $this->instance->id);

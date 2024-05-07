@@ -17,7 +17,7 @@
 /**
  * Transform activity data into activity link.
  *
- * @package    dashaddon_activities
+ * @package    dashaddon_dashboard
  * @copyright  2019 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ use block_dash\local\data_grid\field\attribute\abstract_field_attribute;
 /**
  * Transforms activity data to formatted activity link.
  *
- * @package dashaddon_activities
+ * @package dashaddon_dashboard
  */
 class dash_dashboardlink_attribute extends abstract_field_attribute {
 

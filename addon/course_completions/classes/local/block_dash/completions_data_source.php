@@ -64,6 +64,8 @@ use local_dash\data_grid\filter\course_customfield_condition;
 use local_dash\data_grid\filter\course_dates_condition;
 use local_dash\data_grid\filter\course_dates_filter;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot.'/local/dash/lib.php');
 
 /**
@@ -258,9 +260,7 @@ class completions_data_source extends abstract_data_source {
 
         $compfiltercollection->add_filter(new completion_status_condition('c_completion_status', 'ue.status'));
 
-
         // Cohort conditions.
-
         $compfiltercollection->add_filter(new \local_dash\data_grid\filter\cohort_condition('cohort', 'u.id'));
         $compfiltercollection->add_filter(new \local_dash\data_grid\filter\users_mycohort_condition('users_mycohort', 'u.id'));
 

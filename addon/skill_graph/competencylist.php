@@ -60,7 +60,7 @@ foreach ($list as $key => $value) {
         'competencyframeworkid' => $value->get('competencyframeworkid'),
         'id' => $value->get('id'),
         'parentid' => $value->get('parentid'),
-        'pagecontextid' => \context_system::instance()->id
+        'pagecontextid' => \context_system::instance()->id,
     ]);
 
     $data[] = html_writer::link($reports, format_string($value->get('shortname')), [

@@ -57,10 +57,14 @@ class program_image_url_attribute extends abstract_field_attribute {
             if (!empty($files)) {
                 // Get the first file.
                 $file = reset($files);
-    
                 $imageurl = \moodle_url::make_pluginfile_url(
-                    $file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
-                    $file->get_filename(), false
+                    $file->get_contextid(),
+                    $file->get_component(),
+                    $file->get_filearea(),
+                    $file->get_itemid(),
+                    $file->get_filepath(),
+                    $file->get_filename(),
+                    false,
                 );
             }
         }

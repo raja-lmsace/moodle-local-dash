@@ -80,7 +80,7 @@ class dashboard_form extends persisten_form {
         }
 
         // Description.
-        $mform->addElement('editor', 'description', get_string('description'), array('rows' => 4));
+        $mform->addElement('editor', 'description', get_string('description'), ['rows' => 4]);
         $mform->setType('description', PARAM_CLEANHTML);
 
         if ($this->get_persistent()->get('shortname') != 'coredashboard') {
@@ -91,7 +91,8 @@ class dashboard_form extends persisten_form {
                                                 WHERE c.format != :format
                                                 ORDER BY c.fullname', [
                                                     'contextlevel' => CONTEXT_COURSE,
-                                                    'format' => 'site']);
+                                                    'format' => 'site',
+                                                ]);
             $options = [\context_system::instance()->id => get_string('system', 'block_dash')] + $options;
 
             $mform->addElement('select', 'contextid', get_string('contextid', 'block_dash'), $options);
@@ -148,7 +149,7 @@ class dashboard_form extends persisten_form {
                 $mform->addElement('hidden', 'secondarynav', 0);
                 $mform->setType('secondarynav', PARAM_INT);
             }
-        } else{
+        } else {
             $mform->addElement('hidden', 'secondarynav', 0);
             $mform->setType('secondarynav', PARAM_INT);
         }

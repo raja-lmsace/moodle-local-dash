@@ -86,7 +86,9 @@ class dashboard_table extends \table_sql {
      */
     public function col_name($data) {
         if (!$data->coredash) {
-            return \html_writer::link(new \moodle_url('/local/dash/addon/dashboard/dashboard.php', ['id' => $data->id]), $data->name);
+            return \html_writer::link(
+                new \moodle_url('/local/dash/addon/dashboard/dashboard.php', ['id' => $data->id]),
+                $data->name);
         } else {
             return \html_writer::link(new \moodle_url('/my', ['id' => $data->id]), $data->name);
         }
@@ -155,7 +157,7 @@ class dashboard_table extends \table_sql {
     public function col_actions($data) {
         global $OUTPUT;
 
-        $output =  $OUTPUT->single_button(
+        $output = $OUTPUT->single_button(
                 new \moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => 'edit', 'id' => $data->id]),
                 get_string('edit', 'block_dash'), 'get');
         if (!$data->coredash) {

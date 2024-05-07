@@ -48,7 +48,7 @@ class current_category_condition extends condition {
         } else if ($this->get_context()->contextlevel == CONTEXT_COURSECAT) {
             $categoryid = $this->get_context()->instanceid;
         }
-        if ($categoryid)   {
+        if ($categoryid) {
             if ($categoryrecord = $DB->get_record('course_categories', ['id' => $categoryid])) {
                 list($insql, $inparams) = $DB->get_in_or_equal($categoryrecord->id, SQL_PARAMS_NAMED);
                 $sql = " c.category $insql ";

@@ -81,28 +81,28 @@ class certificates_table extends table {
             new field('code_link', new lang_string('certificatecodelinked', 'block_dash'), $this, 'tci.code', [
                 new widget_attribute([
                     'callback' => fn($row, $data) => formatter::code_with_link($data, $row),
-                ])
+                ]),
             ]),
 
             // Certificate date issued.
             new field('timecreated', new lang_string('issueddate', 'tool_certificate'), $this, null, [
                 new date_attribute([
-                    'format' => get_string('strftimedaydatetime', 'langconfig')
+                    'format' => get_string('strftimedaydatetime', 'langconfig'),
                 ]),
             ]),
 
             // Certificate expiry date.
             new field('expires', new lang_string('expirydate', 'tool_certificate'), $this, null, [
                 new widget_attribute([
-                    'callback' => fn($row, $data) => $data > 0 ? userdate($data) : get_string('never', 'tool_certificate')
-                ])
+                    'callback' => fn($row, $data) => $data > 0 ? userdate($data) : get_string('never', 'tool_certificate'),
+                ]),
             ]),
 
             // Certificate status.
             new field('status', new lang_string('status', 'tool_certificate'), $this, 'tci.expires AS expires, tci.expires', [
                 new widget_attribute([
                     'callback' => fn($row, $data) => formatter::certificate_issued_status($data, $row),
-                ])
+                ]),
             ]),
 
             // Download certificate button.
@@ -118,7 +118,7 @@ class certificates_table extends table {
                         $attr = new linked_data_attribute(['url' => $murl]);
                         $data = get_string('downloadcertificate', 'block_dash');
                         return $attr->transform_data($data, $record);
-                    }
+                    },
                 ]),
 
             ]),

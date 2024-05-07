@@ -34,7 +34,7 @@ Feature: Add a dashboard data source in dash block
       #| teacher2 | C4     | teacher |
     And I log in as "admin"
     And I am on "Course 1" course homepage
-    And I turn block editing mode on
+    And I turn dash block editing mode on
     And I add the "Dash" block
     And I click on "Dashboards" "radio"
     #--Create extra dashboard in block from manage dashboard--#
@@ -96,7 +96,7 @@ Feature: Add a dashboard data source in dash block
     And I click on "Manage dashboards" "button"
     And I should see "Edit" in the "Test dashboard" "table_row"
     And I click on "Edit" "button"
-    And I set the field "Description" to "A learning management system or virtual learning environment is a software application."    
+    And I set the field "Description" to "A learning management system or virtual learning environment is a software application."
     And I click on ".fontawesome-picker-container .fontawesome-autocomplete" "css_element"
     And I click on ".fontawesome-icon-suggestions li .fa-globe" "css_element"
     And I upload "local/dash/addon/dashboard/tests/fixtures/unnamed.jpg" file to "Thumbnail image" filemanager
@@ -110,14 +110,14 @@ Feature: Add a dashboard data source in dash block
     And I am on homepage
     And I should see "A learning management system or virtual learning environment is a software application." in the "Test dashboard" "table_row"
     And ".fa-globe" "css_element" should exist in the ".table.dash-table" "css_element"
-    
+
     #And the "href" attribute of "section.block_dash table.dash-table tbody tr:nth-child(2) td:nth-child(5) > a" "css_element" should contain "local/dash/addon/dashboard/dashboard.php?id=217000"
     #And the "src" attribute of "section.block_dash table.dash-table tbody tr:nth-child(2) td:nth-child(5) > img" "css_element" should contain "pluginfile.php/1/dashaddon_dashboard/dashthumbnailimage/unnamed.jpg"
     #And the "src" attribute of "section.block_dash table.dash-table tbody tr:nth-child(2) td:nth-child(6) > img" "css_element" should contain "pluginfile.php/1/dashaddon_dashboard/dashbgimage/lms.jpg"
-    
+
     Then "//div[contains(@class, 'table-responsive')]//img[contains(@class, 'img-responsive')][contains(@src, 'pluginfile.php/1/dashaddon_dashboard/dashthumbnailimage/')][contains(@src, 'unnamed.jpg')]" "xpath_element" should exist    
     Then "//div[contains(@class, 'table-responsive')]//img[contains(@class, 'img-responsive')][contains(@src, 'pluginfile.php/1/dashaddon_dashboard/dashbgimage')][contains(@src, 'lms.jpg')]" "xpath_element" should exist    
-    
+
     And I click on ".img-responsive" "css_element"
     And I am on homepage
     And I click on "Test dashboard" "link"

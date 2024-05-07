@@ -34,7 +34,7 @@ use dashaddon_dashboard\local\dash_framework\structure\dashboard_table;
 
 /**
  * Dashboard data source.
- * @package   local_dash
+ * @package   dashaddon_dashboard
  * @copyright 2020 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

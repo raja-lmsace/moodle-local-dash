@@ -28,6 +28,8 @@ use enrol_programs\output\catalogue\renderer as programrenderer;
 
 /**
  * Renderer of the program catelogue.
+ *
+ * @package   dashaddon_programs
  */
 class renderer extends programrenderer {
 

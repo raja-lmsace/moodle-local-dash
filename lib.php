@@ -348,8 +348,9 @@ function local_dash_output_fragment_icons_list($args) {
 
 /**
  * Upgrade the dashboard in to the new block.
+ *
+ * @return bool
  */
-
 function local_dash_upgrade_blocks_data_source_idnumber() {
     global $DB;
     $changedatasources = [
@@ -357,7 +358,8 @@ function local_dash_upgrade_blocks_data_source_idnumber() {
         'block_dash\local\data_source\categories_data_source' => 'dashaddon_categories\local\block_dash\categories_data_source',
         'local_dash\local\block_dash\courses_data_source' => 'dashaddon_courses\local\block_dash\courses_data_source',
         'local_dash\local\block_dash\dashboard_data_source' => 'dashaddon_dashboard\local\block_dash\dashboard_data_source',
-        'local_dash\local\block_dash\completions_data_source'  =>  'dashaddon_course_completions\local\block_dash\completions_data_source',
+        'local_dash\local\block_dash\completions_data_source' =>
+            'dashaddon_course_completions\local\block_dash\completions_data_source',
     ];
     $blockinstances = $DB->get_records('block_instances', ['blockname' => 'dash']);
     foreach ($blockinstances as $blockinstance) {

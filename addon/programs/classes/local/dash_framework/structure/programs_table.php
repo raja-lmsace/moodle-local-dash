@@ -165,7 +165,8 @@ class programs_table extends table {
             ]),
 
             new field('smart_program_button', new lang_string('smart_coursebutton', 'block_dash'), $this, [
-                'select' => '(SELECT id FROM {enrol_programs_allocations} WHERE programid = epp.id AND userid = ' . $USER->id .')'
+                'select' => '(SELECT id FROM {enrol_programs_allocations}
+                    WHERE programid = epp.id AND userid = ' . $USER->id .')',
             ], [
                 new smart_program_button_attribute(),
             ]),

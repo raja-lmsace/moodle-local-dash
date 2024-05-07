@@ -22,7 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
+/**
+ * The require plugin dependencies added for the soft dependencies in the programs dash addon.
+ *
+ * @return string
+ */
 function dashaddon_programs_extend_added_dependencies() {
     global $OUTPUT;
     $manager = \core_plugin_manager::instance();

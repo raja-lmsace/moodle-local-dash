@@ -18,8 +18,8 @@
 /**
  * Displays preconfigured dashboards.
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @package    dashaddon_dashboard
+ * @copyright  2024 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -80,7 +80,9 @@ require_login();
 $PAGE->set_title($dashboard->get('name'));
 $PAGE->set_heading($dashboard->get('name'));
 if (has_capability('local/dash:managedashboards', $context)) {
-    $PAGE->navbar->add(get_string('managedashboards', 'block_dash'), new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'));
+    $PAGE->navbar->add(get_string('managedashboards', 'block_dash'),
+        new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'),
+    );
 }
 if ($course) {
     $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', ['id' => $course->id]));
@@ -104,7 +106,8 @@ if ($PAGE->user_allowed_editing()) {
 }
 // Send out the resulting CSS code. The theme revision will be set as etag to support the browser caching.
 $includestyle = new \moodle_url('/local/dash/addon/dashboard/styles.php', ['id' => $dashboard->get('id'),
-    'rev' => theme_get_revision()]);
+    'rev' => theme_get_revision(),
+]);
 $PAGE->requires->css($includestyle);
 echo $OUTPUT->header();
 echo $OUTPUT->addblockbutton($regionname);

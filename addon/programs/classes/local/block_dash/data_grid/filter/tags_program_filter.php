@@ -17,7 +17,7 @@
 /**
  * Filter items based on tags in a certain component and itemtype.
  *
- * @package    dashaddon_program
+ * @package    dashaddon_programs
  * @copyright  2024 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,7 +29,7 @@ use block_dash\local\data_grid\filter\select_filter;
 /**
  * Filter items based on tags in a certain component and itemtype.
  *
- * @package dashaddon_program
+ * @package dashaddon_programs
  */
 class tags_program_filter extends select_filter {
 
@@ -66,7 +66,6 @@ class tags_program_filter extends select_filter {
      *
      * NOTE: not used anywhere, this was intended for tag filtering UI
      *
-     * @param ?int $userid
      * @return array [tagid => tagname]
      */
     public function get_used_tags(): array {

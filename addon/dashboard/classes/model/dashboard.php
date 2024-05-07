@@ -97,12 +97,12 @@ class dashboard extends persistent {
             ],
             'description' => [
                 'type' => PARAM_CLEANHTML,
-                'default' => ''
+                'default' => '',
             ],
             'descriptionformat' => [
                 'choices' => [FORMAT_HTML, FORMAT_MOODLE, FORMAT_PLAIN, FORMAT_MARKDOWN],
                 'type' => PARAM_INT,
-                'default' => FORMAT_HTML
+                'default' => FORMAT_HTML,
             ],
             'dashicon' => [
                 'type' => PARAM_TEXT,
@@ -158,45 +158,45 @@ class dashboard extends persistent {
             case self::PERMISSION_COHORT:
                 return cohort_is_member($this->get('cohort_id'), $user->id);
             case self::PERMISSION_ROLE:
-                    $roles = json_decode($this->get('roles'));
-                    // Roles not mentioned then stop the role check.
-                    if ($roles == '' || empty($roles)) {
-                        return false;
-                    }
+                $roles = json_decode($this->get('roles'));
+                // Roles not mentioned then stop the role check.
+                if ($roles == '' || empty($roles)) {
+                    return false;
+                }
 
-                    // Verify the default user role is set to view the dashboard.
-                    $defaultuserroleid = isset($CFG->defaultuserroleid) ? $CFG->defaultuserroleid : 0;
-                    if ($defaultuserroleid && in_array($defaultuserroleid, $roles) && !empty($user->id) && !isguestuser($user->id)) {
+                // Verify the default user role is set to view the dashboard.
+                $defaultuserroleid = isset($CFG->defaultuserroleid) ? $CFG->defaultuserroleid : 0;
+                if ($defaultuserroleid && in_array($defaultuserroleid, $roles) && !empty($user->id) && !isguestuser($user->id)) {
+                    return true;
+                }
+
+                // Verify the guest user have view the dashboard.
+                if (isguestuser()) {
+                    $guestroles = get_archetype_roles('guest');
+                    $guestroleid = array_column($guestroles, 'id');
+                    if (array_intersect($guestroleid, $roles)) {
                         return true;
                     }
+                }
 
-                    // Verify the guest user have view the dashboard.
-                    if (isguestuser()) {
-                        $guestroles = get_archetype_roles('guest');
-                        $guestroleid = array_column($guestroles, 'id');
-                        if (array_intersect($guestroleid, $roles)) {
-                            return true;
-                        }
-                    }
+                list($insql, $inparam) = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'role');
 
-                    list($insql, $inparam) = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'role');
+                $contextsql = ($this->get('rolecontext') == SYSTEMCONTEXT) ? ' AND contextid=:systemcontext ' : '';
 
-                    $contextsql = ($this->get('rolecontext') == SYSTEMCONTEXT) ? ' AND contextid=:systemcontext ' : '';
+                $sql = "SELECT u.* FROM {user} u WHERE u.id=:userid AND u.id IN
+                        (SELECT userid FROM {role_assignments} WHERE roleid $insql AND userid=:rluserid $contextsql)";
 
-                    $sql = "SELECT u.* FROM {user} u WHERE u.id=:userid AND u.id IN
-                            (SELECT userid FROM {role_assignments} WHERE roleid $insql AND userid=:rluserid $contextsql)";
+                $params = [
+                    'userid' => $user->id,
+                    'rluserid' => $user->id,
+                    'systemcontext' => \context_system::instance()->id,
+                ];
+                $mainparms = array_merge($params, $inparam);
 
-                    $params = [
-                        'userid' => $user->id,
-                        'rluserid' => $user->id,
-                        'systemcontext' => \context_system::instance()->id,
-                    ];
-                    $mainparms = array_merge($params, $inparam);
+                $records = $DB->get_records_sql($sql, $mainparms);
 
-                    $records = $DB->get_records_sql($sql, $mainparms);
-
-                    // Records found user will have access otherwise restrict the user to view the dashboard.
-                    return count($records) > 0 ? true : false;
+                // Records found user will have access otherwise restrict the user to view the dashboard.
+                return count($records) > 0 ? true : false;
             case self::PERMISSION_PUBLIC:
                 // No permission check.
                 return true;
@@ -223,42 +223,62 @@ class dashboard extends persistent {
         return true;
     }
 
+    /**
+     * Loads the prepare editor filemanager.
+     */
     public function prepare_dashboard_filemanager() {
         global $DB;
-        $dashboard = $DB->get_record(static::TABLE, array('id' => $this->get('id')), '*', MUST_EXIST);
+        $dashboard = $DB->get_record(static::TABLE, ['id' => $this->get('id')], '*', MUST_EXIST);
         $filemanagers = ['dashthumbnailimage', 'dashbgimage'];
         $upd = new \stdClass();
         $upd->id = $dashboard->id;
         foreach ($filemanagers as $field) {
-            file_save_draft_area_files($dashboard->{$field}, \context_system::instance()->id, 'dashaddon_dashboard', $field, $dashboard->id, self::get_filemanager_options());
+            file_save_draft_area_files($dashboard->{$field},
+                \context_system::instance()->id,
+                'dashaddon_dashboard',
+                $field,
+                $dashboard->id,
+                self::get_filemanager_options(),
+            );
             $upd->{$field} = $dashboard->{$field};
         }
         $DB->update_record('dashaddon_dashboard_dash', $upd);
     }
 
+    /**
+     * After create dashboard.
+     */
     public function after_create() {
         $this->prepare_dashboard_filemanager();
     }
 
-
+    /**
+     * After update the dashoard
+     *
+     * @param object $result
+     */
     public function after_update($result) {
         global $DB;
         $this->prepare_dashboard_filemanager();
-        $dashboard = $DB->get_record(static::TABLE, array('id' => $this->get('id')), '*', MUST_EXIST);
+        $dashboard = $DB->get_record(static::TABLE, ['id' => $this->get('id')], '*', MUST_EXIST);
         $update = new \stdClass();
         $update->id = $dashboard->id;
         $update->roles = $dashboard->roles;
         $DB->update_record('dashaddon_dashboard_dash', $update);
     }
 
+    /**
+     * Loads the prepare editor files.
+     */
     public function prepare_filemanger_files() {
         global $DB;
-        $record = $DB->get_record(static::TABLE, array('id' => $this->get('id')), '*', MUST_EXIST);
+        $record = $DB->get_record(static::TABLE, ['id' => $this->get('id')], '*', MUST_EXIST);
         $filemanagers = ['dashthumbnailimage', 'dashbgimage'];
         foreach ($filemanagers as $field) {
-            $draftid_editor = file_get_submitted_draft_itemid($field.'_filemanager');
-            file_prepare_draft_area($draftid_editor, \context_system::instance()->id, 'dashaddon_dashboard', $field, $record->id, self::get_filemanager_options());
-            $this->raw_set($field, $draftid_editor);
+            $draftideditor = file_get_submitted_draft_itemid($field.'_filemanager');
+            file_prepare_draft_area($draftideditor, \context_system::instance()->id, 'dashaddon_dashboard',
+                $field, $record->id, self::get_filemanager_options());
+            $this->raw_set($field, $draftideditor);
         }
     }
 
@@ -269,13 +289,13 @@ class dashboard extends persistent {
      */
     public static function get_filemanager_options() {
         global $CFG;
-        return array(
+        return [
             'maxfiles' => 1,
             'maxbytes' => $CFG->maxbytes,
             'context' => \context_system::instance(),
             'noclean' => true,
             'subdirs' => false,
-        );
+        ];
     }
 
     /**
@@ -291,7 +311,7 @@ class dashboard extends persistent {
      */
     public function set_roles_data() {
         global $DB;
-        $record = $DB->get_record(static::TABLE, array('id' => $this->get('id')), '*', MUST_EXIST);
+        $record = $DB->get_record(static::TABLE, ['id' => $this->get('id')], '*', MUST_EXIST);
         if (!empty($record->roles)) {
             $roles = json_decode($record->roles);
             if (!empty($roles)) {

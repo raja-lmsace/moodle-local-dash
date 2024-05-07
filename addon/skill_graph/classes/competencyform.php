@@ -115,7 +115,9 @@ class competencyform extends \core_form\dynamic_form {
 
         $defaults = [
             'competencyid' => $competencyid,
-            'competency_preferences' => ['color' => get_config('dashaddon_skill_graph', self::COMPETENCYCOLOR . "_" . $competencyid) ?: ''],
+            'competency_preferences' => [
+                'color' => get_config('dashaddon_skill_graph', self::COMPETENCYCOLOR . "_" . $competencyid) ?: '',
+            ],
         ];
 
         // Setup the block config data to form.

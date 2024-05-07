@@ -342,8 +342,11 @@ class myprofile_widget extends abstract_widget {
                 // Number of logins created by the user in this week.
                 case 'loginsthisweek':
                     $lastweek = strtotime('this week'); // Timestamp of the last week.
-                    $joparams = ['jolsluserid' => $userid,
-                        'jolsleventname' => '\core\event\user_loggedin', 'jolastweek' => $lastweek];
+                    $joparams = [
+                        'jolsluserid' => $userid,
+                        'jolsleventname' => '\core\event\user_loggedin',
+                        'jolastweek' => $lastweek,
+                    ];
                     // Join the log store and get the login events created after the last week.
                     $sql = "LEFT JOIN (
                             SELECT DISTINCT userid, count(*) AS loginsthisweek FROM {logstore_standard_log}

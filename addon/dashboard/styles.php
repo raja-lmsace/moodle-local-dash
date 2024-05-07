@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Designer pro - Course background styles serving
+ * Dashboard background styles serving
  *
- * @package   local_designer
- * @copyright 2021 bdecent gmbh <https://bdecent.de>
+ * @package   dashaddon_dashboard
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,8 +29,6 @@ define('NO_DEBUG_DISPLAY', true);
 
 // Do not do any upgrade checks here.
 define('NO_UPGRADE_CHECK', true);
-
-
 
 // Require config.
 // @codingStandardsIgnoreStart

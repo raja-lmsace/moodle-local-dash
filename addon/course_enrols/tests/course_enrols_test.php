@@ -148,8 +148,10 @@ class course_enrols_test extends \advanced_testcase {
     public function test_edit_enrolment() {
         global $DB;
         $enrol = $DB->get_record('enrol', ['courseid' => $this->course1->id, 'enrol' => 'manual'], '*', MUST_EXIST);
-        $userenrolment = $DB->get_record('user_enrolments', ['enrolid' => $enrol->id,
-            'userid' => $this->user->id], '*', MUST_EXIST);
+        $userenrolment = $DB->get_record('user_enrolments', [
+            'enrolid' => $enrol->id,
+            'userid' => $this->user->id,
+        ], '*', MUST_EXIST, );
         $data = new stdClass();
         $timestart = strtotime("+2days");
         $timeend = strtotime("+20days");
@@ -158,7 +160,8 @@ class course_enrols_test extends \advanced_testcase {
         $data->timeend = $timeend;
         $this->dashenrolmanager->edit_enrolment($userenrolment, $data);
         $result = $DB->get_record('user_enrolments', ['enrolid' => $enrol->id,
-            'userid' => $this->user->id], '*', MUST_EXIST);
+            'userid' => $this->user->id, ], '*', MUST_EXIST,
+        );
         $this->assertEquals($result->timestart, $timestart);
         $this->assertEquals($result->timeend, $timeend);
         $this->assertEquals(ENROL_USER_SUSPENDED, $result->status);
@@ -170,9 +173,10 @@ class course_enrols_test extends \advanced_testcase {
      */
     public function test_course_enrols_unenrol_user() {
         global $DB, $PAGE;
-        $enrol = $DB->get_record('enrol', ['courseid' => $this->course1->id, 'enrol' => 'manual'], '*', MUST_EXIST);
+        $enrol = $DB->get_record('enrol', ['courseid' => $this->course1->id, 'enrol' => 'manual'], '*', MUST_EXIST, );
         $userenrolment = $DB->get_record('user_enrolments', ['enrolid' => $enrol->id,
-            'userid' => $this->user->id], '*', MUST_EXIST);
+            'userid' => $this->user->id,
+        ], '*', MUST_EXIST, );
         $this->assertTrue(!empty($userenrolment));
         $this->dashenrolmanager->unenrol_user($userenrolment);
         $result = $DB->get_record('user_enrolments', ['enrolid' => $enrol->id, 'userid' => $this->user->id]);
@@ -234,9 +238,11 @@ class course_enrols_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1], ['createsections' => true]);
         $user = $this->getDataGenerator()->create_user();
         $assign1 = $this->getDataGenerator()->create_module('assign', ['course' => $course->id,
-            'section' => 1, 'name' => 'Test 1'], ['completion' => 1]);
+            'section' => 1, 'name' => 'Test 1',
+        ], ['completion' => 1], );
         $assign2 = $this->getDataGenerator()->create_module('assign', ['course' => $course->id,
-            'section' => 1, 'name' => 'Test 2'], ['completion' => 1]);
+            'section' => 1, 'name' => 'Test 2',
+        ], ['completion' => 1], );
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $this->studentrole->id);
         $section = $DB->get_record('course_sections', ['course' => $course->id, 'section' => 1]);
         $criteriadata = (object) [

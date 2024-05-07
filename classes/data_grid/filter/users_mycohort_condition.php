@@ -17,7 +17,7 @@
 /**
  * Filters results to specific sections.
  *
- * @package    dashaddon_skillprogress
+ * @package    local_dash
  * @copyright  2023 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ use coding_exception;
 /**
  * Filters results to specific sections.
  *
- * @package dashaddon_skillprogress
+ * @package local_dash
  */
 class users_mycohort_condition extends condition {
 

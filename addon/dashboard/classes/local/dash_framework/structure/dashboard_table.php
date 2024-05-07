@@ -44,7 +44,7 @@ use moodle_url;
 /**
  * Class dashboard_table.
  *
- * @package local_dash
+ * @package dashaddon_dashboard
  */
 class dashboard_table extends table {
 
@@ -83,7 +83,7 @@ class dashboard_table extends table {
             ]),
             new field('link', new lang_string('dashboardlink', 'block_dash'), $this, 'dd.id', [
                 new dash_dashboardlink_attribute(),
-				new link_attribute(['label_field' => 'dd_name'])
+                new link_attribute(['label_field' => 'dd_name']),
             ]),
             new field('dashicon', new lang_string('dashicon', 'block_dash'), $this, 'dd.dashicon', [
                 new dashboard_dash_icon_attribute(),
@@ -91,7 +91,10 @@ class dashboard_table extends table {
             new field('dashthumbnailimg', new lang_string('dashthumbnailimg', 'block_dash'), $this, 'dd.id', [
                 new dashboard_dash_thumbnail_image_attribute(),
                 new image_attribute(),
-                new linked_data_attribute(['url' => new moodle_url('/local/dash/addon/dashboard/dashboard.php', ['id' => 'dd_id'])]),
+                new linked_data_attribute([
+                    'url' => new moodle_url('/local/dash/addon/dashboard/dashboard.php',
+                    ['id' => 'dd_id']),
+                ]),
             ]),
             new field('dashthumbnailimgurl', new lang_string('dashthumbnailimgurl', 'block_dash'), $this, 'dd.id', [
                 new dashboard_dash_thumbnail_image_attribute(), new image_url_attribute(),

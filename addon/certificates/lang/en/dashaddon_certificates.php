@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'dashaddon_certificate', language 'en'
+ * Strings for component 'dashaddon_certificates', language 'en'
  *
- * @package   dashaddon_certificate
+ * @package  dashaddon_certificates
  * @copyright 2024 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

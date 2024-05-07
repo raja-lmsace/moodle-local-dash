@@ -26,7 +26,7 @@
 define('ANYCONTEXT', 1);
 define('SYSTEMCONTEXT', 2);
 
- /**
+/**
  * Dashboard plugin file definitions, List of fileareas used in local_dash plugin.
  *
  * @param stdclass $course
@@ -42,7 +42,7 @@ function dashaddon_dashboard_pluginfile($course, $cm, $context, $filearea, $args
 
     $fileareas = [
         'dashbgimage',
-        'dashthumbnailimage'
+        'dashthumbnailimage',
     ];
 
     if ($context->contextlevel == CONTEXT_SYSTEM && in_array($filearea, $fileareas) !== false) {
@@ -73,7 +73,12 @@ function dashaddon_dashboard_pluginfile($course, $cm, $context, $filearea, $args
     }
 }
 
-
+/**
+ * Get the dashboard background image.
+ *
+ * @param int $dashboardid Dashboard ID
+ * @return string
+ */
 function dashaddon_dashboard_get_dashboard_background($dashboardid) {
     $fs = get_file_storage();
     $files = $fs->get_area_files(
@@ -93,6 +98,9 @@ function dashaddon_dashboard_get_dashboard_background($dashboardid) {
     return '';
 }
 
+/**
+ * Create the core dashboard and updated the moodle dashboard in the dash dashboard table.
+ */
 function dashaddon_dashboard_create_core_dashboard() {
     global $DB, $USER;
 
@@ -166,4 +174,3 @@ function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $cou
     }
 
 }
-

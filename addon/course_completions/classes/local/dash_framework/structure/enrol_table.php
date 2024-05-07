@@ -47,7 +47,7 @@ use moodle_url;
 /**
  * Class enrol_table.
  *
- * @package local_dash
+ * @package dashaddon_course_completions
  */
 class enrol_table extends table {
 

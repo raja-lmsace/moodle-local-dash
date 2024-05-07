@@ -226,7 +226,8 @@ class competency_progress_widget extends abstract_widget {
                 'shortname' => format_string($competency->get('shortname')),
                 'idnumber' => $competency->get('idnumber'),
                 'proficiency' => $usercomp->get('proficiency'),
-                'color' => get_config('dashaddon_skill_graph', 'competencycolor_' . $compid) ?: '', // Color of the competency set in dash.
+                // Color of the competency set in dash.
+                'color' => get_config('dashaddon_skill_graph', 'competencycolor_' . $compid) ?: '',
                 'competencyimage' => $bgimage ?: '',
                 'childrencount' => count($value->children),
                 'children' => ($value->children) ? $this->build_competency_data($value->children) : [],
