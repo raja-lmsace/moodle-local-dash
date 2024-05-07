@@ -47,7 +47,7 @@ trait filter_element {
 
         // If All option is present, send it to top.
         if (isset($options[self::ALL_OPTION])) {
-            $options = array(self::ALL_OPTION => $options[self::ALL_OPTION]) + $options;
+            $options = [self::ALL_OPTION => $options[self::ALL_OPTION]] + $options;
         }
 
         $newoptions = [];
@@ -60,7 +60,7 @@ trait filter_element {
         return $OUTPUT->render_from_template('dashaddon_course_enrols/filter_select', [
             'name' => $name,
             'options' => $newoptions,
-            'multiple' => true
+            'multiple' => true,
         ]);
     }
 }

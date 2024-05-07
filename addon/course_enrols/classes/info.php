@@ -118,7 +118,7 @@ class info {
             'alpha_asc' => get_string('alpha_asc', 'block_dash'),
             'alpha_desc' => get_string('alpha_desc', 'block_dash'),
             'coursestartdate_asc' => get_string('coursestartdate_asc', 'block_dash'),
-            'coursestartdate_desc' => get_string('coursestartdate_desc', 'block_dash')
+            'coursestartdate_desc' => get_string('coursestartdate_desc', 'block_dash'),
         ];
     }
 
@@ -150,7 +150,7 @@ class info {
                                                 WHERE ra.userid = ?
                                                         AND ra.contextid = c.id
                                                         AND c.instanceid = u.id
-                                                        AND c.contextlevel = ".CONTEXT_USER, array($USER->id))) {
+                                                        AND c.contextlevel = ".CONTEXT_USER, [$USER->id])) {
 
             $users = [];
             foreach ($usercontexts as $usercontext) {
@@ -218,8 +218,9 @@ class info {
         $sectionsnum = 0;
         $sections = [];
         foreach ($modinfo->get_section_info_all() as $sectionnum => $thissection) {
-            $thissection->iscompleted = $courseinfo->get_section_completion($thissection->id);
-            $thissection->name = $courseinfo->format->get_section_name($thissection);
+            $section = new \stdClass();
+            $section->iscompleted = $courseinfo->get_section_completion($thissection->id);
+            $section->name = $courseinfo->format->get_section_name($thissection);
             // Added support for multiple available info in a section.
             if ($thissection->availableinfo && is_object($thissection->availableinfo)
                 && isset($thissection->availableinfo->items)) {
@@ -229,7 +230,7 @@ class info {
                     $availableinfo .= \html_writer::tag('li', $item);
                 }
                 $availableinfo = \html_writer::end_tag('ul');
-                $thissection->availableinfo = $availableinfo;
+                $section->availableinfo = $availableinfo;
             }
             $cms = [];
             if (isset($modinfo->sections[$thissection->section])) {
@@ -239,10 +240,10 @@ class info {
                     $cms[] = ['cm' => $mod, 'cmname' => format_string($mod->name), 'iscompleted' => $iscompleted];
                 }
             }
-            $thissection->cms = $cms;
+            $section->cms = $cms;
             if ($cms) {
-                $thissection->sectionnum = $sectionsnum += 1;
-                $sections[] = $thissection;
+                $section->sectionnum = $sectionsnum += 1;
+                $sections[] = $section;
             }
         }
         return $sections;
@@ -272,8 +273,14 @@ class info {
         $sortqueries = self::get_sort_sql();
         $sort = isset($sortqueries[$sort]) ? $sortqueries[$sort] : '';
 
-        list($courses, $count) = dashaddon_enrolments_get_all_users_courses(
+        $alluserscourses = dashaddon_enrolments_get_all_users_courses(
             $userid, false, $sort, $status, $limitfrom, $limitnum, $condition, $conditionparams);
+
+        if (empty($alluserscourses)) {
+            return [[], 0];
+        }
+
+        list($courses, $count) = $alluserscourses;
 
         foreach ($courses as $courseid => &$course) {
             $modinfo = get_fast_modinfo($course, $userid);
@@ -356,7 +363,7 @@ class info {
         $completioninfo = new \completion_info($this->course);
         if ($sectionid) {
             $modinfo = get_fast_modinfo($this->course);
-            $section = $DB->get_record('course_sections', array('id' => $sectionid));
+            $section = $DB->get_record('course_sections', ['id' => $sectionid]);
             if (isset($section)) {
                 if (isset($modinfo->sections[$section->section])) {
                     foreach ($modinfo->sections[$section->section] as $modnumber) {
@@ -418,7 +425,7 @@ class info {
         if ($canreviewenrol) {
             $canviewfullnames = 1;
             $fullname = fullname($user, $canviewfullnames);
-            $coursename = format_string($this->course->fullname, true, array('context' => $this->context));
+            $coursename = format_string($this->course->fullname, true, ['context' => $this->context]);
             require_once($CFG->dirroot . '/enrol/locallib.php');
             $manager = new \course_enrolment_manager($PAGE, $this->course);
             $userenrolments = $manager->get_user_enrolments($user->id);
@@ -468,7 +475,7 @@ class info {
                     'dashaddon/course_enrols:viewdetails', $this->course->id
                  );
                 $docicon = $OUTPUT->pix_icon('docs', $statusfielddata->enrolinstancename, 'core',
-                    array('class' => 'iconhelp icon-pre', 'role' => 'presentation'));
+                    ['class' => 'iconhelp icon-pre', 'role' => 'presentation']);
                 $statusfielddata->docicon = $docicon;
                 $enrolstatusoutput .= $OUTPUT->render_from_template(
                     'dashaddon_course_enrols/status_field', $statusfielddata

@@ -1,0 +1,57 @@
+{{#data.showlearningpath}}
+<div class="learning-path-widget">
+
+    {{#data.showinfo}}
+    <div class="learning-path-header alert {{#data.completedlearingpath}} alert-success{{/data.completedlearingpath}}{{^data.completedlearingpath}} alert-secondary{{/data.completedlearingpath}}">
+        {{#data.infocontent}}
+        <div class="learningpath-info-block">
+            <p> {{{data.infocontent}}} </p>
+        </div>
+        {{/data.infocontent}}
+        {{#data.infobutton}}
+            <div class="learningpath-info-btn">
+                <a href="{{{data.nextcourseurl}}}" class="btn btn-primary">{{data.infobutton}}</a>
+            </div>
+        {{/data.infobutton}}
+    </div>
+    {{/data.showinfo}}
+
+    {{#data.pathdesktop}}
+        <div class="learning-path-block svg-block d-none d-lg-block d-xl-block" id="learningpath-svg-{{uniqueid}}">
+            {{{data.pathdesktop}}}
+        </div>
+    {{/data.pathdesktop}}
+
+    {{#data.pathtablet}}
+    <div class="learning-path-block svg-block d-none d-md-block d-lg-none d-xl-none" id="learningpath-svg-tab-{{uniqueid}}">
+        {{{data.pathtablet}}}
+    </div>
+    {{/data.pathtablet}}
+
+    {{#data.pathmobile}}
+    <div class="learning-path-block svg-block d-block d-sm-block d-md-none d-lg-none d-xl-none" id="learningpath-svg-mob-{{uniqueid}}">
+        {{{data.pathmobile}}}
+    </div>
+    {{/data.pathmobile}}
+
+    <div id="learningpath-gird-{{uniqueid}}" class="learning-path-grid learning-path-block {{^data.pathdesktop}} desktop-show {{/data.pathdesktop}} {{^data.pathtablet}} tablet-show {{/data.pathtablet}} {{^data.pathmobile}} mobile-show {{/data.pathmobile}}">
+        {{> dashaddon_learningpath/grid_layout}}
+    </div>
+
+</div>
+
+{{#js}}
+
+require(['jquery', 'dashaddon_learningpath/learningpath'], function($, LearnigPath) {
+    LearnigPath.init('{{uniqueid}}', {{{data.dataset}}}, {{data.pagecontextid}}, {{data.isgrid}});
+});
+
+{{/js}}
+
+
+{{/data.showlearningpath}}
+
+
+{{^data.showlearningpath}}
+    {{#noresult}}{{{noresult}}}{{/noresult}}
+{{/data.showlearningpath}}

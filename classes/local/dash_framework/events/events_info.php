@@ -78,15 +78,15 @@ class events_info {
             base_event::class => [],
             course_viewed::class => [
                 'icon' => ['local_dash', 'viewed'],
-                'color' => 'info'
+                'color' => 'info',
             ],
             course_completed::class => [
                 'icon' => ['local_dash', 'completed'],
-                'color' => 'success'
+                'color' => 'success',
             ],
             course_module_viewed::class => [
                 'icon' => ['local_dash', 'viewed'],
-                'color' => 'info'
+                'color' => 'info',
             ],
         ];
     }

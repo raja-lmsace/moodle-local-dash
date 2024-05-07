@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Theme Boost Union Login - Form element for color picker
+ * Dashaddon content - Form element for color picker
  *
- * @package    theme_boost_union
+ * @package    dashaddon_content
  * @copyright  2023 bdecent GmbH <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,7 +31,7 @@ require_once($CFG->dirroot.'/lib/form/text.php');
 /**
  * Form element for color picker
  *
- * @package   theme_boost_union
+ * @package   dashaddon_content
  * @copyright 2023 bdecent GmbH <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -57,7 +57,7 @@ class moodlequickform_dashaddon_content_colorpicker extends MoodleQuickForm_text
         if (empty($class)) {
             $class = '';
         }
-        $this->updateAttributes(array('class' => $class.' theme_boost_union-form-colour-picker '));
+        $this->updateAttributes(['class' => $class.' theme_boost_union-form-colour-picker ']);
     }
 
     /**

@@ -33,8 +33,8 @@ $capabilities = [
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'student' => CAP_PREVENT,
-            'user'    => CAP_ALLOW
-        ]
+            'user'    => CAP_ALLOW,
+        ],
     ],
     'dashaddon/course_enrols:viewdetails' => [
         'riskbitmask'  => RISK_MANAGETRUST,
@@ -44,8 +44,8 @@ $capabilities = [
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'student' => CAP_ALLOW,
-            'user'    => CAP_ALLOW
-        ]
+            'user'    => CAP_ALLOW,
+        ],
     ],
     'dashaddon/course_enrols:unenrol' => [
         'riskbitmask'  => RISK_MANAGETRUST,
@@ -55,8 +55,8 @@ $capabilities = [
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'user'    => CAP_ALLOW,
-            'student' => CAP_PREVENT
-        ]
+            'student' => CAP_PREVENT,
+        ],
     ],
     'dashaddon/course_enrols:enrol' => [
         'riskbitmask'  => RISK_MANAGETRUST,
@@ -66,8 +66,8 @@ $capabilities = [
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'user'    => CAP_ALLOW,
-            'student' => CAP_PREVENT
-        ]
+            'student' => CAP_PREVENT,
+        ],
     ],
     'dashaddon/course_enrols:viewprofiledash' => [
         'riskbitmask'  => RISK_MANAGETRUST,
@@ -77,15 +77,15 @@ $capabilities = [
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'user'    => CAP_ALLOW,
-            'student' => CAP_PREVENT
-        ]
+            'student' => CAP_PREVENT,
+        ],
     ],
     'dashaddon/course_enrols:viewotherprofiledash' => [
         'riskbitmask' => RISK_SPAM,
         'captype'      => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes'   => array(
+        'archetypes'   => [
             'manager'  => CAP_ALLOW,
-        )
+        ],
     ],
 ];

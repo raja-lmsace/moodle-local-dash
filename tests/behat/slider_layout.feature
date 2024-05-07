@@ -20,15 +20,15 @@ Feature: Enable the slider layout in dash block on the dashboard page and view i
       | student5 | Student   | Five     | student3@example.com |
     And I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
-    And I turn block editing mode on
-    And I add the "Dash" block
-    And I click on "#id_config_data_source_idnumber_local_dashlocalblock_dashcourses_data_source" "css_element"
+    And I turn dash block editing mode on
+    # And I add the "Dash" block
+    And I create dash "Courses" datasource
     And I configure the "New Dash" block
     And I set the field "Block title" to "Course datasource"
+    # And I click on "#id_config_data_source_idnumber_local_dashlocalblock_dashcourses_data_source" "css_element"
     And I press "Save changes"
-    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
-    And I should see "Preferences"
-    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
+    # And I click on "Preferences" "button" in the "Course datasource" "block"
+    And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     Then I click on "General" "link"
     And I set the field "Layout" to "Grid layout"
@@ -57,12 +57,10 @@ Feature: Enable the slider layout in dash block on the dashboard page and view i
   Scenario: Check the slider settings
     Given I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
-    And I turn block editing mode on
+    And I turn dash block editing mode on
     Then ".dash-block-content .card_layout_slider .slick-next" "css_element" should exist
     Then ".dash-block-content .card_layout_slider .slick-prev" "css_element" should exist
-    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
-    And I should see "Preferences"
-    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
+    And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     And I set the field "Layout mode" to "Slider"
     And I set the field "Heading field" to "course: Full name"
@@ -75,9 +73,7 @@ Feature: Enable the slider layout in dash block on the dashboard page and view i
     And I press "Save changes"
     Then ".dash-block-content .card_layout_slider .slick-next" "css_element" should not exist
     Then ".dash-block-content .card_layout_slider .slick-prev" "css_element" should not exist
-    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
-    And I should see "Preferences"
-    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
+    And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     And I set the field "Slides to show" to "2"
     And I press "Save changes"

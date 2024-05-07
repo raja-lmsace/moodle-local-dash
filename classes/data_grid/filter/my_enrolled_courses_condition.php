@@ -73,9 +73,9 @@ class my_enrolled_courses_condition extends condition {
         $sql = "$select IN(SELECT ctx.instanceid
                            FROM {role_assignments} ra
                            JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = " . CONTEXT_COURSE . "
-                           WHERE ra.userid = :userid";
+                           WHERE ra.userid = :enrolleduserid";
 
-        $params = ['userid' => $USER->id];
+        $params = ['enrolleduserid' => $USER->id];
         if (isset($this->get_preferences()['roleids'])
             && is_array($this->get_preferences()['roleids']) && count($this->get_preferences()['roleids']) > 0) {
             [$rsql, $rparams] = $DB->get_in_or_equal($this->get_preferences()['roleids'], SQL_PARAMS_NAMED, 'roles');

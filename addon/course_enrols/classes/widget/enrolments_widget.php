@@ -35,12 +35,32 @@ use local_dash\data_grid\filter\course_category_condition;
 use dashaddon_course_enrols\local\block_dash\data_grid\filter\completion_filter;
 use dashaddon_course_enrols\local\block_dash\data_grid\filter\sort_status_filter;
 use dashaddon_course_enrols\local\block_dash\data_grid\filter\user_filter;
-use \dashaddon_course_enrols\info;
+use dashaddon_course_enrols\info;
 
 /**
  * Enrolments widget class contains the layout information and generate the data for widget.
  */
 class enrolments_widget extends abstract_widget {
+
+    /**
+     * Enrolment sort method.
+     * @var string
+     */
+    protected $enrolmentsort;
+
+    /**
+     * User enrolment status.
+     *
+     * @var string
+     */
+    protected $enrolstatus;
+
+    /**
+     * User id.
+     *
+     * @var int
+     */
+    protected $userid;
 
     /**
      * Dash add enrolments form before courses.
@@ -97,7 +117,7 @@ class enrolments_widget extends abstract_widget {
             'layout' => 'enrolments',
             'addcourse' => 1,
             'progress' => 1,
-            'expandable' => 1
+            'expandable' => 1,
         ];
         return $preferences;
     }
@@ -128,7 +148,7 @@ class enrolments_widget extends abstract_widget {
             'userid' => $this->userid,
             'sort' => $this->enrolmentsort,
             'enrolstatus' => $this->enrolstatus,
-            'courses' => array_values($enrolledcourses),
+            'courses' => !empty($enrolledcourses) ? array_values($enrolledcourses) : [],
             'contextid' => $this->get_block_instance()->context->id,
             'uniqueid' => $this->get_block_instance()->instance->id,
             'availablecoursestoenrol' => $this->get_available_courses_for_enrol($enrolledcourses),
@@ -324,7 +344,7 @@ class enrolments_widget extends abstract_widget {
             $choices = [
                 0 => get_string('disable', 'core'),
                 1 => get_string('course_enrolments:abovecourseform', 'block_dash'),
-                2 => get_string('course_enrolments:belowcourseform', 'block_dash')
+                2 => get_string('course_enrolments:belowcourseform', 'block_dash'),
             ];
             $mform->addElement('select', 'config_preferences[addcourse]',
                 get_string('course_enrolments:displayaddcourse', 'block_dash'), $choices);

@@ -86,7 +86,7 @@ class tags_condition extends condition {
                 }
             }
 
-            return $itemids;
+            return !empty($itemids) ? $itemids : [0];
         }
     }
 
@@ -117,7 +117,7 @@ class tags_condition extends condition {
         }
 
         $mform->addElement('autocomplete', $fieldname . '[tags]', get_string('tags', 'block_dash'), $options, [
-            'multiple' => true
+            'multiple' => true,
         ]);
         $mform->hideIf($fieldname . '[tags]', $fieldname . '[enabled]');
     }

@@ -53,7 +53,7 @@ class sort_status_filter extends select_filter {
      */
     public function get_supported_operations() {
         return [
-            self::OPERATION_EQUAL
+            self::OPERATION_EQUAL,
         ];
     }
 

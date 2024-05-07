@@ -1,0 +1,395 @@
+/*Skill level visual*/
+.skill-level-visuals .level-image .responsive-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50px;
+    filter: grayscale(1);
+}
+.skill-level-visuals .level-image.current-level-img .responsive-img {
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    filter: none;
+}
+.skill-level-visuals .level-image.completed .responsive-img {
+    filter: none;
+}
+.skill-level-visuals .current-level-section span.current-level-name {
+    font-size: 14px;
+    font-weight: bold;
+}
+.skill-level-visuals .skill-levels {
+    text-align: center;
+    margin-top: 20px;
+}
+.skill-level-visuals .skill-levels .current-level-text label {
+    font-style: italic;
+}
+.skill-level-visuals .skill-levels .current-level-name {
+    font-weight: bold;
+    background: #f1f1f1;
+    padding: 2px 10px;
+    display: inline-block;
+    border-radius: 15px;
+}
+.skill-level-visuals .skill-levels .level-items {
+    display: inline-block;
+}
+.skill-level-visuals .level-item {
+    text-align: center;
+    padding: 10px;
+    margin: 5px 5px;
+    display: inline-block;
+    vertical-align: top;
+}
+.skill-level-visuals .level-item .level-image {
+    margin: 5px;
+}
+.skill-level-visuals .level-image.current-level-img {
+    margin: 10px 0;
+}
+.skill-level-visuals .current-level-section {
+    text-align: center;
+}
+.skill-level-visuals .level-item .current-level {
+    display: block;
+}
+/* End of Skill level visual*/
+
+/* Grid */
+.grid-block-layout {
+    position: relative;
+}
+.grid-block-layout .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+/* End of Grid */
+
+/* Modal course details area */
+.grid-layout-block .grid-layout {
+    margin-bottom: 30px;
+}
+.grid-layout-block .grid-layout .img-block {
+    height: 200px;
+}
+.grid-layout-block .grid-layout .img-block img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.grid-layout-block .grid-layout .progress-block .progress {
+    height: 12px;
+    border-radius: 0;
+}
+.grid-layout-block .grid-layout .progress-block .progress .progress-bar.progress-not-started {
+    width: 100%;
+    color: #000;
+    text-align: center;
+    background: none;
+}
+.grid-layout-block .grid-layout .progress-block .progress .progress-bar.progress-bg-success {
+    background-color: #11b56a;
+}
+.grid-layout-block .grid-layout .card-body {
+    padding-left: 0;
+    padding-right: 0;
+}
+.grid-layout-block .grid-layout .card-body .btn-block a {
+    display: block;
+}
+.grid-layout-block .pagination .page-item .page-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    outline: none;
+    display: inline-block;
+}
+.grid-layout-block .pagination .page-item {
+    width: 100%;
+}
+.grid-layout-block .pagination .page-item.prev-item {
+    text-align: left;
+}
+.grid-layout-block .pagination .page-item.next-item {
+    text-align: right;
+}
+
+@media (max-width: 767.98px) {
+    .grid-layout-block .pagination {
+        flex-wrap: nowrap;
+    }
+}
+/* End of Modal course details area */
+
+/* Learning path */
+.learning-path-widget .learning-path-header .alert-secondary {
+    background-color: #f1f1f1;
+}
+.learning-path-widget .learning-path-header p {
+    color: #000;
+    font-size: 16px;
+    margin-bottom: 0;
+}
+.learning-path-widget .learning-path-header .learningpath-info-btn {
+    margin-top: 10px;
+}
+.learning-path-widget .learning-path-header .learningpath-info-btn a {
+    color: #fff;
+    font-weight: normal;
+}
+.learning-path-widget .learning-path-grid {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .learning-path-widget .learning-path-grid.desktop-show {
+        display: block;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .learning-path-widget .learning-path-grid.tablet-show {
+        display: block;
+    }
+}
+
+@media (max-width: 767px) {
+    .learning-path-widget .learning-path-grid.mobile-show {
+        display: block;
+    }
+}
+
+/* Grid layout */
+#gridLayout {
+    display: flex;
+    flex-wrap: wrap;
+    width: 90%;
+    padding-left: 0;
+    margin: 0 auto;
+    overflow: hidden;
+    font-family: 'Raleway', sans-serif;
+    font-size: 15px;
+    list-style-type: none;
+}
+.grid-block {
+    position: relative;
+    visibility: hidden;
+    outline: 1px solid transparent; /* fix for jagged edges in FF on hover transition */
+}
+.grid-block::after {
+    content: '';
+    display: block;
+    padding-bottom: 86.602%;  /* =  100 / tan(60) * 1.5 */
+}
+.grid-item {
+    position: absolute;
+    width: 96%;
+    padding-bottom: 110.851%; /* =  width / sin(60) */
+    margin: 0 2%;
+    overflow: hidden;
+    visibility: hidden;
+    outline: 1px solid transparent; /* fix for jagged edges in FF on hover transition */
+}
+.grid-item * {
+    position: absolute;
+    visibility: visible;
+    outline: 1px solid transparent; /* fix for jagged edges in FF on hover transition */
+}
+.grid-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #fff;
+    overflow: hidden;
+    border: 4px solid transparent;
+    background: none;
+    -webkit-clip-path: polygon(-35% 50%, 50% 0%, 100% 29%, 100% 69%, 50% 98%, 50% 98%);
+}
+.learning-path-grid .grid-block .grid-item.notstarted .grid-link {
+    background: #666;
+}
+.learning-path-grid .grid-block .grid-item.unavailable .grid-link {
+    background: #ccc;
+    filter: grayscale(100%);
+    opacity: .5;
+}
+.learning-path-grid .grid-block .grid-item.inprogress .grid-link {
+    background: #00b2ff;
+}
+.learning-path-grid .grid-block .grid-item.completed .grid-link {
+    background: #11b56a;
+}
+
+/* HEX CONTENT */
+.grid-block img {
+    left: -100%;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0 auto;
+    transform: rotate3d(0, 0, 0, 0deg);
+    -webkit-clip-path: polygon(-35% 50%, 50% 0%, 100% 29%, 100% 69%, 50% 98%, 50% 98%);
+}
+.grid-block h1,
+.grid-block p {
+    width: 100%;
+    padding: 5%;
+    box-sizing: border-box;
+    background-color: rgba(0, 128, 128, 0.8);
+    font-weight: 300;
+    transition: transform .2s ease-out, opacity .3s ease-out;
+}
+.grid-block h1 {
+    bottom: 50%;
+    padding-top: 50%;
+    font-size: 1.5em;
+    z-index: 1;
+    transform: translate3d(0, -100%, 0);
+}
+.grid-block h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 45%;
+    width: 10%;
+    text-align: center;
+    border-bottom: 1px solid #fff;
+}
+.grid-block p {
+    top: 50%;
+    padding-bottom: 50%;
+    transform: translate3d(0, 100%, 0);
+}
+
+/*** HOVER EFFECT  **********************************************************************/
+.grid-link:hover h1,
+.grid-link:focus h1,
+.grid-link:hover p,
+.grid-link:focus p {
+    transform: translate3d(0, 0, 0);
+}
+
+/*** HEXAGON SIZING AND EVEN ROW INDENTATION *****************************************************************/
+@media (min-width: 1201px) { /* <- 5-4  hexagons per row */
+    #gridLayout {
+        padding-bottom: 4.4%;
+    }
+    .grid-block {
+        width: 20%; /* = 100 / 5 */
+    }
+    .grid-block:nth-child(9n+6) { /* first hexagon of even rows */
+        margin-left: 10%;  /* = width of .grid-block / 2  to indent even rows */
+    }
+}
+
+@media (max-width: 1200px) and (min-width: 901px) { /* <- 4-3  hexagons per row */
+    #gridLayout {
+        padding-bottom: 5.5%;
+    }
+    .grid-block {
+        width: 25%; /* = 100 / 4 */
+    }
+    .grid-block:nth-child(7n+5) { /* first hexagon of even rows */
+        margin-left: 12.5%;  /* = width of .grid-block / 2  to indent even rows */
+    }
+}
+
+@media (max-width: 900px) and (min-width: 601px) { /* <- 3-2  hexagons per row */
+    #gridLayout {
+        padding-bottom: 7.4%;
+    }
+    .grid-block {
+        width: 33.333%; /* = 100 / 3 */
+    }
+    .grid-block:nth-child(5n+4) { /* first hexagon of even rows */
+        margin-left: 16.666%;  /* = width of .grid-block / 2  to indent even rows */
+    }
+}
+
+@media (max-width: 600px) { /* <- 2-1  hexagons per row */
+    #gridLayout {
+        padding-bottom: 11.2%;
+    }
+    .grid-block {
+        width: 50%; /* = 100 / 3 */
+    }
+    .grid-block:nth-child(3n+3) { /* first hexagon of even rows */
+        margin-left: 25%;  /* = width of .grid-block / 2  to indent even rows */
+    }
+}
+
+@media (max-width: 400px) {
+    #gridLayout {
+        font-size: 13px;
+    }
+}
+
+/* End of Learning path - Grid layout */
+
+/* Course details */
+.course-circle {
+    cursor: pointer;
+}
+.course-circle.completed {
+    stroke: #11b56a;
+    --webkit-filter: none;
+    filter: none;
+}
+.course-circle.completed.dot-image {
+    fill: #11b56a;
+}
+.course-circle.inprogress.dot-image {
+    fill: #00b2ff;
+}
+.course-circle.dot-image {
+    fill: #ccc;
+}
+.course-circle.inprogress,
+.course-circle.inprogress-flag {
+    --webkit-filter: none;
+    filter: none;
+    stroke: #00b2ff;
+}
+.course-circle.unavailable {
+    --webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+.learning-path-widget .svg-block svg .start-element,
+.learning-path-widget .svg-block svg .finish-element {
+    height: 100%;
+    color: #fff;
+    text-align: center;
+    background: #000;
+    border-radius: 14px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.learning-path-widget .svg-block:not(.learning-path-completed) svg .finish-element {
+    background-color: #ccc;
+}
+.learning-path-widget .svg-block.learning-path-completed svg .finish-element {
+    background-color: #11b56a;
+}
+.learning-path-widget .svg-block svg .start-element:after,
+.learning-path-widget .svg-block svg .finish-element:after {
+    content: '\f101';
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
+    font-weight: var(--fa-style, 900);
+    font-size: 12px;
+    margin-top: 1px;
+    margin-left: 5px;
+}
+.learning-path-widget .svg-block svg .finish-element:after {
+    content: '\f11e';
+}
+.learning-path-widget .svg-block {
+    text-align: center;
+}
+/* End of Course details */

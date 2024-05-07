@@ -1,0 +1,88 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    svg {
+        border: solid;
+    }
+    text {
+        fill: black;
+        font-size: 4px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+    }
+  </style>
+  <title>Dynamic SVG</title>
+</head>
+<body>
+
+    <svg viewBox="0 0 100 80" id="svg">
+        <defs>
+        <g id="gc">
+          <circle fill="silver" r="3" />
+        </g>
+        </defs>
+        <path id="thePath" fill="none" stroke-width=".5"  stroke-dasharray="3, .5" stroke="#ccc" d="M10,10H70A10,10 0 0 1 70,30H20A10,10 0 0 0 20,50H70A10,10 0 0 1 70,70H20" />
+      </svg>
+
+<script>
+
+//constants used to create a new element in svg
+const SVG_NS = "http://www.w3.org/2000/svg";
+const SVG_XLINK = "http://www.w3.org/1999/xlink";
+//the total length of the path
+let length= thePath.getTotalLength();
+//the number of points on the path
+let n = 5;
+let step = length/n;
+
+
+for(let i= 1; i<=n; i++) {
+//creates a new point on the path at a given length
+let point = thePath.getPointAtLength(i*step);
+
+//create a new use element (or a circle) and set the center of the circle on the calculated point
+let use = document.createElementNS(SVG_NS, 'use');
+use.setAttributeNS(SVG_XLINK, 'xlink:href', '#gc');
+use.setAttribute("x", point.x);
+use.setAttribute("y", point.y);
+//create a new text element on the same point. Thr text content is the i number
+let text = document.createElementNS(SVG_NS, 'text');
+text.setAttribute("x", point.x);
+text.setAttribute("y", point.y);
+text.textContent = i;
+//append the 2 new created elements to the svg
+svg.appendChild(use);
+svg.appendChild(text);
+}
+
+
+</script>
+
+</body>
+</html>
+
+
+
+

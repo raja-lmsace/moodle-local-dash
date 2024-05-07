@@ -24,7 +24,7 @@
 namespace local_dash\data_grid\field\attribute;
 
 use block_dash\local\data_grid\field\attribute\abstract_field_attribute;
-use \moodle_url;
+use moodle_url;
 
 /**
  * Transform data to URL of course image.

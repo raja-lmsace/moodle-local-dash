@@ -23,10 +23,51 @@
  */
 
 namespace local_dash\plugininfo;
+use moodle_url;
 
 /**
  * Dashaddon is subplugin of local_dash.
  */
 class dashaddon extends \core\plugininfo\base {
+
+    /**
+     * Return URL used for management of plugins of this type.
+     * @return moodle_url
+     */
+    public static function get_manage_url() {
+        return new moodle_url('/local/dash/manageaddon.php', ['subtype' => 'dashaddon']);
+    }
+
+    /**
+     * Get name to identify section
+     *
+     * @return string
+     */
+    public function get_settings_section_name() {
+        return $this->type . '_' . $this->name;
+    }
+
+    /**
+     * Allow uninstall
+     *
+     * @return bool
+     */
+    public function is_uninstall_allowed() {
+        return false;
+    }
+
+    /**
+     * Returns the information about plugin availability
+     *
+     * True means that the plugin is enabled. False means that the plugin is
+     * disabled. Null means that the information is not available, or the
+     * plugin does not support configurable availability or the availability
+     * can not be changed.
+     *
+     * @return null|bool
+     */
+    public function is_enabled() {
+        return !empty(get_config($this->type . '_' . $this->name, 'enabled'));
+    }
 
 }

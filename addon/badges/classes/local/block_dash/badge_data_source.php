@@ -102,4 +102,19 @@ class badge_data_source extends abstract_data_source {
 
         return $filtercollection;
     }
+
+    /**
+     * Set the default preferences of the Badge datasource, force the set the default settings.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function set_default_preferences(&$data) {
+        $configpreferences = $data['config_preferences'];
+        $configpreferences['available_fields']['bd_name']['visible'] = true;
+        $configpreferences['available_fields']['bd_image']['visible'] = true;
+        $configpreferences['available_fields']['bd_origin']['visible'] = true;
+        $configpreferences['available_fields']['bd_dateissued']['visible'] = true;
+        $data['config_preferences'] = $configpreferences;
+    }
 }

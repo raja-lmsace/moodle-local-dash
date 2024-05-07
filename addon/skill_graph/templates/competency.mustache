@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template dashaddon_course_enrols/enrolments
+    @template dashaddon_skill_graph/competency
 
     Example context (json):
     {
@@ -58,27 +58,35 @@
 
 }}
 
-{{#data.datasetcount}}
-<div style="position:relative;height:100%;width:100%">
-    <canvas id="skill-graph-{{uniqueid}}"></canvas>
-    <div class="skill-graph-legend" id="skill-graph-legend-{{uniqueid}}">
-        <ul>
-            <li><span style="background-color:{{data.colors.proficient}}"></span><label>{{#str}} proficient, block_dash {{/str}} </label></li>
-            <li><span style="background-color:{{data.colors.achieved}}"></span><label>{{#str}} achieved, block_dash {{/str}}</label></li>
-            <li><span style="background-color:{{data.colors.notachieved}}"></span><label>{{#str}} notachieved, block_dash {{/str}} </label></li>
-        </ul>
-    </div>
-    <div class="clearfix"></div>
-</div>
-{{/data.datasetcount}}
-{{^data.datasetcount}}
-    {{#noresult}}{{{noresult}}}{{/noresult}}
-{{/data.datasetcount}}
+<!-- Load the progress bar template -->
+{{#data.progressgraph}}
+{{> dashaddon_skill_graph/competency_progress }}
+{{/data.progressgraph}}
 
-{{#js}}
-{{#data.datalabels}}
-require(['jquery', 'dashaddon_skill_graph/skill_graph'], function($, skillGraph) {
-    skillGraph.init('{{uniqueid}}', {{{data.datalabels}}}, {{{data.dataset}}});
-});
-{{/data.datalabels}}
-{{/js}}
+{{^data.progressgraph}}
+    {{#data.datasetcount}}
+    <div style="position:relative;height:100%;width:100%">
+        <canvas id="skill-graph-{{uniqueid}}"></canvas>
+        <div class="skill-graph-legend" id="skill-graph-legend-{{uniqueid}}">
+            <ul>
+                <li><span style="background-color:{{data.colors.proficient}}"></span><label>{{#str}} proficient, block_dash {{/str}} </label></li>
+                <li><span style="background-color:{{data.colors.achieved}}"></span><label>{{#str}} achieved, block_dash {{/str}}</label></li>
+                <li><span style="background-color:{{data.colors.notachieved}}"></span><label>{{#str}} notachieved, block_dash {{/str}} </label></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    {{/data.datasetcount}}
+
+    {{^data.datasetcount}}
+        {{#noresult}}{{{noresult}}}{{/noresult}}
+    {{/data.datasetcount}}
+
+    {{#js}}
+        {{#data.datalabels}}
+        require(['jquery', 'dashaddon_skill_graph/skill_graph'], function($, skillGraph) {
+            skillGraph.init('{{uniqueid}}', {{{data.datalabels}}}, {{{data.dataset}}});
+        });
+        {{/data.datalabels}}
+    {{/js}}
+{{/data.progressgraph}}

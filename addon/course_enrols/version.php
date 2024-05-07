@@ -25,10 +25,10 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'dashaddon_course_enrols';
-$plugin->version = 2022111200;
+$plugin->version = 2024042500;
 $plugin->requires  = 2017051509;
 $plugin->maturity  = MATURITY_ALPHA;
 $plugin->release = '1.0';
 $plugin->dependencies = [
-    'local_dash' => 2022110300
+    'local_dash' => 2022110300,
 ];

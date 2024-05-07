@@ -43,10 +43,17 @@ class customfield_select_attribute extends abstract_field_attribute {
      * @throws \moodle_exception
      */
     public function transform_data($data, \stdClass $record) {
+        global $DB;
         /** @var field_controller $field */
         $field = $this->get_option('field');
 
-        if (method_exists($field, 'get_options')) {
+        if ($field instanceof \stdClass) {
+            if ($DB->get_manager()->table_exists('local_metadata_field')) {
+                $metafield = $DB->get_record("local_metadata_field", ['id' => $field->id]);
+                $options = explode("\n", $metafield->param1);
+            }
+
+        } else if (method_exists($field, 'get_options')) {
             // Moodle 3.10 and up.
             $options = $field->get_options();
         } else {

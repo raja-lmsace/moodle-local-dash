@@ -44,7 +44,7 @@ class activity_progress_bar_attribute extends abstract_field_attribute {
     public function transform_data($data, \stdClass $record) {
         global $OUTPUT;
         return $OUTPUT->render_from_template('local_dash/progress_bar', [
-            'percentage' => $data
+            'percentage' => $data,
         ]);
     }
 }

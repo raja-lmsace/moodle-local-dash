@@ -24,7 +24,6 @@
 namespace local_dash\data_grid\filter;
 
 use block_dash\local\data_grid\filter\condition;
-use local_dash\model\dashboard;
 
 /**
  * Limit dashboards to non-public (logged in dashboards only).

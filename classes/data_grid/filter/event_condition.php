@@ -97,7 +97,7 @@ class event_condition extends condition {
 
         $mform->addElement('autocomplete', $fieldname . '[eventnames]', get_string('events', 'block_dash'), $options, [
             'multiple' => true,
-            'noselectionstring' => get_string('events', 'block_dash')
+            'noselectionstring' => get_string('events', 'block_dash'),
         ]);
         $mform->hideIf($fieldname . '[eventnames]', $fieldname . '[enabled]');
     }

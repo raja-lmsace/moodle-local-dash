@@ -15,20 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Library functions defined for skill graph widget.
+ * Library functions defined for dashaddon content widget.
  *
- * @package    dashaddon_skill_graph
+ * @package    dashaddon_content
  * @copyright  2023 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
- * Register the content addon as widget to dash.
- *
- * @return array List of widgets.
- */
-
- /**
  * Dash plugin file definitions, List of fileareas used in local_dash plugin.
  *
  * @param stdclass $course
@@ -40,9 +34,10 @@
  * @param array $options
  * @return void
  */
-function dashaddon_content_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
+function dashaddon_content_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
 
-    if ($context->contextlevel == CONTEXT_BLOCK && (stripos($filearea, 'content') !== false || stripos($filearea, 'backgroundimage') !== false)) {
+    if ($context->contextlevel == CONTEXT_BLOCK
+        && (stripos($filearea, 'content') !== false || stripos($filearea, 'backgroundimage') !== false)) {
         // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
         $itemid = array_shift($args);
         // Use the itemid to retrieve any relevant data records and perform any security checks to see if the

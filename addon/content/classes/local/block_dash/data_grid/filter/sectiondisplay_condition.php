@@ -115,12 +115,11 @@ class sectiondisplay_condition extends condition {
         moodleform $moodleform,
         MoodleQuickForm $mform,
         $fieldnameformat = 'filters[%s]'): void {
-        global $DB, $PAGE;
+        global $PAGE;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
 
         $fieldname = sprintf($fieldnameformat, $this->get_name());
-
 
         $courseid = $PAGE->course->id;
         if ($courseid != SITEID) {
@@ -133,7 +132,8 @@ class sectiondisplay_condition extends condition {
             foreach ($sectionsinfo as $sectionid => $info) {
                 $options[$sectionid] = $format->get_section_name($info);
             }
-            $sections = $mform->addElement('autocomplete', $fieldname . '[sections]', get_string('contentsections', 'block_dash'), $options);
+            $sections = $mform->addElement('autocomplete', $fieldname . '[sections]',
+                get_string('contentsections', 'block_dash'), $options);
             $sections->setMultiple(true);
 
             $mform->hideIf($fieldname . '[sections]', $fieldname . '[enabled]');

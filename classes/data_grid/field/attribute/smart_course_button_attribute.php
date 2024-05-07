@@ -48,6 +48,10 @@ class smart_course_button_attribute extends abstract_field_attribute {
     public function transform_data($data, \stdClass $record) {
         global $DB, $USER;
 
+        if (!$data) {
+            return '';
+        }
+
         $coursecontext = \context_course::instance($data);
 
         $enrolled = is_enrolled($coursecontext, $USER, false, false);

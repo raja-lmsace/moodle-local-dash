@@ -67,7 +67,6 @@ class completion_filter extends select_filter {
         $inparams = [];
         if ($sql) {
             $params['fueuserid'] = $USER->id;
-
             $courses = $DB->get_records_sql(
                 'SELECT ue.courseid FROM (
                     SELECT

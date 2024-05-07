@@ -38,6 +38,7 @@ use block_dash\local\data_grid\field\attribute\moodle_url_attribute;
 use block_dash\local\data_grid\field\attribute\linked_data_attribute;
 use dashaddon_badges\local\block_dash\data_grid\field\attribute\badge_origin_attribute;
 use dashaddon_badges\local\block_dash\data_grid\field\attribute\badge_image_url_attribute;
+use block_dash\local\dash_framework\structure\field_interface;
 
 /**
  * Badges table structure definitions for badge datasource.
@@ -69,41 +70,41 @@ class badge_table extends table {
     public function get_fields(): array {
         $fields = [
             new field('id', new \lang_string('badge', 'dashaddon_badges'), $this, null, [
-                new identifier_attribute()
+                new identifier_attribute(),
             ]),
             new field('name', new \lang_string('badge', 'dashaddon_badges'), $this),
 
             new field('dateissued', new \lang_string('dateissued', 'dashaddon_badges'), $this, [
-                'select' => '(SELECT bi.dateissued FROM {badge_issued} bi where bi.badgeid = bd.id AND bi.userid = u.id)'
+                'select' => '(SELECT bi.dateissued FROM {badge_issued} bi where bi.badgeid = bd.id AND bi.userid = u.id)',
             ], [
-                new date_attribute()
-            ]),
+                new date_attribute(),
+            ], [], field_interface::VISIBILITY_VISIBLE, ''),
 
             new field('image', new lang_string('badgeimage', 'dashaddon_badges'), $this, 'bd.id', [
-                new badge_image_url_attribute(), new image_attribute()
+                new badge_image_url_attribute(), new image_attribute(),
             ]),
 
             new field('imageurl', new lang_string('badgeimageurl', 'dashaddon_badges'), $this, 'bd.id', [
-                new badge_image_url_attribute(), new image_url_attribute()
+                new badge_image_url_attribute(), new image_url_attribute(),
             ]),
 
             new field('badgeurl', new lang_string('badgeurl', 'dashaddon_badges'), $this, 'bd.id', [
-                new moodle_url_attribute(['url' => new moodle_url('/badges/overview.php', ['id' => 'bd_id'] ) ])
+                new moodle_url_attribute(['url' => new moodle_url('/badges/overview.php', ['id' => 'bd_id'] ) ]),
             ]),
 
             new field('badgebutton', new lang_string('badgebutton', 'dashaddon_badges'), $this, 'bd.id', [
                 new moodle_url_attribute(['url' => new moodle_url('/badges/overview.php', ['id' => 'bd_id'] ) ]),
-                new button_attribute(['label' => new lang_string('viewbadge', 'dashaddon_badges')])
+                new button_attribute(['label' => new lang_string('viewbadge', 'dashaddon_badges')]),
             ]),
 
             new field('image_link', new lang_string('badgeimagelink', 'dashaddon_badges'), $this, 'bd.id', [
                 new badge_image_url_attribute(), new image_attribute(),
-                new linked_data_attribute(['url' => new moodle_url('/badges/overview.php', ['id' => 'bd_id'])])
+                new linked_data_attribute(['url' => new moodle_url('/badges/overview.php', ['id' => 'bd_id'])]),
             ]),
 
             new field('origin', new lang_string('origin', 'dashaddon_badges'), $this, 'coalesce(bd.courseid, 1)', [
-                new badge_origin_attribute()
-            ])
+                new badge_origin_attribute(),
+            ]),
         ];
         return $fields;
     }

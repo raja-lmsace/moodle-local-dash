@@ -25,10 +25,10 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'dashaddon_badges';
-$plugin->version = 2021121500;
+$plugin->version = 2024042500;
 $plugin->requires  = 2017051509;
 $plugin->maturity  = MATURITY_ALPHA;
 $plugin->release = '1.1';
 $plugin->dependencies = [
-    'local_dash' => 2021022300
+    'local_dash' => 2021022300,
 ];

@@ -34,6 +34,41 @@ namespace dashaddon_course_completions;
 class completions_test extends \advanced_testcase {
 
     /**
+     * Test user 1
+     *
+     * @var stdClass
+     */
+    public $user;
+
+    /**
+     * List of test users.
+     *
+     * @var array
+     */
+    public $users;
+
+    /**
+     * Test course 1
+     *
+     * @var stdClass
+     */
+    public $course1;
+
+    /**
+     * Test course 2
+     *
+     * @var stdClass
+     */
+    public $course2;
+
+    /**
+     * Test course 3
+     *
+     * @var stdClass
+     */
+    public $course3;
+
+    /**
      * This method is called before each test.
      */
     protected function setUp(): void {
@@ -41,9 +76,9 @@ class completions_test extends \advanced_testcase {
         $this->setAdminUser();
         global $USER;
         $this->user = $USER;
-        $this->course1 = $this->getDataGenerator()->create_course( array('enablecompletion' => 1) );
-        $this->course2 = $this->getDataGenerator()->create_course( array('enablecompletion' => 1) );
-        $this->course3 = $this->getDataGenerator()->create_course( array('enablecompletion' => 1) );
+        $this->course1 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
+        $this->course2 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
+        $this->course3 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
         foreach (range(1, 5) as $user) {
             $this->users[$user] = self::getDataGenerator()->create_user();
         }
@@ -76,7 +111,7 @@ class completions_test extends \advanced_testcase {
 
         $configdata = (object) [
             'title' => $title,
-            'data_source_idnumber' => $widget
+            'data_source_idnumber' => $widget,
         ];
 
         $this->create_block($this->construct_user_page($USER));
@@ -130,23 +165,23 @@ class completions_test extends \advanced_testcase {
 
         $this->setUser($user);
 
-        $assign = $this->getDataGenerator()->create_module('assign', array('course' => $this->course1->id),
-            array('completion' => 1));
-        $data = $this->getDataGenerator()->create_module('data', array('course' => $this->course1->id),
-            array('completion' => 1));
-        $this->getDataGenerator()->create_module('page', array('course' => $this->course1->id),
-            array('completion' => 1));
-        $this->getDataGenerator()->create_module('page', array('course' => $this->course1->id),
-            array('completion' => 1));
+        $assign = $this->getDataGenerator()->create_module('assign', ['course' => $this->course1->id],
+            ['completion' => 1]);
+        $data = $this->getDataGenerator()->create_module('data', ['course' => $this->course1->id],
+            ['completion' => 1]);
+        $this->getDataGenerator()->create_module('page', ['course' => $this->course1->id],
+            ['completion' => 1]);
+        $this->getDataGenerator()->create_module('page', ['course' => $this->course1->id],
+            ['completion' => 1]);
 
         // Mark two of them as completed for a user.
         $cmassign = get_coursemodule_from_id('assign', $assign->cmid);
         $cmdata = get_coursemodule_from_id('data', $data->cmid);
         // Handle overall aggregation.
-        $aggdata = array(
+        $aggdata = [
             'course'        => $this->course1->id,
-            'criteriatype'  => COMPLETION_CRITERIA_TYPE_ACTIVITY
-        );
+            'criteriatype'  => COMPLETION_CRITERIA_TYPE_ACTIVITY,
+        ];
         $criteriadata = new \stdClass();
         $criteriadata->id = $this->course1->id;
         $criteriadata->criteria_activity[$cmdata->id] = 1;
@@ -167,7 +202,7 @@ class completions_test extends \advanced_testcase {
         $ccompletion = new \completion_completion(['course' => $this->course1->id,
                                                   'userid' => $user->id,
                                                   'timeenrolled' => time(),
-                                                  'timestarted' => time()
+                                                  'timestarted' => time(),
                                                 ]);
         // Now, mark the course as completed.
         $ccompletion->mark_complete();

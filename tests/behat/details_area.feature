@@ -20,15 +20,12 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
       | student5 | Student   | Five     | student3@example.com |
     And I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
-    And I turn block editing mode on
-    And I add the "Dash" block
-    And I click on "#id_config_data_source_idnumber_local_dashlocalblock_dashcourses_data_source" "css_element"
+    And I turn dash block editing mode on
+    And I create dash "Courses" datasource
     And I configure the "New Dash" block
     And I set the field "Block title" to "Course datasource"
     And I press "Save changes"
-    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
-    And I should see "Preferences"
-    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
+    And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     Then I click on "General" "link"
     And I set the field "Layout" to "Grid layout"
@@ -46,14 +43,12 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
   Scenario: Check expand area detials in default layouts.
     Given I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
-    And I turn block editing mode on
+    And I turn dash block editing mode on
     Then ".table.dash-table" "css_element" should not exist
     Then ".card-layout-default.card-layout-row" "css_element" should exist
     Then ".card-layout-default .card-block:nth-child(1) .card .card-body" "css_element" should exist
     Then I should see "C1" in the ".card-layout-default .card-block:nth-child(1) .card-title-sub" "css_element"
-    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
-    And I should see "Preferences"
-    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
+    And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     And I set the field "Details area" to "Expanding"
     Then I set the field "config_preferences[details_bg_color]" to "#030096"
@@ -70,10 +65,8 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
   Scenario: Check floating area detials in default layouts.
     Given I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
-    And I turn block editing mode on
-    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
-    And I should see "Preferences"
-    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
+    And I turn dash block editing mode on
+    And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     Then I should see "Details area"
     And I set the field "Details area" to "Floating"
@@ -87,10 +80,8 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
   Scenario: Check modal area detials in default layouts.
     Given I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
-    And I turn block editing mode on
-    And I click on ".dropdown-toggle" "css_element" in the ".block_dash .action-menu-trigger" "css_element"
-    And I should see "Preferences"
-    And I click on "Preferences" "link" in the ".block_dash .dropdown-menu" "css_element"
+    And I turn dash block editing mode on
+    And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     Then I should see "Details area"
     And I set the field "Details area" to "Modal"

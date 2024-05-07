@@ -1,0 +1,48 @@
+
+{{#data.noresult}}
+{{#noresult}}{{{noresult}}}{{/noresult}}
+{{/data.noresult}}
+
+{{^data.noresult}}
+<div class="learner-dashboard-block">
+    <div class="learner-profile-block">
+        {{#data.userinfostatus}}
+            <div class="dashboard-profile">
+                {{#preferences.profileimage}}
+                <div class="img">
+                    {{#data.userinfo.gameavatar}}
+                    <img class="img-responsive" src="{{{data.userinfo.gameavatar}}}" role="presentation" alt="{{{data.userinfo.u_fullname}}} user game avatar">
+                    {{/data.userinfo.gameavatar}}
+
+                    {{^data.userinfo.gameavatar}}
+                        {{{data.userinfo.u_picture}}}
+                    {{/data.userinfo.gameavatar}}
+                </div>
+                {{/preferences.profileimage}}
+
+                <div class="profile-info">
+
+                    {{#preferences.fullname}}
+                        <h3>{{{data.userinfo.u_fullname}}}</h3>
+                    {{/preferences.fullname}}
+
+                    <p>{{{data.userinfo.userinfo1}}}</p>
+                    <p>{{{data.userinfo.userinfo2}}}</p>
+                    <p>{{{data.userinfo.userinfo3}}}</p>
+
+                </div>
+            </div>
+        {{/data.userinfostatus}}
+
+        {{#data.kpistatus}}
+            <div class="dashboard-stats-block">
+                {{#data.kpi}}
+                    <div class="dash-myprofile-status dashboard-{{name}}-stats {{customclass}}">
+                        <p><b>{{{value}}}</b>  {{#label}} <span> {{{label}}} </span> {{/label}}  </p>
+                    </div>
+                {{/data.kpi}}
+            </div>
+        {{/data.kpistatus}}
+    </div>
+</div>
+{{/data.noresult}}

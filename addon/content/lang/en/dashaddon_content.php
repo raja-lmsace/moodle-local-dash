@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Dash - Content addon';
+$string['pluginname'] = 'Addon: Content';
 $string['datasource:badge_data_source'] = 'Badges';
 $string['datasource:content_customtype'] = 'Custom content';
 $string['fullwidth'] = 'Full width';

@@ -154,7 +154,7 @@ class completion_widget extends abstract_widget {
                 "notstarted" => self::COLORNOTSTARTED,
                 "white"      => '#FFFFFF',
             ],
-            'branch'     => $CFG->branch > 400 ? 'mooodle-chatimage' : ''
+            'branch'     => $CFG->branch > 400 ? 'mooodle-chatimage' : '',
         ];
 
         // Can't able to use the global variables for multiple instance.
@@ -169,7 +169,7 @@ class completion_widget extends abstract_widget {
     }
 
     /**
-     * Fetch the accessible courses based on the conditions and process the data to create doughnut chart using moodle chart api
+     * Fetch the accessible courses based on the conditions and process the data to create doughnut chart using moodle chart api.
      *
      * @return array
      */
@@ -188,18 +188,18 @@ class completion_widget extends abstract_widget {
 
         $courses = [];
 
-        $sql = "SELECT ue.*, e.courseid, cp.timeenrolled, cp.timecompleted, cp.timestarted, ue.userid, c.fullname, ra.user
+        $sql = "SELECT ue.*, e.courseid, cp.timeenrolled, cp.timecompleted, cp.timestarted, ue.userid, c.fullname, ra.userid
             from {user_enrolments} ue
             JOIN {enrol} e ON e.id = ue.enrolid
             JOIN {context} ctx ON ctx.instanceid = e.courseid AND ctx.contextlevel = :contextlevel
-            JOIN (SELECT DISTINCT userid as user, contextid
+            JOIN (SELECT DISTINCT userid, contextid
                 FROM {role_assignments}
                 WHERE roleid $roleinsql
-            ) ra ON ra.user = ue.userid AND ra.contextid = ctx.id
+            ) ra ON (ra.userid = ue.userid) AND ra.contextid = ctx.id
             JOIN {user} u ON u.id = ue.userid  AND u.deleted != 1
             JOIN {course} c ON c.id = e.courseid
             LEFT JOIN {course_completions} cp ON cp.course = e.courseid AND cp.userid = ue.userid
-            WHERE c.enablecompletion = 1 AND ra.user = ue.userid $conditionsql ORDER BY c.id ASC";
+            WHERE c.enablecompletion = 1 AND (ra.userid = ue.userid) $conditionsql ORDER BY c.id ASC";
 
         $params['contextlevel'] = CONTEXT_COURSE; // Course context level.
         $recordset = $DB->get_recordset_sql($sql, $roleinparams + $params);
@@ -217,7 +217,7 @@ class completion_widget extends abstract_widget {
             $course['dataset'] = [
                 $report['completed'],
                 $report['inprogress'],
-                $report['notyetstarted']
+                $report['notyetstarted'],
             ];
             // Make the enrollments empty to prevent the data limit reach issue for JS.
             $course['enrollments'] = [];
@@ -288,7 +288,6 @@ class completion_widget extends abstract_widget {
 
         $this->before_data();
         list($sql, $params) = $this->get_filter_collection()->get_sql_and_params();
-
         return $sql ? [" AND ".$sql[0], $params] : [];
     }
 

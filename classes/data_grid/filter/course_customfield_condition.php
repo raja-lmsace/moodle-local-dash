@@ -122,7 +122,7 @@ class course_customfield_condition extends condition {
      * Get custom field id from shortname.
      *
      * @return int
-     */
+     */ 
     public function get_field_record() {
         global $DB;
         if (block_dash_is_totara()) {

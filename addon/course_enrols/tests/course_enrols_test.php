@@ -25,12 +25,75 @@
 namespace dashaddon_course_enrols;
 use context_course;
 use stdClass;
-use \dashaddon_course_enrols\info;
+use dashaddon_course_enrols\info;
 
 /**
  * Unit test for course_enrols
  */
 class course_enrols_test extends \advanced_testcase {
+
+    /**
+     * Student role.
+     *
+     * @var stdClass
+     */
+    public $studentrole;
+
+    /**
+     * Course 1 context.
+     *
+     * @var stdClass
+     */
+    public $coursecontext1;
+
+    /**
+     * Test course 1.
+     *
+     * @var stdClass
+     */
+    public $course1;
+
+    /**
+     * Test course 2 context.
+     *
+     * @var stdClass
+     */
+    public $coursecontext2;
+
+    /**
+     * Test user1.
+     *
+     * @var stdClass
+     */
+    public $user;
+
+    /**
+     * Test course 2.
+     *
+     * @var stdClass
+     */
+    public $course2;
+
+    /**
+     * Course context of course 3.
+     *
+     * @var stdClass
+     */
+    public $coursecontext3;
+
+    /**
+     * Test course 3.
+     *
+     * @var stdClass
+     */
+    public $course3;
+
+    /**
+     * Manager user.
+     *
+     * @var stdClass
+     */
+    public $dashenrolmanager;
 
     /**
      * Set the admin user as User.
@@ -41,25 +104,25 @@ class course_enrols_test extends \advanced_testcase {
         global $DB, $CFG, $PAGE;
         require_once($CFG->dirroot.'/local/dash/addon/course_enrols/locallib.php');
         require_once($CFG->dirroot.'/local/dash/addon/course_enrols/lib.php');
-        $this->studentrole = $DB->get_record('role', array('shortname' => 'student'));
+        $this->studentrole = $DB->get_record('role', ['shortname' => 'student']);
         $this->resetAfterTest(true);
         $this->user = $this->getDataGenerator()->create_user();
         $this->course1 = $this->getDataGenerator()->create_course([
             'name' => 'Course 1',
         ]);
-        $this->coursecontext1 = context_course::instance($this->course1->id);
+        $this->coursecontext1 = \context_course::instance($this->course1->id);
         $this->getDataGenerator()->enrol_user($this->user->id, $this->course1->id, 'student', 'manual'
         , time(), strtotime("+10 days"), ENROL_USER_ACTIVE);
         $this->course2 = $this->getDataGenerator()->create_course([
             'name' => 'Course 2',
         ]);
-        $this->coursecontext2 = context_course::instance($this->course2->id);
+        $this->coursecontext2 = \context_course::instance($this->course2->id);
         $this->getDataGenerator()->enrol_user($this->user->id, $this->course2->id, 'student');
 
         $this->course3 = $this->getDataGenerator()->create_course([
             'name' => 'Course 3',
         ]);
-        $this->coursecontext3 = context_course::instance($this->course3->id);
+        $this->coursecontext3 = \context_course::instance($this->course3->id);
         $this->getDataGenerator()->enrol_user($this->user->id, $this->course3->id, 'student');
         $this->dashenrolmanager = new \dash_course_enrolments($PAGE, $this->course1);
     }
@@ -168,14 +231,14 @@ class course_enrols_test extends \advanced_testcase {
     public function test_course_enrols_get_sections() {
         global $DB, $CFG;
         require_once($CFG->dirroot.'/completion/criteria/completion_criteria_activity.php');
-        $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1], array('createsections' => true));
+        $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1], ['createsections' => true]);
         $user = $this->getDataGenerator()->create_user();
         $assign1 = $this->getDataGenerator()->create_module('assign', ['course' => $course->id,
             'section' => 1, 'name' => 'Test 1'], ['completion' => 1]);
         $assign2 = $this->getDataGenerator()->create_module('assign', ['course' => $course->id,
             'section' => 1, 'name' => 'Test 2'], ['completion' => 1]);
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $this->studentrole->id);
-        $section = $DB->get_record('course_sections', array('course' => $course->id, 'section' => 1));
+        $section = $DB->get_record('course_sections', ['course' => $course->id, 'section' => 1]);
         $criteriadata = (object) [
             'id' => $course->id,
             'criteria_activity' => [$assign2->cmid => 1],

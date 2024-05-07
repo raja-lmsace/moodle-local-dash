@@ -1,24 +1,81 @@
 <?php
+// This file is part of The Bootstrap Moodle theme
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Dash content widget - Datasource defined.
+ *
+ * @package    dashaddon_content
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace dashaddon_content\local\block_dash;
 
-use \dashaddon_content\local\block_dash\data_grid\filter\sectiondisplay_condition;
+use dashaddon_content\local\block_dash\data_grid\filter\sectiondisplay_condition;
 use block_dash\local\data_custom\abstract_custom_type;
 use block_dash\local\data_source\form\preferences_form;
 use block_dash\local\data_grid\filter\filter_collection;
 use renderer_base;
 use html_writer;
 
+/**
+ * Datasource and method of the dash content widget definitions.
+ */
 class content_customtype extends abstract_custom_type {
 
+    /**
+     * Represets the layout width is full width.
+     * @var int
+     */
     public const LAYOUTFULL = 1;
+
+    /**
+     * Represets the layout width is double, both are equal width.
+     * @var int
+     */
     public const LAYOUTDOUBLEEQUAL = 2;
+
+    /**
+     * Represets the layout width is double layout, left layout is 3/2 .
+     * @var int
+     */
     public const LAYOUTDOUBLELEFT = 3;
+
+    /**
+     * Represets the layout width is double layout, right layout is 3/2.
+     * @var int
+     */
     public const LAYOUTDOUBLERIGHT = 4;
+
+    /**
+     * Represets the layout width is triple layout.
+     * @var int
+     */
     public const LAYOUTTRIPLE = 5;
 
-
+    /**
+     * Represets the content display state to display on all pages.
+     * @var int
+     */
     public const DISPLAYALL = 0;
+
+    /**
+     * Represets the content display state to display only on section pages.
+     * @var int
+     */
     public const DISPLAYSECTION = 1;
 
     /**
@@ -41,7 +98,6 @@ class content_customtype extends abstract_custom_type {
         return has_capability('dashaddon/content:managecontent', $context);
     }
 
-
     /**
      * Build the features config to display in the block to select after insert the dash block.
      *
@@ -50,7 +106,7 @@ class content_customtype extends abstract_custom_type {
      * @return void
      */
     public static function get_features_config(&$mform, $source) {
-
+        global $PAGE;
         $layouts = [
             self::LAYOUTFULL => get_string('layoutfull', 'block_dash'),
             self::LAYOUTDOUBLEEQUAL => get_string('layoutdoubleequal', 'block_dash'),
@@ -67,6 +123,11 @@ class content_customtype extends abstract_custom_type {
         $customoptions[] = $mform->createElement('radio', 'config_data_source_idnumber', '', $source['name'], self::class);
         $customoptions[] = $mform->createElement('html', html_writer::end_div());
 
+        if (self::get_single_section()) {
+            $customoptions[] = $mform->createElement('hidden', 'config_preferences[singlesection]', self::get_single_section());
+            $mform->setType('config_preferences[singlesection]', PARAM_INT);
+        }
+
         foreach ($layouts as $key => $value) {
             $customoptions[] = $mform->createElement('html', \html_writer::start_div('content-layout-item addon-suboptions',
                 ['data-target' => 'subsource-config']));
@@ -76,7 +137,7 @@ class content_customtype extends abstract_custom_type {
 
         $customoptions[] = $mform->createElement('html', html_writer::end_div());
 
-        $mform->addGroup($customoptions, 'customfeature', get_string('content', 'dashaddon_content'), array(' '), false);
+        $mform->addGroup($customoptions, 'customfeature', get_string('content', 'dashaddon_content'), [' '], false);
         $mform->setType('customfeature', PARAM_TEXT);
 
         return $customoptions ?? [];
@@ -238,7 +299,7 @@ class content_customtype extends abstract_custom_type {
         $contenttext = $content->content ?? '';
         $bgstyle = $content->backgroundcolor ? "background-color:".$content->backgroundcolor.";" : '';
         // Text color.
-        $bgstyle .= isset($content->textcolor) && $content->textcolor  ? "color:".$content->textcolor.";" : "";
+        $bgstyle .= isset($content->textcolor) && $content->textcolor ? "color:".$content->textcolor.";" : "";
 
         // Remove the empty p tags from content.
         $pattern = "/<p[^>]*><br><\\/p[^>]*>/";
@@ -268,7 +329,7 @@ class content_customtype extends abstract_custom_type {
             'backgroundimage' => $bgimageurl,
             'content' => $contenttext
                 ? format_text($contenttext, $content->contentformat, ['overflow' => false, 'noclean' => true]) : '',
-            'showimage' => $contenttext ? false : true
+            'showimage' => $contenttext ? false : true,
         ];
     }
 
@@ -301,8 +362,26 @@ class content_customtype extends abstract_custom_type {
         return $url ?? '';
     }
 
-    public function build_features_list(&$mform, &$customoptions) {
-
+    /**
+     * Set the default preferences of the content addon, force the content to sectiondisplay to the current section.
+     *
+     * @param array $data
+     * @return void
+     */
+    public function set_default_preferences(&$data) {
+        // Set the section default for single section in dashaddon_content.
+        if (get_config("local_dash", "restrictcurrentsection")) {
+            $configpreferences = $data['config_preferences'];
+            if (isset($data['config_data_source_idnumber']) &&
+                $data['config_data_source_idnumber'] == 'dashaddon_content\local\block_dash\content_customtype') {
+                if (isset($configpreferences['singlesection'])
+                    && $configpreferences['singlesection'] && !isset($configpreferences['sectiondisplay'])) {
+                    $configpreferences['filters']['sectiondisplay']['enabled'] = 1;
+                    $configpreferences['filters']['sectiondisplay']['sections'] = [$configpreferences['singlesection']];
+                }
+            }
+            $data['config_preferences'] = $configpreferences;
+        }
     }
 
     /**
@@ -331,12 +410,32 @@ class content_customtype extends abstract_custom_type {
 
         }
 
-
         if ($layout = $this->get_layout()) {
             $layout->build_preferences_form($form, $mform);
         }
 
         $mform->addElement('html', get_string('fieldalert', 'block_dash'), 'fieldalert');
+    }
+
+    /**
+     * Get the section of the page, if the page is single section.
+     *
+     * @return int|bool
+     */
+    public static function get_single_section() {
+        global $PAGE;
+        $courseid = $PAGE->course->id;
+        if ($courseid != SITEID) {
+            $format = course_get_format($PAGE->course->id);
+            $course = $format->get_course();
+            if (isset($course->coursedisplay) && $course->coursedisplay == COURSE_DISPLAY_MULTIPAGE) {
+                $params = $PAGE->url->params();
+                if (isset($params['section'])) {
+                    return $params['section'];
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -346,7 +445,6 @@ class content_customtype extends abstract_custom_type {
      * @throws coding_exception
      */
     public function build_filter_collection() {
-        global $PAGE;
 
         $filtercollection = new filter_collection(get_class($this), $this->get_context());
 
@@ -368,9 +466,11 @@ class content_customtype extends abstract_custom_type {
 
     /**
      * Copy any block-specific data when copying to a new block instance.
-     * 
-     * @param int $fromid the id number of the block instance to copy from
-     * @return boolean
+     *
+     * @param int $frominstanceid the id number of the block instance to copy from.
+     * @param int $currentcontextid
+     *
+     * @return bool
      */
     public function instance_copy($frominstanceid, $currentcontextid) {
 

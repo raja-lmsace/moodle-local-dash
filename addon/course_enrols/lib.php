@@ -32,8 +32,8 @@ function dashaddon_course_enrols_register_widget() {
         [
             'name' => get_string('widget:course_enrols', 'dashaddon_course_enrols'),
             'identifier' => dashaddon_course_enrols\widget\enrolments_widget::class,
-            'help' => 'widget:course_enrols'
-        ]
+            'help' => 'widget:course_enrols',
+        ],
     ];
 }
 
@@ -56,7 +56,7 @@ function dashaddon_course_enrols_output_fragment_user_enrolment_form($args) {
     $customdata = [
         'ue' => $userenrolment,
         'modal' => true,
-        'enrolinstancename' => $plugin->get_instance_name($instance)
+        'enrolinstancename' => $plugin->get_instance_name($instance),
     ];
 
     // Set the data if applicable.
@@ -101,10 +101,10 @@ function dashaddon_enrolments_get_all_users_courses($userid, $onlyactive = false
 
     // Guest account does not have any courses.
     if (isguestuser($userid) || empty($userid)) {
-        return(array());
+        return [];
     }
 
-    $fields = array('*');
+    $fields = ['*'];
 
     $orderby = "";
     if ($sort) {
@@ -112,7 +112,7 @@ function dashaddon_enrolments_get_all_users_courses($userid, $onlyactive = false
         $orderby = "ORDER BY $sort";
     }
 
-    $params = array('siteid' => SITEID);
+    $params = ['siteid' => SITEID];
 
     if ($onlyactive) {
         $subwhere = "WHERE ue.status = :active AND e.status = :enabled AND ue.timestart < :now1
@@ -186,5 +186,6 @@ function dashaddon_enrolments_get_all_users_courses($userid, $onlyactive = false
           $orderby ";
     $count = $DB->get_records_sql($countsql, $params + $conditionparams);
     $count = count((array)$count);
+
     return [$courses, $count];
 }

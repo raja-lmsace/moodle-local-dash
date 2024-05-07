@@ -1,0 +1,49 @@
+<div class="grid-layout-block">
+    <div class="grid-layout">
+        <div class="card-img-top img-block">
+            <img src="{{courseimg}}" alt="img-1">
+        </div>
+
+        <div class="progress-block">
+            <div class="progress">
+                <div class="progress-bar{{#progress}} progress-bg-success{{/progress}}{{^progress}} progress-not-started{{/progress}}" role="progressbar" style= "{{#progress}}width: {{progress}}%{{/progress}}"
+                    aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100">{{progress}}%</div>
+            </div>
+        </div>
+
+
+        <div class="content-block card-body">
+            <h2 class="card-title">{{coursename}}</h2>
+            <div class="summary-block card-text">
+                <p>{{{summary}}}</p>
+            </div>
+            <div class="btn-block">
+            {{^notstarted}}
+                <a href="{{courseurl}}" class="btn btn-primary">{{^completed}}{{#str}} resumecourse, block_dash{{/str}}{{/completed}} {{#completed}}{{#str}} completedcourse, block_dash{{/str}}{{/completed}}</a>
+            {{/notstarted}}
+            {{#notstarted}}
+                <a href="{{courseurl}}" class="btn btn-primary">{{^completed}}{{#str}} startcourse, block_dash{{/str}}{{/completed}} {{#completed}}{{#str}} completedcourse, block_dash{{/str}}{{/completed}}</a>
+            {{/notstarted}}
+            </div>
+        </div>
+    </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {{#prevcourse}}
+            <li class="page-item prev-item" data-circle="{{prevcoursecircle}}"><a class="page-link" href="#"><i class="fa fa-angle-double-left"></i> Previous</a>
+                <div class="course-pagination">
+                    <a>{{prevcourse}}</a>
+                </div>
+            </li>
+            {{/prevcourse}}
+
+            {{#nextcourse}}
+            <li class="page-item next-item" data-circle="{{nextcoursecircle}}"><a class="page-link" href="#">Next <i class="fa fa-angle-double-right"></i></a>
+                <div class="course-pagination">
+                    <a>{{nextcourse}}</a>
+                </div>
+            </li>
+            {{/nextcourse}}
+        </ul>
+    </nav>
+</div>

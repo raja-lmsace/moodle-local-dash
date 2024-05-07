@@ -1,18 +1,38 @@
 <?php
+// This file is part of The Bootstrap Moodle theme
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Dash content widget form to add content
+ *
+ * @package    dashaddon_content
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace dashaddon_content;
 
+defined('MOODLE_INTERNAL') || die();
+
 use context;
-use context_block;
 use moodle_url;
-use core_external\external_api;
-use course_modinfo;
-use dashaddon_content\local\block_dash\content_customtype;
-use local_ludemy\widget_fields;
-use local_ludemy\plugininfo\aceblock;
 
 require_once($CFG->dirroot.'/lib/formslib.php');
 
+/**
+ * Dash content widget dynamic form to setup content of the layout.
+ */
 class contentform extends \core_form\dynamic_form {
 
     /**
@@ -54,7 +74,8 @@ class contentform extends \core_form\dynamic_form {
         $mform->setType('content_preferences[textcolor]', PARAM_RAW);
 
         // Background image.
-        $mform->addElement('filemanager', 'content_preferences[backgroundimage]', get_string('backgroundimage', 'block_dash'), null, $editor);
+        $mform->addElement('filemanager', 'content_preferences[backgroundimage]',
+            get_string('backgroundimage', 'block_dash'), null, $editor);
 
     }
 
@@ -72,7 +93,7 @@ class contentform extends \core_form\dynamic_form {
      * Check the access of the current user for this form submission.
      */
     protected function check_access_for_dynamic_submission(): void {
-        // TODO: Validatation of user capability goes here.
+        // Validatation of user capability goes here.
     }
 
     /**
@@ -149,10 +170,6 @@ class contentform extends \core_form\dynamic_form {
                 if (isset($defaults['preferences']['content_preferences'][$layoutid])) {
                     $contentpreference = $defaults['preferences']['content_preferences'][$layoutid];
                     $defaults['content_preferences'] = (array) $contentpreference; // Setup default preference.
-                    /* $defaults['content_preferences']['content_editor'] = [
-                        'text' => $contentpreference->content, //  file_rewrite_pluginfile_urls($contentpreference->content, 'pluginfile.php', $this->get_context_for_dynamic_submission()->id, 'dashaddon_content', 'content', $blockid),
-                        'format' => $contentpreference->contentformat
-                    ]; */
                 }
             }
         }
@@ -185,14 +202,13 @@ class contentform extends \core_form\dynamic_form {
      */
     public function data_preprocessing(&$defaultvalues) {
 
-        // print_r($context);
         // Prepare the editor to support files.
         $defaultvalues = (object) $defaultvalues; // Convert to object, file manager methods require the objects.
 
         // Content preferences.
         $contentpreferences = (object) $defaultvalues->content_preferences;
 
-        $blockid = $defaultvalues->blockid ?? 0; // Use the ludemy id as item id. Blockinstanceid
+        $blockid = $defaultvalues->blockid ?? 0; // Use the ludemy id as item id. Blockinstanceid.
 
         // Block context.
         $context = \context_block::instance($blockid);
@@ -202,7 +218,7 @@ class contentform extends \core_form\dynamic_form {
             // Other filearea goes here in future.
         ];
         $filemanagers = [
-            'backgroundimage' => 'backgroundimage'
+            'backgroundimage' => 'backgroundimage',
         ];
 
         $layoutid = $this->optional_param('layoutid', 'layout1', PARAM_ALPHANUMEXT);
@@ -217,7 +233,8 @@ class contentform extends \core_form\dynamic_form {
 
             $filearea .= '_' . $layoutid; // Filearea with layout.
             $contentpreferences = file_prepare_standard_editor(
-                $contentpreferences, $configname, $this->get_editor_options($context), $context, 'dashaddon_content', $filearea, $blockid
+                $contentpreferences, $configname, $this->get_editor_options($context),
+                $context, 'dashaddon_content', $filearea, $blockid
             );
         }
 
@@ -259,7 +276,7 @@ class contentform extends \core_form\dynamic_form {
 
         $contentpreferences = (object) $data->content_preferences;
 
-        $blockid = $data->blockid ?? 0; // Use the ludemy id as item id. blockinstanceid
+        $blockid = $data->blockid ?? 0; // Use the ludemy id as item id. blockinstanceid.
 
         // Block context.
         $context = \context_block::instance($blockid);
@@ -270,20 +287,18 @@ class contentform extends \core_form\dynamic_form {
         ];
 
         $filemanagers = [
-            'backgroundimage' => 'backgroundimage'
+            'backgroundimage' => 'backgroundimage',
         ];
 
         $layoutid = $this->optional_param('layoutid', 'layout1', PARAM_ALPHANUMEXT);
 
         foreach ($editors as $configname => $filearea) {
             // Verify the element is editor.
-           /*  if (!isset($contentpreferences->$configname) && !isset($contentpreferences->{$configname.'_editor'})) {
-                continue;
-            } */
             $filearea .= '_' . $layoutid;
 
             $contentpreferences = file_postupdate_standard_editor(
-                $contentpreferences, $configname, $this->get_editor_options($context), $context,  'dashaddon_content', $filearea, $blockid
+                $contentpreferences, $configname, $this->get_editor_options($context),
+                $context,  'dashaddon_content', $filearea, $blockid
             );
         }
 
@@ -293,7 +308,8 @@ class contentform extends \core_form\dynamic_form {
             // Now save the files in correct part of the File API.
             $filearea .= '_' . $layoutid;
             file_save_draft_area_files(
-                $contentpreferences->$configname, $context->id, 'dashaddon_content', $filearea, $blockid, $this->get_editor_options($context)
+                $contentpreferences->$configname, $context->id, 'dashaddon_content', $filearea,
+                $blockid, $this->get_editor_options($context)
             );
         }
 
@@ -309,12 +325,11 @@ class contentform extends \core_form\dynamic_form {
         global $PAGE;
 
         return [
-            // 'trusttext' => true,
             'subdirs' => true,
             'maxfiles' => 1,
             'maxbytes' => 1000000,
             'context' => $context ?: $PAGE->context,
-            'accepted_types' => 'web_image'
+            'accepted_types' => 'web_image',
         ];
     }
 
@@ -327,18 +342,16 @@ class contentform extends \core_form\dynamic_form {
      *
      * @param stdClass|array $defaultvalues object or array of default values
      */
-    function set_data($defaultvalues) {
+    public function set_data($defaultvalues) {
 
         $this->data_preprocessing($defaultvalues); // Include to store the files.
 
         if (is_object($defaultvalues)) {
             $defaultvalues = (array)$defaultvalues;
         }
-        // print_r($defaultvalues);
+
         $this->_form->setDefaults($defaultvalues);
     }
-
-
 
     /**
      * Return submitted data if properly submitted or returns NULL if validation fails or

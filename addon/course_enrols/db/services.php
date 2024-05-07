@@ -25,27 +25,27 @@
 defined('MOODLE_INTERNAL') || die();
 
 $functions = [
-    'dashaddon_course_enrols_submit_user_enrolment_form' => array(
+    'dashaddon_course_enrols_submit_user_enrolment_form' => [
        'classname' => 'dashaddon_course_enrols\external',
        'methodname' => 'submit_user_enrolment_form',
        'description' => 'Generate a course backup file and return a link.',
        'type' => 'read',
        'ajax'        => true,
-    ),
+    ],
 
-    'dashaddon_course_enrols_unenrol_user_enrolment' => array(
+    'dashaddon_course_enrols_unenrol_user_enrolment' => [
         'classname' => 'dashaddon_course_enrols\external',
         'methodname' => 'unenrol_user_enrolment',
         'description' => 'External function that unenrols a given user enrolment',
         'type' => 'write',
         'ajax' => true,
-    ),
+    ],
 
-    'dashaddon_course_enrols_enrol_courses' => array(
+    'dashaddon_course_enrols_enrol_courses' => [
         'classname' => 'dashaddon_course_enrols\external',
         'methodname' => 'enrol_courses',
         'description' => 'External function that unenrols a given user enrolment',
         'type' => 'write',
         'ajax' => true,
-    ),
+    ],
 ];

@@ -24,7 +24,7 @@
 
 namespace local_dash;
 
-use local_dash\local\block_dash\courses_data_source;
+use dashaddon_courses\local\block_dash\courses_data_source;
 use block_dash\local\layout\grid_layout;
 
 /**
@@ -37,6 +37,41 @@ use block_dash\local\layout\grid_layout;
 class smart_button_test extends \advanced_testcase {
 
     /**
+     * Test user 1
+     *
+     * @var stdClass
+     */
+    public $user;
+
+    /**
+     * List of test users.
+     *
+     * @var array
+     */
+    public $users;
+
+    /**
+     * Test course 1
+     *
+     * @var stdClass
+     */
+    public $course1;
+
+    /**
+     * Test course 2
+     *
+     * @var stdClass
+     */
+    public $course2;
+
+    /**
+     * Test course 3
+     *
+     * @var stdClass
+     */
+    public $course3;
+
+    /**
      * This method is called before each test.
      */
     protected function setUp(): void {
@@ -44,9 +79,9 @@ class smart_button_test extends \advanced_testcase {
         $this->setAdminUser();
         global $USER;
         $this->user = $USER;
-        $this->course1 = $this->getDataGenerator()->create_course( array('enablecompletion' => 1) );
-        $this->course2 = $this->getDataGenerator()->create_course( array('enablecompletion' => 1) );
-        $this->course3 = $this->getDataGenerator()->create_course( array('enablecompletion' => 1) );
+        $this->course1 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
+        $this->course2 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
+        $this->course3 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
         foreach (range(1, 5) as $user) {
             $this->users[$user] = self::getDataGenerator()->create_user();
         }
@@ -86,11 +121,11 @@ class smart_button_test extends \advanced_testcase {
         self::getDataGenerator()->enrol_user($user->id, $this->course3->id);
 
         $selfplugin = enrol_get_plugin('self');
-        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
-        $instanceid1 = $selfplugin->add_instance($this->course1, array('status' => ENROL_INSTANCE_ENABLED,
+        $studentrole = $DB->get_record('role', ['shortname' => 'student']);
+        $instanceid1 = $selfplugin->add_instance($this->course1, ['status' => ENROL_INSTANCE_ENABLED,
                                                                 'name' => 'Test instance 1',
                                                                 'customint6' => 1,
-                                                                'roleid' => $studentrole->id));
+                                                                'roleid' => $studentrole->id]);
         $this->setUser($user);
 
         $data = $this->create_instance();

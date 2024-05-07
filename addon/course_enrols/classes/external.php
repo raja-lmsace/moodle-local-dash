@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/externallib.php");
 require_once($CFG->dirroot.'/local/dash/addon/course_enrols/locallib.php');
 
-use core_external\external_api;
+use external_api;
 use external_function_parameters;
 use external_value;
 use external_multiple_structure;
@@ -77,7 +77,7 @@ class external extends external_api {
         $customformdata = [
             'ue' => $userenrolment,
             'modal' => true,
-            'enrolinstancename' => $plugin->get_instance_name($instance)
+            'enrolinstancename' => $plugin->get_instance_name($instance),
         ];
         $mform = new \enrol_user_enrolment_form(null, $customformdata, 'post', '', null, true, $data);
 
@@ -114,9 +114,9 @@ class external extends external_api {
      */
     public static function unenrol_user_enrolment_parameters() {
         return new external_function_parameters(
-            array(
-                'ueid' => new external_value(PARAM_INT, 'User enrolment ID')
-            )
+            [
+                'ueid' => new external_value(PARAM_INT, 'User enrolment ID'),
+            ]
         );
     }
 
@@ -130,12 +130,11 @@ class external extends external_api {
         global $CFG, $DB, $PAGE;
 
         $params = self::validate_parameters(self::unenrol_user_enrolment_parameters(), [
-            'ueid' => $ueid
+            'ueid' => $ueid,
         ]);
 
         $result = false;
         $errors = [];
-        // TODO: Need to check capability.
 
         $userenrolment = $DB->get_record('user_enrolments', ['id' => $params['ueid']], '*');
         if ($userenrolment) {
@@ -158,7 +157,7 @@ class external extends external_api {
             foreach ($validationerrors as $key => $errormessage) {
                 $errors[] = (object)[
                     'key' => $key,
-                    'message' => $errormessage
+                    'message' => $errormessage,
                 ];
             }
         }
@@ -176,17 +175,17 @@ class external extends external_api {
      */
     public static function unenrol_user_enrolment_returns() {
         return new external_single_structure(
-            array(
+            [
                 'result' => new external_value(PARAM_BOOL, 'True if the user\'s enrolment was successfully updated'),
                 'errors' => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'key' => new external_value(PARAM_TEXT, 'The data that failed the validation'),
                             'message' => new external_value(PARAM_TEXT, 'The error message'),
-                        )
+                        ]
                     ), 'List of validation errors'
                 ),
-            )
+            ]
         );
     }
 

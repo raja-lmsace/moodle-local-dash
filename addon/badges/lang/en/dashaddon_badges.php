@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Dash report - Badges addon';
+$string['pluginname'] = 'Data source: Badges';
 $string['datasource:badge_data_source'] = 'Badges';
 
 $string['badge'] = 'Badge';

@@ -29,14 +29,13 @@
  */
 function xmldb_local_dash_upgrade($oldversion) {
     global $CFG, $DB;
-    require_once($CFG->dirroot."/local/dash/lib.php");
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2019112402) {
+    require_once($CFG->dirroot.'/local/dash/lib.php');
 
+    if ($oldversion < 2019112402) {
         // Define table dash_data_source to be created.
         $table = new xmldb_table('dash_data_source');
-
         // Adding fields to table dash_data_source.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
@@ -46,143 +45,107 @@ function xmldb_local_dash_upgrade($oldversion) {
         $table->add_field('layout_type', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
         $table->add_field('layout_path', XMLDB_TYPE_CHAR, '255', null, null, null, null);
         $table->add_field('layout_mustache', XMLDB_TYPE_TEXT, null, null, null, null, null);
-
         // Adding keys to table dash_data_source.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-
         // Adding indexes to table dash_data_source.
         $table->add_index('idnumber', XMLDB_INDEX_UNIQUE, ['idnumber']);
-
         // Conditionally launch create table for dash_data_source.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-
         // Dash savepoint reached.
         upgrade_plugin_savepoint(true, 2019112402, 'local', 'dash');
     }
-
     if ($oldversion < 2019121200) {
-
         // Define table dash_dashboard to be created.
         $table = new xmldb_table('dash_dashboard');
-
         // Adding fields to table dash_dashboard.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
         $table->add_field('contextid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
         // Adding keys to table dash_dashboard.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-
         // Adding indexes to table dash_dashboard.
         $table->add_index('contextid', XMLDB_INDEX_NOTUNIQUE, ['contextid']);
-
         // Conditionally launch create table for dash_dashboard.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-
         // Dash savepoint reached.
         upgrade_plugin_savepoint(true, 2019121200, 'local', 'dash');
     }
-
     if ($oldversion < 2019121201) {
-
         // Define field timecreated to be added to dash_dashboard.
         $table = new xmldb_table('dash_dashboard');
         $field = new xmldb_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'contextid');
-
         // Conditionally launch add field timecreated.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         // Define field timemodified to be added to dash_dashboard.
         $table = new xmldb_table('dash_dashboard');
         $field = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'timecreated');
-
         // Conditionally launch add field timemodified.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         // Define field usermodified to be added to dash_dashboard.
         $table = new xmldb_table('dash_dashboard');
         $field = new xmldb_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'timemodified');
-
         // Conditionally launch add field usermodified.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         // Dash savepoint reached.
         upgrade_plugin_savepoint(true, 2019121201, 'local', 'dash');
     }
-
     if ($oldversion < 2019121302) {
-
         // Define field permission to be added to dash_dashboard.
         $table = new xmldb_table('dash_dashboard');
         $field = new xmldb_field('permission', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'usermodified');
-
         // Conditionally launch add field permission.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         // Define field cohort_id to be added to dash_dashboard.
         $table = new xmldb_table('dash_dashboard');
         $field = new xmldb_field('cohort_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'permission');
-
         // Conditionally launch add field cohort_id.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         // Dash savepoint reached.
         upgrade_plugin_savepoint(true, 2019121302, 'local', 'dash');
     }
-
     if ($oldversion < 2019121700) {
-
         // Define field shortname to be added to dash_dashboard.
         $table = new xmldb_table('dash_dashboard');
         $field = new xmldb_field('shortname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'cohort_id');
-
         // Conditionally launch add field shortname.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         // Set unique values for shortname before adding index.
-
         $DB->execute('UPDATE {dash_dashboard} SET shortname = MD5(concat(name, id))');
-
         // Define index shortname (unique) to be added to dash_dashboard.
         $table = new xmldb_table('dash_dashboard');
         $index = new xmldb_index('shortname', XMLDB_INDEX_UNIQUE, ['shortname']);
-
         // Conditionally launch add index shortname.
         if (!$dbman->index_exists($table, $index)) {
             $dbman->add_index($table, $index);
         }
-
         // Dash savepoint reached.
         upgrade_plugin_savepoint(true, 2019121700, 'local', 'dash');
     }
-
     if ($oldversion < 2020012300) {
         // Remove old custom data source table. Moved to dashaddon_developer.
         if ($dbman->table_exists('dash_data_source')) {
             $table = new xmldb_table('dash_data_source');
             $dbman->drop_table($table);
         }
-
         // Dash savepoint reached.
         upgrade_plugin_savepoint(true, 2020012300, 'local', 'dash');
     }
-
     if ($oldversion < 2020101400) {
         // Data source classes have moved to `local` namespace. Update all instances of Dash that use a class name as
         // the data source idnumber.
@@ -194,10 +157,8 @@ function xmldb_local_dash_upgrade($oldversion) {
                 $instance->instance_config_save($instance->config);
             }
         }
-
         upgrade_plugin_savepoint(true, 2020101400, 'local', 'dash');
     }
-
     if ($oldversion < 2021122300) {
         $table = new xmldb_table('dash_dashboard');
         $dbman->rename_table($table, 'local_dash_dashboard');
@@ -214,7 +175,21 @@ function xmldb_local_dash_upgrade($oldversion) {
         // Dash savepoint reached.
         upgrade_plugin_savepoint(true, 2022011903, 'local', 'dash');
     }
-    // Import the add custom field  options.
-    local_dash_create_customfields();
+
+    if ($oldversion < 2024040428) {
+        // Dash savepoint reached.
+        $table = new xmldb_table('local_dash_dashboard');
+        $dashaddondashboard = new xmldb_table('dashaddon_dashboard_dash');
+        if ($dbman->table_exists($table) && !$dbman->table_exists($dashaddondashboard)) {
+            $dbman->rename_table($table, 'dashaddon_dashboard_dash');
+        }
+        upgrade_plugin_savepoint(true, 2024040428, 'local', 'dash');
+    }
+
+    if ($oldversion < 2024050304) {
+        local_dash_upgrade_blocks_data_source_idnumber();
+        // Dash savepoint reached.
+        upgrade_plugin_savepoint(true, 2024050304, 'local', 'dash');
+    }
     return true;
 }

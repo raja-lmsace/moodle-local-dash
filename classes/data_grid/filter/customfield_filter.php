@@ -57,7 +57,7 @@ class customfield_filter extends select_filter {
     public function get_supported_operations() {
         return [
             self::OPERATION_EQUAL,
-            self::OPERATION_IN_OR_EQUAL
+            self::OPERATION_IN_OR_EQUAL,
         ];
     }
 
@@ -68,13 +68,23 @@ class customfield_filter extends select_filter {
     public function init() {
         global $DB;
 
-        if ($this->field instanceof \stdClass) {
-            $options = $DB->get_records_sql_menu("SELECT id.data AS key1, id.data AS key2 FROM {course_info_data} id
-                                              WHERE id.fieldid = :fieldid
-                                              GROUP BY id.data", ['fieldid' => $this->field->id]);
-
-            foreach ($options as $key => $option) {
-                $this->add_option($key, $option);
+        if ($this->field instanceof \stdClass && dashaddon_activities_is_local_metadata_installed()) {
+            $params['fieldid'] = $this->field->id;
+            $metafield = $DB->get_record('local_metadata_field', ['id' => $this->field->id]);
+            $options = $DB->get_records_sql_menu("SELECT cd.data AS key1, cd.data AS key2 FROM {local_metadata} cd
+                                              WHERE cd.fieldid = :fieldid
+                                              GROUP BY cd.data", $params);
+            if ($metafield->datatype == 'menu') {
+                $selectoptions = explode("\n", $metafield->param1);
+                foreach ($options as $key => $option) {
+                    if (in_array($option, $selectoptions)) {
+                        $this->add_option($key, format_string($option));
+                    }
+                }
+            } else {
+                foreach ($options as $key => $option) {
+                    $this->add_option($key, $option);
+                }
             }
 
         } else if (class_exists('\core_course\customfield\course_handler')) {
@@ -83,8 +93,6 @@ class customfield_filter extends select_filter {
             $options = $DB->get_records_sql_menu("SELECT cd.value AS key1, cd.value AS key2 FROM {customfield_data} cd
                                               WHERE cd.fieldid = :fieldid
                                               GROUP BY cd.value", $params);
-
-
             if ($this->field instanceof \customfield_select\field_controller) {
                 if (method_exists($this->field, 'get_options')) {
                     // Moodle 3.10 and up.
@@ -93,10 +101,12 @@ class customfield_filter extends select_filter {
                     // Moodle 3.9 and earlier.
                     $selectoptions = \customfield_select\field_controller::get_options_array($this->field);
                 }
-
                 foreach ($options as $key => $option) {
-                    $this->add_option($key, format_string($selectoptions[$option]));
+                    if (isset($selectoptions[$option])) {
+                        $this->add_option($key, format_string($selectoptions[$option]));
+                    }
                 }
+
             } else {
                 foreach ($options as $key => $option) {
                     $this->add_option($key, format_string($option));

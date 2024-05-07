@@ -70,4 +70,5 @@ class behat_local_dash extends behat_base {
         $this->execute('behat_navigation::i_navigate_to_in_current_page_administration', [$nodetext]);
 
     }
+
 }

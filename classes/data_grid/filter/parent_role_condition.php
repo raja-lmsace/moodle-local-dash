@@ -26,7 +26,6 @@ namespace local_dash\data_grid\filter;
 use block_dash\local\data_grid\filter\condition;
 use block_dash\local\data_grid\filter\filter;
 use coding_exception;
-use local_dash\model\dashboard;
 
 /**
  * Parent role condition.

@@ -42,31 +42,38 @@ class timeago_attribute extends abstract_field_attribute {
      * @return mixed
      */
     public function transform_data($data, \stdClass $record) {
-        $now = new DateTime();
-        $ago = new DateTime('@' . $data);
-        $diff = $now->diff($ago);
 
-        $diff->w = floor($diff->d / 7);
-        $diff->d -= $diff->w * 7;
+        if (is_numeric($data) && $data > 0) {
+            $now = new DateTime();
+            $ago = new DateTime('@' . $data);
+            $diff = $now->diff($ago);
 
-        $string = array(
-            'y' => 'year',
-            'm' => 'month',
-            'w' => 'week',
-            'd' => 'day',
-            'h' => 'hour',
-            'i' => 'minute',
-            's' => 'second',
-        );
-        foreach ($string as $k => &$v) {
-            if ($diff->$k) {
-                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-            } else {
-                unset($string[$k]);
+            $w = floor($diff->d / 7);
+            $diff->d -= $w * 7;
+
+            $string = [
+                'y' => 'year',
+                'm' => 'month',
+                'w' => 'week',
+                'd' => 'day',
+                'h' => 'hour',
+                'i' => 'minute',
+                's' => 'second',
+            ];
+            foreach ($string as $k => &$v) {
+
+                $diffvalue = (isset($$k)) ? $$k : $diff->$k;
+                if ($diffvalue) {
+                    $v = $diffvalue . ' ' . $v . ($diffvalue > 1 ? 's' : '');
+                } else {
+                    unset($string[$k]);
+                }
             }
+
+            $string = array_slice($string, 0, 1);
+            return $string ? implode(', ', $string) . ' ago' : 'just now';
         }
 
-        $string = array_slice($string, 0, 1);
-        return $string ? implode(', ', $string) . ' ago' : 'just now';
+        return '-';
     }
 }

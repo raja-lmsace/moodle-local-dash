@@ -17,35 +17,6 @@
     }
 }
 
-body.path-local-dash-dashboard div[role=main],
-body.path-local-dash-dashboard div[role=main] .block-region {
-    width: 100%;
-}
-body.path-local-dash-dashboard div[role=main] .block-region {
-    display: flex;
-    flex-wrap: wrap;
-}
-body.path-local-dash-dashboard:not(.editing) #region-main {
-    padding: 0;
-    border: none;
-    background: transparent;
-    margin: 0 -0.5rem;
-}
-body.path-local-dash-dashboard:not(.editing) .block.block-dash {
-    margin-bottom: 0;
-}
-
-/** Block widths **/
-body.path-local-dash-dashboard:not(.editing) .dash-block-width-100,
-body.path-local-dash-dashboard:not(.editing) .dash-block-width-50,
-body.path-local-dash-dashboard:not(.editing) .dash-block-width-33,
-body.path-local-dash-dashboard:not(.editing) .dash-block-width-66,
-body.path-local-dash-dashboard:not(.editing) .dash-block-width-25,
-body.path-local-dash-dashboard:not(.editing) .dash-block-width-20,
-body.path-local-dash-dashboard:not(.editing) .dash-block-width-16 {
-    margin: 0.5rem;
-}
-
 .block_dash .panel .card-img-top-overlay,
 .block_dash .card .card-img-top-overlay {
     position: absolute;
@@ -249,14 +220,10 @@ body.path-local-dash-dashboard:not(.editing) .dash-block-width-16 {
 .block_dash .dash-container .dash-block-content .card {
     width: 100%;
     height: 100%;
-    /* overflow: hidden; */
     border: 0;
     position: relative;
     z-index: 0;
 }
-/* .block_dash .dash-container .dash-block-content .courses-list .card {
-    overflow: auto;
-} */
 .block_dash .dash-container .dash-block-content .card .badge {
     white-space: pre-wrap;
 }
@@ -660,14 +627,6 @@ body.path-local-dash-dashboard:not(.editing) .dash-block-width-16 {
 
 /* End of Default layout */
 
-.path-local-dash-dashboard .header-maxwidth,
-.path-local-dash-dashboard .secondary-navigation {
-    max-width: none;
-}
-
-.path-local-dash-dashboard .drawer-toggles .drawer-left-toggle {
-    display: none;
-}
 
 /*SLider*/
 form fieldset #fitem_id_config_preferences_details_bg_color.fitem.fitem_f .fitemtitle label,
@@ -1277,4 +1236,11 @@ form fieldset .fitem.fitem_f .felement {
 .block_dash .dash-block-content .card_layout_masonry.floating-card.fit-content .card-block.filtr-item.floating-details
 .card:not(.details-area-block) {
     border-bottom-left-radius: 0;
+}
+.icon-responsive {
+    max-width: 24px;
+    max-height: 24px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

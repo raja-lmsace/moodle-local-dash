@@ -143,7 +143,7 @@ class status_field implements renderable, templatable {
             foreach ($enrolaction->get_attributes() as $name => $value) {
                 $attribute = (object) [
                     'name' => $name,
-                    'value' => $value
+                    'value' => $value,
                 ];
                 $action->attributes[] = $attribute;
             }

@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Course enrolments';
+$string['pluginname'] = 'Widget: Course enrolments';
 $string['widget:course_enrols'] = 'Course Enrolments';
 
 $string['course_enrols:viewdetails'] = 'View enrolment details';

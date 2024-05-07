@@ -195,9 +195,8 @@ class competency_widget extends abstract_widget {
                 'achieved' => self::COLOR_ACHIEVED,
                 'notachieved' => self::COLOR_NOTACHIEVED,
                 'fillStyle' => self::COLOR_FILLSTYLE,
-            ]
+            ],
         ];
-
 
         $PAGE->requires->data_for_js('skillGraphData', $competenciesdata['colors']);
 
@@ -314,7 +313,7 @@ class competency_widget extends abstract_widget {
             'pointBackgroundColor' => "rgba(255,99,132,1)",
             'pointBorderColor' => "red",
             'pointHoverBackgroundColor' => "#fff",
-            'pointHoverBorderColor' => "rgba(255,99,132,1)"
+            'pointHoverBorderColor' => "rgba(255,99,132,1)",
         ];
     }
 
@@ -387,7 +386,7 @@ class competency_widget extends abstract_widget {
             } else {
                 $this->competencydata[$competencyid] = (object) [
                     'proficiency' => $result->get('proficiency'),
-                    'grade'       => $result->get('grade')
+                    'grade'       => $result->get('grade'),
                 ];
             }
 

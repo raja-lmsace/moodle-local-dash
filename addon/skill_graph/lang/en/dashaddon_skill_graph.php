@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Skill graph';
+$string['pluginname'] = 'Widget: Competency graph';
 $string['widget:skill_graph'] = 'Skill graph';
 $string['widget:skill_graph_help'] = 'Competency breakdown report';
+$string['widget:competency_progress'] = 'Competency progress';
+$string['widget:competency_progress_help'] = 'Competency breakdown progress';

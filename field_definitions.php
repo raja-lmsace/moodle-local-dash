@@ -32,21 +32,21 @@ $definitions = [
         'tables' => ['c'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'c_shortname',
         'select' => 'c.shortname',
         'title' => get_string('shortname'),
-        'tables' => ['c']
+        'tables' => ['c'],
     ],
     [
         'name' => 'c_fullname',
         'select' => 'c.fullname',
         'title' => get_string('fullname'),
-        'tables' => ['c']
+        'tables' => ['c'],
     ],
     [
         'name' => 'c_startdate',
@@ -55,9 +55,9 @@ $definitions = [
         'tables' => ['c'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'c_enddate',
@@ -66,15 +66,15 @@ $definitions = [
         'tables' => ['c'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'c_idnumber',
         'select' => 'c.idnumber',
         'title' => get_string('idnumber'),
-        'tables' => ['c']
+        'tables' => ['c'],
     ],
     [
         'name' => 'c_summary',
@@ -83,9 +83,9 @@ $definitions = [
         'tables' => ['c'],
         'attributes' => [
             [
-                'type' => \local_dash\data_grid\field\attribute\course_summary_attribute::class
-            ]
-        ]
+                'type' => \local_dash\data_grid\field\attribute\course_summary_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'c_url',
@@ -96,10 +96,10 @@ $definitions = [
             [
                 'type' => \block_dash\local\data_grid\field\attribute\moodle_url_attribute::class,
                 'options' => [
-                    'url' => new moodle_url('/course/view.php', ['id' => 'c_id'])
-                ]
-            ]
-        ]
+                    'url' => new moodle_url('/course/view.php', ['id' => 'c_id']),
+                ],
+            ],
+        ],
     ],
     [
         'name' => 'c_button',
@@ -110,16 +110,16 @@ $definitions = [
             [
                 'type' => \block_dash\local\data_grid\field\attribute\moodle_url_attribute::class,
                 'options' => [
-                    'url' => new moodle_url('/course/view.php', ['id' => 'c_id'])
-                ]
+                    'url' => new moodle_url('/course/view.php', ['id' => 'c_id']),
+                ],
             ],
             [
                 'type' => \block_dash\local\data_grid\field\attribute\button_attribute::class,
                 'options' => [
-                    'label' => get_string('viewcourse', 'block_dash')
-                ]
-            ]
-        ]
+                    'label' => get_string('viewcourse', 'block_dash'),
+                ],
+            ],
+        ],
     ],
     [
         'name' => 'c_image_url',
@@ -128,12 +128,12 @@ $definitions = [
         'tables' => ['c'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\image_url_attribute::class
+                'type' => \block_dash\local\data_grid\field\attribute\image_url_attribute::class,
             ],
             [
-                'type' => \local_dash\data_grid\field\attribute\course_image_url_attribute::class
-            ]
-        ]
+                'type' => \local_dash\data_grid\field\attribute\course_image_url_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'c_image',
@@ -142,12 +142,12 @@ $definitions = [
         'tables' => ['c'],
         'attributes' => [
             [
-                'type' => \local_dash\data_grid\field\attribute\course_image_url_attribute::class
+                'type' => \local_dash\data_grid\field\attribute\course_image_url_attribute::class,
             ],
             [
-                'type' => \block_dash\local\data_grid\field\attribute\image_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\image_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'c_format',
@@ -156,9 +156,9 @@ $definitions = [
         'tables' => ['c'],
         'attributes' => [
             [
-                'type' => \local_dash\data_grid\field\attribute\course_format_attribute::class
-            ]
-        ]
+                'type' => \local_dash\data_grid\field\attribute\course_format_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'c_enablecompletion',
@@ -167,9 +167,9 @@ $definitions = [
         'tables' => ['c'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'c_tags',
@@ -181,17 +181,17 @@ $definitions = [
                 'type' => \local_dash\data_grid\field\attribute\tags_attribute::class,
                 'options' => [
                     'component' => 'core',
-                    'itemtype' => 'course'
-                ]
-            ]
-        ]
+                    'itemtype' => 'course',
+                ],
+            ],
+        ],
     ],
     [
         'name' => 'c_total_activities',
         'select' => '(SELECT COUNT(*) FROM {course_modules} cm100 WHERE cm100.course = c.id AND cm100.visible = 1)',
         'title' => get_string('totalactivities', 'block_dash'),
         'tables' => ['c'],
-        'options' => ['supports_sorting' => false]
+        'options' => ['supports_sorting' => false],
     ],
     [
         'name' => 'c_users_completed',
@@ -199,7 +199,7 @@ $definitions = [
                       WHERE timecompleted > 0 AND ccp100.course = c.id)',
         'title' => get_string('userscompleted', 'block_dash'),
         'tables' => ['c'],
-        'options' => ['supports_sorting' => false]
+        'options' => ['supports_sorting' => false],
     ],
     [
         'name' => 'c_users_not_completed',
@@ -207,7 +207,7 @@ $definitions = [
                       WHERE timecompleted IS NULL AND ccp200.course = c.id)',
         'title' => get_string('usersnotcompleted', 'block_dash'),
         'tables' => ['c'],
-        'options' => ['supports_sorting' => false]
+        'options' => ['supports_sorting' => false],
     ],
 ];
 
@@ -225,12 +225,12 @@ if (class_exists('\core_course\customfield\course_handler')) {
         switch ($field->get('type')) {
             case 'checkbox':
                 $attributes[] = [
-                    'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class
+                    'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class,
                 ];
                 break;
             case 'date':
                 $attributes[] = [
-                    'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class
+                    'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
                 ];
                 break;
             case 'textarea':
@@ -239,8 +239,8 @@ if (class_exists('\core_course\customfield\course_handler')) {
                 $attributes[] = [
                     'type' => \local_dash\data_grid\field\attribute\customfield_select_attribute::class,
                     'options' => [
-                        'field' => $field
-                    ]
+                        'field' => $field,
+                    ],
                 ];
                 break;
         }
@@ -251,7 +251,7 @@ if (class_exists('\core_course\customfield\course_handler')) {
             'title' => $field->get('name'),
             'tables' => ['c'],
             'attributes' => $attributes,
-            'options' => ['supports_sorting' => false]
+            'options' => ['supports_sorting' => false],
         ];
 
         $i++;
@@ -270,12 +270,12 @@ if (class_exists('\core_course\customfield\course_handler')) {
         switch ($field->datatype) {
             case 'checkbox':
                 $attributes[] = [
-                    'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class
+                    'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class,
                 ];
                 break;
             case 'date':
                 $attributes[] = [
-                    'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class
+                    'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
                 ];
                 break;
             case 'textarea':
@@ -284,8 +284,8 @@ if (class_exists('\core_course\customfield\course_handler')) {
                 $attributes[] = [
                     'type' => \local_dash\data_grid\field\attribute\customfield_select_attribute::class,
                     'options' => [
-                        'field' => $field
-                    ]
+                        'field' => $field,
+                    ],
                 ];
                 break;
         }
@@ -296,7 +296,7 @@ if (class_exists('\core_course\customfield\course_handler')) {
             'title' => $field->fullname,
             'tables' => ['c'],
             'attributes' => $attributes,
-            'options' => ['supports_sorting' => false]
+            'options' => ['supports_sorting' => false],
         ];
 
         $i++;
@@ -312,15 +312,15 @@ $definitions = array_merge($definitions, [
         'tables' => ['cc'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'cc_name',
         'select' => 'cc.name',
         'title' => get_string('categoryname'),
-        'tables' => ['cc']
+        'tables' => ['cc'],
     ],
 
     // Course completions.
@@ -331,9 +331,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['ccp'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'ccp_total_activities',
@@ -341,7 +341,7 @@ $definitions = array_merge($definitions, [
                     WHERE ccc200.course = c.id AND ccc200.criteriatype = 4)',
         'title' => get_string('totalactivitiescompletion', 'block_dash'),
         'tables' => ['ccp'],
-        'options' => ['supports_sorting' => false]
+        'options' => ['supports_sorting' => false],
     ],
     [
         'name' => 'ccp_completed_activities',
@@ -350,7 +350,7 @@ $definitions = array_merge($definitions, [
                       AND cccc100.course = c.id)',
         'title' => get_string('completedactivities', 'block_dash'),
         'tables' => ['ccp'],
-        'options' => ['supports_sorting' => false]
+        'options' => ['supports_sorting' => false],
     ],
     [
         'name' => 'ccp_completed',
@@ -359,9 +359,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['ccp'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'ccp_timecompleted',
@@ -370,9 +370,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['ccp'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'ccp_progress',
@@ -382,9 +382,9 @@ $definitions = array_merge($definitions, [
         'options' => ['supports_sorting' => false],
         'attributes' => [
             [
-                'type' => \local_dash\data_grid\field\attribute\activity_progress_attribute::class
-            ]
-        ]
+                'type' => \local_dash\data_grid\field\attribute\activity_progress_attribute::class,
+            ],
+        ],
     ],
 
     // Enrollment methods.
@@ -395,9 +395,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['e'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'e_enrol',
@@ -406,9 +406,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['e'],
         'attributes' => [
             [
-                'type' => \local_dash\data_grid\field\attribute\enrol_name_attribute::class
-            ]
-        ]
+                'type' => \local_dash\data_grid\field\attribute\enrol_name_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'e_status',
@@ -417,16 +417,16 @@ $definitions = array_merge($definitions, [
         'tables' => ['e'],
         'attributes' => [
             [
-                'type' => \local_dash\data_grid\field\attribute\enrol_status_attribute::class
-            ]
-        ]
+                'type' => \local_dash\data_grid\field\attribute\enrol_status_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'e_enrolled_users',
         'select' => '(SELECT COUNT(*) FROM {user_enrolments} ue100 WHERE ue100.enrolid = e.id)',
         'title' => get_string('enrolledusers', 'enrol'),
         'tables' => ['e'],
-        'options' => ['supports_sorting' => false]
+        'options' => ['supports_sorting' => false],
     ],
 
     // User enrollmments.
@@ -437,9 +437,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['ue'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'ue_timestart',
@@ -448,9 +448,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['ue'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'ue_timeend',
@@ -459,9 +459,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['ue'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'ue_daysuntilstart',
@@ -470,9 +470,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['ue'],
         'attributes' => [
             [
-                'type' => \local_dash\data_grid\field\attribute\days_until_start_attribute::class
-            ]
-        ]
+                'type' => \local_dash\data_grid\field\attribute\days_until_start_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'ue_daysuntilend',
@@ -481,9 +481,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['ue'],
         'attributes' => [
             [
-                'type' => \local_dash\data_grid\field\attribute\days_until_end_attribute::class
-            ]
-        ]
+                'type' => \local_dash\data_grid\field\attribute\days_until_end_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'ue_status',
@@ -492,9 +492,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['ue'],
         'attributes' => [
             [
-                'type' => \local_dash\data_grid\field\attribute\enrol_status_attribute::class
-            ]
-        ]
+                'type' => \local_dash\data_grid\field\attribute\enrol_status_attribute::class,
+            ],
+        ],
     ],
 
     // Dashboard fields.
@@ -505,9 +505,9 @@ $definitions = array_merge($definitions, [
         'tables' => ['dd'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'dd_contextid',
@@ -516,15 +516,15 @@ $definitions = array_merge($definitions, [
         'tables' => ['dd'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\context_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\context_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'dd_name',
         'select' => 'dd.name',
         'title' => get_string('name'),
-        'tables' => ['dd']
+        'tables' => ['dd'],
     ],
     [
         'name' => 'dd_link',
@@ -535,16 +535,16 @@ $definitions = array_merge($definitions, [
             [
                 'type' => \block_dash\local\data_grid\field\attribute\moodle_url_attribute::class,
                 'options' => [
-                    'url' => new moodle_url('/local/dash/dashboard.php', ['id' => 'dd_id'])
-                ]
+                    'url' => new moodle_url('/local/dash/addon/dashboard/dashboard.php', ['id' => 'dd_id']),
+                ],
             ],
             [
                 'type' => \block_dash\local\data_grid\field\attribute\link_attribute::class,
                 'options' => [
-                    'label_field' => 'dd_name'
-                ]
-            ]
-        ]
+                    'label_field' => 'dd_name',
+                ],
+            ],
+        ],
     ],
 
     // Site logs fields.
@@ -555,15 +555,15 @@ $definitions = array_merge($definitions, [
         'tables' => ['sl'],
         'attributes' => [
             [
-                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class
-            ]
-        ]
+                'type' => \block_dash\local\data_grid\field\attribute\identifier_attribute::class,
+            ],
+        ],
     ],
     [
         'name' => 'sl_eventname',
         'select' => 'sl.eventname',
         'title' => get_string('eventname'),
-        'tables' => ['sl']
+        'tables' => ['sl'],
     ],
 ]);
 

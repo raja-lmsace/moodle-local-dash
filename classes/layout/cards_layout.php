@@ -168,22 +168,22 @@ class cards_layout extends abstract_layout {
         global $CFG;
         if ($form->get_tab() == preferences_form::TAB_FIELDS) {
             // Register the dashcolorpicker element. - LMSACE.
-            require_once($CFG->dirroot.'/local/dash/dashcolorpicker.php');
-            \MoodleQuickForm::registerElementType('dashcolorpicker', $CFG->dirroot.'/local/dash/dashcolorpicker.php',
+            require_once($CFG->dirroot.'/blocks/dash/form/element-colorpicker.php');
+            \MoodleQuickForm::registerElementType('dashcolorpicker', $CFG->dirroot.'/blocks/dash/form/element-colorpicker.php',
             'moodlequickform_dashcolorpicker');
 
             // Layout mode - LMSACE.
             $mform->addElement('select', 'config_preferences[layoutmode]', get_string('layoutmode', 'block_dash'), [
                 'none' => get_string('strgrid', 'block_dash'),
                 'slider' => get_string('strslider', 'block_dash'),
-                'masonry' => get_string('strmasonry', 'block_dash')
+                'masonry' => get_string('strmasonry', 'block_dash'),
             ]);
             $mform->setType('config_preferences[layoutmode]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[layoutmode]', 'layoutmode', 'block_dash');
             $mform->setDefault('config_preferences[layoutmode]', 'none');
 
             $mform->addElement('select', 'config_preferences[columns]', get_string('columns', 'block_dash'), [
-                12 => 1, 6 => 2, 4 => 3, 3 => 4, 25 => 5, 2 => 6, 1 => 12
+                12 => 1, 6 => 2, 4 => 3, 3 => 4, 25 => 5, 2 => 6, 1 => 12,
             ]);
             $mform->setType('config_preferences[columns]', PARAM_INT);
             $mform->addHelpButton('config_preferences[columns]', 'columns', 'block_dash');
@@ -315,7 +315,7 @@ class cards_layout extends abstract_layout {
 
             $options = [];
             // Check course or user.
-            if (in_array("local_dash\local\dash_framework\structure\course_table", array_map('get_class',
+            if (in_array("dashaddon_courses\local\dash_framework\structure\course_table", array_map('get_class',
                 $this->get_data_source()->get_tables()))) {
                 $handler = \core_course\customfield\course_handler::create();
                 $fields = $handler->get_fields();
@@ -355,7 +355,6 @@ class cards_layout extends abstract_layout {
 
             $noneoption = [null => get_string('none', 'block_dash')];
 
-            // TODO: LMSACE.
             $mform->addElement('select', 'config_preferences[backgroundimagefield]',
                 get_string('backgroundimagefield', 'block_dash'),
                 array_merge(
@@ -417,22 +416,22 @@ class cards_layout extends abstract_layout {
             $mform->addElement('html', '<hr>');
 
             // Display the details area options.
-            $detailsareaoptions = array(
+            $detailsareaoptions = [
                 'disabled' => get_string('strdisabled', 'block_dash'),
                 'expanding' => get_string('strexpanding', 'block_dash'),
                 'floating' => get_string('strfloating', 'block_dash'),
-                'modal' => get_string('strmodal', 'block_dash')
-            );
+                'modal' => get_string('strmodal', 'block_dash'),
+            ];
             $mform->addElement('select', 'config_preferences[details_area]', get_string('details_area', 'block_dash'),
                 $detailsareaoptions);
             $mform->setType('config_preferences[details_area]', PARAM_TEXT);
             $mform->setDefault('config_preferences[details_area]', 'disabled');
             $mform->addHelpButton('config_preferences[details_area]', 'details_area', 'block_dash');
 
-            $detailsareasizeoptions = array(
+            $detailsareasizeoptions = [
                 'like_item' => get_string('like_item', 'block_dash'),
-                'fit_content' => get_string('fit_content', 'block_dash')
-            );
+                'fit_content' => get_string('fit_content', 'block_dash'),
+            ];
             $mform->addElement('select', 'config_preferences[details_area_size]', get_string('details_area_size', 'block_dash'),
                 $detailsareasizeoptions);
             $mform->setType('config_preferences[details_area_size]', PARAM_TEXT);

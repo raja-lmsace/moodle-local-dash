@@ -52,41 +52,7 @@ class course_dates_condition extends condition {
      * @throws coding_exception
      */
     public function get_label() {
-        if ($label = parent::get_label()) {
-            return $label;
-        }
-
-        return get_string('status');
-    }
-
-    /**
-     * Get values from filter based on user selection. All filters must return an array of values.
-     *
-     * Override in child class to add more values.
-     *
-     * @return array
-     */
-    public function get_value() {
-        if (isset($this->get_preferences()['coursedates']) && is_array($this->get_preferences()['coursedates'])) {
-            $status = $this->get_preferences()['coursedates'];
-            switch ($status) {
-                case 'past':
-                    $sql = 'c.enddate <> 0 AND c.enddate < :now';
-                    $params = ['now' => time()];
-
-                    break;
-                case 'present':
-                    $sql = 'c.startdate < :startdate AND ( c.enddate == 0 OR c.enddate > :endtime)';
-                    $params = ['enddate' => time(), 'startdate' => time()];
-                    break;
-                case 'future':
-                    $sql = 'c.startdate > :now';
-                    $params = ['now' => time()];
-                    break;
-            }
-            return [$sql, $params];
-        }
-
+        return get_string('coursedates', 'block_dash');
     }
 
     /**
@@ -136,22 +102,22 @@ class course_dates_condition extends condition {
             foreach ($dates as $key => $date) {
                 switch ($date) {
                     case 'past':
-                        $sql[] = "c.enddate <> 0 AND c.enddate < :now_$key";
-                        $params += ['now_'.$key => time()];
+                        $sql[] = "(c.enddate <> 0 AND c.enddate < :cdc_now_$key)";
+                        $params += ['cdc_now_'.$key => time()];
                         break;
                     case 'present':
-                        $sql[] = "(c.startdate < :startdate_$key AND ( c.enddate = 0 OR c.enddate > :enddate_$key) )";
-                        $params += ['enddate_'.$key => time(), 'startdate_'.$key => time()];
+                        $sql[] = "(c.startdate < :cdc_startdate_$key AND ( c.enddate = 0 OR c.enddate > :cdc_enddate_$key) )";
+                        $params += ['cdc_enddate_'.$key => time(), 'cdc_startdate_'.$key => time()];
                         break;
                     case 'future':
-                        $sql[] = "c.startdate > :now_$key";
-                        $params += ['now_'.$key => time()];
+                        $sql[] = "(c.startdate > :cdc_now_$key)";
+                        $params += ['cdc_now_'.$key => time()];
                         break;
                 }
             }
 
             return ['('.implode(' OR ', $sql).')', $params];
         }
-        return false;
+
     }
 }
