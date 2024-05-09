@@ -30,19 +30,19 @@
 <div class="grid-layout-block">
     <div class="grid-layout">
         <div class="card-img-top img-block">
-            <img src="{{#courseimg}}{{courseimg}}{{/courseimg}}" alt="img-1">
+            <img src="{{courseimg}}" alt="img-1">
         </div>
 
         <div class="progress-block">
             <div class="progress">
                 <div class="progress-bar{{#progress}} progress-bg-success{{/progress}}{{^progress}} progress-not-started{{/progress}}" role="progressbar" style= "{{#progress}}width: {{progress}}%{{/progress}}"
-                    aria-valuenow="{{#progress}}{{progress}}{{/progress}}" aria-valuemin="0" aria-valuemax="100">{{progress}}%</div>
+                    aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100">{{progress}}%</div>
             </div>
         </div>
 
 
         <div class="content-block card-body">
-            {{#coursename}}<h2 class="card-title">{{coursename}}</h2>{{/coursename}}
+            <h2 class="card-title">{{coursename}}</h2>
             <div class="summary-block card-text">
                 <p>{{{summary}}}</p>
             </div>
