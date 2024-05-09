@@ -30,6 +30,7 @@
 function xmldb_dashaddon_skill_graph_upgrade($oldversion) {
     if ($oldversion < 2024042500) {
         set_config('enabled', 1, 'dashaddon_skill_graph');
+        upgrade_plugin_savepoint(true, 2024042500, 'dashaddon', 'skill_graph');
     }
     return true;
 }

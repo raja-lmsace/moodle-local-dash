@@ -30,6 +30,7 @@
 function xmldb_dashaddon_course_enrols_upgrade($oldversion) {
     if ($oldversion < 2024042500) {
         set_config('enabled', 1, 'dashaddon_course_enrols');
+        upgrade_plugin_savepoint(true, 2024042500, 'dashaddon', 'course_enrols');
     }
     return true;
 }

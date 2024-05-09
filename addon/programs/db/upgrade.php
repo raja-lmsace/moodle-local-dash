@@ -33,6 +33,7 @@ function xmldb_dashaddon_programs_upgrade($oldversion) {
         require_once($CFG->dirroot. "/local/dash/addon/programs/lib.php");
         if (empty(dashaddon_programs_extend_added_dependencies())) {
             set_config('enabled', 1, 'dashaddon_programs');
+            upgrade_plugin_savepoint(true, 2024042500, 'dashaddon', 'programs');
         }
     }
     return true;
