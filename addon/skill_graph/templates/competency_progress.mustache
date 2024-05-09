@@ -19,39 +19,13 @@
 
     Example context (json):
     {
-        "error": "",
-        "paginator": "",
-        "data": {
-            "contextid": 2015,
-            "uniqueid": "158",
-            "dataset": "[]",
-            "datasetcount": 2,
-        },
-        "uniqueid": "63e200ba54a47",
-        "is_totara": false,
-        "bootstrap3": false,
-        "bootstrap4": true,
-        "noresult": "<p dir=\"ltr\" style=\"text-align:left;\"><br /></p>",
-        "filter_form_html": "",
-        "supports_filtering": false,
-        "supports_pagination": false,
-        "preferences": {
-            "default_sort": "alpha",
-            "filters": {
-                "competencyframeworks": {
-                    "enabled": "1",
-                    "competencyframework": "2"
-                }
-            }
-        }
     }
 
 }}
 
 {{^data.datasetcount}}
-{{#noresult}}{{{noresult}}}{{/noresult}}
+    {{#noresult}}{{{noresult}}}{{/noresult}}
 {{/data.datasetcount}}
-
 
 {{#data.datasetcount}}
 <div class="competency-progress-dash-widget">
@@ -117,8 +91,5 @@
             {{/data.dataset}}
         </div>
     </div>
-
 </div>
-
 {{/data.datasetcount}}
-
