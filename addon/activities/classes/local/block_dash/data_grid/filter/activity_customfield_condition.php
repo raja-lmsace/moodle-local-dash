@@ -48,7 +48,7 @@ class activity_customfield_condition extends condition {
     }
 
     /**
-     * Get condition label.
+     * Get activities condition label.
      *
      * @return string
      * @throws coding_exception

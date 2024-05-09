@@ -35,23 +35,23 @@ function xmldb_local_dash_upgrade($oldversion) {
 
     if ($oldversion < 2019112402) {
         // Define table dash_data_source to be created.
-        $table = new xmldb_table('dash_data_source');
+        $datasourcetable = new xmldb_table('dash_data_source');
         // Adding fields to table dash_data_source.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('idnumber', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('available_field_definitions', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
-        $table->add_field('query_template', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
-        $table->add_field('layout_type', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('layout_path', XMLDB_TYPE_CHAR, '255', null, null, null, null);
-        $table->add_field('layout_mustache', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $datasourcetable->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $datasourcetable->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $datasourcetable->add_field('idnumber', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $datasourcetable->add_field('available_field_definitions', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $datasourcetable->add_field('query_template', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $datasourcetable->add_field('layout_type', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+        $datasourcetable->add_field('layout_path', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $datasourcetable->add_field('layout_mustache', XMLDB_TYPE_TEXT, null, null, null, null, null);
         // Adding keys to table dash_data_source.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $datasourcetable->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         // Adding indexes to table dash_data_source.
-        $table->add_index('idnumber', XMLDB_INDEX_UNIQUE, ['idnumber']);
+        $datasourcetable->add_index('idnumber', XMLDB_INDEX_UNIQUE, ['idnumber']);
         // Conditionally launch create table for dash_data_source.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
+        if (!$dbman->table_exists($datasourcetable)) {
+            $dbman->create_table($datasourcetable);
         }
         // Dash savepoint reached.
         upgrade_plugin_savepoint(true, 2019112402, 'local', 'dash');

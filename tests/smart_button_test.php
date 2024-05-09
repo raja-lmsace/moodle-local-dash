@@ -51,21 +51,21 @@ class smart_button_test extends \advanced_testcase {
     public $users;
 
     /**
-     * Test course 1
+     * Smart button Test course 1
      *
      * @var stdClass
      */
     public $course1;
 
     /**
-     * Test course 2
+     * Smart button Test course 2
      *
      * @var stdClass
      */
     public $course2;
 
     /**
-     * Test course 3
+     * Smart button Test course 3
      *
      * @var stdClass
      */

@@ -1,4 +1,4 @@
-@local @local_dash @dash_cohort_course @javascript @_file_upload
+@local @local_dash @dash_cohort_course_completions @javascript @_file_upload
 Feature: Dash program to show the list of cohort course
   In order to show the course data source in dash block on the dashboard
   As an admin

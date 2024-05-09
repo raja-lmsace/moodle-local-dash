@@ -46,7 +46,7 @@ class course_customfield_condition extends condition {
     }
 
     /**
-     * Get condition label.
+     * Get course customfield condition label.
      *
      * @return string
      * @throws coding_exception
