@@ -257,7 +257,6 @@ function xmldb_local_dash_upgrade($oldversion) {
             $dashboardrecord->permission = 'public';
             $DB->update_record('dashaddon_dashboard_dash', $dashboardrecord);
         }
-        upgrade_plugin_savepoint(true, 2024050202, 'dashaddon', 'dashboard');
         upgrade_plugin_savepoint(true, 2024040428, 'local', 'dash');
     }
 
