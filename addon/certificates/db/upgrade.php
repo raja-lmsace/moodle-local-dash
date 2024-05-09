@@ -34,6 +34,7 @@ function xmldb_dashaddon_certificates_upgrade($oldversion) {
         if (empty(dashaddon_certificates_extend_added_dependencies())) {
             set_config('enabled', 1, 'dashaddon_certificates');
         }
+        upgrade_plugin_savepoint(true, 2024042500, 'dashaddon', 'certificates');
     }
     return true;
 }

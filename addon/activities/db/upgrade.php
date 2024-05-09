@@ -34,6 +34,7 @@ function xmldb_dashaddon_activities_upgrade($oldversion) {
         if (empty(dashaddon_activities_extend_added_dependencies())) {
             set_config('enabled', 1, 'dashaddon_activities');
         }
+        upgrade_plugin_savepoint(true, 2024042500, 'dashaddon', 'activities');
     }
     return true;
 }

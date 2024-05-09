@@ -30,6 +30,7 @@
 function xmldb_dashaddon_badges_upgrade($oldversion) {
     if ($oldversion < 2024042500) {
         set_config('enabled', 1, 'dashaddon_badges');
+        upgrade_plugin_savepoint(true, 2024042500, 'dashaddon', 'badges');
     }
     return true;
 }

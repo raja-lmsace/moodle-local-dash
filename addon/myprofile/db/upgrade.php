@@ -30,6 +30,7 @@
 function xmldb_dashaddon_myprofile_upgrade($oldversion) {
     if ($oldversion < 2024042500) {
         set_config('enabled', 1, 'dashaddon_myprofile');
+        upgrade_plugin_savepoint(true, 2024042500, 'dashaddon', 'myprofile');
     }
     return true;
 }

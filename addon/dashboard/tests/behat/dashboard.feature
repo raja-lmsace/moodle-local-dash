@@ -28,7 +28,7 @@ Feature: Add a dashboard data source in dash block
       | student2 | C2     | student |
     And I log in as "admin"
     And I am on "Course 1" course homepage
-    And I turn block editing mode on
+    And I turn dash block editing mode on
     And I add the "Dash" block
     And I click on "Dashboards" "radio"
     And I navigate to "Plugins > Manage dashboards" in site administration
