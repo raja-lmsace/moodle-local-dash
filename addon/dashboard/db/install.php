@@ -29,7 +29,6 @@ function xmldb_dashaddon_dashboard_install() {
     global $CFG, $DB;
     require_once($CFG->dirroot."/local/dash/addon/dashboard/lib.php");
     set_config('enabled', 1, 'dashaddon_dashboard');
-    dashaddon_dashboard_create_core_dashboard();
 
     // Create the dashaddon_dashboard_dash table.
     $dbman = $DB->get_manager();
@@ -51,7 +50,7 @@ function xmldb_dashaddon_dashboard_install() {
     $table->add_field('rolecontext', XMLDB_TYPE_TEXT, '10', null, null, null, null);
     $table->add_field('shortname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
     $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
-    $table->add_field('descriptionformat', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('descriptionformat', XMLDB_TYPE_INTEGER, '4', null, null, null, null);
     $table->add_field('dashicon', XMLDB_TYPE_CHAR, '50', null, null, null, null);
     $table->add_field('dashthumbnailimage', XMLDB_TYPE_INTEGER, '15', null, null, null, null);
     $table->add_field('dashbgimage', XMLDB_TYPE_TEXT, '4', null, null, null, null);
@@ -66,5 +65,7 @@ function xmldb_dashaddon_dashboard_install() {
     if (!$dbman->table_exists($table)) {
         $dbman->create_table($table);
     }
+
+    dashaddon_dashboard_create_core_dashboard();
 
 }
