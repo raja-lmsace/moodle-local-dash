@@ -34,20 +34,6 @@ namespace dashaddon_course_completions;
 class completions_test extends \advanced_testcase {
 
     /**
-     * Test user 1
-     *
-     * @var stdClass
-     */
-    public $user;
-
-    /**
-     * List of test users.
-     *
-     * @var array
-     */
-    public $users;
-
-    /**
      * Test course 1
      *
      * @var stdClass
@@ -67,6 +53,21 @@ class completions_test extends \advanced_testcase {
      * @var stdClass
      */
     public $course3;
+
+    /**
+     * Test user 1
+     *
+     * @var stdClass
+     */
+    public $user;
+
+    /**
+     * List of test users.
+     *
+     * @var array
+     */
+    public $users;
+
 
     /**
      * This method is called before each test.

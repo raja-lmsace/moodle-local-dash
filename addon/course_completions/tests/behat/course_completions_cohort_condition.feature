@@ -1,5 +1,5 @@
 @local @local_dash @dash_cohort_course_completions @javascript @_file_upload
-Feature: Dash program to show the list of cohort course
+Feature: Dash program to show the list of cohort course completion condition
   In order to show the course data source in dash block on the dashboard
   As an admin
   I can add the dash block to the dashboard

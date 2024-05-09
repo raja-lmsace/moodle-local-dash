@@ -46,20 +46,6 @@ class course_customfield_condition extends condition {
     }
 
     /**
-     * Get course customfield condition label.
-     *
-     * @return string
-     * @throws coding_exception
-     */
-    public function get_label() {
-        if ($label = parent::get_label()) {
-            return $label;
-        }
-
-        return get_string('status');
-    }
-
-    /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
      * @param moodleform $moodleform
@@ -83,6 +69,20 @@ class course_customfield_condition extends condition {
             $mform->hideIf($fieldname . "[value][text]", $fieldname . '[enabled]');
             $mform->hideIf($fieldname . "[value]", $fieldname . '[enabled]');
         }
+    }
+
+    /**
+     * Get course customfield condition label.
+     *
+     * @return string
+     * @throws coding_exception
+     */
+    public function get_label() {
+        if ($label = parent::get_label()) {
+            return $label;
+        }
+
+        return get_string('status');
     }
 
     /**
