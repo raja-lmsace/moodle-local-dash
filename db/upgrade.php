@@ -183,6 +183,81 @@ function xmldb_local_dash_upgrade($oldversion) {
         if ($dbman->table_exists($table) && !$dbman->table_exists($dashaddondashboard)) {
             $dbman->rename_table($table, 'dashaddon_dashboard_dash');
         }
+
+        // Define field description to be added to dash_dashboard.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null, 'shortname');
+        // Conditionally launch add field description.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Define field description format to be added to dash_dashboard.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('descriptionformat', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'description');
+        // Conditionally launch add field description format.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field description to be added to dash_dashboard.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('coredash', XMLDB_TYPE_INTEGER, '2', null, null, null, 0, 'secondarynav');
+        // Conditionally launch add field cohort_id.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Define field dash icon to be added to dash_dashboard.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('dashicon', XMLDB_TYPE_CHAR, '50', null, null, null, null, 'descriptionformat');
+        // Conditionally launch add field dashicon.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field dash icon to be added to dash_dashboard.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('dashthumbnailimage', XMLDB_TYPE_INTEGER, '15', null, null, null, null, 'dashicon');
+        // Conditionally launch add field dashicon.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Define field dash icon to be added to dash_dashboard.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('dashbgimage', XMLDB_TYPE_INTEGER, '15', null, null, null, null, 'dashthumbnailimage');
+        // Conditionally launch add field dashicon.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Remove the role_id field.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('role_id');
+        // Conditionally launch drop field role_id.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define field roles to be added to dash_dashboard.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('roles', XMLDB_TYPE_TEXT, null, null, null, null, null, 'cohort_id');
+        // Conditionally launch add field roles.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field rolecontext to be added to dash_dashboard.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('rolecontext', XMLDB_TYPE_INTEGER, '9', null, null, null, null, 'roles');
+        // Conditionally launch add field rolecontext.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        if ($dashboardrecord = $DB->get_record('dashaddon_dashboard_dash', ['shortname' => 'coredashboard'])) {
+            $dashboardrecord->name = get_string('maindashboard', 'block_dash');
+            $dashboardrecord->permission = 'public';
+            $DB->update_record('dashaddon_dashboard_dash', $dashboardrecord);
+        }
+        upgrade_plugin_savepoint(true, 2024050202, 'dashaddon', 'dashboard');
         upgrade_plugin_savepoint(true, 2024040428, 'local', 'dash');
     }
 

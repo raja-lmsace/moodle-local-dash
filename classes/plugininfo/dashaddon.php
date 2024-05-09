@@ -53,7 +53,7 @@ class dashaddon extends \core\plugininfo\base {
      * @return bool
      */
     public function is_uninstall_allowed() {
-        return false;
+        return true;
     }
 
     /**

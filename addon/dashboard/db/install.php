@@ -26,8 +26,45 @@
  * Stub for database installation.
  */
 function xmldb_dashaddon_dashboard_install() {
-    global $CFG;
+    global $CFG, $DB;
     require_once($CFG->dirroot."/local/dash/addon/dashboard/lib.php");
     set_config('enabled', 1, 'dashaddon_dashboard');
     dashaddon_dashboard_create_core_dashboard();
+
+    // Create the dashaddon_dashboard_dash table.
+    $dbman = $DB->get_manager();
+    if ($dbman->table_exists('dashaddon_dashboard_dash')) {
+        return true;
+    }
+    // Define table dash_data_source to be created.
+    $table = new xmldb_table('dashaddon_dashboard_dash');
+    // Adding fields to table dash_data_source.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('contextid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+    $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('permission', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('cohort_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+    $table->add_field('roles', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+    $table->add_field('rolecontext', XMLDB_TYPE_TEXT, '10', null, null, null, null);
+    $table->add_field('shortname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+    $table->add_field('descriptionformat', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('dashicon', XMLDB_TYPE_CHAR, '50', null, null, null, null);
+    $table->add_field('dashthumbnailimage', XMLDB_TYPE_INTEGER, '15', null, null, null, null);
+    $table->add_field('dashbgimage', XMLDB_TYPE_TEXT, '4', null, null, null, null);
+    $table->add_field('secondarynav', XMLDB_TYPE_TEXT, '4', null, null, null, null);
+    $table->add_field('coredash', XMLDB_TYPE_INTEGER, '2', null, null, null, null);
+    // Adding keys to table dash_data_source.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+    // Adding indexes to table dash_data_source.
+    $table->add_index('contextid', XMLDB_INDEX_NOTUNIQUE, ['contextid']);
+    $table->add_index('shortname', XMLDB_INDEX_UNIQUE, ['shortname']);
+    // Conditionally launch create table for dash_data_source.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
+
 }
