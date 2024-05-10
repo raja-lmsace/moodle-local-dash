@@ -98,22 +98,22 @@ class activities_data_source extends abstract_data_source {
         if (dashaddon_activities_is_local_metadata_installed()) {
             $modulefields = $DB->get_records('local_metadata_field', ['contextlevel' => CONTEXT_MODULE]);
             foreach ($modulefields as $field) {
-                $alias = 'cm_mf_' . strtolower($field->shortname);
-                if (isset($filterpreferences[$alias]) && $filterpreferences[$alias]['enabled']) {
-                    $builder->join('local_metadata', $alias, 'instanceid', 'cm.id', join::TYPE_LEFT_JOIN)
-                        ->join_condition($alias, "$alias.fieldid = " . $field->id);
+                $al = 'cm_mf_' . strtolower($field->shortname);
+                if (isset($filterpreferences[$al]) && $filterpreferences[$al]['enabled']) {
+                    $builder->join('local_metadata', $al, 'instanceid', 'cm.id', join::TYPE_LEFT_JOIN)
+                        ->join_condition($al, "$al.fieldid = " . $field->id);
                 }
             }
         }
 
         if (class_exists('\core_course\customfield\course_handler')) {
-            $handler = \core_course\customfield\course_handler::create();
-            foreach ($handler->get_fields() as $field) {
-                $alias = 'c_f_' . strtolower($field->get('shortname'));
+            $coursehandler = \core_course\customfield\course_handler::create();
+            foreach ($coursehandler->get_fields() as $field) {
+                $al = 'c_f_' . strtolower($field->get('shortname'));
                 // Only join custom field table if the filter is enabled.
-                if (isset($filterpreferences[$alias]) && $filterpreferences[$alias]['enabled']) {
-                    $builder->join('customfield_data', $alias, 'instanceid', 'c.id', join::TYPE_LEFT_JOIN)
-                        ->join_condition($alias, "$alias.fieldid = " . $field->get('id'));
+                if (isset($filterpreferences[$al]) && $filterpreferences[$al]['enabled']) {
+                    $builder->join('customfield_data', $al, 'instanceid', 'c.id', join::TYPE_LEFT_JOIN)
+                        ->join_condition($al, "$al.fieldid = " . $field->get('id'));
                 }
             }
         } else if (block_dash_is_totara()) {
