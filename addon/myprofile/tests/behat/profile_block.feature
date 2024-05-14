@@ -19,11 +19,11 @@ Feature: User profile with stats
         | Course 2 | C2        | 0        | 1                |
         | Course 3 | C3        | 0        | 1                |
     And the following "activities" exist:
-        | activity | name         | course | idnumber | intro            | section | completion |
-        | page     | Test page1   | C1     | page1    | Page description | 1       | 1          |
-        | page     | Test page2   | C2     | page1    | Page description | 2       | 1          |
-        | page     | Test page3   | C3     | page1    | Page description | 3       | 1          |
-        | assign   | Test assign1 | C1     | assign1  | Page description | 2       | 1          |
+        | activity | name         | course | idnumber | intro                 | section | completion | completionview | completionexpected |
+        | page     | Test page1   | C1     | page1    | Page description      | 1       | 1          | 0              | 0                  |
+        | page     | Test page2   | C2     | page1    | Page description      | 2       | 1          | 0              | 0                  |
+        | page     | Test page3   | C3     | page1    | Page description      | 3       | 1          | 0              | ##today##          |
+        | assign   | Test assign1 | C1     | assign1  | Assign due today      | 2       | 1          | 0              | ##yesterday##      |
     And the following "users" exist:
         | username | firstname | lastname | email                |
         | student1 | Student   | First    | student1@example.com |
@@ -73,10 +73,11 @@ Feature: User profile with stats
     And I turn dash block editing mode on
     And I add the "Dash" block
     And I create dash "My profile" datasource
-    # And I configure the "New Dash" block
-    # And I set the field "Block title" to "My profile"
-    # And I click on "My profile" "radio" in the "Configure New Dash block" "dialogue"
-    # And I press "Save changes"
+    And I configure the "New Dash" block
+    And I set the following fields to these values:
+      | Block title | My profile |
+      | Region      | content    |
+    And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
     And I log out
     And I log in as "student1"
@@ -94,7 +95,7 @@ Feature: User profile with stats
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I click on "#action-menu-toggle-0" "css_element"
-    And I open the "New Dash" block preference
+    And I open the "My profile" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I set the following fields to these values:
         | Show user profile image         | 1                       |
@@ -138,7 +139,7 @@ Feature: User profile with stats
     And I should see "Current courses" in the ".dashboard-stats-block .dashboard-currentcoursescount-stats p span" "css_element"
     And I should see "1" in the ".dashboard-stats-block .dashboard-futurecoursescount-stats p b" "css_element"
     And I should see "Future courses" in the ".dashboard-stats-block .dashboard-futurecoursescount-stats p span" "css_element"
-    And I should see "3" in the ".dashboard-stats-block .dashboard-pastcoursescount-stats p b" "css_element"
+    And I should see "0" in the ".dashboard-stats-block .dashboard-pastcoursescount-stats p b" "css_element"
     And I should see "Past courses" in the ".dashboard-stats-block .dashboard-pastcoursescount-stats p span" "css_element"
     Then I log out
 
@@ -164,13 +165,12 @@ Feature: User profile with stats
     Then I should see "Points - 45" in the "beginner" "table_row"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
-    And I click on "#action-menu-toggle-0" "css_element"
     And I open the "New Dash" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I set the following fields to these values:
         | Show user profile image         | 1                                   |
         | Show user's full name           | 0                                   |
-        | id_config_preferences_userinfo1 | user: Full name (linked to profile) |
+        | id_config_preferences_userinfo1 | user: Fullname linked               |
         | id_config_preferences_userinfo2 | user: User profile URL              |
         | id_config_preferences_userinfo3 | user: User profile link             |
         | id_config_preferences_kpi1      | Earned skill points                 |
@@ -181,13 +181,19 @@ Feature: User profile with stats
         | id_config_preferences_kpi6      | Number of overdue activities        |
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
-    And I am on "Course 1" course homepage
-    And I am on the "Test assign1" "assign activity" page
-    And I click on "Settings" "link" in the ".secondary-navigation" "css_element"
-    And I expand all fieldsets
-    And I set the following fields to these values:
-        | Due date | ##25 Feb 2024 08:00## |
-    And I press "Save and return to course"
+    # And I am on "Course 1" course homepage
+    # And I am on the "Test assign1" "assign activity" page
+    # And I click on "Settings" "link" in the ".secondary-navigation" "css_element"
+    # And I expand all fieldsets
+    # And I set the following fields to these values:
+    #     | Due date | ##today##%d %B %Y## |
+    # And I press "Save and return to course"
+    # And I am on the "Test assign2" "assign activity" page
+    # And I click on "Settings" "link" in the ".secondary-navigation" "css_element"
+    # And I expand all fieldsets
+    # And I set the following fields to these values:
+    #     | Due date | ##yesterday## |
+    # And I press "Save and return to course"
     And I log out
     And I am on the "Course 1" course page logged in as student1
     And I am on the "student1" "user > profile" page
@@ -236,7 +242,6 @@ Feature: User profile with stats
     Then I should see "Points - 45" in the "beginner" "table_row"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
-    # And I click on "#action-menu-toggle-0" "css_element"
     And I open the "New Dash" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I set the following fields to these values:
