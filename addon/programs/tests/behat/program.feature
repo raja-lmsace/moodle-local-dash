@@ -72,18 +72,18 @@ Feature: Dash program to show the list of course data source
     And I click on "Update program" "button" in the ".modal-body" "css_element"
     And I should see "Yes" in the "dl.row" "css_element"
     And I should see "Cohort 1" in the "dl.row" "css_element"
-    And I click on "Allocation settings" "link" in the ".nav-tabs" "css_element"
+    And I follow "Allocation settings"
     And I should see "Allocations"
-    And I click on ".fa-cog" "css_element" in the "#page.drawers div[role=\"main\"] h3:nth-of-type(1)" "css_element"
+    And I click on "Update allocations" "link"
     And I set the following fields to these values:
         | timeallocationstart[enabled]  | 1  |
         | Allocation start              | ##15 Mar 2024 08:00## |
         | Allocation end                | ##15 Apr 2025 08:00## |
-    And I click on "Update allocation" "button" in the ".modal-body" "css_element"
-    And I should see "Friday, 15 March 2024, 8:00 AM" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(1) dd:nth-of-type(1)" "css_element"
-    And I should see "Tuesday, 15 April 2025, 8:00 AM" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(1) dd:nth-of-type(2)" "css_element"
+    And I press dialog form button "Update allocations"
+    And I should see "Friday, 15 March 2024, 8:00 AM" in the "Allocation start:" definition list item
+    And I should see "Tuesday, 15 April 2025, 8:00 AM" in the "Allocation end:" definition list item
     And I should see "Scheduling"
-    And I click on ".fa-cog" "css_element" in the "#page.drawers div[role=\"main\"] h3:nth-of-type(2)" "css_element"
+    And I click on "Update scheduling" "link"
     And I set the following fields to these values:
         | Program start                 | At a fixed date       |
         | Program start date            | ##15 Mar 2024 18:30## |
@@ -91,27 +91,27 @@ Feature: Dash program to show the list of course data source
         | Due date                      | ##15 Apr 2025 08:00## |
         | Program end                   | At a fixed date       |
         | Program end date              | ##15 Apr 2025 08:00## |
-    And I click on "Update scheduling" "button" in the ".modal-body" "css_element"
-    And I should see "Friday, 15 March 2024, 6:30 PM" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(2) dd:nth-of-type(1)" "css_element"
-    And I should see "Tuesday, 15 April 2025, 8:00 AM" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(2) dd:nth-of-type(2)" "css_element"
-    And I should see "Tuesday, 15 April 2025, 8:00 AM" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(2) dd:nth-of-type(3)" "css_element"
+    And I press dialog form button "Update scheduling"
+    And I should see "Friday, 15 March 2024, 6:30 PM" in the "Program start:" definition list item
+    And I should see "Tuesday, 15 April 2025, 8:00 AM" in the "Program due:" definition list item
+    And I should see "Tuesday, 15 April 2025, 8:00 AM" in the "Program end:" definition list item
     And I should see "Allocation sources"
-    And I click on ".fa-cog" "css_element" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(3) dd:nth-of-type(2) a" "css_element"
+    And I click on "Update Self allocation" "link"
     And I set the following fields to these values:
         | Active                 | Yes   |
         | Allow new sign ups     | Yes   |
         | Sign up key            | 1234  |
         | Max users              | 3     |
     And I click on "Update" "button" in the ".modal-body" "css_element"
-    And I should see "Active; Sign up key is required; Users 0/3; Sign ups are allowed" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(3) dd:nth-of-type(2)" "css_element"
+    And I should see "Active; Sign up key is required; Users 0/3; Sign ups are allowed" in the "Self allocation:" definition list item
     And I click on "Program management" "link" in the ".breadcrumb" "css_element"
     And I should see "Demo program" in the "Demo text" "table_row"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I add the "Dash" block
+    And I click on "Enrol Programs" "radio"
     And I configure the "New Dash" block
     And I set the field "Block title" to "Enrol Programs"
-    And I click on "Enrol Programs" "radio" in the "Configure New Dash block" "dialogue"
     And I press "Save changes"
     And I click on "#action-menu-toggle-0" "css_element"
     And I click on "Preferences" "link" in the "Enrol Programs" "block"
@@ -170,16 +170,16 @@ Feature: Dash program to show the list of course data source
     And I should see "Cohort 1" in the "dl.row" "css_element"
     And I click on "Allocation settings" "link" in the ".nav-tabs" "css_element"
     And I should see "Allocations"
-    And I click on ".fa-cog" "css_element" in the "#page.drawers div[role=\"main\"] h3:nth-of-type(1)" "css_element"
+    And I click on "Update allocations" "link"
     And I set the following fields to these values:
         | timeallocationstart[enabled]  | 1                     |
         | Allocation start              | ##16 Mar 2024 08:00## |
         | Allocation end                | ##16 Apr 2025 08:00## |
     And I click on "Update allocation" "button" in the ".modal-body" "css_element"
-    And I should see "Saturday, 16 March 2024, 8:00 AM" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(1) dd:nth-of-type(1)" "css_element"
-    And I should see "Wednesday, 16 April 2025, 8:00 AM" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(1) dd:nth-of-type(2)" "css_element"
+    And I should see "Saturday, 16 March 2024, 8:00 AM" in the "Allocation start:" definition list item
+    And I should see "Wednesday, 16 April 2025, 8:00 AM" in the "Allocation end:" definition list item
     And I should see "Scheduling"
-    And I click on ".fa-cog" "css_element" in the "#page.drawers div[role=\"main\"] h3:nth-of-type(2)" "css_element"
+    And I click on "Update scheduling" "link"
     And I set the following fields to these values:
         | Program start                 | At a fixed date       |
         | Program start date            | ##16 Mar 2024 18:30## |
@@ -188,26 +188,26 @@ Feature: Dash program to show the list of course data source
         | Program end                   | At a fixed date       |
         | Program end date              | ##16 Apr 2025 08:00## |
     And I click on "Update scheduling" "button" in the ".modal-body" "css_element"
-    And I should see "Saturday, 16 March 2024, 6:30 PM" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(2) dd:nth-of-type(1)" "css_element"
-    And I should see "Wednesday, 16 April 2025, 8:00 AM" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(2) dd:nth-of-type(2)" "css_element"
-    And I should see "Wednesday, 16 April 2025, 8:00 AM" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(2) dd:nth-of-type(3)" "css_element"
+    And I should see "Saturday, 16 March 2024, 6:30 PM" in the "Program start:" definition list item
+    And I should see "Wednesday, 16 April 2025, 8:00 AM" in the "Program due:" definition list item
+    And I should see "Wednesday, 16 April 2025, 8:00 AM" in the "Program end:" definition list item
     And I should see "Allocation sources"
-    And I click on ".fa-cog" "css_element" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(3) dd:nth-of-type(2) a" "css_element"
+    And I click on "Update Self allocation" "link"
     And I set the following fields to these values:
         | Active                 | Yes   |
         | Allow new sign ups     | Yes   |
         | Sign up key            | 1234  |
         | Max users              | 3     |
     And I click on "Update" "button" in the ".modal-body" "css_element"
-    And I should see "Active; Sign up key is required; Users 0/3; Sign ups are allowed" in the "#page.drawers div[role=\"main\"] dl.row:nth-of-type(3) dd:nth-of-type(2)" "css_element"
+    And I should see "Active; Sign up key is required; Users 0/3; Sign ups are allowed" in the "Self allocation:" definition list item
     And I click on "Program management" "link" in the ".breadcrumb" "css_element"
     And I should see "Basic program" in the "Basic content" "table_row"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I add the "Dash" block
+    And I click on "Enrol Programs" "radio"
     And I configure the "New Dash" block
     And I set the field "Block title" to "Enrol Programs"
-    And I click on "Enrol Programs" "radio" in the "Configure New Dash block" "dialogue"
     And I press "Save changes"
     And I click on "#action-menu-toggle-0" "css_element"
     And I click on "Preferences" "link" in the "Enrol Programs" "block"

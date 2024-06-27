@@ -15,20 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version info
+ * Library functions defined for dashaddon content widget.
  *
- * @package    dashaddon_dashboard
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @package    dashaddon_activities
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+use dashaddon_activities\local\block_dash\data_grid\filter\activity_customfield_condition;
 
-$plugin->component = 'dashaddon_dashboard';
-$plugin->version = 2024050901;
-$plugin->requires  = 2017051509;
-$plugin->maturity  = MATURITY_ALPHA;
-$plugin->release = '1.1';
-$plugin->dependencies = [
-    'local_dash' => 2021022300,
-];

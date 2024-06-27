@@ -327,8 +327,8 @@ Feature: Dash program to show the list of course data certificate
     And I log out
 
     And I log in as "student 2"
-    And I am on "Course 1" course homepage
-    And I am on the "Test certificate1" "coursecertificate activity" page
+    And I am on "Course 2" course homepage
+    And I am on the "Test certificate2" "coursecertificate activity" page
     And I follow dashboard
     And I should see "Certificate 1" in the "Course 1" "table_row"
     And I should see "Course 1" in the "C1" "table_row"
@@ -341,14 +341,14 @@ Feature: Dash program to show the list of course data certificate
     And I should see "Course 2" in the "C2" "table_row"
     And I should see "Test course 2" in the "Course 2" "table_row"
     And I should see "Category 02" in the "Course 2" "table_row"
-    And I should see "student2" in the "Course 2" "table_row"
-    And I should see "student2@example.com" in the "Course 2" "table_row"
+    And I should see "student1" in the "Course 2" "table_row"
+    And I should see "student1@example.com" in the "Course 2" "table_row"
     And I log out
 
   Scenario: Display the certificate for the course custom fields
     Given I log in as "admin"
     # Course Custom field
-    And I navigate to "Courses > Default settings > Course custom fields" in site administration
+    And I navigate to "Courses > Course custom fields" in site administration
     And I wait "20" seconds
     And I click on "Add a new custom field" "link"
     And I click on "Dropdown menu" "link"

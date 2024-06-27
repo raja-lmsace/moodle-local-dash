@@ -265,5 +265,6 @@ function xmldb_local_dash_upgrade($oldversion) {
         // Dash savepoint reached.
         upgrade_plugin_savepoint(true, 2024050304, 'local', 'dash');
     }
+
     return true;
 }

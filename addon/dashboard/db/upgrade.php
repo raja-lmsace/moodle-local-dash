@@ -31,5 +31,14 @@ function xmldb_dashaddon_dashboard_upgrade($oldversion) {
     global $CFG, $DB;
     require_once($CFG->dirroot."/local/dash/addon/dashboard/lib.php");
     dashaddon_dashboard_create_core_dashboard();
+    $dbman = $DB->get_manager();
+
+    if ($oldversion < 2024050900) {
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('secondarynav', XMLDB_TYPE_INTEGER, '4', null, null, null, null, 'dashbgimage');
+        $dbman->change_field_type($table, $field);
+        upgrade_plugin_savepoint(true, 2024050900, 'dashaddon', 'dashboard');
+    }
+
     return true;
 }

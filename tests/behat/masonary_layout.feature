@@ -49,12 +49,15 @@ Feature: Enable the masonry layout in dash block on the dashboard page and view 
 
   Scenario: Check the masonry settings
     Given the following "custom field categories" exist:
-      | name  | component   | area   | itemid |
-      | Other | core_course | course | 0      |
+      | name          | component   | area   | itemid |
+      | Other         | core_course | course | 0      |
+      | Dash settings | core_course | course | 1      |
     And the following "custom fields" exist:
-      | name    | category | type     | shortname | configdata            |
-      | Field 1 | Other    | checkbox | checkbox  |                       |
-      | Field 2 | Other    | date     | date      |                       |
+      | name      | category      | type     | shortname | configdata                             |
+      | Field 1   | Other         | checkbox | checkbox  |                                        |
+      | Field 2   | Other         | date     | date      |                                        |
+      | Grid size | Dash settings | select   | gridsize  | {"options":"Wide\nTall\nSquare"}       |
+      | Promotion | Dash settings | select   | promotion | {"options":"Featured\nNormal\nDimmed"} |
     And I log in as "admin"
     Then I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
@@ -67,17 +70,17 @@ Feature: Enable the masonry layout in dash block on the dashboard page and view 
     And I set the field "Heading field" to "course: Full name"
     Then I press "Save changes"
     And I am on the "C1" "course editing" page
-    Then I follow "Expand all"
+    And I expand all fieldsets
     And I set the field "Grid size" to "Wide"
     And I set the field "Promotion" to "Featured"
     Then I press "Save and display"
     And I am on the "C2" "course editing" page
-    Then I follow "Expand all"
+    And I expand all fieldsets
     And I set the field "Grid size" to "Tall"
     And I set the field "Promotion" to "Normal"
     Then I press "Save and display"
     And I am on the "C3" "course editing" page
-    Then I follow "Expand all"
+    And I expand all fieldsets
     And I set the field "Grid size" to "Square"
     And I set the field "Promotion" to "Dimmed"
     Then I press "Save and display"

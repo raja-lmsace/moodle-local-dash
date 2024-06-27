@@ -23,13 +23,13 @@ Feature: Add learning path widget in dash block
       | Course 7 | C7        | CAT4     | 1                | 1           |                |                 |
       | Course 8 | C8        | CAT4     | 1                | 2           | ##1 year ago## | ##1 month ago## |
       | Course 9 | C9        | CAT4     | 1                | 3           |                |                 |
-      | Course 10| C10       | cAT5     | 0                | 2           |                |                 |
+      | Course 10| C10       | CAT5     | 0                | 2           |                |                 |
       | Course 11| C11       | CAT5     | 1                | 1           |                |                 |
       | Course 12| C12       | CAT5     | 1                | 2           | ##1 year ago## | ##1 month ago## |
       | Course 13| C13       | CAT5     | 1                | 3           |                |                 |
       | Course 14| C14       | CAT5     | 0                | 2           |                |                 |
       | Course 15| C15       | CAT5     | 1                | 1           |                |                 |
-      | Course 16| C16       | cAT5     | 1                | 2           | ##1 year ago## | ##1 month ago## |
+      | Course 16| C16       | CAT5     | 1                | 2           | ##1 year ago## | ##1 month ago## |
     And the following "activities" exist:
       | activity      | name               | course   | idnumber | intro                 | section    | completion |
       | assign        | Assignment 1       | C1       | page01   | Welcome to Assignment | 1          | 1          |
@@ -126,7 +126,7 @@ Feature: Add learning path widget in dash block
     And I should see "New Dash"
     And "li.grid-block[data-title='Course 1'] .grid-item.notstarted" "css_element" should exist in the "#gridLayout" "css_element"
     And "li.grid-block[data-title='Course 2'] .grid-item.notstarted" "css_element" should exist in the "#gridLayout" "css_element"
-    And "li.grid-block[data-title='Course 3'] .grid-item.notstarted" "css_element" should exist in the "#gridLayout" "css_element"
+    And "li.grid-block[data-title='Course 3'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
     And "li.grid-block[data-title='Course 6'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
     And "li.grid-block[data-title='Course 8'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
     And "li.grid-block[data-title='Course 11'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
@@ -138,9 +138,9 @@ Feature: Add learning path widget in dash block
     And I am on course index
     And I click on "Category 02" "link"
     And I should see "New Dash"
-    And "li.grid-block[data-title='Course 1'] .grid-item.notstarted" "css_element" should exist in the "#gridLayout" "css_element"
-    And "li.grid-block[data-title='Course 2'] .grid-item.notstarted" "css_element" should exist in the "#gridLayout" "css_element"
     And "li.grid-block[data-title='Course 3'] .grid-item.notstarted" "css_element" should exist in the "#gridLayout" "css_element"
+    And "li.grid-block[data-title='Course 1'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
+    And "li.grid-block[data-title='Course 2'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
     And "li.grid-block[data-title='Course 10'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
     And "li.grid-block[data-title='Course 15'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
     And "li.grid-block[data-title='Course 16'] .grid-item.notstarted" "css_element" should not exist in the "#gridLayout" "css_element"
