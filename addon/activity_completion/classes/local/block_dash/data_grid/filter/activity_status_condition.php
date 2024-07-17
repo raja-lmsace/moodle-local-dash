@@ -119,38 +119,38 @@ class activity_status_condition extends condition {
         list($sql, $params) = parent::get_sql_and_params();
 
         if (is_array($params)) {
-            $sql = [];
+            $conditionsql = [];
             foreach ($params as $key => $status) {
                 switch ($status) {
                     case 'open':
-                        $sql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
+                        $conditionsql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
                                 UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) > :now_$key + 86000) OR
                                 cmc.completionstate = 0";
                         $params += ['now_'.$key => time()];
                         break;
                     case 'due':
-                        $sql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
+                        $conditionsql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
                                 UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) <= :now_$key + 86000) OR
                                 cmc.completionstate = 0 ";
                         $params += ['now_'.$key => time(), 'now1_'.$key => time()];
                         break;
                     case 'overdue':
-                        $sql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
+                        $conditionsql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
                                 UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) <= :now_$key) OR
                                 cmc.completionstate = 0 ";
                         $params += ['now_'.$key => time()];
                         break;
                     case 'complete':
-                        $sql[] = "(cmc.completionstate <> 0 AND (cmc.timemodified <=
+                        $conditionsql[] = "(cmc.completionstate <> 0 AND (cmc.timemodified <=
                                 UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d'))))";
                         break;
                     case 'late':
-                        $sql[] = "(cmc.completionstate <> 0 AND STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d') IS NOT NULL AND
+                        $conditionsql[] = "(cmc.completionstate <> 0 AND STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d') IS NOT NULL AND
                                 cmc.timemodified >= UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')))";
                         break;
                 }
             }
-            return ['('.implode(' OR ', $sql).')', $params];
+            return ['('.implode(' OR ', $conditionsql).')', $params];
         }
         return false;
     }

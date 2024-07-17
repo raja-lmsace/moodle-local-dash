@@ -125,12 +125,12 @@ class activity_completion_data_source extends abstract_data_source {
         if (dashaddon_activity_completion_is_timemangement_installed()) {
             $builder->join('ltool_timemanagement_modules', 'tm', 'cmid', 'cm.id', join::TYPE_LEFT_JOIN);
         }
-        $filterpreferences = $this->get_preferences('filters');
+        $activityfilterpreferences = $this->get_preferences('filters');
         if (dashaddon_activities_is_local_metadata_installed()) {
-            $modulefields = $DB->get_records('local_metadata_field', ['contextlevel' => CONTEXT_MODULE]);
-            foreach ($modulefields as $field) {
+            $coursemodulefields = $DB->get_records('local_metadata_field', ['contextlevel' => CONTEXT_MODULE]);
+            foreach ($coursemodulefields as $field) {
                 $al = 'cm_mf_' . strtolower($field->shortname);
-                if (isset($filterpreferences[$al]) && $filterpreferences[$al]['enabled']) {
+                if (isset($activityfilterpreferences[$al]) && $activityfilterpreferences[$al]['enabled']) {
                     $builder->join('local_metadata', $al, 'instanceid', 'cm.id', join::TYPE_LEFT_JOIN)
                         ->join_condition($al, "$al.fieldid = " . $field->id);
                 }
@@ -138,11 +138,11 @@ class activity_completion_data_source extends abstract_data_source {
         }
 
         if (class_exists('\core_course\customfield\course_handler')) {
-            $coursehandler = \core_course\customfield\course_handler::create();
-            foreach ($coursehandler->get_fields() as $field) {
+            $coursemodulehandler = \core_course\customfield\course_handler::create();
+            foreach ($coursemodulehandler->get_fields() as $field) {
                 $al = 'c_f_' . strtolower($field->get('shortname'));
                 // Only join custom field table if the filter is enabled.
-                if (isset($filterpreferences[$al]) && $filterpreferences[$al]['enabled']) {
+                if (isset($activityfilterpreferences[$al]) && $activityfilterpreferences[$al]['enabled']) {
                     $builder->join('customfield_data', $al, 'instanceid', 'c.id', join::TYPE_LEFT_JOIN)
                         ->join_condition($al, "$al.fieldid = " . $field->get('id'));
                 }
@@ -152,7 +152,7 @@ class activity_completion_data_source extends abstract_data_source {
             foreach ($DB->get_records('course_info_field') as $field) {
                 $alias = 'c_f_' . strtolower($field->shortname);
                 // Only join custom field table if the filter is enabled.
-                if (isset($filterpreferences[$alias]) && $filterpreferences[$alias]['enabled']) {
+                if (isset($activityfilterpreferences[$alias]) && $activityfilterpreferences[$alias]['enabled']) {
                     $builder->join('course_info_data', $alias, 'courseid', 'c.id', join::TYPE_LEFT_JOIN)
                         ->join_condition($alias, "$alias.fieldid = " . $field->get('id'));
                 }
@@ -181,39 +181,39 @@ class activity_completion_data_source extends abstract_data_source {
 
         global $DB;
 
-        $filtercollection = new filter_collection(get_class($this), $this->get_context());
+        $cmfiltercollection = new filter_collection(get_class($this), $this->get_context());
 
         // Course category filter.
-        $filtercollection->add_filter(new category_field_filter('cc_id', 'cc.id', get_string('category')));
+        $cmfiltercollection->add_filter(new category_field_filter('cc_id', 'cc.id', get_string('category')));
 
         // Course filter.
-        $filtercollection->add_filter(new course_field_filter('c_id', 'c.id', get_string('course')));
+        $cmfiltercollection->add_filter(new course_field_filter('c_id', 'c.id', get_string('course')));
 
         // Module name filter.
-        $filtercollection->add_filter(new module_field_filter('m_id', 'm.id', get_string('modulename', 'block_dash')));
+        $cmfiltercollection->add_filter(new module_field_filter('m_id', 'm.id', get_string('modulename', 'block_dash')));
 
         // Activity tag filter.
-        $filtercollection->add_filter(new tags_field_filter('cm_tags', 'cm.id', 'core', 'course_modules',
+        $cmfiltercollection->add_filter(new tags_field_filter('cm_tags', 'cm.id', 'core', 'course_modules',
             get_string('activitytags', 'dashaddon_activities')));
 
         // Activity type filter.
-        $filtercollection->add_filter(new activity_type_field_filter('cm_type', ''));
+        $cmfiltercollection->add_filter(new activity_type_field_filter('cm_type', ''));
 
         // Activity purpose filter.
-        $filtercollection->add_filter(new activity_purpose_field_filter('cm_purpose', ''));
+        $cmfiltercollection->add_filter(new activity_purpose_field_filter('cm_purpose', ''));
 
         // Activity status filter.
-        $filtercollection->add_filter(new activity_status_filter('activity_status', ''));
+        $cmfiltercollection->add_filter(new activity_status_filter('activity_status', ''));
 
         // User filter.
-        $filtercollection->add_filter(new user_filter('u_id', 'u.id', get_string('user')));
+        $cmfiltercollection->add_filter(new user_filter('u_id', 'u.id', get_string('user')));
 
         // Activity filter.
-        $filtercollection->add_filter(new activity_name_filter('cm_id', 'cm.id'));
+        $cmfiltercollection->add_filter(new activity_name_filter('cm_id', 'cm.id'));
 
         if (dashaddon_activities_is_local_metadata_installed()) {
-            $modulefields = $DB->get_records('local_metadata_field', ['contextlevel' => CONTEXT_MODULE]);
-            foreach ($modulefields as $field) {
+            $coursemodulefields = $DB->get_records('local_metadata_field', ['contextlevel' => CONTEXT_MODULE]);
+            foreach ($coursemodulefields as $field) {
 
                 $alias = 'cm_mf_' . strtolower($field->shortname);
                 $select = $alias . '.data';
@@ -223,13 +223,13 @@ class activity_completion_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, format_string($field->name));
                         break;
                     case 'datetime':
-                        $filtercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
+                        $cmfiltercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
                         format_string($field->name)));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $filtercollection->add_filter(new customfield_filter($alias, $select, $field,
+                        $cmfiltercollection->add_filter(new customfield_filter($alias, $select, $field,
                         format_string($field->name)));
                         break;
                 }
@@ -237,8 +237,8 @@ class activity_completion_data_source extends abstract_data_source {
         }
 
         if (class_exists('\core_course\customfield\course_handler')) {
-            $coursehandler = \core_course\customfield\course_handler::create();
-            foreach ($coursehandler->get_fields() as $field) {
+            $coursemodulehandler = \core_course\customfield\course_handler::create();
+            foreach ($coursemodulehandler->get_fields() as $field) {
 
                 $alias = 'c_f_' . strtolower($field->get('shortname'));
                 $select = $alias . '.value';
@@ -248,13 +248,13 @@ class activity_completion_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->get_formatted_name());
                         break;
                     case 'date':
-                        $filtercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
+                        $cmfiltercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
                             $field->get_formatted_name()));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $filtercollection->add_filter(new customfield_filter($alias, $select, $field,
+                        $cmfiltercollection->add_filter(new customfield_filter($alias, $select, $field,
                             $field->get_formatted_name()));
                         break;
                 }
@@ -272,13 +272,13 @@ class activity_completion_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->fullname);
                         break;
                     case 'date':
-                        $filtercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
+                        $cmfiltercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
                             $field->fullname));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $filtercollection->add_filter(new customfield_filter($alias, $select, $field,
+                        $cmfiltercollection->add_filter(new customfield_filter($alias, $select, $field,
                             $field->fullname));
                         break;
                 }
@@ -286,46 +286,46 @@ class activity_completion_data_source extends abstract_data_source {
         }
 
         // Course category condition.
-        $filtercollection->add_filter(new course_category_condition('c_course_categories_condition', 'c.category'));
+        $cmfiltercollection->add_filter(new course_category_condition('c_course_categories_condition', 'c.category'));
 
         // My enrolled course condition.
-        $filtercollection->add_filter(new my_enrolled_courses_condition('my_enrolled_courses', 'c.id'));
+        $cmfiltercollection->add_filter(new my_enrolled_courses_condition('my_enrolled_courses', 'c.id'));
 
         // Course condition.
-        $filtercollection->add_filter(new course_condition('c_course', 'c.id'));
+        $cmfiltercollection->add_filter(new course_condition('c_course', 'c.id'));
 
         // Activity tag condition.
-        $filtercollection->add_filter(new tags_condition('activity_tags', 'cm.id', 'core', 'course_modules',
+        $cmfiltercollection->add_filter(new tags_condition('activity_tags', 'cm.id', 'core', 'course_modules',
             get_string('activitytags', 'dashaddon_activities')));
 
         // Course dates condition - past, present, future.
-        $filtercollection->add_filter(new course_dates_condition('c_coursedates', 'c.id'));
+        $cmfiltercollection->add_filter(new course_dates_condition('c_coursedates', 'c.id'));
 
         // Partent role condition (Users i manage).
-        $filtercollection->add_filter(new parent_role_condition('parentrole', 'u.id'));
+        $cmfiltercollection->add_filter(new parent_role_condition('parentrole', 'u.id'));
 
         // Current user.
-        $filtercollection->add_filter(new logged_in_user_condition('current_user', 'u.id'));
+        $cmfiltercollection->add_filter(new logged_in_user_condition('current_user', 'u.id'));
 
         // Cohorts condition.
-        $filtercollection->add_filter(new cohort_condition('cohort', 'u.id'));
+        $cmfiltercollection->add_filter(new cohort_condition('cohort', 'u.id'));
 
         // Members of my cohorts condition.
-        $filtercollection->add_filter(new users_mycohort_condition('users_mycohort', 'u.id'));
+        $cmfiltercollection->add_filter(new users_mycohort_condition('users_mycohort', 'u.id'));
 
         // Activity completion status.
-        $filtercollection->add_filter(new activity_completion_status_condition('activitycompletion_status', 'cmc.completionstate'));
+        $cmfiltercollection->add_filter(new activity_completion_status_condition('activitycompletion_status', 'cmc.completionstate'));
 
         // Module name condition.
-        $filtercollection->add_filter(new activity_modulename_condition('modulename', 'm.id'));
+        $cmfiltercollection->add_filter(new activity_modulename_condition('modulename', 'm.id'));
 
         // Activity status.
-        $filtercollection->add_filter(new activity_status_condition('activitystatus', ''));
+        $cmfiltercollection->add_filter(new activity_status_condition('activitystatus', ''));
 
         if (dashaddon_activities_is_local_metadata_installed()) {
-            dashaddon_activities_customfield_conditions($filtercollection);
+            dashaddon_activities_customfield_conditions($cmfiltercollection);
         }
-        return $filtercollection;
+        return $cmfiltercollection;
     }
 
     /**
