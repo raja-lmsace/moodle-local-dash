@@ -54,7 +54,7 @@ function xmldb_dashaddon_dashboard_install() {
     $table->add_field('dashicon', XMLDB_TYPE_CHAR, '50', null, null, null, null);
     $table->add_field('dashthumbnailimage', XMLDB_TYPE_INTEGER, '15', null, null, null, null);
     $table->add_field('dashbgimage', XMLDB_TYPE_TEXT, '4', null, null, null, null);
-    $table->add_field('secondarynav', XMLDB_TYPE_TEXT, '4', null, null, null, null);
+    $table->add_field('secondarynav', XMLDB_TYPE_INTEGER, '4', null, null, null, null);
     $table->add_field('coredash', XMLDB_TYPE_INTEGER, '2', null, null, null, null);
     // Adding keys to table dash_data_source.
     $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);

@@ -31,6 +31,10 @@ use block_dash\local\data_grid\filter\filter_collection;
 use block_dash\local\dash_framework\query_builder\builder;
 use local_dash\data_grid\filter\course_category_condition;
 use dashaddon_learningpath\local\block_dash\data_grid\filter\current_category_condition;
+use local_dash\data_grid\filter\tags_condition;
+use block_dash\local\data_grid\filter\bool_filter;
+use block_dash\local\data_grid\filter\date_filter;
+use local_dash\data_grid\filter\customfield_filter;
 
 /**
  * Learning path widget.
@@ -298,6 +302,10 @@ class learningpath_widget extends abstract_widget {
 
         $filtercollection->add_filter(new current_category_condition('current_category', 'c.category'));
 
+        $filtercollection->add_filter(new tags_condition('course_tags', 'c.id', 'core', 'course',
+            get_string('coursetags', 'dashaddon_learningpath')));
+
+        local_dash_customfield_conditions($filtercollection);
         return $filtercollection;
     }
 
@@ -314,8 +322,24 @@ class learningpath_widget extends abstract_widget {
         $orderfield = "c.id";
         $orderby = "ASC";
         $preferorderfield = $this->get_preferences('orderby');
+        $ordercustom = '';
         if ($preferorderfield) {
-            $orderfield = $preferorderfield;
+            if ($preferorderfield == 'custom') {
+                $customvalues = $this->get_preferences('customorder');
+                if (!empty($customvalues)) {
+                    $customvalues = explode(",", $customvalues);
+                    $ordercustom = "CASE ";
+                    $i = 1;
+                    foreach ($customvalues as $value) {
+                        $ordercustom .= "WHEN c.id = $value THEN $i ";
+                        $i++;
+                    }
+                    $ordercustom .= "ELSE 4 END,";
+                }
+                $orderfield = 'c.id';
+            } else {
+                $orderfield = $preferorderfield;
+            }
         }
         $preferorderby = $this->get_preferences('orderdirection');
         if ($preferorderby) {
@@ -323,17 +347,40 @@ class learningpath_widget extends abstract_widget {
         }
         $courselimit = $this->get_preferences('limit');
 
-        $endsql = "ORDER BY $orderfield $orderby";
+        $endsql = "ORDER BY $ordercustom $orderfield $orderby";
         if ($courselimit) {
             $endsql .= " LIMIT $courselimit";
         }
+
+        $preferencesfilter = $this->get_preferences('filters');
 
         $courses = [];
 
         $sql = "SELECT c.id, c.fullname, c.category
             FROM {course} c
-            JOIN {context} ctx ON ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel
-            WHERE c.id > 1 AND c.visible = 1 $conditionsql $endsql";
+            JOIN {context} ctx ON ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel ";
+        if (class_exists('\core_course\customfield\course_handler')) {
+            $coursehandler = \core_course\customfield\course_handler::create();
+            foreach ($coursehandler->get_fields() as $field) {
+                $alias = 'c_f_' . strtolower($field->get('shortname'));
+                if (isset($preferencesfilter[$alias]) && $preferencesfilter[$alias]['enabled']) {
+                    $alias = 'c_f_' . strtolower($field->get('shortname'));
+                    $sql .= "LEFT JOIN {customfield_data} $alias $alias.instanceid = c.id AND $alias.fieldid = $field->get('id')";
+                }
+            }
+        } else if (block_dash_is_totara()) {
+            global $DB;
+
+            foreach ($DB->get_records('course_info_field') as $field) {
+                $alias = 'c_f_' . strtolower($field->shortname);
+                // Only join custom field table if the filter is enabled.
+                if (isset($preferencesfilter[$alias]) && $preferencesfilter[$alias]['enabled']) {
+                    $sql .= $sql .= "LEFT JOIN {course_info_field} $alias $alias.courseid = c.id AND $alias.fieldid =
+                        $field->get('id')";
+                }
+            }
+        }
+        $sql .= "WHERE c.id > 1 AND c.visible = 1 $conditionsql $endsql";
 
         $params['userid'] = $this->get_current_userid();
         $params['contextlevel'] = CONTEXT_COURSE; // Course context level.
@@ -463,6 +510,7 @@ class learningpath_widget extends abstract_widget {
                 'large' => get_string('largeimage', 'block_dash'),
                 'extralarge' => get_string('extralargeimage', 'block_dash'),
             ];
+
             // Course image size.
             $mform->addElement('select', 'config_preferences[courseimgsize]', get_string('field:courseimgsize', 'block_dash'),
                 $courseimgsizes);
@@ -487,6 +535,7 @@ class learningpath_widget extends abstract_widget {
                 'c.fullname' => get_string('coursefullname', 'block_dash'),
                 'c.idnumber' => get_string('courseidnumber', 'block_dash'),
                 'c.startdate' => get_string('coursestartdate', 'block_dash'),
+                'custom' => get_string('field:customorder', 'dashaddon_learningpath'),
             ];
 
             // Order by.
@@ -494,6 +543,12 @@ class learningpath_widget extends abstract_widget {
             $orderbyoptions);
             $mform->addHelpButton('config_preferences[orderby]', 'field:orderby', 'block_dash');
             $mform->setType('config_preferences[orderby]', PARAM_TEXT);
+
+            $mform->addElement('text', 'config_preferences[customorder]', get_string('field:customorder',
+                'dashaddon_learningpath'));
+            $mform->addHelpButton('config_preferences[customorder]', 'field:customorder', 'dashaddon_learningpath');
+            $mform->hideIf('config_preferences[customorder]', 'config_preferences[orderby]', 'neq', 'custom');
+            $mform->setType('config_preferences[customorder]', PARAM_TEXT);
 
             $orderbyoptions = [
                 'ASC' => get_string('asc', 'block_dash'),

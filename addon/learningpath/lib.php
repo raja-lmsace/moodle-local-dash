@@ -29,7 +29,7 @@ use core_course\external\course_summary_exporter;
  *
  * @return array List of widgets.
  */
-function dashaddon_learningpath_register_widget() : array {
+function dashaddon_learningpath_register_widget(): array {
     return [
         [
             'name' => get_string('widget:learningpath', 'block_dash'),

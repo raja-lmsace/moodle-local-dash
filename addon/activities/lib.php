@@ -71,13 +71,15 @@ function dashaddon_activities_get_mod_user_duedate($mod) {
     global $DB, $USER, $CFG;
     require_once($CFG->dirroot . "/local/learningtools/ltool/timemanagement/lib.php");
     $course = $mod->get_course();
-    $userenrolments = ltool_timemanagement_get_course_user_enrollment($course->id, $USER->id);
-    if (!empty($userenrolments)) {
-        $timestarted = $userenrolments[0]['timestart'];
-        $record = $DB->get_record('ltool_timemanagement_modules', ['cmid' => $mod->id]);
-        if ($record) {
-            list('startdate' => $startdate, 'duedate' => $duedate) = ltool_timemanagement_cal_coursemodule_managedates(
-                    $record, $timestarted);
+    if (function_exists('ltool_timemanagement_get_course_user_enrollment')) {
+        $userenrolments = ltool_timemanagement_get_course_user_enrollment($course->id, $USER->id);
+        if (!empty($userenrolments)) {
+            $timestarted = $userenrolments[0]['timestart'];
+            $record = $DB->get_record('ltool_timemanagement_modules', ['cmid' => $mod->id]);
+            if ($record) {
+                list('startdate' => $startdate, 'duedate' => $duedate) = ltool_timemanagement_cal_coursemodule_managedates(
+                        $record, $timestarted);
+            }
         }
     }
     return $duedate ?? false;

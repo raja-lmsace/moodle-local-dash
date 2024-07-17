@@ -49,6 +49,8 @@ use dashaddon_activities\local\dash_framework\structure\activities_table;
 use block_dash\local\dash_framework\query_builder\join;
 use mod_forum\local\exporters\group;
 use local_dash\data_grid\filter\tags_field_filter;
+use local_dash\data_grid\filter\course_dates_condition;
+use local_dash\data_grid\filter\activity_modulename_condition;
 
 use dashaddon_courses\local\dash_framework\structure\course_table;
 use dashaddon_categories\local\dash_framework\structure\course_category_table;
@@ -245,6 +247,12 @@ class activities_data_source extends abstract_data_source {
 
         $filtercollection->add_filter(new tags_condition('activity_tags', 'cm.id', 'core', 'course_modules',
             get_string('activitytags', 'dashaddon_activities')));
+
+        // Course dates condition - past, present, future.
+        $filtercollection->add_filter(new course_dates_condition('c_coursedates', 'c.id'));
+
+        // Module name condition.
+        $filtercollection->add_filter(new activity_modulename_condition('modulename', 'm.id'));
 
         if (dashaddon_activities_is_local_metadata_installed()) {
             dashaddon_activities_customfield_conditions($filtercollection);

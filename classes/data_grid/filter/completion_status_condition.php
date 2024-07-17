@@ -112,6 +112,7 @@ class completion_status_condition extends condition {
         global $USER, $DB;
 
         list($sql, $params) = parent::get_sql_and_params();
+
         if ($sql) {
             $params['cueuserid'] = $USER->id;
             $courses = $DB->get_records_sql(
@@ -134,7 +135,9 @@ class completion_status_condition extends condition {
             list($insql, $inparams) = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'cs', true, true);
             $sql = ' c.id ' . $insql;
             $params = array_merge($params, $inparams);
+
         }
+
         return [$sql, $params];
     }
 }

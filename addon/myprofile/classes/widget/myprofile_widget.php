@@ -225,7 +225,7 @@ class myprofile_widget extends abstract_widget {
                     $join['completedcourses'] = " LEFT JOIN (
                                 SELECT cc.course AS courseid, cc.timestarted AS completionstart, cc.timecompleted AS completedtime
                                 FROM {course_completions} cc
-                                WHERE cc.userid = :ccuserid AND cc.timecompleted <> ''
+                                WHERE cc.userid = :ccuserid AND cc.timecompleted IS NOT NULL
                             ) cc ON cc.courseid = c.id";
                     $params['ccuserid'] = $userid;
                     $select['completedcourses'] = 'cc.completionstart, cc.completedtime';
@@ -465,39 +465,42 @@ class myprofile_widget extends abstract_widget {
 
                 case "numberofoverdueactivities":
                 case 'numberofdueactivities':
-                    if (!isset($result['numberofdueactivities'])) {
-                        require_once($CFG->dirroot.'/local/dash/addon/myprofile/timemanagementlib.php');
-                        $overdues = $dues = 0;
+                    require_once($CFG->dirroot.'/local/dash/addon/myprofile/timemanagementlib.php');
+                    $overdues = $dues = 0;
 
-                        $transforms[$field] = function($courses, $userdata) use (&$result, $field) {
-                            $finaldues = 0;
-                            $finaloverdues = 0;
-                            foreach ($courses as $course) {
-                                list($dues, $overdues) = dashaddon_myprofile_get_user_dueactivities($course->id, $userdata->u_id);
-                                $finaldues += $dues;
-                                $finaloverdues += $overdues;
-                            }
+                    $transforms[$field] = function($courses, $userdata) use (&$result, $field) {
+                        $finaldues = 0;
+                        $finaloverdues = 0;
+                        foreach ($courses as $course) {
+                            list($dues, $overdues) = dashaddon_myprofile_get_user_dueactivities($course->id, $userdata->u_id);
+                            $finaldues += $dues;
+                            $finaloverdues += $overdues;
+                        }
 
-                            // Number of due activities.
-                            $result['numberofdueactivities'] = $this->add_kpi($field, $finaldues, [],
-                                get_string('label:numberofdueactivities', 'block_dash'));
-
+                        if ($field == 'numberofoverdueactivities') {
                             // Number of overdue activities.
                             $label = get_string('label:numberofoverdueactivities', 'block_dash');
                             $result['numberofoverdueactivities'] = $this->add_kpi($field, $finaloverdues, [], $label);
-
-                            return false;
-                        };
-
-                        // Number of due activities.
-                        if ($field == 'numberofdueactivities') {
-                            $result['numberofdueactivities'] = $this->add_kpi($field, $dues);
                         }
+
+                        if ($field == 'numberofdueactivities') {
+                            // Number of due activities.
+                            $result['numberofdueactivities'] = $this->add_kpi($field, $finaldues, [],
+                            get_string('label:numberofdueactivities', 'block_dash'));
+                        }
+                        return false;
+                    };
+
+                    // Number of due activities.
+                    if ($field == 'numberofdueactivities') {
+                        $result['numberofdueactivities'] = $this->add_kpi($field, $dues);
                     }
+
                     // Number of overdue activities.
                     if ($field == 'numberofoverdueactivities') {
                         $result['numberofoverdueactivities'] = $this->add_kpi($field, $overdues);
                     }
+
                     break;
             }
         }

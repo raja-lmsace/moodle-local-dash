@@ -81,7 +81,7 @@ class content_customtype extends abstract_custom_type {
     /**
      * Get template file name to renderer.
      */
-    public function get_mustache_template_name() :string {
+    public function get_mustache_template_name(): string {
         return 'dashaddon_content/content';
     }
 
@@ -91,7 +91,7 @@ class content_customtype extends abstract_custom_type {
      * @param \context $context
      * @return bool
      */
-    public static function has_capbility($context) : bool {
+    public static function has_capbility($context): bool {
         global $COURSE;
 
         // Content is only available for the users with this capability and only for course pages not system pages.
@@ -201,7 +201,7 @@ class content_customtype extends abstract_custom_type {
      * @param stdclass $content
      * @return array
      */
-    protected function generate_layouts($content) : array {
+    protected function generate_layouts($content): array {
         global $PAGE;
 
         // Find this layout is available to display on this page.

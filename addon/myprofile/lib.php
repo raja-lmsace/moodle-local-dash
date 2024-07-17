@@ -27,7 +27,7 @@
  *
  * @return array List of widgets.
  */
-function dashaddon_myprofile_register_widget() : array {
+function dashaddon_myprofile_register_widget(): array {
     return [
         [
             'name' => get_string('widget:myprofile', 'block_dash'),

@@ -275,7 +275,7 @@ class custom_data_source extends persistent {
      *
      * @return array
      */
-    public function get_placeholders() : array {
+    public function get_placeholders(): array {
 
         // Include the placeholder fields in selection query.
         $placeholders = $this->get('placeholderfields');

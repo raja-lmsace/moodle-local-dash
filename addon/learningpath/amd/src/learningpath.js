@@ -70,7 +70,6 @@ define(['jquery',  'core/fragment', 'core/modal_factory', 'core/modal_events',
     }
 
     learningPath.prototype.showCircleDetails = function(event) {
-        console.log(event.currentTarget);
         var learingPathID = event.target.closest(".learning-path-block").getAttribute("id");
         ModalFactory.create({
             title: "",
@@ -270,7 +269,6 @@ define(['jquery',  'core/fragment', 'core/modal_factory', 'core/modal_events',
                 var imagePath = courses[i].img;
 
                 // Create course image.
-                // console.log(Data.dotimg);
                 if (!Data.dotimg) {
                     var image = self.createImage(imagePath, imageWidth, imageHeight);
 
@@ -329,11 +327,9 @@ define(['jquery',  'core/fragment', 'core/modal_factory', 'core/modal_events',
         }
 
         createCircle(point, course, patternID, radious, courses, i) {
-            //console.log("i the value" + i);
             var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             circle.classList.add('course-circle');
 
-            //console.log(course.info.id);
             var courseInd = "circle-course-" + course.info.id;
             circle.classList.add(courseInd);
             circle.setAttribute("data-courseid", course.info.id);

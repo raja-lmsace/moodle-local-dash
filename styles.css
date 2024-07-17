@@ -1244,3 +1244,7 @@ form fieldset .fitem.fitem_f .felement {
     height: 100%;
     object-fit: cover;
 }
+
+.block_dash .dash-container .dash-table td .activity-completion-override {
+    cursor: pointer;
+}

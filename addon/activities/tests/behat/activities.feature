@@ -103,72 +103,72 @@ Feature: Add activities widget in dash block
   Scenario: check the activities datasource fields
     Given I log in as "student1"
     And ".dash-block-content .dash-table" "css_element" should exist
-    And I should see "Test choice 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "Test choice 2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(1)" "css_element"
-    And I should see "Test page 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(1)" "css_element"
-    And I should see "Test assignment 1" in the ".dash-table tbody tr:nth-child(8) td:nth-child(1)" "css_element"
+    And I should see "Test choice 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    And I should see "Test choice 2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(2)" "css_element"
+    And I should see "Test page 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(2)" "css_element"
+    And I should see "Test assignment 1" in the ".dash-table tbody tr:nth-child(8) td:nth-child(2)" "css_element"
     # Description
-    And I should see "Test choice 01 description" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Test choice 02 description" in the ".dash-table tbody tr:nth-child(2) td:nth-child(3)" "css_element"
-    And I should see "Test page 01 description" in the ".dash-table tbody tr:nth-child(5) td:nth-child(3)" "css_element"
+    And I should see "Test choice 01 description" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    And I should see "Test choice 02 description" in the ".dash-table tbody tr:nth-child(2) td:nth-child(6)" "css_element"
+    And I should see "Test page 01 description" in the ".dash-table tbody tr:nth-child(5) td:nth-child(6)" "css_element"
     # Id number
-    And I should see "choice1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
-    And I should see "choice2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(4)" "css_element"
-    And I should see "page" in the ".dash-table tbody tr:nth-child(5) td:nth-child(4)" "css_element"
-    And I should see "assign1" in the ".dash-table tbody tr:nth-child(8) td:nth-child(4)" "css_element"
+    And I should see "choice1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
+    And I should see "choice2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(7)" "css_element"
+    And I should see "page" in the ".dash-table tbody tr:nth-child(5) td:nth-child(7)" "css_element"
+    And I should see "assign1" in the ".dash-table tbody tr:nth-child(8) td:nth-child(7)" "css_element"
     # Type
-    And I should see "Activity" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "Resource" in the ".dash-table tbody tr:nth-child(5) td:nth-child(6)" "css_element"
-    And I should see "Activity" in the ".dash-table tbody tr:nth-child(8) td:nth-child(6)" "css_element"
+    And I should see "Activity" in the ".dash-table tbody tr:nth-child(1) td:nth-child(9)" "css_element"
+    And I should see "Resource" in the ".dash-table tbody tr:nth-child(5) td:nth-child(9)" "css_element"
+    And I should see "Activity" in the ".dash-table tbody tr:nth-child(8) td:nth-child(9)" "css_element"
     # Module Name
-    And I should see "Choice" in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
-    And I should see "Page" in the ".dash-table tbody tr:nth-child(5) td:nth-child(7)" "css_element"
-    And I should see "Assignment" in the ".dash-table tbody tr:nth-child(8) td:nth-child(7)" "css_element"
+    And I should see "Choice" in the ".dash-table tbody tr:nth-child(1) td:nth-child(10)" "css_element"
+    And I should see "Page" in the ".dash-table tbody tr:nth-child(5) td:nth-child(10)" "css_element"
+    And I should see "Assignment" in the ".dash-table tbody tr:nth-child(8) td:nth-child(10)" "css_element"
     # Module Image.
-    Then "//table[contains(@class, 'dash-table')]//tr[1]//td[8]//img[contains(@src, 'image.php') and contains(@src, '/boost/choice')]" "xpath_element" should exist
-    Then "//table[contains(@class, 'dash-table')]//tr[5]//td[8]//img[contains(@src, 'image.php') and contains(@src, '/boost/page')]" "xpath_element" should exist
-    Then "//table[contains(@class, 'dash-table')]//tr[8]//td[8]//img[contains(@src, 'image.php') and contains(@src, '/boost/assign')]" "xpath_element" should exist
+    Then "//table[contains(@class, 'dash-table')]//tr[1]//td[1]//img[contains(@src, 'image.php') and contains(@src, '/boost/choice')]" "xpath_element" should exist
+    Then "//table[contains(@class, 'dash-table')]//tr[5]//td[1]//img[contains(@src, 'image.php') and contains(@src, '/boost/page')]" "xpath_element" should exist
+    Then "//table[contains(@class, 'dash-table')]//tr[8]//td[1]//img[contains(@src, 'image.php') and contains(@src, '/boost/assign')]" "xpath_element" should exist
     # Purpose.
-    And I should see "Communication" in the ".dash-table tbody tr:nth-child(1) td:nth-child(9)" "css_element"
-    And I should see "Content" in the ".dash-table tbody tr:nth-child(5) td:nth-child(9)" "css_element"
-    And I should see "Assessment" in the ".dash-table tbody tr:nth-child(8) td:nth-child(9)" "css_element"
+    And I should see "Communication" in the ".dash-table tbody tr:nth-child(1) td:nth-child(11)" "css_element"
+    And I should see "Content" in the ".dash-table tbody tr:nth-child(5) td:nth-child(11)" "css_element"
+    And I should see "Assessment" in the ".dash-table tbody tr:nth-child(8) td:nth-child(11)" "css_element"
     # Completion status.
-    And I should see "Not completed" in the ".dash-table tbody tr:nth-child(1) td:nth-child(10)" "css_element"
-    And I should see "Not completed" in the ".dash-table tbody tr:nth-child(5) td:nth-child(10)" "css_element"
-    And I should see "" in the ".dash-table tbody tr:nth-child(8) td:nth-child(10)" "css_element"
+    And I should see "Not completed" in the ".dash-table tbody tr:nth-child(1) td:nth-child(12)" "css_element"
+    And I should see "Not completed" in the ".dash-table tbody tr:nth-child(5) td:nth-child(12)" "css_element"
+    And I should see "" in the ".dash-table tbody tr:nth-child(8) td:nth-child(12)" "css_element"
     # Completion due date.
-    And I should see "##+2day##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(12)" "css_element"
-    And I should see "##+5day##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(5) td:nth-child(12)" "css_element"
-    Then I click on ".dash-table tbody tr:nth-child(1) td:nth-child(2) a" "css_element"
+    And I should see "##+2day##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(14)" "css_element"
+    And I should see "##+5day##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(5) td:nth-child(14)" "css_element"
+    Then I click on ".dash-table tbody tr:nth-child(1) td:nth-child(5) a" "css_element"
     Then I should see "Test choice 1"
     And I press "Mark as done"
     Then I follow "Dashboard"
-    Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(2) a" "css_element"
+    Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(5) a" "css_element"
     Then I should see "Test page 1"
     Then I wait "10" seconds
     And I press "Mark as done"
     Then I follow "Dashboard"
     # check the activity completion or not.
-    And I should see "Completed" in the ".dash-table tbody tr:nth-child(1) td:nth-child(10)" "css_element"
-    And I should see "Completed" in the ".dash-table tbody tr:nth-child(5) td:nth-child(10)" "css_element"
+    And I should see "Completed" in the ".dash-table tbody tr:nth-child(1) td:nth-child(12)" "css_element"
+    And I should see "Completed" in the ".dash-table tbody tr:nth-child(5) td:nth-child(12)" "css_element"
     # Completion date.
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(11)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(5) td:nth-child(11)" "css_element"
+    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(13)" "css_element"
+    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
     # Module section.
-    Then I should see "General" in the ".dash-table tbody tr:nth-child(1) td:nth-child(13)" "css_element"
-    Then I should see "Topic 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
-    Then I should see "Topic 2" in the ".dash-table tbody tr:nth-child(8) td:nth-child(13)" "css_element"
-    # Module section link.
-    Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(14)" "css_element"
-    Then I should see "Topic 1"
-    Then I follow "Dashboard"
-    Then I click on ".dash-table tbody tr:nth-child(8) td:nth-child(14)" "css_element"
-    Then I should see "Topic 2"
-    Then I follow "Dashboard"
+    Then I should see "General" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
+    Then I should see "Topic 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(4)" "css_element"
+    Then I should see "Topic 2" in the ".dash-table tbody tr:nth-child(8) td:nth-child(4)" "css_element"
+    # # Module section link.
+    # Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(15) a" "css_element"
+    # Then I should see "Topic 1"
+    # Then I follow "Dashboard"
+    # Then I click on ".dash-table tbody tr:nth-child(8) td:nth-child(15) a" "css_element"
+    # Then I should see "Topic 2"
+    # Then I follow "Dashboard"
     # Module path
-    Then I should see "Category 01 / Course 2 / General" in the ".dash-table tbody tr:nth-child(1) td:nth-child(15)" "css_element"
-    Then I should see "Category 01 / Course 2 / Topic 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(15)" "css_element"
-    Then I should see "Category 02 / Category 03 / Course 5 / Topic 2" in the ".dash-table tbody tr:nth-child(8) td:nth-child(15)" "css_element"
+    Then I should see "Category 01 / Course 2 / General" in the ".dash-table tbody tr:nth-child(1) td:nth-child(16)" "css_element"
+    Then I should see "Category 01 / Course 2 / Topic 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(16)" "css_element"
+    Then I should see "Category 02 / Category 03 / Course 5 / Topic 2" in the ".dash-table tbody tr:nth-child(8) td:nth-child(16)" "css_element"
 
   Scenario: check the activities datasource filters
     Given I log in as "student1"

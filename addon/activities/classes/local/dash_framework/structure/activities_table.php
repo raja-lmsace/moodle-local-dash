@@ -35,6 +35,8 @@ use local_dash\data_grid\field\attribute\tags_attribute;
 use block_dash\local\data_grid\field\attribute\date_attribute;
 use block_dash\local\data_grid\field\attribute\bool_attribute;
 use block_dash\local\data_grid\field\attribute\image_attribute;
+use block_dash\local\data_grid\field\attribute\button_attribute;
+use local_dash\data_grid\field\attribute\customfield_select_attribute;
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_link_attribute;
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_name_attribute;
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_modname_attribute;
@@ -49,7 +51,9 @@ use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_pat
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_duedate_attribute;
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_background_attribute;
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_purpose_attribute;
-use local_dash\data_grid\field\attribute\customfield_select_attribute;
+use dashaddon_activity_completion\local\block_dash\data_grid\field\attribute\activity_url_attribute;
+
+
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -156,6 +160,10 @@ class activities_table extends table {
             ]),
             new field('modifiedat', new lang_string('modifieddate', 'block_dash'), $this, $activitymodifiydatesql, [
                 new date_attribute(),
+            ]),
+            new field('button', new lang_string('activitybutton', 'block_dash'), $this, 'cmc.id', [
+                new activity_url_attribute(['mod' => 'cm_modulename', 'cmid' => 'cm_id']),
+                new button_attribute(['label' => new lang_string('viewactivity', 'block_dash'), 'aria-label' => 'cm_name']),
             ]),
         ];
 

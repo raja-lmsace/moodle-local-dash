@@ -27,7 +27,7 @@
  *
  * @return array List of widgets.
  */
-function dashaddon_course_completions_register_widget() : array {
+function dashaddon_course_completions_register_widget(): array {
     return [
         [
             'name' => get_string('widget:course_completions', 'block_dash'),

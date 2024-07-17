@@ -26,6 +26,9 @@ namespace dashaddon_course_enrols\local\block_dash\data_grid\filter;
 
 use block_dash\local\data_grid\filter\filter_collection_interface;
 
+/**
+ * Filter element.
+ */
 trait filter_element {
     /**
      * Override this method and call it after creating a form element.
