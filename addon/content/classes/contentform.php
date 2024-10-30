@@ -326,7 +326,7 @@ class contentform extends \core_form\dynamic_form {
 
         return [
             'subdirs' => true,
-            'maxfiles' => 1,
+            'maxfiles' => -1,
             'maxbytes' => 1000000,
             'context' => $context ?: $PAGE->context,
             'accepted_types' => 'web_image',
