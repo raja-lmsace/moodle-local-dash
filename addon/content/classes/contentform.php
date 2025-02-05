@@ -292,10 +292,12 @@ class contentform extends \core_form\dynamic_form {
 
         $layoutid = $this->optional_param('layoutid', 'layout1', PARAM_ALPHANUMEXT);
 
+        // print_r($contentpreferences);
         foreach ($editors as $configname => $filearea) {
             // Verify the element is editor.
-            $filearea .= '_' . $layoutid;
+            $filearea = $filearea . '_' . $layoutid;
 
+            // echo $filearea;
             $contentpreferences = file_postupdate_standard_editor(
                 $contentpreferences, $configname, $this->get_editor_options($context),
                 $context,  'dashaddon_content', $filearea, $blockid
@@ -326,7 +328,7 @@ class contentform extends \core_form\dynamic_form {
 
         return [
             'subdirs' => true,
-            'maxfiles' => 1,
+            'maxfiles' => -1,
             'maxbytes' => 1000000,
             'context' => $context ?: $PAGE->context,
             'accepted_types' => 'web_image',

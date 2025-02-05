@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'dashaddon_activity_completion';
-$plugin->version = 2024071700;
+$plugin->version = 2024123001;
 $plugin->requires  = 2017051509;
 $plugin->maturity  = MATURITY_ALPHA;
 $plugin->release = '1.1';

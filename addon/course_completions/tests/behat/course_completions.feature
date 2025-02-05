@@ -137,3 +137,4 @@ Feature: Add course completion widget in dash block
     And I press "Save and display"
     And I follow dashboard
     And I should see "Course 4" in the "Course completions" "block"
+

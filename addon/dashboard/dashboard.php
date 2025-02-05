@@ -48,7 +48,7 @@ if (!$id = optional_param('id', null, PARAM_INT)) {
 
 $dashboard = new dashboard($id);
 
-$context = context::instance_by_id($dashboard->get('contextid'));
+$context = $dashboard->get_context_instance();
 $course = null;
 $PAGE->set_context($context);
 if ($coursecontext = $context->get_course_context(false)) {
@@ -78,14 +78,17 @@ $PAGE->set_pagelayout('mydashboard');
 require_login();
 $PAGE->set_title($dashboard->get('name'));
 $PAGE->set_heading($dashboard->get('name'));
+
 if (has_capability('local/dash:managedashboards', $context)) {
     $PAGE->navbar->add(get_string('managedashboards', 'block_dash'),
         new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'),
     );
 }
+
 if ($course) {
     $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', ['id' => $course->id]));
 }
+
 $PAGE->navbar->add($dashboard->get('name'), $PAGE->url);
 
 if ($PAGE->user_allowed_editing()) {
@@ -103,12 +106,55 @@ if ($PAGE->user_allowed_editing()) {
         $PAGE->set_button($button);
     }
 }
+
 // Send out the resulting CSS code. The theme revision will be set as etag to support the browser caching.
 $includestyle = new \moodle_url('/local/dash/addon/dashboard/styles.php', ['id' => $dashboard->get('id'),
     'rev' => theme_get_revision(),
 ]);
+
+$PAGE->requires->js_amd_inline("
+    require(['jquery'], function($) {
+        var element = $('.block-region section:nth-of-type(1)');
+        var elementBottom = element.offset().top + element.outerHeight();
+        $(window).on('scroll', function() {
+            if ($(this).scrollTop() > elementBottom) {
+                if (!$('.dash-tab-element').hasClass('fixed-top')) {
+                    $('.dash-tab-element').addClass('fixed-top');
+                }
+            } else {
+                if ($('.dash-tab-element').hasClass('fixed-top')) {
+                    $('.dash-tab-element').removeClass('fixed-top');
+                }
+            }
+        });
+    })
+");
+
+$PAGE->requires->js_call_amd('dashaddon_dashboard/dashboard', 'init');
+
 $PAGE->requires->css($includestyle);
+if ($PAGE->user_is_editing()) {
+    if ($context->contextlevel == CONTEXT_COURSECAT) {
+        if (has_capability('local/dash:managecoursecatedashboards', $context)) {
+            $PAGE->set_button($OUTPUT->single_button(new \moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => 'edit',
+                'id' => $dashboard->get('id')]),
+                get_string('editdashboard', 'block_dash'), 'get'));
+        }
+    } else  {
+        if (has_capability('local/dash:managedashboards', $context)) {
+            $PAGE->set_button($OUTPUT->single_button(new \moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => 'edit',
+                'id' => $dashboard->get('id')]),
+                get_string('editdashboard', 'block_dash'), 'get'));
+        }
+    }
+}
+
 echo $OUTPUT->header();
+
 echo $OUTPUT->addblockbutton($regionname);
-echo $OUTPUT->custom_block_region($regionname);
+
+$renderer = $PAGE->get_renderer('local_dash');
+
+echo $renderer->custom_block_region($regionname, $dashboard);
+
 echo $OUTPUT->footer();

@@ -27,3 +27,4 @@ $string['dash:managedatasources'] = 'Manage data sources';
 $string['pluginname'] = 'Dash Pro';
 $string['subplugintype_dashaddon'] = 'Dash Addon';
 $string['subplugintype_dashaddon_plural'] = 'Dash Addons';
+$string['dash:managecoursecatedashboards'] = 'Manage course categorydata sources';

@@ -46,6 +46,7 @@ use local_dash\data_grid\field\attribute\customfield_select_attribute;
 use local_dash\data_grid\field\attribute\completion_status_attribute;
 use local_dash\data_grid\field\attribute\enrollment_options_attribute;
 use local_dash\data_grid\field\attribute\smart_course_button_attribute;
+use block_dash\local\data_grid\field\attribute\course_information_url_attribute;
 
 /**
  * Class course_table.
@@ -103,11 +104,11 @@ class course_table extends table {
             ]),
             new field('image', new lang_string('courseoverviewfiles'), $this, 'c.id', [
                 new course_image_url_attribute(),
-                new image_attribute(),
+                new image_attribute(['title' => 'c_fullname']),
             ]),
             // Course image link.
             new field('image_link', new lang_string('courseimagelink', 'block_dash'), $this, 'c.id', [
-                new course_image_url_attribute(), new image_attribute(),
+                new course_image_url_attribute(), new image_attribute(['title' => 'c_fullname']),
                 new linked_data_attribute(['url' => new moodle_url('/course/view.php', ['id' => 'c_id'])]),
             ]),
 
@@ -157,6 +158,11 @@ class course_table extends table {
             ]),
             new field('smart_course_button', new lang_string('smart_coursebutton', 'block_dash'), $this, 'c.id', [
                 new smart_course_button_attribute(),
+            ]),
+
+            new field('courseinformation', new lang_string('courseinformation', 'block_dash'), $this, 'c.id', [
+                new course_information_url_attribute(),
+                new button_attribute(['label' => new lang_string('courseinformation', 'block_dash')]),
             ]),
         ];
 

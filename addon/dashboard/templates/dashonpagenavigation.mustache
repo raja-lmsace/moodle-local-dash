@@ -1,0 +1,33 @@
+<section class="onpage-navigation">
+    <div class="dash-tab-block">
+        <nav>
+            <div class="dash-tab-element {{#hidebuttontitle}}hide-title-button{{/hidebuttontitle}} {{showtitleclass}} {{showctaclass}}">
+                <div class="dash-tab-title">
+                    <h2 class=""> {{dashboardname}} </h2>
+                    <div class="dash-register-block">
+                        <a href="{{{ctaurl}}}">{{ctatext}}</a>
+                    </div>
+                </div>
+                <div class="dash-tab-title dash-nav-block">
+                    {{#moremenubar}}
+                        <nav class="navbar navbar-expand {{extraclasses}}" aria-label="{{#str}}sitemenubar, admin{{/str}}">
+                                {{> core/moremenu}}
+                        </nav>
+                    {{/moremenubar}}
+                </div>
+            </div>
+        </nav>
+    </div>
+</section>
+
+{{#js}}
+    require(['jquery'], function($) {
+        $(document).ready(function() {
+            $('.dash-tab-element .moremenu li .nav-link').on('click', function() {
+                $('.dash-tab-element .moremenu li .nav-link').removeClass('active');
+                $(this).addClass('active');
+            });
+            $('.dash-tab-element .moremenu li .nav-link').first().addClass('active');
+        });
+    });
+{{/js}}

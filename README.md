@@ -1,1 +1,1 @@
-# moodle-local_dash
+# Moodle-local-dash

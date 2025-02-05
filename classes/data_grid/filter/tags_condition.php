@@ -77,15 +77,15 @@ class tags_condition extends condition {
             $itemids = [];
 
             $collectionid = \core_tag_area::get_collection($this->component, $this->itemtype);
-
-            foreach ($values as $value) {
-                if ($tag = \core_tag_tag::get_by_name($collectionid, $value)) {
-                    foreach ($tag->get_tagged_items($this->component, $this->itemtype) as $item) {
-                        $itemids[] = $item->id;
+            if (is_array($values)) {
+                foreach ($values as $value) {
+                    if ($tag = \core_tag_tag::get_by_name($collectionid, $value)) {
+                        foreach ($tag->get_tagged_items($this->component, $this->itemtype) as $item) {
+                            $itemids[] = $item->id;
+                        }
                     }
                 }
             }
-
             return !empty($itemids) ? $itemids : [0];
         }
     }

@@ -31,18 +31,28 @@ global $USER;
 
 $context = context_system::instance();
 
+$contextid = optional_param('contextid', 0, PARAM_INT);
+if ($contextid) {
+    $context = context::instance_by_id($contextid);
+}
+
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'));
 $PAGE->set_title(get_string('managedashboards', 'block_dash'));
 $PAGE->set_heading(get_string('managedashboards', 'block_dash'));
-$PAGE->set_button($OUTPUT->single_button(new moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => 'create']),
+$PAGE->set_button($OUTPUT->single_button(new moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => 'create',
+    'contextid' => $contextid]),
     get_string('createdashboard', 'block_dash')));
 $PAGE->navbar->add(get_string('managedashboards', 'block_dash'));
 
 require_login();
-require_capability('local/dash:managedashboards', $context);
+if ($context->contextlevel == CONTEXT_COURSECAT) {
+    require_capability('local/dash:managecoursecatedashboards', $context);
+} else  {
+    require_capability('local/dash:managedashboards', $context);
+}
 
-$table = new dashboard_table('dashboards');
+$table = new dashboard_table('dashboards', $contextid);
 $table->define_baseurl($PAGE->url);
 $table->set_attribute('class', 'dashaddon-dashboardlist');
 

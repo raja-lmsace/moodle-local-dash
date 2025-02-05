@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'dashaddon_dashboard';
-$plugin->version = 2024050901;
+$plugin->version = 2025010300;
 $plugin->requires  = 2017051509;
 $plugin->maturity  = MATURITY_ALPHA;
 $plugin->release = '1.1';

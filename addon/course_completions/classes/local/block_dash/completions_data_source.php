@@ -34,7 +34,7 @@ use local_dash\data_grid\filter\course_field_filter;
 use local_dash\data_grid\filter\selfenrol_condition;
 use block_dash\local\data_source\abstract_data_source;
 use local_dash\data_grid\filter\category_field_filter;
-use local_dash\data_grid\filter\parent_role_condition;
+use local_dash\data_grid\filter\relations_role_condition;
 use block_dash\local\dash_framework\query_builder\join;
 use block_dash\local\data_grid\filter\course_condition;
 use block_dash\local\data_grid\filter\filter_collection;
@@ -165,7 +165,7 @@ class completions_data_source extends abstract_data_source {
         $compfiltercollection->add_filter(new tags_field_filter('c_tags', 'c.id', 'core', 'course',
             get_string('coursetags', 'tag')));
 
-        $compfiltercollection->add_filter(new parent_role_condition('parentrole', 'u.id'));
+        $compfiltercollection->add_filter(new relations_role_condition('parentrole', 'u.id'));
 
         $compfiltercollection->add_filter(new completion_status_filter('c_status', 'ue.status', get_string('status')));
 
@@ -242,7 +242,7 @@ class completions_data_source extends abstract_data_source {
 
         $compfiltercollection->add_filter(new current_course_condition('c_current_course', 'c.id'));
 
-        $compfiltercollection->add_filter(new my_groups_condition('my_groups', 'g.id'));
+        $compfiltercollection->add_filter(new my_groups_condition('my_groups', 'gm300.id'));
 
         $compfiltercollection->add_filter(new enrollment_self_condition('self_enrollments', 'e.enrol'));
 

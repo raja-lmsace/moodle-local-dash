@@ -32,6 +32,7 @@ if ($hassiteconfig) {
     $settings = null;
 
     $page = new admin_settingpage('localdashgeneralsettings', get_string('generalsettings', 'block_dash'));
+
     $name = 'local_dash/courseimage';
     $title = get_string('courseimage', 'block_dash');
     $description = get_string('courseimagedesc', 'block_dash');
@@ -127,4 +128,10 @@ if ($hassiteconfig) {
     if (class_exists('\dashaddon_skill_graph\widget\competency_progress_widget')) {
         \dashaddon_skill_graph\widget\competency_progress_widget::include_global_settings_page($ADMIN);
     }
+
+}
+
+foreach (core_plugin_manager::instance()->get_plugins_of_type('dashaddon') as $plugin) {
+    // Load all the dashaddon plugins settings pages
+    $plugin->load_settings($ADMIN, 'localdashsettings', $hassiteconfig);
 }

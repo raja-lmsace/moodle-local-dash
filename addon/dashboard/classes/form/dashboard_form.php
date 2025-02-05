@@ -24,6 +24,7 @@
 namespace dashaddon_dashboard\form;
 
 use core\form\persistent as persisten_form;
+use core_course_category;
 use dashaddon_dashboard\model\dashboard;
 
 defined('MOODLE_INTERNAL') || die();
@@ -61,9 +62,12 @@ class dashboard_form extends persisten_form {
      * @return void
      */
     protected function definition() {
-        global $DB,  $PAGE;
+        global $DB, $PAGE, $OUTPUT;
 
         $mform = $this->_form;
+
+        // General header
+        $mform->addElement('header', 'generalheader', get_string('general'));
 
         $mform->addElement('text', 'name', get_string('name'));
         $mform->setType('name', PARAM_TEXT);
@@ -71,40 +75,91 @@ class dashboard_form extends persisten_form {
 
         if (!$this->get_persistent()->get('id')) {
             $mform->addElement('text', 'shortname', get_string('shortname'));
-            // Shortname is actually PARAM_ALPHAEXT. Setting to PARAM_TEXT so value is not cleaned before validation. That
-            // Allows dashboard::validate_shortname() to warn the user instead of silently cleaning and submitting.
             $mform->setType('shortname', PARAM_TEXT);
             $mform->addRule('shortname', get_string('required'), 'required');
         } else {
             $mform->addElement('static', 'shortname', get_string('shortname'), $this->get_persistent()->get('shortname'));
         }
 
-        // Description.
         $mform->addElement('editor', 'description', get_string('description'), ['rows' => 4]);
         $mform->setType('description', PARAM_CLEANHTML);
 
+        // Context settings section.
+        $mform->addElement('header', 'contextsettings', get_string('contextsettings', 'block_dash'));
         if ($this->get_persistent()->get('shortname') != 'coredashboard') {
 
-            $options = $DB->get_records_sql_menu('SELECT ctx.id, c.fullname FROM {course} c
-                                                JOIN {context} ctx ON ctx.contextlevel = :contextlevel
-                                                AND ctx.instanceid = c.id
-                                                WHERE c.format != :format
-                                                ORDER BY c.fullname', [
-                                                    'contextlevel' => CONTEXT_COURSE,
-                                                    'format' => 'site',
-                                                ]);
-            $options = [\context_system::instance()->id => get_string('system', 'block_dash')] + $options;
+            $options = $DB->get_records_sql_menu('SELECT c.id, c.fullname FROM {course} c
+                                                    JOIN {context} ctx ON ctx.contextlevel = :contextlevel
+                                                    AND ctx.instanceid = c.id
+                                                    WHERE c.format != :format
+                                                    ORDER BY c.fullname', [
+                                                        'contextlevel' => CONTEXT_COURSE,
+                                                        'format' => 'site',
+                                                    ]);
+            // Context type selection.
+            $contexttypes = [
+                'system' => get_string('contextsystem', 'block_dash'),
+                'category' => get_string('contextcategory', 'block_dash'),
+                'course' => get_string('contextcourse', 'block_dash')
+            ];
+            if (isset($this->_customdata['categoryid'])) {
+                $contexttypes = ['category' => get_string('contextcategory', 'block_dash')];
+            }
+            $mform->addElement('select', 'contexttype', get_string('contexttype', 'block_dash'), $contexttypes);
+            $mform->setDefault('contexttype', 'system');
 
-            $mform->addElement('select', 'contextid', get_string('contextid', 'block_dash'), $options);
-            $mform->setType('contextid', PARAM_INT);
-            $mform->addRule('contextid', get_string('required'), 'required');
-            $mform->addHelpButton('contextid', 'contextid', 'block_dash');
+            // Course category.
+            $categoryoptions = [];
+            if (isset($this->_customdata['categoryid'])) {
+                $categoryoptions[$this->_customdata['categoryid']] = core_course_category::get($this->_customdata['categoryid'])->get_formatted_name(); 
+            } else {
+                foreach (\core_course_category::make_categories_list('moodle/category:manage') as $id => $category) {
+                    $categoryoptions[$id] = $category;
+                }
+            }
+            $mform->addElement('autocomplete', 'categoryid', get_string('selectcategory', 'block_dash'), $categoryoptions);
+            $mform->addHelpButton('categoryid', 'coursecategory');
+            $mform->hideIf('categoryid', 'contexttype', 'neq', 'category');
 
+            // Course selector.
+            $mform->addElement('autocomplete', 'courseid', get_string('selectcourse', 'block_dash'), $options,
+                    ['multiple' => false, 'includefrontpage' => false]);
+            $mform->hideIf('courseid', 'contexttype', 'neq', 'course');
+
+            if (local_dash_secondarynav()) {
+                $mform->addElement('select', 'secondarynav', get_string('secondarynav', 'block_dash'), [
+                    1 => get_string('yes'),
+                    0 => get_string('no'),
+                ]);
+                $mform->setType('secondarynav', PARAM_INT);
+                $mform->hideIf('secondarynav', 'contexttype', 'neq', 'course');
+            } else {
+                $mform->addElement('hidden', 'secondarynav', 0);
+                $mform->setType('secondarynav', PARAM_INT);
+            }
+
+            // Redirct to course dashboard.
+            $mform->addElement('advcheckbox', 'redirecttodashboard', get_string('redirecttodashboard', 'block_dash'));
+            $mform->hideIf('redirecttodashboard', 'contexttype', 'neq', 'course');
+            $mform->setDefault('redirecttodashboard', 0);
+
+        } else {
+            $mform->addElement('hidden', 'secondarynav', 0);
+            $mform->setType('secondarynav', PARAM_INT);
+        }
+
+
+        // Restrict access header
+        $mform->addElement('header', 'restrictaccessheader', get_string('restrictaccess', 'block_dash'));
+
+        if ($this->get_persistent()->get('shortname') != 'coredashboard') {
+            // Permission selector.
             $mform->addElement('select', 'permission', get_string('permissions', 'block_dash'), [
                 'loggedin' => get_string('permissionsloggedin', 'block_dash'),
                 'public' => get_string('permissionspublic', 'block_dash'),
                 'cohort' => get_string('permissionscohort', 'block_dash'),
                 'role' => get_string('permissionsrole', 'block_dash'),
+                //'courseparticipant' => get_string('permissionscourseparticipant', 'block_dash'),
             ]);
             $mform->setType('permission', PARAM_TEXT);
 
@@ -138,21 +193,10 @@ class dashboard_form extends persisten_form {
             $mform->setType('rolecontext', PARAM_INT);
             $mform->addHelpButton('rolecontext', 'permissionsrolecontext', 'block_dash');
             $mform->hideIf('rolecontext', 'permission', 'noeq', 'role');
-
-            if (local_dash_secondarynav()) {
-                $mform->addElement('select', 'secondarynav', get_string('secondarynav', 'block_dash'), [
-                    1 => get_string('yes'),
-                    0 => get_string('no'),
-                ]);
-                $mform->setType('secondarynav', PARAM_INT);
-            } else {
-                $mform->addElement('hidden', 'secondarynav', 0);
-                $mform->setType('secondarynav', PARAM_INT);
-            }
-        } else {
-            $mform->addElement('hidden', 'secondarynav', 0);
-            $mform->setType('secondarynav', PARAM_INT);
         }
+
+        // Appearance header
+        $mform->addElement('header', 'appearanceheader', get_string('appearance'));
 
         // Add a font awesome icon element.
         $theme = \theme_config::load($PAGE->theme->name);
@@ -187,8 +231,78 @@ class dashboard_form extends persisten_form {
                         'accepted_types' => 'web_image',
                         'return_types' => FILE_INTERNAL,
         ]);
-        $mform->addHelpButton('dashbgimage', 'dashbgimg', 'block_dash');
+
+        // On page navigation settings
+        $mform->addElement('header', 'onpagenavigationsettings', get_string('onpagenavigation', 'block_dash'));
+
+        // Included blocks
+        $blocksoptions = \dashaddon_dashboard\helper::get_dashaddondash_pageblocks($this->get_persistent()->get('shortname'));
+        if (!empty($blocksoptions)) {
+            $mform->addElement('autocomplete', 'includedblocks', get_string('includedblocks', 'block_dash'), $blocksoptions, ['multiple' => 'multiple']);
+            $mform->setType('includedblocks', PARAM_TEXT);
+
+            // Display dashboard title.
+            $displaytitleoptions = [
+                0 => get_string('disabled', 'block_dash'),
+                1 => get_string('always', 'block_dash'),
+                2 => get_string('onlywhensticky', 'block_dash')
+            ];
+            $mform->addElement('select', 'displaydashboardtitle', get_string('displaydashboardtitle', 'block_dash'), $displaytitleoptions);
+            $mform->setDefault('displaydashboardtitle', 0);
+
+            // Display call to action.
+            $mform->addElement('select', 'displaycta', get_string('displaycta', 'block_dash'), $displaytitleoptions);
+            $mform->setDefault('displaycta', 0);
+
+            // Call to action link type.
+            $ctaoptionsarray = [
+                'enrolment' => get_string('enrolmentoptions', 'block_dash'),
+                'campaign' => get_string('campaign', 'block_dash'),
+                'shopurl' => get_string('shopurl', 'block_dash'),
+                'custom' => get_string('customurl', 'block_dash')
+            ];
+
+            $mform->addElement('select', 'ctalink', get_string('ctalink', 'block_dash'), $ctaoptionsarray);
+            if (array_key_exists('magic', \core_component::get_plugin_list('auth'))) {
+                // Campaign selector - visible when campaign is selected.
+                $campaignoptions = $this->get_campaign_options(); // You'll need to implement this method
+                if ($campaignoptions) {
+                    $mform->addElement('select', 'ctacampaignid', get_string('selectcampaign', 'block_dash'), $campaignoptions);
+                    $mform->hideIf('ctacampaignid', 'ctalink', 'neq', 'campaign');
+                } else {
+                    $mform->addElement('static', 'ctacampaignidinfo', get_string('selectcampaign', 'block_dash') , get_string('nocampaignsareavailable', 'block_dash'));
+                    $mform->hideIf('ctacampaignidinfo', 'ctalink', 'neq', 'campaign');
+                }
+            } else {
+                $mform->addElement('static', 'magicauthinfo', '', get_string('magicnotavailable', 'block_dash'));
+                $mform->hideIf('magicauthinfo', 'ctalink', 'neq', 'campaign');
+            }
+
+            // Custom URL input - visible when custom is selected
+            $mform->addElement('text', 'ctacustomurl', get_string('customurl', 'block_dash'));
+            $mform->setType('ctacustomurl', PARAM_URL);
+            $mform->hideIf('ctacustomurl', 'ctalink', 'neq', 'custom');
+
+            $mform->addElement('text', 'ctacustomurltext', get_string('customurltext', 'block_dash'));
+            $mform->setType('ctacustomurltext', PARAM_TEXT);
+            $mform->hideIf('ctacustomurltext', 'ctalink', 'neq', 'custom');
+
+        } else {
+            $mform->addElement('static', 'onpagenavigationnoblocks', '' , get_string('blocksnotfound', 'block_dash'));
+        }
+
 
         $this->add_action_buttons();
     }
+
+
+    public function get_campaign_options() {
+        global $DB;
+        $campaigns = [];
+        if (array_key_exists('magic', \core_component::get_plugin_list('auth'))) {
+            $campaigns = $DB->get_records_menu('auth_magic_campaigns', null, '', 'id, title');
+        }
+        return $campaigns;
+    }
 }
+

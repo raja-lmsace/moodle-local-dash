@@ -48,3 +48,4 @@ $string['cmstatus'] = "Activity completion status";
 $string['activitygrade'] = 'Grade activity';
 $string['grade'] = 'Grade';
 $string['activity'] = 'Activity';
+$string['activity_completion:editgrade'] = 'Edit the grade activity for parent users.';

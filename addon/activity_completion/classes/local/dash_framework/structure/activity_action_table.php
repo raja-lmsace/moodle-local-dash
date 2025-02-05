@@ -79,8 +79,6 @@ class activity_action_table extends table {
             ], ['supports_sorting' => false]),
 
         ];
-        $PAGE->requires->js_call_amd('dashaddon_activity_completion/overrideactivitycompletion', 'init', []);
-        $PAGE->requires->js_call_amd('dashaddon_activity_completion/activitygrade', 'init', []);
         return $fields;
     }
 }

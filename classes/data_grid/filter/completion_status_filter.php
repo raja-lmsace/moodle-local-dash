@@ -39,9 +39,9 @@ class completion_status_filter extends select_filter {
         global $DB;
 
         $choices = [
-            'completed' => get_string('status:completed', 'block_dash'),
-            'inprogress' => get_string('status:inprogress', 'block_dash'),
             'enrolled' => get_string('status:enrolled', 'block_dash'),
+            'inprogress' => get_string('status:inprogress', 'block_dash'),
+            'completed' => get_string('status:completed', 'block_dash'),
         ];
         $this->add_options($choices);
         parent::init();
@@ -55,7 +55,6 @@ class completion_status_filter extends select_filter {
      */
     public function get_sql_and_params() {
         global $USER, $DB;
-
         list($sql, $params) = parent::get_sql_and_params();
         $inparams = [];
         if ($sql) {

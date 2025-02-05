@@ -30,7 +30,7 @@ use block_dash\local\data_source\form\preferences_form;
 use block_dash\local\data_grid\filter\course_condition;
 use local_dash\data_grid\filter\course_category_condition;
 use local_dash\data_grid\filter\my_enrolled_courses_condition;
-use local_dash\data_grid\filter\parent_role_condition;
+use local_dash\data_grid\filter\relations_role_condition;
 use local_dash\data_grid\filter\course_dates_condition;
 use local_dash\data_grid\filter\course_customfield_condition;
 
@@ -307,7 +307,7 @@ class completion_widget extends abstract_widget {
 
         $filtercollection->add_filter(new course_category_condition('c_course_categories_condition', 'c.category'));
 
-        $filtercollection->add_filter(new parent_role_condition('parentrole', 'u.id'));
+        $filtercollection->add_filter(new relations_role_condition('parentrole', 'u.id'));
 
         $filtercollection->add_filter(new course_dates_condition('coursedates', 'c.id'));
 

@@ -174,3 +174,23 @@ function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $cou
     }
 
 }
+
+/**
+ * Change the block instance pagetype pattern.
+ *
+ * @return void
+ */
+function dashaddon_dashboard_change_pagetypepattern() {
+    global $DB;
+    $sql = "SELECT * FROM {block_instances} WHERE blockname = 'dash' AND pagetypepattern LIKE 'local-dash-dashboard%'";
+    $records = $DB->get_records_sql($sql);
+    foreach ($records as $record) {
+        $pagetypepattern = $record->pagetypepattern;
+        $prefix = 'local-dash';
+        $replacement = 'dashaddon';
+        $modifiypattern = str_replace($prefix, $replacement, $pagetypepattern);
+        $record->pagetypepattern = $modifiypattern;
+        $DB->update_record('block_instances', $record);
+    }
+    return true;
+}

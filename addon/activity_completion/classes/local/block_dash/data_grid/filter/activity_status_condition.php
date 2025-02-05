@@ -124,19 +124,19 @@ class activity_status_condition extends condition {
                 switch ($status) {
                     case 'open':
                         $conditionsql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
-                                UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) > :now_$key + 86000) OR
+                                UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) > :now_$key + 86000) AND
                                 cmc.completionstate = 0";
                         $params += ['now_'.$key => time()];
                         break;
                     case 'due':
                         $conditionsql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
-                                UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) <= :now_$key + 86000) OR
+                                UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) <= :now_$key + 86000) AND
                                 cmc.completionstate = 0 ";
                         $params += ['now_'.$key => time(), 'now1_'.$key => time()];
                         break;
                     case 'overdue':
                         $conditionsql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
-                                UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) <= :now_$key) OR
+                                UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) <= :now_$key) AND
                                 cmc.completionstate = 0 ";
                         $params += ['now_'.$key => time()];
                         break;

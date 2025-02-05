@@ -41,4 +41,14 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
+
+    'local/dash:managecoursecatedashboards' => [
+        'riskbitmask'  => RISK_MANAGETRUST,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_COURSECAT,
+        'archetypes'   => [
+            'manager' => CAP_ALLOW,
+            'coursecreator' => CAP_ALLOW,
+        ],
+    ],
 ];

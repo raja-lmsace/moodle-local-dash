@@ -328,7 +328,7 @@ class content_customtype extends abstract_custom_type {
             'style' => $bgstyle,
             'backgroundimage' => $bgimageurl,
             'content' => $contenttext
-                ? format_text($contenttext, $content->contentformat, ['overflow' => false, 'noclean' => true]) : '',
+                ? format_text($contenttext, $content->contentformat, ['overflowdiv' => false, 'noclean' => true]) : '',
             'showimage' => $contenttext ? false : true,
         ];
     }
@@ -504,4 +504,37 @@ class content_customtype extends abstract_custom_type {
         return true;
     }
 
+    /**
+     * Include the flag to confirm this block is show on this page.
+     *
+     * @param array $data
+     * @return void
+     */
+    public function update_data_before_render(&$data) {
+        $data['showcollapseblock'] = $this->is_section_expand_content_addon($data);
+    }
+
+     /**
+     * Confirm the block is configured to display only for the section.
+     *
+     * @return bool
+     */
+    public function is_section_expand_content_addon($data) {
+
+        if (isset($data['collapseaction']) && $data['collapseaction'] === true) {
+            $currentsection = optional_param('section', 0, PARAM_INT);
+
+            if (isset($this->get_block_instance()->config->preferences)) {
+                if ($this->get_filter_collection()->get_filter('sectiondisplay') === null) {
+                    return false;
+                }
+                $restrictedsections = $this->get_filter_collection()->get_filter('sectiondisplay')->get_values();
+                if (in_array((int)$currentsection, $restrictedsections)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

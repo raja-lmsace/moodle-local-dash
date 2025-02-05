@@ -33,40 +33,69 @@ require_once("$CFG->libdir/adminlib.php");
 global $PAGE, $DB;
 
 $action = required_param('action', PARAM_TEXT);
+$contextid = optional_param('contextid', 0, PARAM_INT);
 
 $context = context_system::instance();
+$pageparams = ['action' => $action];
+$redirecturl = new moodle_url('/local/dash/addon/dashboard/dashboard_list.php');
+if ($contextid) {
+    $context = context::instance_by_id($contextid);
+    $pageparams['contextid'] = $contextid;
+    $redirecturl->param('contextid', $contextid);
+}
 
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => $action]));
-$PAGE->navbar->add(get_string('managedashboards', 'block_dash'), new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'));
+$PAGE->set_url(new moodle_url('/local/dash/addon/dashboard/dashboards.php', $pageparams));
+$PAGE->navbar->add(get_string('managedashboards', 'block_dash'), new moodle_url('/local/dash/addon/dashboard/dashboard_list.php', $pageparams));
 
 /** @var renderer $renderer */
 $renderer = $PAGE->get_renderer('block_dash');
 
 require_login();
-require_capability('local/dash:managedashboards', $context);
+if ($context->contextlevel == CONTEXT_COURSECAT) {
+    require_capability('local/dash:managecoursecatedashboards', $context);
+} else  {
+    require_capability('local/dash:managedashboards', $context);
+}
+
+$PAGE->requires->js_call_amd('dashaddon_dashboard/dashboard', 'init');
 
 switch ($action) {
     case 'create':
         $PAGE->set_title(get_string('createdashboard', 'block_dash'));
         $PAGE->set_heading(get_string('createdashboard', 'block_dash'));
         $PAGE->navbar->add(get_string('createdashboard', 'block_dash'));
-        $form = new dashboard_form($PAGE->url, [
-            'persistent' => null,
-        ]);
+        $customdata = ['persistent' => null];
+        if ($context->contextlevel == CONTEXT_COURSECAT) {
+            $customdata['categoryid'] = $context->instanceid;
+        }
+        $form = new dashboard_form($PAGE->url, $customdata);
         if ($data = $form->get_data()) {
             $dashboard = new dashboard(0, $data);
             $dashboard->create();
-
+            $dashboard->clear_hook_cache(true);
             \core\notification::success(get_string('dashboardcreated', 'block_dash', $dashboard->to_record()));
-            redirect(new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'));
+            redirect($redirecturl);
         } else if ($form->is_cancelled()) {
-            redirect(new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'));
+            redirect($redirecturl);
         }
 
         echo $OUTPUT->header();
         $form->display();
 
+        break;
+
+    case 'duplicate':
+        $PAGE->set_title(get_string('duplicatedashboard', 'block_dash'));
+        $PAGE->set_heading(get_string('duplicatedashboard', 'block_dash'));
+        $PAGE->navbar->add(get_string('duplicatedashboard', 'block_dash'));
+
+        $id = required_param('id', PARAM_INT);
+        $originaldashboard = new dashboard($id);
+        $newdashboard = $originaldashboard->duplicate();
+
+        \core\notification::success(get_string('dashboardduplicated', 'block_dash', $newdashboard->to_record()));
+        redirect($redirecturl);
         break;
 
     case 'edit':
@@ -82,18 +111,22 @@ switch ($action) {
         $dashboard = new dashboard($id);
         $dashboard->prepare_filemanger_files();
         $dashboard->set_roles_data();
-        $form = new dashboard_form($PAGE->url, [
-            'persistent' => $dashboard,
-        ]);
+        $dashboard->set_includedblocks_data();
+        $customdata = ['persistent' => $dashboard];
+        if ($context->contextlevel == CONTEXT_COURSECAT) {
+            $customdata['categoryid'] = $context->instanceid;
+        }
+        $form = new dashboard_form($PAGE->url, $customdata);
 
         if ($data = $form->get_data()) {
             $dashboard->from_record($data);
             $dashboard->update();
+            $dashboard->clear_hook_cache();
             theme_reset_all_caches();
             \core\notification::success(get_string('dashboardedited', 'block_dash', $dashboard->to_record()));
-            redirect(new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'));
+            redirect($redirecturl);
         } else if ($form->is_cancelled()) {
-            redirect(new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'));
+            redirect($redirecturl);
         }
 
         echo $OUTPUT->header();
@@ -115,8 +148,9 @@ switch ($action) {
 
         if ($confirm = optional_param('confirm', 0, PARAM_BOOL)) {
             $dashboard->delete();
+            $dashboard->clear_hook_cache();
             \core\notification::success(get_string('dashboarddeleted', 'block_dash', $dashboard->to_record()));
-            redirect(new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'));
+            redirect($redirecturl);
         }
 
         echo $OUTPUT->header();

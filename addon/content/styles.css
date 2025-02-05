@@ -23,12 +23,12 @@
 .block_dash.block.block-collapse-block {
     min-height: auto;
 }
-.block_dash.block .card-body h5 span.collapsible-block:before {
+.block_dash.block .card-body > .card-title span.collapsible-block.dash-block-collapse-icon:before {
     content: '\f107';
     font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
     font-weight: var(--fa-style, 900);
     margin-right: 10px;
 }
-.block_dash.block .card-body h5 span.collapsible-block.collapsed:before {
+.block_dash.block .card-body > .card-title span.collapsible-block.dash-block-collapse-icon.collapsed:before {
     content: '\f105';
 }

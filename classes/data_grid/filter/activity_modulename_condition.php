@@ -76,7 +76,7 @@ class activity_modulename_condition extends condition {
 
         $fieldname = sprintf($fieldnameformat, $this->get_name());
 
-        $modules = $DB->get_records_sql_menu("SELECT DISTINCT id, name FROM {modules}");
+        $modules = $DB->get_records_sql_menu("SELECT DISTINCT id, name FROM {modules} WHERE visible = 1");
         $select = $mform->addElement('select', $fieldname . '[modules]', '', $modules, ['class' => 'select2-form']);
         $mform->hideIf($fieldname . '[modules]', $fieldname . '[enabled]');
         $select->setMultiple(true);

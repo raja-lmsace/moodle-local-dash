@@ -130,7 +130,7 @@ Feature: Add course enrol widget in dash block
     And I log in as "student1"
     And I should not see "Course 5" in the ".course-enrols-courses-list .courses-list" "css_element"
     And I set the field "courses[]" to "Course 5"
-    Then I click on "Enrol now" "button" in the "New Dash" "block"
+    Then I click on "Enrol Now" "button" in the "New Dash" "block"
     Then I reload the page
     And I should see "Course 5" in the ".course-enrols-courses-list .courses-list" "css_element"
 

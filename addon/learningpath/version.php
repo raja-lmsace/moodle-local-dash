@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'dashaddon_learningpath';
-$plugin->version = 2024071300;
+$plugin->version = 2024071500;
 $plugin->requires  = 2017051509;
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release = '1.0';

@@ -59,8 +59,9 @@ class activity_grade_attribute extends abstract_field_attribute {
     public function transform_data($data, \stdClass $record) {
         global $DB, $PAGE, $USER;
 
-        $context = \context_course::instance($record->c_id);
         $userid = $record->u_id;
+        $context = \context_course::instance($record->c_id);
+        $usercontext = \context_user::instance($userid);
         $cmid = $record->cm_id;
         $gradebutton = '';
 
@@ -68,30 +69,31 @@ class activity_grade_attribute extends abstract_field_attribute {
             return $gradebutton;
         }
 
-        if (!has_capability('moodle/grade:edit', $context, $USER->id)) {
-            return $gradebutton;
-        }
+        if (has_capability('moodle/grade:edit', $context, $USER->id) ||
+            has_capability('dashaddon/activity_completion:editgrade', $usercontext, $USER->id)) {
 
-        list($course, $cm) = get_course_and_cm_from_cmid($cmid);
+            list($course, $cm) = get_course_and_cm_from_cmid($cmid);
 
-        // Set up completion object and check it is enabled.
-        $completion = new \completion_info($course);
-        if (!$completion->is_enabled()) {
-            return $gradebutton;
-        }
-
-        if ($completion->is_tracked_user($userid)) {
-
-            if ($record->gt_id != null) {
-                $gradebutton .= html_writer::link('javascript:void(0);', get_string('grade', 'dashaddon_activity_completion'),
-                [   'class' => 'btn btn-secondary grade-activity',
-                    'data-userid' => $userid,
-                    'data-cmid' => $cmid,
-                    'data-contextid' => \context_system::instance()->id,
-                    'data-currentgrade' => $record->gg_finalgrade ?? 0,
-                    'data-gradeitemid' => ($record->gt_id != null) ? $record->gt_id : 0 ,
-                ]);
+            // Set up completion object and check it is enabled.
+            $completion = new \completion_info($course);
+            if (!$completion->is_enabled()) {
+                return $gradebutton;
             }
+
+            if ($completion->is_tracked_user($userid)) {
+
+                if ($record->gt_id != null) {
+                    $gradebutton .= html_writer::link('javascript:void(0);', get_string('grade', 'dashaddon_activity_completion'),
+                    [   'class' => 'btn btn-secondary grade-activity-btn',
+                        'data-userid' => $userid,
+                        'data-cmid' => $cmid,
+                        'data-contextid' => \context_system::instance()->id,
+                        'data-currentgrade' => $record->gg_finalgrade ?? 0,
+                        'data-gradeitemid' => ($record->gt_id != null) ? $record->gt_id : 0 ,
+                    ]);
+                }
+            }
+            return $gradebutton;
         }
         return $gradebutton;
     }

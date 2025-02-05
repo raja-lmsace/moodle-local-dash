@@ -20,67 +20,106 @@
  * @copyright  2023 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(["core/fragment","core/modal_factory","core/modal_events","core/notification","core/str", 'core/ajax'],
-    (function(Fragment,ModalFactory,ModalEvents,notification,String, Ajax) {
+define(['jquery',"core/fragment","core/modal_factory","core/modal_events","core/notification","core/str", 'core/ajax'],
+    (function($, Fragment,ModalFactory,ModalEvents,notification,String, Ajax) {
+
+    const SELECTORS = {
+        dashBlock: '.block[data-block="dash"]',
+        overridebtn: '.activity-completion-override',
+    };
 
     /**
      * Override the activity completion in the activity completion data source.
      */
-    function overrideactivitycompletion() {
-        document.body.addEventListener('click', function (e) {
-            var targetElement = e.target.closest('.activity-completion-override');
-            if (targetElement) {
-                e.preventDefault();
+    class CompletionOverride {
 
-                if (!targetElement) return;
+        constructor(blockID) {
+            this.blockID = blockID;
+            this.SELECTORS = SELECTORS;
+            this.SELECTORS.blockRoot = '#inst' + this.blockID;
+            this.overrideactivitycompletion();
+        }
 
-                var data = {
-                    userid: targetElement.getAttribute("data-userid"),
-                    cmid: targetElement.getAttribute("data-cmid"),
-                    newstate: targetElement.getAttribute("data-state"),
-                };
+        getRoot() {
+            return document.querySelector(this.SELECTORS.blockRoot);
+        }
 
-                ModalFactory.create({
-                    type: ModalFactory.types.SAVE_CANCEL,
-                    title: String.get_string('confirm'),
-                    body: String.get_string('completionstate', 'dashaddon_activity_completion'),
-                    large: false
-                })
-                .then(function(modal) {
-                    modal.show();
-                    modal.getRoot().on(ModalEvents.save, e => {
-                        e.preventDefault();
-                        overridestate(data);
-                        modal.hide();
-                    });
+        /**
+         * Override the activity completion.
+         */
+        overrideactivitycompletion() {
 
-                    modal.getRoot().on(ModalEvents.hidden, function() {
-                        modal.destroy();
-                    });
+            var self = this;
+            var blockid = this.blockID;
+            this.getRoot().addEventListener('click', function (e) {
+                var targetElement = e.target.closest(self.SELECTORS.overridebtn);
+                if (targetElement) {
+                    e.preventDefault();
 
-                }).catch(notification.exception);
+                    var data = {
+                        userid: targetElement.getAttribute("data-userid"),
+                        cmid: targetElement.getAttribute("data-cmid"),
+                        newstate: targetElement.getAttribute("data-state"),
+                    };
+
+                    ModalFactory.create({
+                        type: ModalFactory.types.SAVE_CANCEL,
+                        title: String.get_string('confirm'),
+                        body: String.get_string('completionstate', 'dashaddon_activity_completion'),
+                        large: false
+                    })
+                    .then(function(modal) {
+                        modal.show();
+                        modal.getRoot().on(ModalEvents.save, e => {
+                            e.preventDefault();
+                            self.overridestate(data, blockid);
+                            modal.hide();
+                        });
+
+                        modal.getRoot().on(ModalEvents.hidden, function() {
+                            modal.destroy();
+                        });
+
+                        return modal;
+                    }).catch(notification.exception);
+                }
+            });
+        }
+
+        /**
+         * Override the activity completion status.
+         *
+         * @param {Object} data
+         * @param {int} blockid
+         */
+        overridestate(data, blockid) {
+            Ajax.call([{
+                methodname: 'core_completion_override_activity_completion_status',
+                args: data,
+                done: function() {
+                    CompletionOverride.refresh(blockid);
+                }
+            }]);
+        }
+
+        /**
+         * Trigger the filter form to submit. to refresh the course content.
+         * @param {int} blockid
+         */
+        static refresh(blockid) {
+            var block = '#inst' + blockid;
+            // Quick fix. TODO: Need to implement the method in Dashinstance.js to referesh the content from anywhere.
+            if ($(block).find('select:eq(1)').length == 0 ) {
+                $(block).find('.filter-form').append('<select style="display:none;"><option>1</option></select>');
             }
-        });
-    }
 
-    /**
-     * Override the activity completion status.
-     *
-     * @param {Object} data
-     */
-    function overridestate(data) {
-        Ajax.call([{
-            methodname: 'core_completion_override_activity_completion_status',
-            args: data,
-            done: function() {
-                window.location.reload();
-            }
-        }]);
+            $(block).find('.filter-form').find('select').trigger('change');
+        }
     }
 
     return {
-        init: function() {
-            overrideactivitycompletion();
+        init: function(blockID) {
+            new CompletionOverride(blockID);
         }
     };
 

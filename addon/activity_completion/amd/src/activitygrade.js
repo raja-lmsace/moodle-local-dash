@@ -20,100 +20,140 @@
  * @copyright  2023 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(["core/fragment","core/modal_factory","core/modal_events","core/notification","core/str", 'core/ajax'],
-    (function(Fragment,ModalFactory,ModalEvents,notification,String, Ajax) {
+define(['jquery', "core/fragment","core/modal_factory","core/modal_events","core/notification","core/str", 'core/ajax'],
+    (function($, Fragment,ModalFactory,ModalEvents,notification,String, Ajax) {
+
+    const SELECTORS = {
+        dashBlock: '.block[data-block="dash"]',
+        gradebtn: '.grade-activity-btn',
+    };
 
     /**
-     * Grade activity action.
+     * Grade the activity in the activity completion data source.
      */
-    function activitygrade() {
-        document.body.addEventListener('click', function (e) {
-            if (e.target && e.target.classList.contains('grade-activity')) {
-                e.preventDefault();
+    class Activitygrade {
 
-                var params = {
-                    userid: e.target.getAttribute("data-userid"),
-                    cmid: e.target.getAttribute("data-cmid"),
-                    contextid: e.target.getAttribute("data-contextid"),
-                    currentgrade: e.target.getAttribute("data-currentgrade"),
-                    gradeitemid: e.target.getAttribute("data-gradeitemid"),
-                };
+        constructor(blockID) {
+            this.blockID = blockID;
+            this.SELECTORS = SELECTORS;
+            this.SELECTORS.blockRoot = '#inst' + this.blockID;
+            this.activitygrade();
+        }
 
-                ModalFactory.create({
-                    type: ModalFactory.types.SAVE_CANCEL,
-                    title: String.get_string('activitygrade', 'dashaddon_activity_completion'),
-                    body: getgradebodycontent(params),
-                    large: false
-                })
-                .then(function(modal) {
-                    modal.show();
+        getRoot() {
+            return document.querySelector(this.SELECTORS.blockRoot);
+        }
 
-                    modal.getRoot().on(ModalEvents.save, e => {
-                        e.preventDefault();
-                        modal.getRoot().find('form').submit();
-                    });
+        /**
+         * Grade activity action.
+         */
+        activitygrade() {
 
-                    modal.getRoot().on('submit', 'form', e => {
-                        e.preventDefault();
-                        submitFormData(params);
-                        modal.hide();
-                    });
+            var self = this;
+            var blockid = this.blockID;
+            this.getRoot().addEventListener('click', function (e) {
+                var gradebtn = e.target.closest(self.SELECTORS.gradebtn);
+                if (gradebtn) {
 
-                    modal.getRoot().on(ModalEvents.hidden, function() {
-                        modal.destroy();
-                    });
+                    e.preventDefault();
 
-                }).catch(notification.exception);
-            }
-        });
-    }
+                    var params = {
+                        userid: e.target.getAttribute("data-userid"),
+                        cmid: e.target.getAttribute("data-cmid"),
+                        contextid: e.target.getAttribute("data-contextid"),
+                        currentgrade: e.target.getAttribute("data-currentgrade"),
+                        gradeitemid: e.target.getAttribute("data-gradeitemid"),
+                    };
 
-    /**
-     * Submit form data.
-     *
-     * @param {object} params
-     */
-    function submitFormData(params) {
-        var modalform = document.querySelectorAll('#activity-grade-action form')[0];
-        var formData = new URLSearchParams(new FormData(modalform)).toString();
-        Ajax.call([{
-            methodname: 'dashaddon_activity_completion_grade_activity',
-            args: {userid: params.userid, formdata: formData, cmid: params.cmid, gradeitemid: params.gradeitemid},
-            done: function(response) {
+                    ModalFactory.create({
+                        type: ModalFactory.types.SAVE_CANCEL,
+                        title: String.get_string('activitygrade', 'dashaddon_activity_completion'),
+                        body: self.getgradebodycontent(params),
+                        large: false
+                    })
+                    .then(function(modal) {
+                        modal.show();
 
-                if (response.message) {
-                    notification.addNotification({
-                        message: response.message,
-                        type: "error"
-                    });
+                        modal.getRoot().on(ModalEvents.save, e => {
+                            e.preventDefault();
+                            modal.getRoot().find('form').submit();
+                        });
+
+                        modal.getRoot().on('submit', 'form', e => {
+                            e.preventDefault();
+                            self.submitFormData(params, blockid);
+                            modal.hide();
+                        });
+
+                        modal.getRoot().on(ModalEvents.hidden, function() {
+                            modal.destroy();
+                        });
+
+                        return modal;
+                    }).catch(notification.exception);
                 }
+            });
+        }
 
-                if (response.status) {
-                    window.location.reload();
+        /**
+         * Submit form data.
+         *
+         * @param {object} params
+         * @param {int} blockid
+         */
+        submitFormData(params, blockid) {
+            var modalform = document.querySelectorAll('#activity-grade-action form')[0];
+            var formData = new URLSearchParams(new FormData(modalform)).toString();
+            Ajax.call([{
+                methodname: 'dashaddon_activity_completion_grade_activity',
+                args: {userid: params.userid, formdata: formData, cmid: params.cmid, gradeitemid: params.gradeitemid},
+                done: function(response) {
+
+                    if (response.message) {
+                        notification.addNotification({
+                            message: response.message,
+                            type: "error"
+                        });
+                    }
+
+                    if (response.status) {
+                        Activitygrade.refresh(blockid);
+                    }
                 }
+            }]);
+        }
+
+        /**
+         * Returns submit form data in load fragment.
+         *
+         * @param {object} params
+         * @returns {Promise}
+         */
+        getgradebodycontent(params) {
+            return Fragment.loadFragment('dashaddon_activity_completion', 'grade_activity_form', params.contextid, params);
+        }
+
+        /**
+         * Trigger the filter form to submit. to refresh the course content.
+         *
+         * @param {int} blockid
+         */
+        static refresh(blockid) {
+            var block = '#inst' + blockid;
+            // Quick fix. TODO: Need to implement the method in Dashinstance.js to referesh the content from anywhere.
+            if ($(block).find('select:eq(1)').length == 0 ) {
+                $(block).find('.filter-form').append('<select style="display:none;"><option>1</option></select>');
             }
-        }]);
-    }
 
-    /**
-     * Returns submit form data in load fragment.
-     *
-     * @param {object} params
-     * @returns {Promise}
-     */
-    function getgradebodycontent(params) {
-        return Fragment.loadFragment('dashaddon_activity_completion', 'grade_activity_form', params.contextid, params);
-    }
+            $(block).find('.filter-form').find('select').trigger('change');
+        }
 
-    /**
-     * Initialize the activity grade action and rebind events on paginated content changes.
-     */
-    function init() {
-        activitygrade();
     }
 
     return {
-        init: init
+        init: function(blockID) {
+            new Activitygrade(blockID);
+        }
     };
 
 }));

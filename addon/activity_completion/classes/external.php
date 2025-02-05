@@ -22,9 +22,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use grade_plugin_return;
-use grade_report_grader;
-
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir.'/externallib.php');
 require_once($CFG->libdir . '/grade/grade_item.php');
@@ -68,6 +65,8 @@ class external extends \external_api {
     public static function grade_activity($userid, $formdata, $cmid, $gradeitemid) {
         global $DB, $CFG;
 
+        require_once($CFG->libdir . '/completionlib.php');
+
         $vaildparams = self::validate_parameters(self::grade_activity_parameters(),
             ['userid' => $userid, 'formdata' => $formdata, 'cmid' => $cmid, 'gradeitemid' => $gradeitemid]);
         parse_str($vaildparams['formdata'], $gradedata);
@@ -90,6 +89,19 @@ class external extends \external_api {
         $data->grade = $gradedata['grade'];
 
         $warnings = $report->process_data($data);
+        // Fetch the user grade instance.
+        $gradeinstance = !empty($report->grades[$userid][$gradeitemid]) ? $report->grades[$userid][$gradeitemid] : [];
+        // If grade instance is not empty, then notify the grade chnaged to trigger the module completion.
+        if (!empty($gradeinstance)) {
+            $gradeitem = $gradeinstance->grade_item;
+            $completion = new \completion_info($course);
+            if (!$completion->is_enabled($cm)) {
+                return;
+            }
+            // Inform the grade has changed, inform the module completion.
+            $completion->inform_grade_changed($cm, $gradeitem, $gradeinstance, false, false);
+        }
+
         foreach ($warnings as $warning) {
             $message = $warning;
         }

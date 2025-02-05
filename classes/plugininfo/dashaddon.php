@@ -70,4 +70,34 @@ class dashaddon extends \core\plugininfo\base {
         return !empty(get_config($this->type . '_' . $this->name, 'enabled'));
     }
 
+    /**
+     * Loads plugin settings to the settings tree
+     *
+     * This function usually includes settings.php file in plugins folder.
+     * Alternatively it can create a link to some settings page (instance of admin_externalpage)
+     *
+     * @param \part_of_admin_tree $adminroot
+     * @param string $parentnodename
+     * @param bool $hassiteconfig whether the current user has moodle/site:config capability
+     */
+    public function load_settings(\part_of_admin_tree $adminroot, $parentnodename, $hassiteconfig) {
+
+        $ADMIN = $adminroot; // May be used in settings.php.
+        if (!$this->is_installed_and_upgraded()) {
+            return;
+        }
+
+        if (!$hassiteconfig || !file_exists($this->full_path('settings.php'))) {
+            return;
+        }
+
+        $section = $this->get_settings_section_name();
+        $page = new \admin_settingpage($section, $this->displayname, 'moodle/site:config', $this->is_enabled() === false);
+        include($this->full_path('settings.php')); // This may also set $settings to null.
+
+        if ($page) {
+            $ADMIN->add($parentnodename, $page);
+        }
+    }
+
 }
