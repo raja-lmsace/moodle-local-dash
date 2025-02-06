@@ -283,7 +283,7 @@ Feature: Add activity completion datasource in dash block
     And I click on "select[name='u_id'] + span .selection" "css_element"
     And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Student')]" "xpath_element"
     And I should see "Assignment 1" in the ".dash-table tbody tr:first-child td:nth-child(2)" "css_element"
-    And I should see "Student 1" in the ".dash-table tbody tr:first-child td:nth-child(4)" "css_element"
+    And I should see "Student 1" in the ".dash-table tbody tr:first-child td:nth-child(5)" "css_element"
     #---Activity filter---#
     And I click on "select[name='cm_id'] + span .selection" "css_element"
     And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Assignment 1')]" "xpath_element"
