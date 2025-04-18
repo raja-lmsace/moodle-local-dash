@@ -61,14 +61,17 @@ class smart_course_button_attribute extends abstract_field_attribute {
         $shopurl = $this->get_shopurl($data);
         if ($isactiveenrolment || $this->is_guestaccess($data)) {
             $url = new \moodle_url('/course/view.php', ['id' => $data]);
-            return \html_writer::link($url, get_string('viewcourse', 'block_dash'), ['class' => 'btn btn-primary']);
+            return \html_writer::link($url, get_string('viewcourse', 'block_dash'), ['class' => 'btn btn-primary',
+            'label' => get_string('viewcourse', 'block_dash'), 'aria-label' => get_string('smart_coursebutton', 'block_dash')]);
         } else if ($shopurl && !$enrolled && !$canselfenrol) {
             // Buy now.
-            return html_writer::link($shopurl, get_string('buynow', 'block_dash'), ['class' => 'btn btn-primary']);
+            return html_writer::link($shopurl, get_string('buynow', 'block_dash'), ['class' => 'btn btn-primary',
+                'label' => get_string('buynow', 'block_dash'), 'aria-label' => get_string('smart_coursebutton', 'block_dash')]);
         } else if (!$enrolled && $canselfenrol) {
             // Enrol Now.
             $url = new \moodle_url('/enrol/index.php', ['id' => $data]);
-            return html_writer::link($url, get_string('enrolnow', 'block_dash'), ['class' => 'btn btn-primary']);
+            return html_writer::link($url, get_string('enrolnow', 'block_dash'), ['class' => 'btn btn-primary',
+                'label' => get_string('enrolnow', 'block_dash'), 'aria-label' => get_string('smart_coursebutton', 'block_dash')]);
         } else if (!$isactiveenrolment || !$canselfenrol) {
             // Not available.
             return \html_writer::span(get_string('notavailable', 'block_dash'));
@@ -83,9 +86,16 @@ class smart_course_button_attribute extends abstract_field_attribute {
      * @return bool
      */
     public function get_shopurl($courseid) {
+        global $DB;
+
         $fieldid = get_config('local_dash', 'courseshopurl');
         if ($fieldid) {
+
             if (class_exists('\core_customfield\field_controller')) {
+                // Confirm the selected custom field is available.
+                if (!$record = $DB->get_record(\core_customfield\field::TABLE, ['id' => $fieldid], '*', IGNORE_MISSING)) {
+                    return false;
+                }
                 $field = \core_customfield\field_controller::create($fieldid);
                 $data = \core_customfield\api::get_instance_fields_data([$fieldid => $field], $courseid);
                 return !empty($data) ? current($data)->export_value() : false;
@@ -140,6 +150,5 @@ class smart_course_button_attribute extends abstract_field_attribute {
         }
         return false;
     }
-
 
 }

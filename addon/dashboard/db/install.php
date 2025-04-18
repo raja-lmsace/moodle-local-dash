@@ -40,7 +40,7 @@ function xmldb_dashaddon_dashboard_install() {
     // Adding fields to table dash_data_source.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
-    $table->add_field('contextid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('contextid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
     $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
     $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
     $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
@@ -56,16 +56,24 @@ function xmldb_dashaddon_dashboard_install() {
     $table->add_field('dashbgimage', XMLDB_TYPE_TEXT, '4', null, null, null, null);
     $table->add_field('secondarynav', XMLDB_TYPE_INTEGER, '4', null, null, null, null);
     $table->add_field('coredash', XMLDB_TYPE_INTEGER, '2', null, null, null, null);
+    // Adding new fields for on page navigation settings.
+    $table->add_field('includedblocks', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+    $table->add_field('displaydashboardtitle', XMLDB_TYPE_INTEGER, '10', null, null, null, '0');
+    $table->add_field('displaycta', XMLDB_TYPE_INTEGER, '10', null, null, null, '0');
+    $table->add_field('ctalink', XMLDB_TYPE_CHAR, '255', null, null, null, 'enrolment');
+    $table->add_field('ctacampaignid', XMLDB_TYPE_INTEGER, '10', null, null, null, '0');
+    $table->add_field('ctacustomurl', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+    $table->add_field('ctacustomurltext', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+    // Adding new fields for context.
+    $table->add_field('contexttype', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'system');
+    $table->add_field('categoryid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+    $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+    $table->add_field('redirecttodashboard', XMLDB_TYPE_INTEGER, '4', null, null, null, null);
     // Adding keys to table dash_data_source.
     $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-    // Adding indexes to table dash_data_source.
-    $table->add_index('contextid', XMLDB_INDEX_NOTUNIQUE, ['contextid']);
-    $table->add_index('shortname', XMLDB_INDEX_UNIQUE, ['shortname']);
-    // Conditionally launch create table for dash_data_source.
     if (!$dbman->table_exists($table)) {
         $dbman->create_table($table);
     }
-
     dashaddon_dashboard_create_core_dashboard();
 
 }

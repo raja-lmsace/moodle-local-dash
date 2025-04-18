@@ -769,19 +769,4 @@ class myprofile_widget extends abstract_widget {
         return $filtercollection;
     }
 
-    /**
-     * Add the myprofile related global settings in dash global settings section.
-     *
-     * @param \admin_settingpage $page
-     * @return void
-     */
-    public static function include_global_settings(\admin_settingpage &$page) {
-
-        $name = 'dashaddon_myprofile/loginstreakdays';
-        $title = get_string('loginstreakdays', 'block_dash');
-        $description = get_string('loginstreakdaysdesc', 'block_dash');
-        $setting = new \admin_setting_configtext($name, $title, $description, 5, PARAM_INT);
-
-        $page->add($setting);
-    }
 }

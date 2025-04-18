@@ -33,7 +33,8 @@ Manage programs to create a new program and edit existing programs.
 
 After creating the program, you can use the programs in the Dash "Enrol programs" data source block <a href="https://github.com/open-lms-open-source/moodle-enrol_programs/blob/MOODLE_401_STABLE/docs/en/management.md">Program Management Overview</a>.
 
-![Program-management-active](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/9b5018c3-8a86-46d4-bb3e-4631d19973e3)
+![Program-management-active](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/46944f73-65a6-4d7d-a2b7-3e6050cc63a6)
+
 
 ## Dash - Programs:
 
@@ -41,7 +42,7 @@ A new data source called "Programs" has been implemented within the Dash plugin.
 
 Once added, a "New Dash" block will appear. Access the "Preferences" option on the Dash block by clicking the cog icon. In the "Edit Preferences" dialogue that appears, navigate to the "Fields" tab and enable the necessary lists to display the data content on the Dash block table.
 
-![Dash-enrol-program](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/fce366ba-03f4-4935-a7ad-e20a96521fb1)
+![Dash-enrol-program](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/a738ba50-2f0f-463e-8f13-f0dc94657204)
 
 
 ### Fields
@@ -62,7 +63,7 @@ Once added, a "New Dash" block will appear. Access the "Preferences" option on t
   
     The Default image will be available from the **Site administration > Plugin > Local plugins > Dash > General Setting**. In Dash General settings, upload the image on the "Enrol Program image"
 
-![Dash-general-setting-image](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/6f46e94a-a556-4c2b-b8c4-d81f4f7b4034)
+![Dash-general-setting-image](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/08d8b913-d4ae-4f51-a33d-acf6bb2e91ac)
 
 
 ### Visibility settings
@@ -94,7 +95,7 @@ Once added, a "New Dash" block will appear. Access the "Preferences" option on t
 
 26. <b>Requests with approval:</b>: Users can request access to the program, and their enrollment must be approved by an administrator before they can join.
 
-![Programs-field-preferences](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/d1ddc609-667a-4bd9-9a58-231c8dcb60d6)
+![Programs-field-preferences](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/07dbcde7-7d42-4701-ac56-75dd57d86397)
 
 
 ## Dash - Filters:
@@ -103,16 +104,12 @@ To access the "Preferences" option on the Dash block, click the cog icon. In the
 
 Once enabled, an auto-complete input box will appear above the Dash table content. You can use this box to search for or select tags associated with the program. The selected tags will then be listed in the program table content.
 
-![Programs-filter-tags-preferences](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/127679d7-24d2-443e-8555-94ba86c88ac9)
+![Programs-filter-tags-preferences](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/e2614ce8-33a2-400b-9f5d-4cbbc2c1a61e)
 
 
 ## Program Listings in Dash Block:
 
 The program listings are displayed on the Dash block as a table, making it easy for you to see and understand the available programs.
 
-
-![Dash-program-lists-table](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/9ffe7d81-3367-47ab-834d-244b4cc408b4)
-
-
-
+![Dash-program-lists-table](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/88d677bc-233e-4beb-8df1-d49288e9caf0)
 

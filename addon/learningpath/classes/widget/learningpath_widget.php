@@ -578,25 +578,4 @@ class learningpath_widget extends abstract_widget {
         return true;
     }
 
-    /**
-     * Add the learningpath related global settings in dash global settings section.
-     *
-     * @param \admin_settingpage $page
-     * @return void
-     */
-    public static function include_global_settings(\admin_settingpage &$page) {
-        $ports = [
-            'desktop_learningpath',
-            'tablet_learningpath',
-            'mobile_learningpath',
-        ];
-        foreach ($ports as $port) {
-            $name = "dashaddon_learningpath/$port";
-            $title = get_string($port, 'block_dash');
-            $description = get_string($port . '_desc', 'block_dash');
-            $setting = new \admin_setting_configstoredfile(
-                $name, $title, $description, $port, 0, ['maxfiles' => -1, 'accepted_types' => ['.svg']]);
-            $page->add($setting);
-        }
-    }
 }

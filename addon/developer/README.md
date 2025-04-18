@@ -157,13 +157,13 @@ Let's break down the Mustache explanation:
 
 - **{{#data}} and {{/data}}**: Within the row loop, these tags loop through all fields in each row of data. Within this loop, it accesses the values of each field to display them in the table cells.
 
-- **{{get_value}}**: This Mustache tag retrieves the value of the current field being accessed.
+- **{{{get_value}}}**: This Mustache tag retrieves the value of the current field being accessed.
 
 - **{{get_name}} and {{get_label}}**: These Mustache tags retrieve the name and label of the current field being accessed, typically used for table headers.
 
 - **{{#str}} and {{/str}}**: This Mustache tag is used to access Moodle's language string translation functionality. It translates the "noresults" string to display a message when no data is available.
 
-- **{{data.first_child.data.c_fullname.get_value}}**: This Mustache tag demonstrates accessing a specific field within the first child data collection. In this example, it retrieves the value of the "c_fullname" field, which could represent the full name of a course.
+- **{{{data.first_child.c_fullname}}}**: This Mustache tag demonstrates accessing a specific field within the first child data collection. In this example, it retrieves the value of the "c_fullname" field, which could represent the full name of a course.
 
 Overall, the Mustache template provides a flexible and dynamic way to define the layout structure and access data values for display within the Dash block. It allows for looping through datasets, accessing field values, and conditional rendering based on the presence of data.
 
@@ -581,7 +581,7 @@ This example layout provides a simple and straightforward way to present data in
                             {{! 4. Loop through all fields in data collection }}
                             {{#data}}
                                 {{#is_visible}}
-                                <td>{{get_value}}</td>
+                                <td>{{{get_value}}}</td>
                                 {{/is_visible}}
                             {{/data}}
                         </tr>
@@ -591,7 +591,7 @@ This example layout provides a simple and straightforward way to present data in
             </div>
 
             {{! Here's another example: Access of specific data/fields. }}
-            <p>Here's a course: {{data.first_child.data.c_fullname.get_value}}</p>
+            <p>Here's a course: {{{data.first_child.c_fullname}}}</p>
         {{/body}}
         {{/ block_dash/layout }}
 ```

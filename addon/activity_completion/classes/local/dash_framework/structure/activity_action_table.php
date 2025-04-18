@@ -28,7 +28,7 @@ use block_dash\local\dash_framework\structure\table;
 use block_dash\local\dash_framework\structure\field;
 use block_dash\local\dash_framework\structure\field_interface;
 use block_dash\local\data_grid\field\attribute\button_attribute;
-use dashaddon_activity_completion\local\block_dash\data_grid\field\attribute\activity_url_attribute;
+use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_url_attribute;
 use dashaddon_activity_completion\local\block_dash\data_grid\field\attribute\activity_completion_toggle_attribute;
 use dashaddon_activity_completion\local\block_dash\data_grid\field\attribute\activity_grade_attribute;
 use lang_string;
@@ -79,8 +79,6 @@ class activity_action_table extends table {
             ], ['supports_sorting' => false]),
 
         ];
-        $PAGE->requires->js_call_amd('dashaddon_activity_completion/overrideactivitycompletion', 'init', []);
-        $PAGE->requires->js_call_amd('dashaddon_activity_completion/activitygrade', 'init', []);
         return $fields;
     }
 }

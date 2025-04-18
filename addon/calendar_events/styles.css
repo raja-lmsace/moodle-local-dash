@@ -1,0 +1,21 @@
+.dash-block-content .timeline > li {
+
+    .timeline-badge.calendar_event_site {
+        background-color: #d6f8cd;
+    }
+    .timeline-badge.calendar_event_category {
+        background-color: #e0cbe0;
+    }
+    .timeline-badge.calendar_event_course {
+        background-color: #ffd3bd;
+    }
+    .timeline-badge.calendar_event_group {
+        background-color: #fee7ae;
+    }
+    .timeline-badge.calendar_event_user {
+        background-color: #dce7ec;
+    }
+    .timeline-badge.calendar_event_other {
+        background-color: #ced4da;
+    }
+}

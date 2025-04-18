@@ -89,7 +89,7 @@ class activities_data_source extends abstract_data_source {
             ->select('c.id', 'cm_course')
             ->select('cc.id', 'cm_category')
             ->from('course_modules', 'cm')
-            ->join('modules', 'm', 'id', 'cm.module')
+            ->join('modules', 'm', 'id', 'cm.module AND m.visible = 1')
             ->join('course_modules_completion', 'cmc', 'coursemoduleid', 'cm.id AND cmc.userid = :userid1',
                 join::TYPE_LEFT_JOIN, ["userid1" => $USER->id])
             ->join('course', 'c', 'id', 'cm.course')

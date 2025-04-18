@@ -36,7 +36,7 @@ use block_dash\local\dash_framework\structure\user_table;
 use local_dash\data_grid\filter\course_category_condition;
 use local_dash\data_grid\filter\my_enrolled_courses_condition;
 use local_dash\data_grid\filter\course_dates_condition;
-use local_dash\data_grid\filter\parent_role_condition;
+use local_dash\data_grid\filter\relations_role_condition;
 use block_dash\local\data_grid\filter\logged_in_user_condition;
 use local_dash\data_grid\filter\tags_condition;
 use local_dash\data_grid\filter\cohort_condition;
@@ -91,7 +91,7 @@ class activity_completion_data_source extends abstract_data_source {
      * @return builder
      */
     public function get_query_template(): builder {
-        global $USER, $DB, $USER;
+        global $USER, $DB, $USER, $PAGE;
         $builder = new builder();
         $builder
             ->select('uniqueid', 'unique_id')
@@ -108,14 +108,12 @@ class activity_completion_data_source extends abstract_data_source {
             ->select('gt.id', 'gt_id')
             ->select('gg.itemid', 'gg_itemid')
             ->select('gg.finalgrade', 'gg_finalgrade')
-            ->select('tm.duedatecustom', 'tm_duedate')
             ->from('course_modules', 'cm')
-            ->join('modules', 'm', 'id', 'cm.module')
+            ->join('modules', 'm', 'id', 'cm.module AND m.visible = 1')
             ->join('course', 'c', 'id', 'cm.course')
-            ->join('context', 'ctx', 'instanceid', 'c.id', join::TYPE_INNER_JOIN, ['courselevel' => 50])
-            ->join_condition('ctx', 'ctx.contextlevel=:courselevel')
-            ->join('role_assignments', 'ra', 'contextid', 'ctx.id', join::TYPE_INNER_JOIN)
-            ->join('user', 'u', 'id', 'ra.userid')
+            ->join('enrol', 'e', 'courseid', 'c.id')
+            ->join('user_enrolments', 'ue', 'enrolid', 'e.id')
+            ->join('user', 'u', 'id', 'ue.userid', join::TYPE_RIGHT_JOIN)
             ->join('course_modules_completion', 'cmc', 'coursemoduleid', 'cm.id AND cmc.userid = u.id', join::TYPE_LEFT_JOIN)
             ->join('course_categories', 'cc', 'id', 'c.category')
             ->join('course_sections', 'cs', 'id', 'cm.section')
@@ -123,6 +121,7 @@ class activity_completion_data_source extends abstract_data_source {
             ->join('grade_grades', 'gg', 'itemid', 'gt.id AND gg.userid = u.id', join::TYPE_LEFT_JOIN);
 
         if (dashaddon_activity_completion_is_timemangement_installed()) {
+            $builder->select('tm.duedatecustom', 'tm_duedate');
             $builder->join('ltool_timemanagement_modules', 'tm', 'cmid', 'cm.id', join::TYPE_LEFT_JOIN);
         }
         $activityfilterpreferences = $this->get_preferences('filters');
@@ -168,6 +167,14 @@ class activity_completion_data_source extends abstract_data_source {
         $builder->rawcondition('u.deleted = 0');
         $builder->where_raw("cm.deletioninprogress = 0 AND (cm.visible = 1 OR cm.visible = $bypassadmin)");
         $builder->orderby('u.id', 'asc');
+
+        // Js include.
+        $PAGE->requires->js_call_amd('dashaddon_activity_completion/overrideactivitycompletion', 'init',
+            ['blockinstanceid' => $this->get_block_instance()->instance->id]);
+
+        $PAGE->requires->js_call_amd('dashaddon_activity_completion/activitygrade', 'init',
+            ['blockinstanceid' => $this->get_block_instance()->instance->id]);
+
         return $builder;
 
     }
@@ -302,7 +309,7 @@ class activity_completion_data_source extends abstract_data_source {
         $cmfiltercollection->add_filter(new course_dates_condition('c_coursedates', 'c.id'));
 
         // Partent role condition (Users i manage).
-        $cmfiltercollection->add_filter(new parent_role_condition('parentrole', 'u.id'));
+        $cmfiltercollection->add_filter(new relations_role_condition('parentrole', 'u.id'));
 
         // Current user.
         $cmfiltercollection->add_filter(new logged_in_user_condition('current_user', 'u.id'));
@@ -314,7 +321,8 @@ class activity_completion_data_source extends abstract_data_source {
         $cmfiltercollection->add_filter(new users_mycohort_condition('users_mycohort', 'u.id'));
 
         // Activity completion status.
-        $cmfiltercollection->add_filter(new activity_completion_status_condition('activitycompletion_status', 'cmc.completionstate'));
+        $cmfiltercollection->add_filter(new activity_completion_status_condition('activitycompletion_status',
+            'cmc.completionstate'));
 
         // Module name condition.
         $cmfiltercollection->add_filter(new activity_modulename_condition('modulename', 'm.id'));
@@ -337,18 +345,28 @@ class activity_completion_data_source extends abstract_data_source {
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
         $configpreferences['available_fields']['cm_modicon']['visible'] = true;
+        $configpreferences['available_fields']['u_firstname']['visible'] = true;
         $configpreferences['available_fields']['cm_name']['visible'] = true;
-        $configpreferences['available_fields']['c_fullname']['visible'] = true;
         $configpreferences['available_fields']['cm_modsection']['visible'] = true;
         $data['config_preferences'] = $configpreferences;
     }
 
     /**
-     * Get the record data count for table page paginator.
+     * This activity completion data source counted by uniqueid.
+     *
+     * @return bool
      */
-    public function get_data_records_count() {
-        $records = $this->get_query()->get_all_records_query();
-        return count($records);
+    public function count_by_uniqueid() {
+        return true;
+    }
+
+    /**
+     * Is the data source needs to load the js when it the content updated using JS.
+     *
+     * @return bool
+     */
+    public function supports_currentscript() {
+        return false;
     }
 
 }

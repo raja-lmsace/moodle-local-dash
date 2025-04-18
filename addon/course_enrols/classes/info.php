@@ -261,8 +261,8 @@ class info {
      * @param array $conditionparams
      * @return array
      */
-    public static function get_courses_list(int $userid=null, string $sort="alpha_asc",
-        string $status="all", int $limitfrom=null, int $limitnum=null, $condition=null, $conditionparams=[]) {
+    public static function get_courses_list($userid=null, string $sort="alpha_asc",
+        string $status="all", $limitfrom=null, $limitnum=null, $condition=null, $conditionparams=[]) {
 
         global $CFG, $USER, $DB;
         require_once($CFG->dirroot.'/lib/enrollib.php');
@@ -346,7 +346,6 @@ class info {
 
         return false;
     }
-
 
     /**
      * Find all the modules inside the given sections are completed by the logged in user.

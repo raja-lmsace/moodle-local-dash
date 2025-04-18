@@ -117,8 +117,9 @@ function local_dash_get_fontawesome_icon_map() {
  * @return void
  */
 function local_dash_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
+
     if ($context->contextlevel == CONTEXT_SYSTEM && ($filearea === 'courseimage' || $filearea === 'programbg')
-        || $filearea === 'dashthumbnailimage' || $filearea === 'dashbgimage') {
+        || $filearea === 'dashthumbnailimage' || $filearea === 'dashbgimage' || $filearea === 'calendareventsimage') {
         // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
         $itemid = 0;
 
@@ -126,7 +127,8 @@ function local_dash_pluginfile($course, $cm, $context, $filearea, $args, $forced
         // user really does have access to the file in question.
         // Extract the filename / filepath from the $args array.
         $filename = array_pop($args); // The last item in the $args array.
-        if ($filearea === 'programbg' || $filearea === 'dashthumbnailimage' || $filearea === 'dashbgimage') {
+        if ($filearea === 'programbg' || $filearea === 'dashthumbnailimage'
+            || $filearea === 'dashbgimage' || $filearea === 'calendareventsimage') {
             $filepath = '/';
         } else {
             if (!$args) {
@@ -160,7 +162,6 @@ function local_dash_pluginfile($course, $cm, $context, $filearea, $args, $forced
  */
 function local_dash_extend_settings_navigation($settingsnav, $context) {
     global $PAGE, $CFG, $OUTPUT, $DB;
-
     if ($PAGE->pagetype == 'my-index' && array_key_exists('dashboard', core_component::get_plugin_list('dashaddon'))) {
         require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
         $dashboard = $DB->get_record('dashaddon_dashboard_dash', ['shortname' => 'coredashboard']);
@@ -201,6 +202,15 @@ function local_dash_extend_settings_navigation($settingsnav, $context) {
             $currentbtn = $PAGE->button;
             $url = new moodle_url('/local/dash/addon/dashboard/dashboard_list.php');
             $currentbtn .= $OUTPUT->single_button($url, get_string('managedashboards', 'block_dash'));
+            $PAGE->set_button($currentbtn);
+        }
+    }
+
+    if ($PAGE->context->contextlevel == CONTEXT_COURSECAT && $PAGE->pagetype == 'course-index-category') {
+        $category = core_course_category::get($PAGE->context->instanceid);
+        if ($category->can_create_course() || $category->has_manage_capability()) {
+            $url = new moodle_url('/local/dash/addon/dashboard/dashboard_list.php', ['contextid' => $PAGE->context->id]);
+            $currentbtn = $OUTPUT->single_button($url, get_string('managedashboards', 'block_dash'), 'get');
             $PAGE->set_button($currentbtn);
         }
     }

@@ -37,21 +37,14 @@ use local_dash\layout\accordion_layout;
  * @group bdecent
  * @group accordion_layout_test
  */
-class accordion_layout_test extends \advanced_testcase {
-    /**
-     * This method is called before each test.
-     */
-    protected function setUp(): void {
-
-    }
-
+final class accordion_layout_test extends \advanced_testcase {
     /**
      * Test stuff() basic layout config.
      *
      * @covers ::stuff
      * @return void
      */
-    public function test_stuff() {
+    public function test_stuff(): void {
         $this->resetAfterTest();
 
         $cat1 = $this->getDataGenerator()->create_category(['name' => 'Category 1']);

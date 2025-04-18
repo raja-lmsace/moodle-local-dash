@@ -22,8 +22,19 @@
 
     Variables optional for this template:
 
-    Example context (json):
+   Example context (json):
     {
+        "courseimg": "http://example.com/courseimg.jpg",
+        "progress": 50,
+        "coursename": "Course Name",
+        "summary": "Course summary text",
+        "courseurl": "http://example.com/course/1",
+        "completed": false,
+        "notstarted": false,
+        "prevcourse": "Previous Course Name",
+        "prevcoursecircle": 1,
+        "nextcourse": "Next Course Name",
+        "nextcoursecircle": 3
     }
 
 }}
@@ -42,7 +53,7 @@
 
 
         <div class="content-block card-body">
-            <h2 class="card-title">{{coursename}}</h2>
+            <h2 class="card-title">{{{coursename}}}</h2>
             <div class="summary-block card-text">
                 <p>{{{summary}}}</p>
             </div>

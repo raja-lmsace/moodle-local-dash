@@ -17,13 +17,16 @@ Feature: Dash program to show the list of cohort course
       | Course 3 | C3        | CAT3     | 1                |
       | Course 4 | C4        | CAT4     | 1                |
     And the following "activities" exist:
-      | activity      | name               | course   | idnumber | intro                 | section    | completion |
-      | assign        | Assignment 1       | C1       | page01   | Welcome to Assignment | 1          | 1          |
-      | assign        | Assignment 2       | C3       | page02   | Welcome to Assignment | 1          | 1          |
-      | choice        | My quiz B          | C3       | choice   | Welcome to Quiz       | 1          | 1          |
-      | choice        | Quiz 1             | C3       | choice   | Welcome to Quiz       | 2          | 1          |
-      | chat          | Students chat room | C1       | chat01   | Welcome to chat       | 3          | 1          |
-      | book          | Book 1             | C2       | book     | Welcome to Book       | 1          | 1          |
+      | activity  | name               | course   | idnumber | intro                  | section    | completion |
+      | assign    | Assignment 5       | C4       | page06   | Welcome to Assignment5 | 0          | 1          |
+      | assign    | Assignment 6       | C4       | page07   | Welcome to Assignment6 | 0          | 1          |
+      | assign    | Assignment 7       | C4       | page08   | Welcome to Assignment7 | 0          | 1          |
+      | assign    | Assignment 1       | C1       | page01   | Welcome to Assignment1 | 1          | 1          |
+      | assign    | Assignment 2       | C3       | page02   | Welcome to Assignment2 | 1          | 1          |
+      | choice    | My quiz B          | C3       | choice   | Welcome to Quiz        | 1          | 1          |
+      | choice    | Quiz 1             | C3       | choice01 | Welcome to Quiz        | 2          | 1          |
+      | choice    | Quiz 2             | C1       | choice02 | Welcome to Quiz 2      | 3          | 1          |
+      | book      | Book 1             | C2       | book     | Welcome to Book        | 1          | 1          |
     And the following "users" exist:
       | username | firstname | lastname | email                |
       | student1 | Student   | First    | student1@example.com |
@@ -41,6 +44,8 @@ Feature: Dash program to show the list of cohort course
       | teacher6 | Teacher   | Sixth    | teacher6@example.com |
     And the following "course enrolments" exist:
       | user     | course | role    |
+      | admin    | C1     | manager |
+      | admin    | C4     | manager |
       | student1 | C1     | student |
       | student1 | C2     | student |
       | student2 | C1     | student |
@@ -80,7 +85,7 @@ Feature: Dash program to show the list of cohort course
     And I navigate to "Course completion" in current page administration
     And I expand all fieldsets
     And I click on "Assignment - Assignment 1" "checkbox"
-    And I click on "Chat - Students chat room" "checkbox"
+    And I click on "Choice - Quiz 2" "checkbox"
     And I set the field "activity_aggregation" to "2"
     And I press "Save changes"
     And I am on "Course 3" course homepage
@@ -98,7 +103,7 @@ Feature: Dash program to show the list of cohort course
     And I click on "Assignment 1" "link" in the "#page-content" "css_element"
     And I click on "Mark as done" "button"
     And I am on "Course 1" course homepage
-    And I click on "Students chat room" "link" in the "#page-content" "css_element"
+    And I click on "Quiz 2" "link" in the "#page-content" "css_element"
     And I click on "Mark as done" "button"
     And I log out
     And I log in as "student2"
@@ -222,3 +227,68 @@ Feature: Dash program to show the list of cohort course
     And I should not see "Student First" in the "course completion cohort" "block"
     And I should not see "Student Second" in the "course completion cohort" "block"
     And I log out
+
+  Scenario: Course information
+    Given I log in as "admin"
+    And I turn dash block editing mode on
+    And I click on "Manage dashboards" "button"
+    And I click on "Create dashboard" "button"
+    And I set the following fields to these values:
+    | Name                     | Dash-dashboard             |
+    | Short name               | Dash                       |
+    | Description              | Welcome to Dash-dashboard  |
+    | Context type             | course                     |
+    | Add to course navigation | 1                          |
+    And I press "Save changes"
+    And I click on "Dash-dashboard" "link"
+    #---Adding dash blocks---#
+    And I add the "Dash" block to the "Dash" region
+    And I click on "Courses" "radio"
+    Then I configure the "New Dash" block
+    And I set the field "Block title" to "course"
+    And I press "Save changes"
+    Then I open the "course" block preference
+    Then I click on "Fields" "link"
+    And I click on "Course: Course information" "checkbox"
+    And I press "Save changes"
+
+    And I add the "Dash" block to the "Dash" region
+    And I click on "Course completion" "radio"
+    Then I configure the "New Dash" block
+    And I set the field "Block title" to "course completion"
+    And I press "Save changes"
+    Then I open the "course completion" block preference
+    Then I click on "Fields" "link"
+    And I click on "Course completion: Course information" "checkbox"
+    And I press "Save changes"
+    #---Course information button redirect---#
+    And I should see "Course information" in the "Course 1" "table_row"
+    And I click on "Course information" "button" in the "Course 1" "table_row"
+    And I should see "Dash-dashboard"
+    And I click on "Course information" "button" in the "Course 2" "table_row"
+    And I should see "You cannot enrol yourself in this course." in the "#notice" "css_element"
+
+    And I am on "Course 1" course homepage
+    And I navigate to "Dash-dashboard" in current page administration
+
+    And I click on "Course information" "button" in the "Student First" "table_row"
+    And I should see "Dash-dashboard"
+    And I click on "Course information" "button" in the "Student Fifth" "table_row"
+    And I should see "You cannot enrol yourself in this course." in the "#notice" "css_element"
+    And I log out
+    #---student login---#
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    And I click on "Dash-dashboard" "link"
+    And I click on "Course information" "button" in the "Course 1" "table_row"
+    And I should see "Dash-dashboard"
+    And I click on "Course information" "button" in the "Course 3" "table_row"
+    And I should see "You cannot enrol yourself in this course." in the "#notice" "css_element"
+
+    And I am on "Course 1" course homepage
+    And I click on "Dash-dashboard" "link"
+    #---recheck the hided line---#
+    And I click on "Course information" "button" in the "Student First" "table_row"
+    And I should see "Dash-dashboard"
+    And I click on "Course information" "button" in the "Student Fifth" "table_row"
+    And I should see "You cannot enrol yourself in this course." in the "#notice" "css_element"

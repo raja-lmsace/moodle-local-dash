@@ -92,9 +92,9 @@ class completion_status_condition extends condition {
         $fieldname = sprintf($fieldnameformat, $this->get_name());
 
         $choices = [
-            'completed' => get_string('status:completed', 'block_dash'),
-            'inprogress' => get_string('status:inprogress', 'block_dash'),
             'enrolled' => get_string('status:enrolled', 'block_dash'),
+            'inprogress' => get_string('status:inprogress', 'block_dash'),
+            'completed' => get_string('status:completed', 'block_dash'),
         ];
 
         $select = $mform->addElement('select', $fieldname . '[completionstatus]', '', $choices, ['class' => 'select2-form']);

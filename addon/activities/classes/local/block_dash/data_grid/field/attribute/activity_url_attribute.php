@@ -17,12 +17,12 @@
 /**
  * Transforms data to activity url.
  *
- * @package    dashaddon_activity_completion
+ * @package    dashaddon_activities
  * @copyright  2023 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace dashaddon_activity_completion\local\block_dash\data_grid\field\attribute;
+namespace dashaddon_activities\local\block_dash\data_grid\field\attribute;
 
 use block_dash\local\data_grid\field\attribute\abstract_field_attribute;
 use moodle_url;
@@ -30,7 +30,7 @@ use moodle_url;
 /**
  * Transforms data to activity url.
  *
- * @package dashaddon_activity_completion
+ * @package dashaddon_activities
  */
 class activity_url_attribute extends abstract_field_attribute {
 

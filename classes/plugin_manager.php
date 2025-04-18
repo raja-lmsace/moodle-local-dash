@@ -36,6 +36,7 @@ use pix_icon;
 
 require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->dirroot . '/local/dash/lib.php');
+require_once($CFG->dirroot . '/blocks/dash/lib.php');
 
 /**
  * Class that handles the display and configuration of the list of tab plugins.
@@ -62,7 +63,6 @@ class plugin_manager {
         $this->subtype = $subtype;
     }
 
-
     /**
      * Return a list of plugins sorted by the order defined in the admin interface
      *
@@ -73,9 +73,18 @@ class plugin_manager {
 
         $result = [];
         $disabled = [];
+        $disabledlist = [];
 
         foreach ($names as $name => $path) {
             $classname = '\\' . $this->subtype . '_' . $name . '\\dashaddon';
+
+            // If the addon is in the disabled list, store it separately.
+            if (in_array($name, block_dash_disabled_addons_list())) {
+                $disabledlist[] = $name;
+                $this->hide_plugin($name);
+                continue;
+            }
+
             if (
                 !empty(get_config($this->subtype . '_' . $name, 'enabled'))
                 && (!class_exists($classname) || empty($classname::added_dependencies()))
@@ -86,9 +95,10 @@ class plugin_manager {
                 $disabled[] = $name;
             }
         }
-        return array_merge($result, $disabled);
-    }
 
+        // Append the disabled addons at the end of the list.
+        return array_merge($result, $disabled, $disabledlist);
+    }
 
     /**
      * Util function for writing an action icon link
@@ -145,8 +155,8 @@ class plugin_manager {
 
         $plugins = $this->get_sorted_plugins_list();
         $shortsubtype = $this->subtype;
-
         $addondependencies = get_plugin_list_with_function('dashaddon', 'extend_added_dependencies', 'lib.php');
+
         foreach ($plugins as $idx => $plugin) {
             $row = [];
             $class = '';
@@ -157,19 +167,25 @@ class plugin_manager {
             $dependenciesfunction = isset($addondependencies[$this->subtype . '_' . $plugin]) ?
                 $addondependencies[$this->subtype . '_' . $plugin] : '';
 
-            $visible = !empty(get_config($this->subtype . '_' .$plugin, 'enabled')) &&
-                (!function_exists($dependenciesfunction) || empty($dependenciesfunction()));
+            $visible = !empty(get_config($this->subtype . '_' . $plugin, 'enabled')) &&
+            (!function_exists($dependenciesfunction) || empty($dependenciesfunction()));
 
-            if ($visible) {
-                $row[] = $this->format_icon_link('hide', $plugin, 't/hide', get_string('disable'));
-            } else if (function_exists($dependenciesfunction) && $dependenciesfunction()) {
+            if (in_array($plugin, block_dash_disabled_addons_list())) {
                 $row[] = '';
-            } else {
-                $row[] = $this->format_icon_link('show', $plugin, 't/show', get_string('enable'));
+                $row[] = get_string('disabledaddons', 'block_dash');
                 $class = 'dimmed_text';
-            }
+            } else {
+                if ($visible) {
+                    $row[] = $this->format_icon_link('hide', $plugin, 't/hide', get_string('disable'));
+                } else if (function_exists($dependenciesfunction) && $dependenciesfunction()) {
+                    $row[] = '';
+                } else {
+                    $row[] = $this->format_icon_link('show', $plugin, 't/show', get_string('enable'));
+                    $class = 'dimmed_text';
+                }
 
-            $row[] = function_exists($dependenciesfunction) ? $dependenciesfunction() : '';
+                $row[] = function_exists($dependenciesfunction) ? $dependenciesfunction() : '';
+            }
 
             $table->add_data($row, $class);
         }

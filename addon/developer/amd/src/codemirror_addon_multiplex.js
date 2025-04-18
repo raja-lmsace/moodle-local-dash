@@ -1,17 +1,17 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/LICENSE
 
-(function(mod) {
+(function (mod) {
     if (typeof exports == "object" && typeof module == "object") // CommonJS
         mod(require("../../lib/codemirror"));
     else if (typeof define == "function" && define.amd) // AMD
         define(["dashaddon_developer/codemirror"], mod);
     else // Plain browser env
         mod(CodeMirror);
-})(function(CodeMirror) {
+})(function (CodeMirror) {
     "use strict";
 
-    CodeMirror.multiplexingMode = function(outer /*, others */) {
+    CodeMirror.multiplexingMode = function (outer /*, others */) {
         // Others should be {open, close, mode [, delimStyle] [, innerStyle]} objects
         var others = Array.prototype.slice.call(arguments, 1);
 
@@ -25,7 +25,7 @@
         }
 
         return {
-            startState: function() {
+            startState: function () {
                 return {
                     outer: CodeMirror.startState(outer),
                     innerActive: null,
@@ -33,7 +33,7 @@
                 };
             },
 
-            copyState: function(state) {
+            copyState: function (state) {
                 return {
                     outer: CodeMirror.copyState(outer, state.outer),
                     innerActive: state.innerActive,
@@ -41,7 +41,7 @@
                 };
             },
 
-            token: function(stream, state) {
+            token: function (stream, state) {
                 if (!state.innerActive) {
                     var cutOff = Infinity, oldContent = stream.string;
                     for (var i = 0; i < others.length; ++i) {
@@ -96,13 +96,13 @@
                 }
             },
 
-            indent: function(state, textAfter, line) {
+            indent: function (state, textAfter, line) {
                 var mode = state.innerActive ? state.innerActive.mode : outer;
                 if (!mode.indent) return CodeMirror.Pass;
                 return mode.indent(state.innerActive ? state.inner : state.outer, textAfter, line);
             },
 
-            blankLine: function(state) {
+            blankLine: function (state) {
                 var mode = state.innerActive ? state.innerActive.mode : outer;
                 if (mode.blankLine) {
                     mode.blankLine(state.innerActive ? state.inner : state.outer);
@@ -122,8 +122,8 @@
 
             electricChars: outer.electricChars,
 
-            innerMode: function(state) {
-                return state.inner ? {state: state.inner, mode: state.innerActive.mode} : {state: state.outer, mode: outer};
+            innerMode: function (state) {
+                return state.inner ? { state: state.inner, mode: state.innerActive.mode } : { state: state.outer, mode: outer };
             }
         };
     };

@@ -51,6 +51,10 @@ use local_dash\data_grid\filter\show_hidden_courses_condition;
 use local_dash\data_grid\filter\course_dates_condition;
 use local_dash\data_grid\filter\course_dates_filter;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->dirroot.'/local/dash/lib.php');
+
 /**
  * Courses data source.
  */
@@ -221,7 +225,6 @@ class courses_data_source extends abstract_data_source {
 
         return $coursefilter;
     }
-
 
     /**
      * Set the default preferences of the Course datasource, force the set the default settings.

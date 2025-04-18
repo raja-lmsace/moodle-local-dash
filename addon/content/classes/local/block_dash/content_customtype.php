@@ -328,7 +328,7 @@ class content_customtype extends abstract_custom_type {
             'style' => $bgstyle,
             'backgroundimage' => $bgimageurl,
             'content' => $contenttext
-                ? format_text($contenttext, $content->contentformat, ['overflow' => false, 'noclean' => true]) : '',
+                ? format_text($contenttext, $content->contentformat, ['overflowdiv' => false, 'noclean' => true]) : '',
             'showimage' => $contenttext ? false : true,
         ];
     }
@@ -504,4 +504,42 @@ class content_customtype extends abstract_custom_type {
         return true;
     }
 
+    /**
+     * Include the flag to confirm this block is show on this page.
+     *
+     * @param array $data
+     * @return void
+     */
+    public function update_data_before_render(&$data) {
+        $data['showcollapseblock'] = $this->is_section_expand_content_addon($data);
+    }
+
+    /**
+     * Determines if the section content should be expanded based on the provided data.
+     *
+     * This function checks if the 'collapseaction' key in the provided data is set to true.
+     * If so, it retrieves the current section parameter and checks if the section is restricted
+     * based on the block instance's configuration preferences and filter collection.
+     *
+     * @param array $data The data array containing the 'collapseaction' key.
+     * @return bool Returns true if the section content should be expanded, false otherwise.
+     */
+    public function is_section_expand_content_addon($data) {
+
+        if (isset($data['collapseaction']) && $data['collapseaction'] === true) {
+            $currentsection = optional_param('section', 0, PARAM_INT);
+
+            if (isset($this->get_block_instance()->config->preferences)) {
+                if ($this->get_filter_collection()->get_filter('sectiondisplay') === null) {
+                    return false;
+                }
+                $restrictedsections = $this->get_filter_collection()->get_filter('sectiondisplay')->get_values();
+                if (in_array((int)$currentsection, $restrictedsections)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

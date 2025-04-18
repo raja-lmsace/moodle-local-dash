@@ -26,9 +26,9 @@ defined('MOODLE_INTERNAL') || die();
 
 $functions = [
     'dashaddon_activity_completion_grade_activity' => [
-        'classname' => 'external',
+        'classname' => 'dashaddon_activity_completion\external',
         'methodname' => 'grade_activity',
-        'classpath' => 'local/dash/addon/activity_completion/classes/external.php',
+        'classpath' => '',
         'description' => 'Grade the activity in modal',
         'type' => 'write',
         'ajax' => true,

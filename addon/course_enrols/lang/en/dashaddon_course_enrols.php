@@ -22,12 +22,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Widget: Course enrolments';
-$string['widget:course_enrols'] = 'Course Enrolments';
-
-$string['course_enrols:viewdetails'] = 'View enrolment details';
-$string['course_enrols:unenrol'] = 'Unenrol courses from users';
-$string['course_enrols:enrol'] = 'Enrol users into course';
 $string['course_enrols:editenrolment'] = 'Edit the user enrolment';
+$string['course_enrols:enrol'] = 'Enrol users into course';
+$string['course_enrols:unenrol'] = 'Unenrol courses from users';
+$string['course_enrols:viewdetails'] = 'View enrolment details';
 $string['course_enrols:viewotherprofiledash'] = 'View the others profile dash block';
 $string['course_enrols:viewprofiledash'] = 'View the profile dash block';
+$string['pluginname'] = 'Widget: Course enrolments';
+$string['widget:course_enrols'] = 'Course Enrolments';

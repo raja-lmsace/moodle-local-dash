@@ -32,6 +32,7 @@ if ($hassiteconfig) {
     $settings = null;
 
     $page = new admin_settingpage('localdashgeneralsettings', get_string('generalsettings', 'block_dash'));
+
     $name = 'local_dash/courseimage';
     $title = get_string('courseimage', 'block_dash');
     $description = get_string('courseimagedesc', 'block_dash');
@@ -66,33 +67,6 @@ if ($hassiteconfig) {
     $setting = new admin_setting_configselect($name, $title, '', null, $coursefields);
     $page->add($setting);
 
-    if (class_exists('\dashaddon_myprofile\widget\myprofile_widget')) {
-        \dashaddon_myprofile\widget\myprofile_widget::include_global_settings($page);
-    }
-
-    if (class_exists('\dashaddon_learningpath\widget\learningpath_widget')) {
-        \dashaddon_learningpath\widget\learningpath_widget::include_global_settings($page);
-    }
-
-    if (array_key_exists('course_enrols', core_component::get_plugin_list('dashaddon'))) {
-        $options = get_default_enrol_roles(context_system::instance());
-        $student = get_archetype_roles('student');
-        $student = reset($student);
-        $name = 'local_dash/course_enrol_role';
-        $title = get_string('course_enrol_role', 'block_dash');
-        $setting = new admin_setting_configselect($name, $title, "", isset($student->id) ? $student->id : null, $options);
-        $page->add($setting);
-    }
-
-    if (array_key_exists('programs', core_component::get_plugin_list('dashaddon'))) {
-        $name = "local_dash/programbg";
-        $title = get_string("programbg", 'block_dash');
-        $description = get_string("programbg_desc", 'block_dash');
-        $setting = new \admin_setting_configstoredfile(
-            $name, $title, $description, 'programbg', 0, ['maxfiles' => 1, 'accepted_types' => ['.jpg', '.jpeg', '.jpe', '.png']]);
-        $page->add($setting);
-    }
-
     $ADMIN->add('localdashsettings', $page);
 
     $ADMIN->add('localdashsettings', new admin_externalpage(
@@ -109,22 +83,9 @@ if ($hassiteconfig) {
         get_string('managedashboards', 'block_dash'),
         new moodle_url('/local/dash/addon/dashboard/dashboard_list.php')));
 
-    if (array_key_exists('developer', core_component::get_plugin_list('dashaddon'))) {
+}
 
-        $ADMIN->add('localdashsettings', new admin_externalpage(
-            'localdashmanagedatasources',
-            get_string('managedatasources', 'block_dash'),
-            new moodle_url('/local/dash/datasources.php'),
-            'dashaddon/developer:managecustomdatasources'));
-
-        $ADMIN->add('localdashsettings', new admin_externalpage(
-            'localdashmanagelayouts',
-            get_string('managelayouts', 'block_dash'),
-            new moodle_url('/local/dash/addon/developer/customlayouts.php'),
-            'dashaddon/developer:managecustomlayouts'));
-    }
-
-    if (class_exists('\dashaddon_skill_graph\widget\competency_progress_widget')) {
-        \dashaddon_skill_graph\widget\competency_progress_widget::include_global_settings_page($ADMIN);
-    }
+foreach (core_plugin_manager::instance()->get_plugins_of_type('dashaddon') as $plugin) {
+    // Load all the dashaddon plugins settings pages.
+    $plugin->load_settings($ADMIN, 'localdashsettings', $hassiteconfig);
 }

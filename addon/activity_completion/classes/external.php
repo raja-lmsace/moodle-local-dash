@@ -22,11 +22,18 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use grade_plugin_return;
-use grade_report_grader;
+namespace dashaddon_activity_completion;
 
 defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->libdir.'/externallib.php');
+
+use grade_plugin_return;
+use grade_report_grader;
+use external_function_parameters;
+use external_single_structure;
+use external_value;
+
 require_once($CFG->libdir . '/grade/grade_item.php');
 require_once($CFG->libdir . '/grade/grade_object.php');
 require_once($CFG->dirroot . '/grade/report/lib.php');
@@ -37,7 +44,6 @@ require_once($CFG->dirroot.'/grade/lib.php');
  * Define external class.
  */
 class external extends \external_api {
-
 
     /**
      * Parameters defintion to grade activity.
@@ -66,7 +72,9 @@ class external extends \external_api {
      * @return array $message
      */
     public static function grade_activity($userid, $formdata, $cmid, $gradeitemid) {
-        global $DB, $CFG;
+        global $CFG;
+
+        require_once($CFG->libdir . '/completionlib.php');
 
         $vaildparams = self::validate_parameters(self::grade_activity_parameters(),
             ['userid' => $userid, 'formdata' => $formdata, 'cmid' => $cmid, 'gradeitemid' => $gradeitemid]);
@@ -90,6 +98,19 @@ class external extends \external_api {
         $data->grade = $gradedata['grade'];
 
         $warnings = $report->process_data($data);
+        // Fetch the user grade instance.
+        $gradeinstance = !empty($report->grades[$userid][$gradeitemid]) ? $report->grades[$userid][$gradeitemid] : [];
+        // If grade instance is not empty, then notify the grade chnaged to trigger the module completion.
+        if (!empty($gradeinstance)) {
+            $gradeitem = $gradeinstance->grade_item;
+            $completion = new \completion_info($course);
+            if (!$completion->is_enabled($cm)) {
+                return;
+            }
+            // Inform the grade has changed, inform the module completion.
+            $completion->inform_grade_changed($cm, $gradeitem, $gradeinstance, false, false);
+        }
+
         foreach ($warnings as $warning) {
             $message = $warning;
         }
@@ -112,8 +133,8 @@ class external extends \external_api {
     public static function grade_activity_returns() {
         return new external_single_structure(
             [
-                'message' => new \external_value(PARAM_TEXT, 'Return status message'),
-                'status' => new \external_value(PARAM_TEXT, 'Return status'),
+                'message' => new external_value(PARAM_TEXT, 'Return status message'),
+                'status' => new external_value(PARAM_TEXT, 'Return status'),
             ]
         );
     }

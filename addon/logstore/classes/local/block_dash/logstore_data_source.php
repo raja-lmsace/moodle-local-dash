@@ -48,7 +48,7 @@ use local_dash\data_grid\filter\enrollment_nonself_condition;
 use local_dash\data_grid\filter\enrollment_self_condition;
 use local_dash\data_grid\filter\enrollment_status_field_filter;
 use local_dash\data_grid\filter\my_enrolled_courses_condition;
-use local_dash\data_grid\filter\parent_role_condition;
+use local_dash\data_grid\filter\relations_role_condition;
 use local_dash\data_grid\filter\tags_field_filter;
 use dashaddon_categories\local\dash_framework\structure\course_category_table;
 use dashaddon_courses\local\dash_framework\structure\course_table;
@@ -86,7 +86,11 @@ class logstore_data_source extends abstract_data_source {
             ->join('user', 'u', 'id', 'sl.relateduserid')
             ->join('course', 'c', 'id', 'sl.courseid')
             ->join('course_categories', 'cc', 'id', 'c.category')
-            ->join('enrol', 'e', 'courseid', 'c.id');
+            ->join('enrol', 'e', 'courseid', 'c.id')
+            ->join('groups_members', 'gm', 'userid', 'u.id', join::TYPE_LEFT_JOIN)
+            ->join('groups', 'g', 'id', 'gm.groupid', join::TYPE_LEFT_JOIN)
+            ->join('user_enrolments', 'ue', 'userid', 'u.id', join::TYPE_LEFT_JOIN)
+            ->join_condition('ue', 'ue.enrolid = e.id');
 
         if (class_exists('\core_course\customfield\course_handler')) {
             $loghandler = \core_course\customfield\course_handler::create();
@@ -140,7 +144,7 @@ class logstore_data_source extends abstract_data_source {
         $logfiltercollection->add_filter(new tags_field_filter('c_tags', 'c.id', 'core', 'course',
             get_string('coursetags', 'tag')));
 
-        $logfiltercollection->add_filter(new parent_role_condition('parentrole', 'u.id'));
+        $logfiltercollection->add_filter(new relations_role_condition('parentrole', 'u.id'));
 
         if (class_exists('\core_course\customfield\course_handler')) {
             $loghandler = \core_course\customfield\course_handler::create();

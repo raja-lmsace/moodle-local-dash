@@ -22,6 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['dash:managecoursecatedashboards'] = 'Manage course categorydata sources';
 $string['dash:managedashboards'] = 'Manage dashboards';
 $string['dash:managedatasources'] = 'Manage data sources';
 $string['pluginname'] = 'Dash Pro';

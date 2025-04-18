@@ -23,7 +23,7 @@
  */
 
 $string['pluginname'] = 'Widget: Competency graph';
-$string['widget:skill_graph'] = 'Skill graph';
-$string['widget:skill_graph_help'] = 'Competency breakdown report';
 $string['widget:competency_progress'] = 'Competency progress';
 $string['widget:competency_progress_help'] = 'Competency breakdown progress';
+$string['widget:skill_graph'] = 'Skill graph';
+$string['widget:skill_graph_help'] = 'Competency breakdown report';

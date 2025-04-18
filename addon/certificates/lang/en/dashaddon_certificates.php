@@ -22,8 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Data source: Certificates';
-$string['datasource:certificates_data_source'] = 'Course certificates';
 $string['certificate'] = 'Certificates';
+$string['datasource:certificates_data_source'] = 'Course certificates';
+$string['pluginname'] = 'Data source: Certificates';
 $string['tablealias_tci'] = 'Certificates';
 $string['upgradeplugin'] = 'This plugin requires installation of <b> {$a} </b> to enable.';

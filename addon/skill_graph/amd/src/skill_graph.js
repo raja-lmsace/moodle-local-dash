@@ -1,4 +1,27 @@
-define(['jquery', 'dashaddon_skill_graph/chartjs'], function($, Chart) {
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Dashaddon skill graph - Manage competencies apearance.
+ *
+ * @module   dashaddon_skill_graph/skill_graph
+ * @copyright 2023 bdecent GmbH <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+define(['jquery', 'dashaddon_skill_graph/chartjs'], function ($, Chart) {
 
     /* global skillGraphData */
     var colors = skillGraphData;
@@ -6,14 +29,14 @@ define(['jquery', 'dashaddon_skill_graph/chartjs'], function($, Chart) {
     Chart.defaults.font.size = 15;
 
     const chartOptions = {
-        fontSize:  Chart.defaults.font.size,
+        fontSize: Chart.defaults.font.size,
         textMargin: 2,
         fillStyle: colors.fillStyle
     };
 
     var CTX, ChartInstance;
 
-    const skillGraph = function(uniqueid, datalabels, dataset) {
+    const skillGraph = function (uniqueid, datalabels, dataset) {
 
         var chartID = 'skill-graph-' + uniqueid;
         var ctx = document.getElementById(chartID).getContext('2d');
@@ -40,7 +63,7 @@ define(['jquery', 'dashaddon_skill_graph/chartjs'], function($, Chart) {
                     r: {
                         ticks: {
                             display: false,
-                            callback: function(val) {
+                            callback: function (val) {
                                 return '${' + this.getLabelForValue(Number(val)) + '}%';
                             }
                         },
@@ -70,7 +93,7 @@ define(['jquery', 'dashaddon_skill_graph/chartjs'], function($, Chart) {
             },
             plugins: [{
                 id: 'customPlugin',
-                afterRender: function(chart) {
+                afterRender: function (chart) {
                     initPointLabels(chart);
                 },
             }]
@@ -93,10 +116,10 @@ define(['jquery', 'dashaddon_skill_graph/chartjs'], function($, Chart) {
 
         var meta = ChartInstance.getDatasetMeta(index);
         var heighestRadius = 0;
-        meta.data.forEach(function(element) {
+        meta.data.forEach(function (element) {
             heighestRadius = heighestRadius < element.outerRadius ? element.outerRadius : heighestRadius;
         });
-        meta.data.forEach(function(element, index) {
+        meta.data.forEach(function (element, index) {
             element.outerRadius = heighestRadius;
             var label = chart.config.data.labels[index].toString();
             var info = getArcRenderInfo(element, label);
@@ -106,7 +129,7 @@ define(['jquery', 'dashaddon_skill_graph/chartjs'], function($, Chart) {
         });
     };
 
-    const getArcRenderInfo = function(element, label) {
+    const getArcRenderInfo = function (element, label) {
         var radius;
         var view = element;
         // Only outside.
@@ -141,9 +164,9 @@ define(['jquery', 'dashaddon_skill_graph/chartjs'], function($, Chart) {
         };
     };
 
-    const measureLabel = function(label) {
+    const measureLabel = function (label) {
         if (typeof label === 'object') {
-            return {width: label.width, height: label.height};
+            return { width: label.width, height: label.height };
         } else {
             var width = 0;
             var lines = label.split('\n');
@@ -153,11 +176,11 @@ define(['jquery', 'dashaddon_skill_graph/chartjs'], function($, Chart) {
                     width = result.width;
                 }
             }
-            return {width: width, height: chartOptions.fontSize * lines.length};
+            return { width: width, height: chartOptions.fontSize * lines.length };
         }
-      };
+    };
 
-    var renderArcLabel = function(label, renderInfo) {
+    var renderArcLabel = function (label, renderInfo) {
         var ctx = CTX;
         var radius = renderInfo.radius;
         var view = renderInfo.view;

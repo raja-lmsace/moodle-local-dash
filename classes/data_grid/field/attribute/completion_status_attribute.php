@@ -48,7 +48,7 @@ class completion_status_attribute extends abstract_field_attribute {
         if ($data) {
             return get_string('status:'.$data, 'block_dash');
         } else {
-            return '-';
+            return get_string('status:notenrolled', 'block_dash');
         }
     }
 }

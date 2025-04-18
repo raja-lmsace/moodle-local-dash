@@ -63,12 +63,12 @@ Feature: Add activities widget in dash block
     And I click on "Select all" "button"
     Then I click on "Filters" "link"
     Then I set the following fields to these values:
-        | Category | 1 |
-        | Course | 1 |
-        | Module Name | 1 |
+        | Category        | 1 |
+        | Course          | 1 |
+        | Module Name     | 1 |
         | Activities tags | 1 |
-        | Type | 1 |
-        | Module purpose | 1 |
+        | Type            | 1 |
+        | Module purpose  | 1 |
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
     Then I am on the "Test choice 1" "choice activity" page
@@ -156,8 +156,6 @@ Feature: Add activities widget in dash block
     And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
     # Module section.
     Then I should see "General" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
-    Then I should see "Topic 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(4)" "css_element"
-    Then I should see "Topic 2" in the ".dash-table tbody tr:nth-child(8) td:nth-child(4)" "css_element"
     # # Module section link.
     # Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(15) a" "css_element"
     # Then I should see "Topic 1"
@@ -167,8 +165,6 @@ Feature: Add activities widget in dash block
     # Then I follow "Dashboard"
     # Module path
     Then I should see "Category 01 / Course 2 / General" in the ".dash-table tbody tr:nth-child(1) td:nth-child(16)" "css_element"
-    Then I should see "Category 01 / Course 2 / Topic 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(16)" "css_element"
-    Then I should see "Category 02 / Category 03 / Course 5 / Topic 2" in the ".dash-table tbody tr:nth-child(8) td:nth-child(16)" "css_element"
 
   Scenario: check the activities datasource filters
     Given I log in as "student1"

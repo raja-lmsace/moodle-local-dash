@@ -176,7 +176,7 @@ class competency_widget extends abstract_widget {
 
         $filter = $this->get_filter_collection()->get_filter('competencyframeworks')->get_preferences();
         if (isset($filter['enabled']) && $filter['enabled']) {
-            $frameworkid = $filter['competencyframework'];
+            $frameworkid = isset($filter['competencyframework']) ? $filter['competencyframework'] : null;
         }
 
         if (!isset($frameworkid) || empty($frameworkid)) {

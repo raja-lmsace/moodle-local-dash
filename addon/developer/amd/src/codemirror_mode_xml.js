@@ -1,45 +1,51 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/LICENSE
 
-(function(mod) {
+(function (mod) {
     if (typeof exports == "object" && typeof module == "object") // CommonJS
         mod(require("../../lib/codemirror"));
     else if (typeof define == "function" && define.amd) // AMD
         define(["dashaddon_developer/codemirror"], mod);
     else // Plain browser env
         mod(CodeMirror);
-})(function(CodeMirror) {
+})(function (CodeMirror) {
     "use strict";
 
     var htmlConfig = {
-        autoSelfClosers: {'area': true, 'base': true, 'br': true, 'col': true, 'command': true,
+        autoSelfClosers: {
+            'area': true, 'base': true, 'br': true, 'col': true, 'command': true,
             'embed': true, 'frame': true, 'hr': true, 'img': true, 'input': true,
             'keygen': true, 'link': true, 'meta': true, 'param': true, 'source': true,
-            'track': true, 'wbr': true, 'menuitem': true},
-        implicitlyClosed: {'dd': true, 'li': true, 'optgroup': true, 'option': true, 'p': true,
+            'track': true, 'wbr': true, 'menuitem': true
+        },
+        implicitlyClosed: {
+            'dd': true, 'li': true, 'optgroup': true, 'option': true, 'p': true,
             'rp': true, 'rt': true, 'tbody': true, 'td': true, 'tfoot': true,
-            'th': true, 'tr': true},
+            'th': true, 'tr': true
+        },
         contextGrabbers: {
-            'dd': {'dd': true, 'dt': true},
-            'dt': {'dd': true, 'dt': true},
-            'li': {'li': true},
-            'option': {'option': true, 'optgroup': true},
-            'optgroup': {'optgroup': true},
-            'p': {'address': true, 'article': true, 'aside': true, 'blockquote': true, 'dir': true,
+            'dd': { 'dd': true, 'dt': true },
+            'dt': { 'dd': true, 'dt': true },
+            'li': { 'li': true },
+            'option': { 'option': true, 'optgroup': true },
+            'optgroup': { 'optgroup': true },
+            'p': {
+                'address': true, 'article': true, 'aside': true, 'blockquote': true, 'dir': true,
                 'div': true, 'dl': true, 'fieldset': true, 'footer': true, 'form': true,
                 'h1': true, 'h2': true, 'h3': true, 'h4': true, 'h5': true, 'h6': true,
                 'header': true, 'hgroup': true, 'hr': true, 'menu': true, 'nav': true, 'ol': true,
-                'p': true, 'pre': true, 'section': true, 'table': true, 'ul': true},
-            'rp': {'rp': true, 'rt': true},
-            'rt': {'rp': true, 'rt': true},
-            'tbody': {'tbody': true, 'tfoot': true},
-            'td': {'td': true, 'th': true},
-            'tfoot': {'tbody': true},
-            'th': {'td': true, 'th': true},
-            'thead': {'tbody': true, 'tfoot': true},
-            'tr': {'tr': true}
+                'p': true, 'pre': true, 'section': true, 'table': true, 'ul': true
+            },
+            'rp': { 'rp': true, 'rt': true },
+            'rt': { 'rp': true, 'rt': true },
+            'tbody': { 'tbody': true, 'tfoot': true },
+            'td': { 'td': true, 'th': true },
+            'tfoot': { 'tbody': true },
+            'th': { 'td': true, 'th': true },
+            'thead': { 'tbody': true, 'tfoot': true },
+            'tr': { 'tr': true }
         },
-        doNotIndent: {"pre": true},
+        doNotIndent: { "pre": true },
         allowUnquoted: true,
         allowMissing: true,
         caseFold: true
@@ -56,7 +62,7 @@
         caseFold: false
     }
 
-    CodeMirror.defineMode("xml", function(editorConf, config_) {
+    CodeMirror.defineMode("xml", function (editorConf, config_) {
         var indentUnit = editorConf.indentUnit
         var config = {}
         var defaults = config_.htmlMode ? htmlConfig : xmlConfig
@@ -140,7 +146,7 @@
         }
 
         function inAttribute(quote) {
-            var closure = function(stream, state) {
+            var closure = function (stream, state) {
                 while (!stream.eol()) {
                     if (stream.next() == quote) {
                         state.tokenize = inTag;
@@ -154,7 +160,7 @@
         }
 
         function inBlock(style, terminator) {
-            return function(stream, state) {
+            return function (stream, state) {
                 while (!stream.eol()) {
                     if (stream.match(terminator)) {
                         state.tokenize = inText;
@@ -167,7 +173,7 @@
         }
 
         function doctype(depth) {
-            return function(stream, state) {
+            return function (stream, state) {
                 var ch;
                 while ((ch = stream.next()) != null) {
                     if (ch == "<") {
@@ -297,7 +303,7 @@
         }
         function attrValueState(type, stream, state) {
             if (type == "string") return attrContinuedState;
-            if (type == "word" && config.allowUnquoted) {setStyle = "string"; return attrState;}
+            if (type == "word" && config.allowUnquoted) { setStyle = "string"; return attrState; }
             setStyle = "error";
             return attrState(type, stream, state);
         }
@@ -307,17 +313,19 @@
         }
 
         return {
-            startState: function(baseIndent) {
-                var state = {tokenize: inText,
+            startState: function (baseIndent) {
+                var state = {
+                    tokenize: inText,
                     state: baseState,
                     indented: baseIndent || 0,
                     tagName: null, tagStart: null,
-                    context: null}
+                    context: null
+                }
                 if (baseIndent != null) state.baseIndent = baseIndent
                 return state
             },
 
-            token: function(stream, state) {
+            token: function (stream, state) {
                 if (!state.tagName && stream.sol())
                     state.indented = stream.indentation();
 
@@ -333,7 +341,7 @@
                 return style;
             },
 
-            indent: function(state, textAfter, fullLine) {
+            indent: function (state, textAfter, fullLine) {
                 var context = state.context;
                 // Indent multi-line strings (e.g. css).
                 if (state.tokenize.isInAttribute) {
@@ -387,16 +395,16 @@
             configuration: config.htmlMode ? "html" : "xml",
             helperType: config.htmlMode ? "html" : "xml",
 
-            skipAttribute: function(state) {
+            skipAttribute: function (state) {
                 if (state.state == attrValueState)
                     state.state = attrState
             },
 
-            xmlCurrentTag: function(state) {
-                return state.tagName ? {name: state.tagName, close: state.type == "closeTag"} : null
+            xmlCurrentTag: function (state) {
+                return state.tagName ? { name: state.tagName, close: state.type == "closeTag" } : null
             },
 
-            xmlCurrentContext: function(state) {
+            xmlCurrentContext: function (state) {
                 var context = []
                 for (var cx = state.context; cx; cx = cx.prev)
                     if (cx.tagName) context.push(cx.tagName)
@@ -408,6 +416,6 @@
     CodeMirror.defineMIME("text/xml", "xml");
     CodeMirror.defineMIME("application/xml", "xml");
     if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
-        CodeMirror.defineMIME("text/html", {name: "xml", htmlMode: true});
+        CodeMirror.defineMIME("text/html", { name: "xml", htmlMode: true });
 
 });

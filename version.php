@@ -18,17 +18,17 @@
  * Plugin version info
  *
  * @package    local_dash
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
-$plugin->version   = 2024050800;
-$plugin->requires  = 2021051700;
+$plugin->version   = 2025032900;
+$plugin->requires  = 2022112801;
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release = '1.8';
-$plugin->supported = [311, 403];
+$plugin->release = '2.6';
+$plugin->supported = [401, 405];
 $plugin->component = 'local_dash';
 $plugin->dependencies = [
-    'block_dash' => 2024011700,
+    'block_dash' => 2025032900,
 ];

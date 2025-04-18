@@ -300,20 +300,4 @@ class competency_progress_widget extends abstract_widget {
 
         return $filtercollection;
     }
-
-    /**
-     * Include the global settings page.
-     *
-     * @param \parentable_part_of_admin_tree $admin
-     * @return void
-     */
-    public static function include_global_settings_page($admin) {
-
-        $admin->add('localdashsettings', new \admin_externalpage(
-            'dashaddonskillgraph',
-            get_string('managecompentency', 'block_dash'),
-            new \moodle_url('/local/dash/addon/skill_graph/competencylist.php'),
-            'moodle/competency:competencymanage')
-        );
-    }
 }

@@ -34,6 +34,7 @@ require_once($CFG->dirroot. "/local/dash/addon/dashboard/lib.php");
  * Dashboard class.
  */
 class dashboard extends persistent {
+
     /**
      * Dashboard modal db tablename.
      */
@@ -71,6 +72,21 @@ class dashboard extends persistent {
             ],
             'contextid' => [
                 'type' => PARAM_INT,
+                'null' => NULL_ALLOWED,
+                'default' => null,
+            ],
+            'contexttype' => [
+                'type' => PARAM_TEXT,
+            ],
+            'categoryid' => [
+                'type' => PARAM_INT,
+                'null' => NULL_ALLOWED,
+                'default' => null,
+            ],
+            'courseid' => [
+                'type' => PARAM_INT,
+                'null' => NULL_ALLOWED,
+                'default' => null,
             ],
             'permission' => [
                 'type' => PARAM_TEXT,
@@ -113,8 +129,86 @@ class dashboard extends persistent {
             'dashbgimage' => [
                 'type' => PARAM_INT,
             ],
+            'includedblocks' => [
+                'type' => PARAM_RAW,
+            ],
+            'displaydashboardtitle' => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            'displaycta' => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            'ctalink' => [
+                'type' => PARAM_TEXT,
+                'default' => 'enrolment',
+            ],
+            'ctacampaignid' => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            'ctacustomurl' => [
+                'type' => PARAM_URL,
+                'default' => '',
+            ],
+            'ctacustomurltext' => [
+                'type' => PARAM_TEXT,
+                'default' => '',
+            ],
+            'redirecttodashboard' => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
         ];
         return $props;
+    }
+
+    /**
+     * Clears the hook cache and optionally recreates it.
+     *
+     * This function clears the cache for hook callbacks and optionally recreates it
+     * if the specified conditions are met. If the `$create` parameter is set to `false`,
+     * it checks if the `dashaddon_dashboard_dash` table exists and if there is a record
+     * with `redirecttodashboard` set to `true` and `permission` set to `public`. If these
+     * conditions are not met, the function returns `false`.
+     *
+     * @param bool $create Optional. Whether to recreate the cache after clearing it. Default is `false`.
+     * @return bool Returns `false` if the cache is not recreated, otherwise no return value.
+     */
+    public function clear_hook_cache($create = false) {
+        global $DB;
+        $dbman = $DB->get_manager();
+
+        if (!$create) {
+            if (!$dbman->table_exists('dashaddon_dashboard_dash') ||
+                !$DB->record_exists('dashaddon_dashboard_dash', ['redirecttodashboard' => true, 'permission' => 'public'])) {
+                return false;
+            }
+        }
+        $cache = \cache::make('core', 'hookcallbacks');
+        // Remove the event callbacks and recreate.
+        $cache->delete('callbacks');
+
+        // Build the callbacks again.
+        $hookmanager = \core\hook\manager::get_instance();
+        $allhooks = $hookmanager->get_all_callbacks();
+
+        $cache->set('callbacks', $allhooks);
+    }
+
+    /**
+     * Summary of get_context_instance.
+     * @return void
+     */
+    public function get_context_instance() {
+        if ($this->get('contexttype') == 'course') {
+            return \context_course::instance($this->get('courseid'));
+        } else if ($this->get('contexttype') == 'category') {
+            return \context_coursecat::instance($this->get('categoryid'));
+        } else {
+            return \context_system::instance();
+        }
     }
 
     /**
@@ -129,11 +223,13 @@ class dashboard extends persistent {
     public function has_access(\stdClass $user) {
         global $CFG, $DB;
 
-        $context = \context::instance_by_id($this->get('contextid'));
+        $contexttype = $this->get('contexttype');
+        $context = $this->get_context_instance();
 
         require_once("$CFG->dirroot/cohort/lib.php");
 
         $course = null;
+        $coursecategory = null;
         if ($coursecontext = $context->get_course_context(false)) {
             $course = $DB->get_record('course', ['id' => $coursecontext->instanceid]);
         }
@@ -206,6 +302,120 @@ class dashboard extends persistent {
     }
 
     /**
+     * Processes the onboard navigation for the dashboard.
+     *
+     * This function retrieves the included blocks, sorts them based on their positions,
+     * and generates the navigation menu for the dashboard. It also handles the display
+     * settings for the dashboard title and call-to-action button.
+     *
+     * @return string The rendered HTML for the onboard navigation.
+     */
+    public function process_onboard_navigation() {
+        global $OUTPUT, $PAGE;
+        $inculdeblocks = !empty($this->get('includedblocks')) ? json_decode($this->get('includedblocks')) : [];
+        if (empty($inculdeblocks)) {
+            return '';
+        }
+        $blocksoptions = \dashaddon_dashboard\helper::get_dashaddondash_pageblocks($this->get('shortname'));
+        // Create position map from $blocksoptions.
+        $positionmap = array_flip(array_keys($blocksoptions));
+
+        // Sort $includeblocks based on positions in $blocksoptions.
+        usort($inculdeblocks, function($a, $b) use ($positionmap) {
+            return ($positionmap[$a] ?? PHP_INT_MAX) - ($positionmap[$b] ?? PHP_INT_MAX);
+        });
+        $blocknamelist = [];
+        $template = [];
+        $nodes = [];
+        $i = 1;
+        foreach ($inculdeblocks as $blockid) {
+            $blockinfo = block_instance_by_id($blockid);
+            if ($blockinfo) {
+                $newstrblockname = get_string('pluginname', 'block_' . $blockinfo->instance->blockname);
+                $blocktitle = !empty($blockinfo->title) ? $blockinfo->title : $newstrblockname;
+                $list['blockname'] = $blocktitle;
+                $list['blockid'] = $blockid;
+                $blocknamelist[] = $list;
+                $itemdata = new \stdClass();
+                $itemdata->id = $i;
+                $itemdata->title = $blocktitle;
+                $itemdata->sortorder = $i;
+                $itemdata->url = $PAGE->url->out(false) . "#inst". $blockid;
+                $node['itemdata'] = $itemdata;
+                $node['url'] = $PAGE->url->out(false) . "#inst". $blockid;
+                $node['key'] = 'block-'. $i;
+                $node['text'] = $blocktitle;
+                if ($i < 6) {
+                    $node['forceintomoremenu'] = false;
+                } else {
+                    $node['forceintomoremenu'] = true;
+                }
+                $i++;
+                $nodes[] = $node;
+            }
+        }
+        $moremenu = new \core\navigation\output\more_menu((object) $nodes, 'navbar-nav', false);
+        $template['moremenubar'] = $moremenu->export_for_template( $PAGE->get_renderer('core'));
+        $template['dashboardname'] = $this->get('name');
+        $template['blocknamelist'] = $blocknamelist;
+        $template['extraclasses'] = count($inculdeblocks) < 6 ? 'nav-menu' : '';
+        $showtitleclass = '';
+        if (!$this->get('displaydashboardtitle')) {
+            $showtitleclass = 'hide-title';
+        } else if ($this->get('displaydashboardtitle') == 2) {
+            $showtitleclass = 'show-sticky-title';
+        }
+        $template['showtitleclass'] = $showtitleclass;
+        $showbuttonclass = '';
+        if (!$this->get('displaycta')) {
+            $showbuttonclass = 'hide-button';
+        } else if ($this->get('displaycta') == 2) {
+            $showbuttonclass = 'show-sticky-button';
+        }
+        $template['showctaclass'] = $showbuttonclass;
+        list($ctatext, $ctaurl) = $this->process_call_action();
+        $template['ctatext'] = $ctatext;
+        $template['ctaurl'] = $ctaurl;
+        $template['hidebuttontitle'] = !$this->get('displaydashboardtitle') && !$this->get('displaycta');
+        return $OUTPUT->render_from_template('dashaddon_dashboard/dashonpagenavigation', $template);
+    }
+
+    /**
+     * Processes the call to action based on the 'ctalink' value and returns the corresponding text and URL.
+     *
+     * @return array An array containing the text and URL for the call to action.
+     */
+    public function process_call_action() {
+        global $DB, $PAGE;
+        $ctalink = $this->get('ctalink');
+        if ($ctalink == 'enrolment') {
+            $courseid = $this->get('courseid');
+            $text = get_string('strctaenrolment', 'block_dash');
+            $url = new \moodle_url('/enrol/index.php', ['id' => $courseid]);
+        } else if ($ctalink == 'campaign') {
+            $text = get_string('strctacampaign', 'block_dash');
+            $campaignid = $this->get('ctacampaignid');
+            if ($campaignid) {
+                $campaign = $DB->get_record('auth_magic_campaigns', ['id' => $campaignid]);
+                $url = new \moodle_url('/auth/magic/campaigns/view.php', ['code' => $campaign->code]);
+            } else {
+                $url = new \moodle_url('/my');
+            }
+        } else if ($ctalink == 'shopurl') {
+            $text = get_string('strshopurl', 'block_dash');
+            $shopurlfield = get_config('local_dash', 'courseshopurl');
+            $url = $DB->get_field('customfield_data', 'value',
+                ['instanceid' => $this->get('courseid'), 'fieldid' => $shopurlfield]);
+            $url = empty($url) ? new \moodle_url('/course/view.php', ['id' => $this->get('courseid')]) : $url;
+        } else if ($ctalink == 'custom') {
+            $text = !empty($this->get('ctacustomurltext')) ? $this->
+                get('ctacustomurltext') : get_string('strcustomurl', 'block_dash');
+            $url = !empty($this->get('ctacustomurl')) ? $this->get('ctacustomurl') : $PAGE->url->out(false);
+        }
+        return [$text, $url];
+    }
+
+    /**
      * Validate the shortname
      *
      * @param int $value The value.
@@ -264,6 +474,7 @@ class dashboard extends persistent {
         $update = new \stdClass();
         $update->id = $dashboard->id;
         $update->roles = $dashboard->roles;
+        $update->includedblocks = $dashboard->includedblocks;
         $DB->update_record('dashaddon_dashboard_dash', $update);
     }
 
@@ -299,11 +510,55 @@ class dashboard extends persistent {
     }
 
     /**
+     * Method to be executed before updating the dashboard.
+     * This method sets up the context ID for the dashboard.
+     *
+     * @return void
+     */
+    public function before_update() {
+        $this->setup_contextid();
+    }
+
+    /**
+     * Method to be executed before creating a dashboard instance.
+     * This method sets up the context ID for the dashboard.
+     *
+     * @return void
+     */
+    public function before_create() {
+        $this->setup_contextid();
+    }
+
+    /**
+     * Sets up the context ID based on the context type.
+     *
+     * This method determines the context type (course, category, or system) and
+     * sets the context ID accordingly. It retrieves the context type from the
+     * object's properties and then fetches the appropriate context instance.
+     * Finally, it sets the context ID in the object's properties.
+     *
+     * @return void
+     */
+    public function setup_contextid() {
+        $contexttype = $this->get('contexttype');
+        if ($contexttype == 'course') {
+            $context = \context_course::instance($this->get('courseid'));
+        } else if ($contexttype == 'category') {
+            $context = \context_coursecat::instance($this->get('categoryid'));
+        } else {
+            $context = \context_system::instance();
+        }
+        $this->raw_set('contextid', $context->id);
+    }
+
+    /**
      * Before validate the properties.
      */
     public function before_validate() {
         $value = $this->raw_get('roles');
         $this->raw_set('roles', json_encode($value));
+        $inculdeblocks = !empty($this->raw_get('includedblocks')) ? json_encode($this->raw_get('includedblocks')) : '';
+        $this->raw_set('includedblocks', $inculdeblocks);
     }
 
     /**
@@ -322,5 +577,106 @@ class dashboard extends persistent {
                 $this->raw_set('roles', $role);
             }
         }
+    }
+
+    /**
+     * Sets the included blocks data for the dashboard.
+     *
+     * This method retrieves the record from the database using the current dashboard ID.
+     * If the 'includedblocks' field is not empty, it decodes the JSON data. If the decoded
+     * data is not an array, it converts it into an array by splitting the string by commas.
+     * Finally, it converts the array back into a comma-separated string and sets it to the
+     * 'includedblocks' field of the dashboard.
+     *
+     * @return void
+     */
+    public function set_includedblocks_data() {
+        global $DB;
+        $record = $DB->get_record(static::TABLE, ['id' => $this->get('id')], '*', MUST_EXIST);
+        if (!empty($record->includedblocks)) {
+            $blocks = json_decode($record->includedblocks);
+            if (!empty($blocks)) {
+                if (!is_array($blocks)) {
+                    $blocks = explode(',', $blocks);
+                }
+                $blocks = implode(',', $blocks);
+                $this->raw_set('includedblocks', $blocks);
+            }
+        }
+    }
+
+    /**
+     * Duplicate the current dashboard.
+     *
+     * @return dashboard The new dashboard instance
+     */
+    public function duplicate() {
+        global $DB;
+
+        $data = $this->to_record();
+        unset($data->id);
+        $data->name = $this->get('name') . ' ' . get_string('copy', 'block_dash');
+        $context = $this->get_context_instance();
+        $data->contextid = $context->id;
+        do {
+            $shortname = $this->dulicate_dashboard_shortname();
+        } while ($DB->record_exists('dashaddon_dashboard_dash', ['shortname' => $shortname]));
+
+        $data->shortname = $shortname;
+
+        $newdashboard = new dashboard(0, $data);
+        $newdashboard->create();
+
+        $onpagenavigationblocks = [];
+        $currentonpagenavigatioblocks = !empty($this->get('includedblocks')) ? json_decode($this->get('includedblocks')) : [];
+
+        $blocks = \dashaddon_dashboard\helper::get_dashaddondash_pageblocks($this->get('shortname'));
+
+        foreach ($blocks as $blockid => $blockname) {
+            $block = $DB->get_record('block_instances', ['id' => $blockid]);
+            $newblock = clone($block);
+            unset($newblock->id);
+            $newblock->pagetypepattern = 'dashaddon-dashboard-' . $newdashboard->get('shortname');
+            $newblock->defaultregion = $shortname;
+            $blockid = $DB->insert_record('block_instances', $newblock);
+
+            $existbp = $DB->get_record('block_positions', ['blockinstanceid' => $block->id]);
+            // Update the block position.
+            if ($existbp) {
+                $bp = new \stdClass;
+                $bp->blockinstanceid = $blockid;
+                $bp->contextid = $context->id;
+                $bp->pagetype = 'dashaddon-dashboard-' . $shortname;
+                $bp->region = $shortname;
+                $bp->visible = 1;
+                $bp->weight = $existbp->weight;
+                $DB->insert_record('block_positions', $bp);
+            }
+            if (in_array($block->id, $currentonpagenavigatioblocks)) {
+                $onpagenavigationblocks[] = $blockid;
+            }
+        }
+        $DB->set_field('dashaddon_dashboard_dash', 'includedblocks',
+            json_encode($onpagenavigationblocks), ['id' => $newdashboard->get('id')]);
+        return $newdashboard;
+    }
+
+    /**
+     * Generates a random string of a specified length using specified characters.
+     *
+     * This function creates a random string of 16 characters in length, consisting of
+     * lowercase and uppercase letters, as well as hyphens.
+     *
+     * @return string A randomly generated string of 16 characters.
+     */
+    protected function dulicate_dashboard_shortname() {
+        $length = 16;
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-';
+        $characterslength = strlen($characters);
+        $randomstring = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomstring .= $characters[random_int(0, $characterslength - 1)];
+        }
+        return $randomstring;
     }
 }

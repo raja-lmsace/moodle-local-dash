@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Widget: Learning path';
-$string['widget:learningpath'] = ' Learning path widget';
-$string['learningpath:reportuser'] = 'Caluculate In report';
 $string['coursetags'] = "Course tags";
 $string['field:customorder'] = "Custom order";
 $string['field:customorder_help'] = "Users can enter course IDs separated by commas. These IDs will then be used to order the courses in this learning path";
+$string['learningpath:reportuser'] = 'Caluculate In report';
+$string['pluginname'] = 'Widget: Learning path';
+$string['widget:learningpath'] = ' Learning path widget';

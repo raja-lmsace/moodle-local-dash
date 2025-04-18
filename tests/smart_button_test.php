@@ -34,7 +34,7 @@ use block_dash\local\layout\grid_layout;
  * @group bdecent
  * @group widgets_test
  */
-class smart_button_test extends \advanced_testcase {
+final class smart_button_test extends \advanced_testcase {
 
     /**
      * Test user 1
@@ -75,6 +75,7 @@ class smart_button_test extends \advanced_testcase {
      * This method is called before each test.
      */
     protected function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
         $this->setAdminUser();
         global $USER;
@@ -110,7 +111,7 @@ class smart_button_test extends \advanced_testcase {
      * @covers ::contacts_widget
      * @return void
      */
-    public function test_smartbutton() {
+    public function test_smartbutton(): void {
         global $CFG, $DB;
         require_once($CFG->dirroot.'/completion/criteria/completion_criteria_activity.php');
 

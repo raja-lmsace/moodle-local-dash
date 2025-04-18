@@ -50,3 +50,175 @@ body.path-dashaddon-dashboard div#page {
 body.path-dashaddon-dashboard div#page .main-inner {
     min-height: 90%;
 }
+
+/* On Page Navigation */
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-title .navbar {
+    box-shadow: none;
+    padding: 0;
+}
+.onpage-navigation .dash-tab-block .dash-tab-element.show-sticky-button:not(.fixed-top) .dash-tab-title,
+.onpage-navigation .dash-tab-block .dash-tab-element.hide-button .dash-tab-title,
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.hide-button
+.dash-tab-title .navbar,
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.show-sticky-button:not(.fixed-top)
+.dash-tab-title .navbar,
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.hide-button
+.dash-tab-title .navbar .moremenu,
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.show-sticky-button:not(.fixed-top)
+.dash-tab-title .navbar .moremenu,
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.hide-button
+.dash-tab-title .navbar .moremenu .more-nav
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.show-sticky-button:not(.fixed-top)
+.dash-tab-title .navbar .moremenu .more-nav {
+    width: 100%;
+}
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.hide-button
+.dash-tab-title .navbar.nav-menu,
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.show-sticky-button:not(.fixed-top)
+.dash-tab-title .navbar.nav-menu {
+    max-width: 830px;
+    margin: 0 auto;
+}
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.hide-button
+.dash-tab-title .navbar .moremenu .more-nav,
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.show-sticky-button:not(.fixed-top)
+.dash-tab-title .navbar .moremenu .more-nav {
+    width: 100%;
+    justify-content: space-between;
+}
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.hide-button
+.dash-tab-title .navbar .moremenu .more-nav li.dropdownmoremenu .dropdown-menu-left,
+.path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.show-sticky-button:not(.fixed-top)
+.dash-tab-title .navbar .moremenu .more-nav li.dropdownmoremenu .dropdown-menu-left {
+    left: auto;
+    right: 0;
+}
+.path-dashaddon-dashboard .block-region .block {
+    width: 100%;
+    scroll-margin-top: 180px;
+}
+
+.path-dashaddon-dashboard .onpage-navigation {
+    width: 100%;
+    padding: 0 1rem;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+.path-dashaddon-dashboard .dashaddon-dashboardlist tbody tr td .course-item-actions {
+    min-width: 100px;
+}
+.onpage-navigation .dash-tab-element {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: space-between; */
+}
+.onpage-navigation .dash-tab-element.show-sticky-button .dash-tab-title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.onpage-navigation .dash-tab-element:not(.show-sticky-button):not(.hide-button) .dash-tab-title {
+    width: 100%;
+    /* margin-right: 30px; */
+    display: flex;
+    align-items: center;
+}
+.onpage-navigation .dash-tab-element.hide-title.show-sticky-button,
+.onpage-navigation .dash-tab-element:not(.show-sticky-button):not(.hide-button) .dash-tab-title:not(.dash-nav-block) {
+    justify-content: space-between;
+}
+.onpage-navigation .dash-tab-element.hide-title .dash-tab-title h2,
+.onpage-navigation .dash-tab-element.show-sticky-title:not(.fixed-top) .dash-tab-title h2 {
+    display: none;
+}
+.onpage-navigation .dash-tab-element.hide-title,
+.onpage-navigation .dash-tab-element.hide-title.show-sticky-button,
+.onpage-navigation .dash-tab-element.show-sticky-title:not(.hide-button):not(.fixed-top) {
+    flex-direction: row;
+}
+.onpage-navigation .dash-tab-element.hide-title .dash-tab-title:not(.dash-nav-block),
+.onpage-navigation .dash-tab-element.hide-title.show-sticky-button .dash-tab-title:not(.dash-nav-block),
+.onpage-navigation .dash-tab-element.show-sticky-title:not(.fixed-top) .dash-tab-title:not(.dash-nav-block) {
+    width: auto;
+    order: 2;
+}
+.onpage-navigation .dash-tab-element.fixed-top {
+    background-color: #fff;
+    box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.2);
+    padding-top: 5px;
+    padding-left: 4.5rem;
+    padding-right: 4.5rem;
+    margin-top: 61px;
+    position: fixed;
+    z-index: 1029;
+}
+.onpage-navigation .dash-tab-element .dash-tab-title .nav-link {
+    border: 0;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    font-weight: 500;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.onpage-navigation .dash-tab-element .dash-tab-title .nav-link:hover,
+.onpage-navigation .dash-tab-element .dash-tab-title .nav-link:active,
+.onpage-navigation .dash-tab-element .dash-tab-title .nav-link:focus {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    background: none;
+    box-shadow: none;
+}
+.onpage-navigation .dash-tab-element .dash-tab-title .nav-link.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+.onpage-navigation .dash-tab-element.hide-button .dash-register-block {
+    display: none;
+}
+.onpage-navigation .dash-tab-element.show-sticky-button:not(.fixed-top) .dash-register-block {
+    display: none;
+}
+.onpage-navigation .dash-tab-element .dash-register-block {
+    min-width: max-content;
+    margin-right: 5px;
+}
+.onpage-navigation .dash-tab-element .dash-register-block a {
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid var(--primary);
+    border-radius: 5px;
+    background: var(--primary);
+    padding: 7px 15px;
+    display: inline-block;
+}
+.onpage-navigation .dash-tab-element .dash-register-block a:hover,
+.onpage-navigation .dash-tab-element .dash-register-block a:focus,
+.onpage-navigation .dash-tab-element .dash-register-block a:active {
+    background: var(--primary);
+    box-shadow: none;
+}
+
+@media (max-width: 767px) {
+    .onpage-navigation .dash-tab-element.fixed-top {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.hide-button
+    .dash-tab-title .navbar.nav-menu li.nav-item,
+    .path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.show-sticky-button:not(.fixed-top)
+    .dash-tab-title .navbar.nav-menu li.nav-item {
+        margin-right: auto;
+    }
+    .path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.hide-button
+    .dash-tab-title .navbar .moremenu .more-nav,
+    .path-dashaddon-dashboard .onpage-navigation .dash-tab-block .dash-tab-element.show-sticky-button:not(.fixed-top)
+    .dash-tab-title .navbar .moremenu .more-nav {
+        width: 100%;
+        justify-content: normal;
+    }
+}

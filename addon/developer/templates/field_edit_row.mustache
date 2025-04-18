@@ -25,22 +25,35 @@
     Example context (json):
     {
     }
-
 }}
-<tr class="field">
-    <td>
-        <span class="drag-handle">{{#pix}}i/dragdrop, core{{/pix}}</span>
-    </td>
-    <td>
-        <span>{{get_title}}</span>
-    </td>
-    <td>
-        {{get_select}}
-    </td>
-    <td class="custom-form">
-        {{{get_custom_form}}}
-    </td>
-    <td>
-        <a href="#" class="btn btn-danger delete-field">{{#str}}remove{{/str}}</a>
-    </td>
-</tr>
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="field">
+            <td>
+                <span class="drag-handle">{{#pix}}i/dragdrop, core{{/pix}}</span>
+            </td>
+            <td>
+                <span>{{get_title}}</span>
+            </td>
+            <td>
+                {{get_select}}
+            </td>
+            <td class="custom-form">
+                {{{get_custom_form}}}
+            </td>
+            <td>
+                <a href="#" class="btn btn-danger delete-field">{{#str}}remove{{/str}}</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -75,13 +75,13 @@ class activity_completion_toggle_attribute extends abstract_field_attribute {
             }
 
             if (has_capability('report/progress:view', $context)) {
-
+                $buttonclasss = ($record->cmc_completionstate != COMPLETION_COMPLETE_PASS) ? 'activity-completion-override' : '';
                 $checked = ($record->cmc_completionstate != 0) ? ['checked' => 'checked'] : [];
                 $togglehbtn .= html_writer::start_div('input-group');
                 $togglehbtn .= html_writer::div(
                     html_writer::empty_tag('input', [ 'type' => 'checkbox', 'class' => 'custom-control-input'] + $checked) .
                     html_writer::tag('span', '', ['class' => 'custom-control-label']),
-                    'activity-completion-override custom-control custom-switch',
+                    $buttonclasss.' custom-control custom-switch',
                     [
                         'data-cmid' => $cmid,
                         'data-userid' => $userid,

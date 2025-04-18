@@ -28,7 +28,6 @@ Feature: Add activity widget in dash block
       | assign        | Assignment 2       | C3       | page02   | Welcome to Assignment | 1          | 1          |
       | choice        | My quiz B          | C4       | choice   | Welcome to Quiz       | 1          | 1          |
       | choice        | Quiz 1             | C4       | choice   | Welcome to Quiz       | 2          | 1          |
-      | chat          | Students chat room | C1       | chat01   | Welcome to chat       | 3          | 1          |
       | book          | Book 1             | C2       | book     | Welcome to Book       | 1          | 1          |
     And the following "users" exist:
       | username | firstname | lastname | email                |
@@ -139,13 +138,11 @@ Feature: Add activity widget in dash block
     Then I log out
     And I log in as "student1"
     Then I follow "Dashboard"
-    And I should see "Students chat room"
     And I should see "Book 1"
     Then I log out
     And I log in as "teacher1"
     Then I follow "Dashboard"
     And I should not see "Assignment 1"
-    And I should not see "Students chat room"
     Then I log out
     And I log in as "admin"
     Then I follow "Dashboard"
@@ -166,7 +163,6 @@ Feature: Add activity widget in dash block
     Then I log out
     And I log in as "teacher1"
     Then I follow "Dashboard"
-    And I should see "Students chat room"
     And I should see "Book 1"
     And I should not see "My quiz B"
     Then I log out

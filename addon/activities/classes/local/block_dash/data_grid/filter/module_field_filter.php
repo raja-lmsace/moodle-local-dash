@@ -37,7 +37,7 @@ class module_field_filter extends select_filter {
     public function init() {
         global $DB;
         $options = $DB->get_records_sql_menu("SELECT DISTINCT id, name
-        FROM {modules}");
+        FROM {modules} WHERE visible = 1");
         $options = array_map(function($value) {
             return get_string('pluginname', $value);
         }, $options);

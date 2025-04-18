@@ -29,6 +29,7 @@ use block_dash\local\data_grid\field\field_definition_factory;
 use block_dash\local\paginator;
 use block_dash\local\data_source\form\preferences_form;
 use block_dash\local\layout\abstract_layout;
+use local_dash\data_grid\field\attribute\color_attribute;
 use local_dash\data_grid\field\attribute\event\event_color_attribute;
 
 /**
@@ -115,7 +116,7 @@ class timeline_layout extends abstract_layout {
 
             $colorfields = [];
             foreach ($this->get_data_source()->get_available_fields() as $field) {
-                if ($field->has_attribute(event_color_attribute::class)) {
+                if ($field->has_attribute(event_color_attribute::class) || $field->has_attribute(color_attribute::class)) {
                     $colorfields[] = $field;
                 }
             }

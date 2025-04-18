@@ -23,7 +23,6 @@
 
 namespace dashaddon_dashboard\table;
 
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/tablelib.php');
@@ -35,15 +34,21 @@ require_once($CFG->dirroot . '/local/dash/lib.php');
  * @package dashaddon_dashboard
  */
 class dashboard_table extends \table_sql {
+    /**
+     * Summary of contextid
+     * @var int
+     */
+    public $contextid;
 
     /**
      * sessions_report_table constructor.
      * @param string $uniqueid
+     * @param int $contextid
      * @throws \coding_exception
      */
-    public function __construct($uniqueid) {
+    public function __construct($uniqueid, $contextid = 0) {
         parent::__construct($uniqueid);
-
+        $this->contextid = $contextid;
         // Define the headers and columns.
         $headers = [];
         $columns = [];
@@ -104,7 +109,7 @@ class dashboard_table extends \table_sql {
         global $CFG;
         require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
         if ($url = dashaddon_dashboard_get_dashboard_background($data->id)) {
-            return \html_writer::empty_tag('img', ['src' => $url, 'class' => 'img-responsive']);
+            return \html_writer::empty_tag('img', ['src' => $url, 'class' => 'img-responsive', 'alt' => $data->name]);
         } else {
             return "";
         }
@@ -157,15 +162,44 @@ class dashboard_table extends \table_sql {
     public function col_actions($data) {
         global $OUTPUT;
 
-        $output = $OUTPUT->single_button(
-                new \moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => 'edit', 'id' => $data->id]),
-                get_string('edit', 'block_dash'), 'get');
-        if (!$data->coredash) {
-            $output .= $OUTPUT->single_button(
-                new \moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => 'delete', 'id' => $data->id]),
-                get_string('delete', 'block_dash'), 'get');
+        $actions = [];
+
+        $actions += [
+            [
+                'url' => new \moodle_url('/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'duplicate', 'id' => $data->id]),
+                'icon' => new \pix_icon('t/copy', \get_string('duplicate')),
+                'attributes' => ['class' => 'action-copy'],
+                'name' => 'copy',
+            ],
+            [
+                'url' => new \moodle_url('/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'edit', 'id' => $data->id]),
+                'icon' => new \pix_icon('t/edit', \get_string('edit')),
+                'attributes' => ['class' => 'action-edit'],
+                'name' => 'edit',
+            ],
+            [
+                'url' => new \moodle_url('/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'delete', 'id' => $data->id]),
+                'icon' => new \pix_icon('t/delete', \get_string('delete')),
+                'attributes' => ['class' => 'action-delete'],
+                'name' => 'delete',
+            ],
+        ];
+        $actionshtml = [];
+        foreach ($actions as $action) {
+            $action['attributes']['role'] = 'button';
+            if ($data->coredash && $action['name'] == 'copy') {
+                $actionshtml[] = '&nbsp;';
+            } else {
+                if ($this->contextid) {
+                    $action['url']->param('contextid', $this->contextid);
+                }
+                $actionshtml[] = $OUTPUT->action_icon($action['url'], $action['icon'], null, $action['attributes']);
+            }
         }
-        return $output;
+        return \html_writer::span(join('', $actionshtml), 'course-item-actions item-actions me-0');
     }
 
     /**
@@ -179,8 +213,16 @@ class dashboard_table extends \table_sql {
 
         list($wsql, $params) = $this->get_sql_where();
 
+        if ($this->contextid) {
+            if (!empty($wsql)) {
+                $wsql .= ' AND ';
+            } else {
+                $wsql = ' WHERE ';
+            }
+            $wsql .= ' d.contextid = :contextid';
+            $params['contextid'] = $this->contextid;
+        }
         $sql = 'SELECT * FROM {dashaddon_dashboard_dash} d' . $wsql;
-
         $sort = $this->get_sql_sort();
         if ($sort) {
             $sql = $sql . ' ORDER BY ' . $sort;

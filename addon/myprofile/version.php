@@ -32,4 +32,3 @@ $plugin->release = '1.0';
 $plugin->dependencies = [
     'local_dash' => 2022110300,
 ];
-

@@ -70,12 +70,15 @@ class my_enrolled_courses_condition extends condition {
 
         $select = $this->get_select();
 
+        // Get the current userid, based on current page and datasource supports current page user.
+        $userid = $this->get_userid();
+
         $sql = "$select IN(SELECT ctx.instanceid
                            FROM {role_assignments} ra
                            JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = " . CONTEXT_COURSE . "
                            WHERE ra.userid = :enrolleduserid";
 
-        $params = ['enrolleduserid' => $USER->id];
+        $params = ['enrolleduserid' => $userid];
         if (isset($this->get_preferences()['roleids'])
             && is_array($this->get_preferences()['roleids']) && count($this->get_preferences()['roleids']) > 0) {
             [$rsql, $rparams] = $DB->get_in_or_equal($this->get_preferences()['roleids'], SQL_PARAMS_NAMED, 'roles');
@@ -97,7 +100,6 @@ class my_enrolled_courses_condition extends condition {
      */
     public function build_settings_form_fields(
         moodleform $moodleform, MoodleQuickForm $mform, $fieldnameformat = 'filters[%s]'): void {
-
         global $DB;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.

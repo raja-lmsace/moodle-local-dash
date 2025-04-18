@@ -22,6 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Widget: Course completions';
 $string['course_completions:reportuser'] = 'Caluculate In report';
+$string['pluginname'] = 'Widget: Course completions';
 $string['upgradeplugin'] = 'This plugin requires installation of <b> {$a} </b> to enable.';

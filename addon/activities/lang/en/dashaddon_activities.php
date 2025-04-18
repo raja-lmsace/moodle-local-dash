@@ -22,24 +22,23 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Data source: Activities';
-$string['datasource:activities_data_source'] = 'Activities';
-
 $string['activities'] = 'Activities';
-$string['tablealias_cm'] = "Activities";
 $string['activity_name'] = 'Activity name';
 $string['activitylink'] = "Activity Name (linked)";
 $string['activitytags'] = "Activities tags";
 $string['activitytype'] = "Type";
-$string['modname'] = "Module Name";
-$string['modicon'] = "Module icon";
-$string['modcompletionstatus'] = "Completion status";
-$string['notcompleted'] = "Not completed";
 $string['completiondate'] = "Completion date";
-$string['sectionlink'] = "Section link";
-$string['modulebgimage'] = "Activity image";
-$string['modulebgimageurl'] = "Activity image url";
-$string['modulebgimagelink'] = "Activity image link";
-$string['modulepurpose'] = "Module purpose";
 $string['courselink'] = "Course link";
+$string['datasource:activities_data_source'] = 'Activities';
+$string['modcompletionstatus'] = "Completion status";
+$string['modicon'] = "Module icon";
+$string['modname'] = "Module Name";
+$string['modulebgimage'] = "Activity image";
+$string['modulebgimagelink'] = "Activity image link";
+$string['modulebgimageurl'] = "Activity image url";
+$string['modulepurpose'] = "Module purpose";
+$string['notcompleted'] = "Not completed";
+$string['pluginname'] = 'Data source: Activities';
+$string['sectionlink'] = "Section link";
+$string['tablealias_cm'] = "Activities";
 $string['upgradeplugin'] = 'This plugin requires installation of <b> {$a} </b> to enable.';

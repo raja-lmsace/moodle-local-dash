@@ -33,8 +33,9 @@ use block_dash\local\data_grid\field\attribute\identifier_attribute;
 use lang_string;
 use local_dash\data_grid\field\attribute\activity_progress_attribute;
 use local_dash\data_grid\field\attribute\activity_progress_bar_attribute;
-
 use local_dash\data_grid\field\attribute\completion_status_attribute;
+use block_dash\local\data_grid\field\attribute\button_attribute;
+use block_dash\local\data_grid\field\attribute\course_information_url_attribute;
 
 /**
  * Class course_completion_table.
@@ -74,6 +75,7 @@ class course_completion_table extends table {
             ),
             new field('completed_activities', new lang_string('completedactivities', 'block_dash'), $this,
                 '(SELECT COUNT(*) FROM {course_completion_crit_compl} cccc100
+                join {course_completion_criteria} cccc200 ON cccc200.id = cccc100.criteriaid AND cccc200.criteriatype = 4
                 WHERE cccc100.userid = u.id AND cccc100.course = c.id)',
                 [], ['supports_sorting' => false]),
             new field('completed', new lang_string('coursecompleted', 'completion'), $this, 'ccp.id', [
@@ -89,6 +91,10 @@ class course_completion_table extends table {
                 new activity_progress_attribute(),
                 new activity_progress_bar_attribute(),
             ], ['supports_sorting' => false]),
+            new field('courseinformation', new lang_string('courseinformation', 'block_dash'), $this, 'c.id', [
+                new course_information_url_attribute(),
+                new button_attribute(['label' => new lang_string('courseinformation', 'block_dash')]),
+            ]),
         ];
     }
 }

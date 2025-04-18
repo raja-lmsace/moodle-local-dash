@@ -39,6 +39,38 @@ class helper {
     }
 
     /**
+     * Get the list of blocks on the current page
+     *
+     * @param string $shortname The shortname of the page
+     * @return array Array of block options
+     */
+    public static function get_dashaddondash_pageblocks($shortname) {
+        global $DB;
+        $options = [];
+        if ($shortname) {
+            $pagetypepattern = 'dashaddon-dashboard-'. $shortname;
+            $sql = "SELECT bi.id, bi.blockname FROM {block_instances} bi
+                        JOIN {block} b ON bi.blockname = b.name
+                        LEFT JOIN {block_positions} bp ON bp.blockinstanceid = bi.id
+                        LEFT JOIN {block_positions} bs ON bs.blockinstanceid = bi.id
+                        WHERE bi.pagetypepattern = :pagetype ORDER BY
+                        COALESCE(bp.region, bs.region, bi.defaultregion),
+                        COALESCE(bp.weight, bs.weight, bi.defaultweight),
+                        bi.id ";
+            $params = ['pagetype' => $pagetypepattern];
+            $blocks = $DB->get_records_sql_menu($sql, $params);
+
+            foreach ($blocks as $blockid => $blockname) {
+                $blockinfo = block_instance_by_id($blockid);
+                $newstrblockname = get_string('pluginname', 'block_' . $blockinfo->instance->blockname);
+                $blocktitle = !empty($blockinfo->title) ? $blockinfo->title : $newstrblockname;
+                $options[$blockid] = $blocktitle;
+            }
+        }
+        return $options;
+    }
+
+    /**
      * Loads the prepare filemanager files.
      * @param object $dashboard
      */

@@ -31,7 +31,7 @@ namespace dashaddon_course_completions;
  * @group bdecent
  * @group widgets_test
  */
-class completions_test extends \advanced_testcase {
+final class completions_test extends \advanced_testcase {
 
     /**
      * Test course 1
@@ -68,11 +68,11 @@ class completions_test extends \advanced_testcase {
      */
     public $users;
 
-
     /**
      * This method is called before each test.
      */
     protected function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
         $this->setAdminUser();
         global $USER;
@@ -152,7 +152,7 @@ class completions_test extends \advanced_testcase {
      * @covers ::contacts_widget
      * @return void
      */
-    public function test_coursecompletions() {
+    public function test_coursecompletions(): void {
         global $CFG;
         require_once($CFG->dirroot.'/completion/criteria/completion_criteria_activity.php');
 

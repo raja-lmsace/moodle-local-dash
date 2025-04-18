@@ -51,9 +51,8 @@ use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_pat
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_duedate_attribute;
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_background_attribute;
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_purpose_attribute;
-use dashaddon_activity_completion\local\block_dash\data_grid\field\attribute\activity_url_attribute;
 
-
+use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_url_attribute;
 
 defined('MOODLE_INTERNAL') || die();
 
