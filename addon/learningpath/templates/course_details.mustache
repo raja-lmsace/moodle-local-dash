@@ -70,17 +70,17 @@
     <nav aria-label="Page navigation">
         <ul class="pagination">
             {{#prevcourse}}
-            <li class="page-item prev-item" data-circle="{{prevcoursecircle}}"><a class="page-link" href="#"><i class="fa fa-angle-double-left"></i> Previous</a>
-                <div class="course-pagination">
-                    <a>{{prevcourse}}</a>
+            <li class="page-item prev-item" data-circle="{{prevcoursecircle}}"><a class="page-link small" href="#"><i class="fa fa-angle-double-left"></i> {{#str}} previous {{/str}}</a>
+                <div class="course-pagination bold">
+                    <a href="#">{{prevcourse}}</a>
                 </div>
             </li>
             {{/prevcourse}}
 
             {{#nextcourse}}
-            <li class="page-item next-item" data-circle="{{nextcoursecircle}}"><a class="page-link" href="#">Next <i class="fa fa-angle-double-right"></i></a>
-                <div class="course-pagination">
-                    <a>{{nextcourse}}</a>
+            <li class="page-item next-item" data-circle="{{nextcoursecircle}}"><a class="page-link small" href="#">{{#str}} next {{/str}} <i class="fa fa-angle-double-right"></i></a>
+                <div class="course-pagination bold">
+                    <a href="#">{{nextcourse}}</a>
                 </div>
             </li>
             {{/nextcourse}}

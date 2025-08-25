@@ -46,12 +46,12 @@ class dashboard extends persistent {
     const PERMISSION_LOGGEDIN = 'loggedin';
 
     /**
-     * Check user has cohort permission
+     * Check user has cohort permission.
      */
     const PERMISSION_COHORT = 'cohort';
 
     /**
-     * Check user has cohort permission
+     * Check user has cohort permission.
      */
     const PERMISSION_ROLE = 'role';
 
@@ -199,7 +199,7 @@ class dashboard extends persistent {
 
     /**
      * Summary of get_context_instance.
-     * @return void
+     * @return \context
      */
     public function get_context_instance() {
         if ($this->get('contexttype') == 'course') {
@@ -416,7 +416,7 @@ class dashboard extends persistent {
     }
 
     /**
-     * Validate the shortname
+     * Validate the shortname.
      *
      * @param int $value The value.
      * @return true|\lang_string
@@ -463,7 +463,7 @@ class dashboard extends persistent {
     }
 
     /**
-     * After update the dashoard
+     * After update the dashoard.
      *
      * @param object $result
      */
@@ -471,11 +471,23 @@ class dashboard extends persistent {
         global $DB;
         $this->prepare_dashboard_filemanager();
         $dashboard = $DB->get_record(static::TABLE, ['id' => $this->get('id')], '*', MUST_EXIST);
+
+        // Check if context has changed and migrate block positions.
+        $oldcontextid = $this->oldcontextid;
+        $newcontextid = $this->get('contextid');
+
+        if ($oldcontextid && $newcontextid && $oldcontextid != $newcontextid) {
+            $this->migrate_block_positions($oldcontextid, $newcontextid);
+        }
+
         $update = new \stdClass();
         $update->id = $dashboard->id;
         $update->roles = $dashboard->roles;
         $update->includedblocks = $dashboard->includedblocks;
         $DB->update_record('dashaddon_dashboard_dash', $update);
+
+        // Clear the stored old contextid.
+        $this->oldcontextid = null;
     }
 
     /**
@@ -510,12 +522,19 @@ class dashboard extends persistent {
     }
 
     /**
+     * @var int|null Store the old context ID before update
+     */
+    private $oldcontextid = null;
+
+    /**
      * Method to be executed before updating the dashboard.
      * This method sets up the context ID for the dashboard.
      *
      * @return void
      */
     public function before_update() {
+        // Store the old contextid before it gets changed.
+        $this->oldcontextid = $this->get('contextid');
         $this->setup_contextid();
     }
 
@@ -618,11 +637,13 @@ class dashboard extends persistent {
         $data->name = $this->get('name') . ' ' . get_string('copy', 'block_dash');
         $context = $this->get_context_instance();
         $data->contextid = $context->id;
-        do {
-            $shortname = $this->dulicate_dashboard_shortname();
-        } while ($DB->record_exists('dashaddon_dashboard_dash', ['shortname' => $shortname]));
 
-        $data->shortname = $shortname;
+        // Generate unique shortname.
+        do {
+            $newshortname = $this->dulicate_dashboard_shortname();
+        } while ($DB->record_exists('dashaddon_dashboard_dash', ['shortname' => $newshortname]));
+
+        $data->shortname = $newshortname;
 
         $newdashboard = new dashboard(0, $data);
         $newdashboard->create();
@@ -634,30 +655,41 @@ class dashboard extends persistent {
 
         foreach ($blocks as $blockid => $blockname) {
             $block = $DB->get_record('block_instances', ['id' => $blockid]);
+            if (!$block) {
+                continue; // Skip if block not found.
+            }
+
+            // Clone the block instance.
             $newblock = clone($block);
             unset($newblock->id);
             $newblock->pagetypepattern = 'dashaddon-dashboard-' . $newdashboard->get('shortname');
-            $newblock->defaultregion = $shortname;
-            $blockid = $DB->insert_record('block_instances', $newblock);
+            $newblock->defaultregion = $newdashboard->get('shortname');
 
-            $existbp = $DB->get_record('block_positions', ['blockinstanceid' => $block->id]);
-            // Update the block position.
-            if ($existbp) {
+            // Insert the new block instance.
+            $newblockid = $DB->insert_record('block_instances', $newblock);
+
+            // Copy all block positions for this block (there might be multiple contexts).
+            $blockpositions = $DB->get_records('block_positions', ['blockinstanceid' => $block->id]);
+            foreach ($blockpositions as $existbp) {
                 $bp = new \stdClass;
-                $bp->blockinstanceid = $blockid;
+                $bp->blockinstanceid = $newblockid;
                 $bp->contextid = $context->id;
-                $bp->pagetype = 'dashaddon-dashboard-' . $shortname;
-                $bp->region = $shortname;
-                $bp->visible = 1;
+                $bp->pagetype = 'dashaddon-dashboard-' . $newdashboard->get('shortname');
+                $bp->region = $existbp->region ?: $newdashboard->get('shortname');
+                $bp->visible = $existbp->visible;
                 $bp->weight = $existbp->weight;
                 $DB->insert_record('block_positions', $bp);
             }
+
+            // Track blocks for navigation.
             if (in_array($block->id, $currentonpagenavigatioblocks)) {
-                $onpagenavigationblocks[] = $blockid;
+                $onpagenavigationblocks[] = $newblockid;
             }
         }
+        // Update the included blocks for the new dashboard.
         $DB->set_field('dashaddon_dashboard_dash', 'includedblocks',
             json_encode($onpagenavigationblocks), ['id' => $newdashboard->get('id')]);
+
         return $newdashboard;
     }
 
@@ -678,5 +710,37 @@ class dashboard extends persistent {
             $randomstring .= $characters[random_int(0, $characterslength - 1)];
         }
         return $randomstring;
+    }
+
+    /**
+     * Migrate block positions when dashboard context changes.
+     *
+     * @param int $oldcontextid The old context ID.
+     * @param int $newcontextid The new context ID.
+     * @return void
+     */
+    protected function migrate_block_positions($oldcontextid, $newcontextid) {
+        global $DB;
+
+        // Get the page type pattern for this dashboard.
+        $pagetypepattern = 'dashaddon-dashboard-' . $this->get('shortname');
+
+        // First, update any block_positions records (manual overrides).
+        $sql = "UPDATE {block_instances}
+                SET parentcontextid = :newcontextid
+                WHERE parentcontextid = :oldcontextid
+                AND pagetypepattern = :pagetype";
+
+        $DB->execute($sql, [
+            'oldcontextid' => $oldcontextid,
+            'newcontextid' => $newcontextid,
+            'pagetype' => $pagetypepattern,
+        ]);
+
+        // Clean up any orphaned block_instances records for the old context.
+        $DB->delete_records('block_instances', [
+            'parentcontextid' => $oldcontextid,
+            'pagetypepattern' => $pagetypepattern,
+        ]);
     }
 }

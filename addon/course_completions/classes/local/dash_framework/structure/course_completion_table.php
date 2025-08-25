@@ -69,16 +69,25 @@ class course_completion_table extends table {
             new field('id', new lang_string('coursecompletion'), $this, null, [
                 new identifier_attribute(),
             ]),
+
             new field('total_activities', new lang_string('totalactivitiescompletion', 'block_dash'), $this,
-                '(SELECT COUNT(*) FROM {course_completion_criteria} ccc200 WHERE ccc200.course = c.id AND ccc200.criteriatype = 4)',
-                [], ['supports_sorting' => false]
+            'ccc200.totalactivities', [], ['supports_sorting' => false], '', null,
+            '   LEFT JOIN (
+                    SELECT ccc.course, COUNT(*) AS totalactivities
+                    FROM {course_completion_criteria} ccc
+                    WHERE ccc.criteriatype = 4
+                    GROUP BY ccc.course
+                ) ccc200 ON ccc200.course = c.id',
+                true, // Force join even if not visible
             ),
+
             new field('completed_activities', new lang_string('completedactivities', 'block_dash'), $this,
                 '(SELECT COUNT(*) FROM {course_completion_crit_compl} cccc100
                 join {course_completion_criteria} cccc200 ON cccc200.id = cccc100.criteriaid AND cccc200.criteriatype = 4
                 WHERE cccc100.userid = u.id AND cccc100.course = c.id)',
                 [], ['supports_sorting' => false]),
-            new field('completed', new lang_string('coursecompleted', 'completion'), $this, 'ccp.id', [
+
+            new field('completed', new lang_string('coursecompleted', 'completion'), $this, 'ccp.timecompleted', [
                 new bool_attribute(),
             ]),
             new field('timecompleted', new lang_string('datecompleted', 'block_dash'), $this, null, [

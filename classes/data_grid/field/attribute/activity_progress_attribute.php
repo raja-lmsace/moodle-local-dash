@@ -42,11 +42,12 @@ class activity_progress_attribute extends abstract_field_attribute {
      * @throws \moodle_exception
      */
     public function transform_data($data, \stdClass $record) {
-        if (!isset($record->ccp_total_activities)) {
+
+        if (!property_exists($record, 'ccp_total_activities')) {
             throw new \coding_exception('Data source is missing ccp_total_activities field.');
         }
 
-        if (!isset($record->ccp_completed_activities)) {
+        if (!property_exists($record, 'ccp_completed_activities')) {
             throw new \coding_exception('Data source is missing ccp_completed_activities field.');
         }
 
