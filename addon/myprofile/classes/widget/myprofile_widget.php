@@ -26,7 +26,7 @@ namespace dashaddon_myprofile\widget;
 
 use block_dash\local\widget\abstract_widget;
 use block_dash\local\dash_framework\query_builder\join;
-
+use block_dash\local\dash_framework\query_builder\join_raw;
 use dashaddon_myprofile\widget\myprofile_layout;
 use block_dash\local\dash_framework\structure\user_table;
 use block_dash\local\data_source\form\preferences_form;
@@ -45,7 +45,6 @@ require_once("$CFG->dirroot/calendar/externallib.php");
  * My profile widget class helps to generate the Key performance indicators of the user and their basic informations.
  */
 class myprofile_widget extends abstract_widget {
-
     /**
      * Key of the cache to store user login streak count.
      *
@@ -348,12 +347,11 @@ class myprofile_widget extends abstract_widget {
                         'jolastweek' => $lastweek,
                     ];
                     // Join the log store and get the login events created after the last week.
-                    $sql = "LEFT JOIN (
-                            SELECT DISTINCT userid, count(*) AS loginsthisweek FROM {logstore_standard_log}
-                            WHERE timecreated >= :jolastweek AND userid = :jolsluserid AND eventname = :jolsleventname
-                            GROUP BY userid
-                        ) lsl ON lsl.userid = u.id ";
-                    $query->join_raw($sql, $joparams);
+                    $rawjoin = new join_raw("SELECT DISTINCT userid, count(*) AS loginsthisweek FROM {logstore_standard_log}
+                                        WHERE timecreated >= :jolastweek AND userid = :jolsluserid AND eventname = :jolsleventname
+                                        GROUP BY userid", 'lsl', 'userid', 'u.id', join_raw::TYPE_LEFT_JOIN, $joparams);
+
+                    $query->join_raw($rawjoin);
                     $query->select('lsl.loginsthisweek', 'loginsthisweek');
                     // Fetch the count of logins and transform to user readable.
                     $transforms['loginsthisweek'] = fn($courses, $userdata) => $userdata->loginsthisweek ?: 0;
@@ -391,12 +389,13 @@ class myprofile_widget extends abstract_widget {
                     $lastweek = strtotime('this week');
                     $ccparams = ['ccuserid' => $userid, 'cclastweek' => $lastweek];
 
-                    $sql = "LEFT JOIN (
+                    $sql = new join_raw("
                         SELECT DISTINCT userid, count(*) AS completions FROM {course_completions}
                         WHERE timecompleted >= :cclastweek AND userid = :ccuserid
-                        GROUP BY userid
-                        ) cc ON cc.userid = u.id";
-                    $query->join_raw($sql, $ccparams);
+                        GROUP BY userid", 'cc', 'userid', 'u.id', join::TYPE_LEFT_JOIN, $ccparams
+                    );
+
+                    $query->join_raw($sql);
                     $query->select('cc.completions', 'completedcoursesinweek');
 
                     $transforms['completedcoursesinweek'] = fn($courses, $userdata) => $userdata->completedcoursesinweek ?: 0;
@@ -406,25 +405,27 @@ class myprofile_widget extends abstract_widget {
                     $lastweek = strtotime('this week');
                     $cmcparams = ['cmcuserid' => $userid, 'cmclastweek' => $lastweek];
 
-                    $sql = "LEFT JOIN (
-                            SELECT DISTINCT userid, count(*) AS completedactivitiesinweek FROM {course_modules_completion}
+                    $sql = new join_raw(
+                            "SELECT DISTINCT userid, count(*) AS completedactivitiesinweek FROM {course_modules_completion}
                             WHERE timemodified >= :cmclastweek AND userid = :cmcuserid AND completionstate >= 1
-                            GROUP BY userid
-                        ) cmc ON cmc.userid = u.id";
-                    $query->join_raw($sql, $cmcparams);
+                            GROUP BY userid", 'cmc', 'userid', 'u.id', join::TYPE_LEFT_JOIN, $cmcparams);
+
+                    $query->join_raw($sql);
                     $query->select('cmc.completedactivitiesinweek', 'completedactivitiesinweek');
 
                     $transforms['completedactivitiesinweek'] = fn($courses, $userdata) => $userdata->completedactivitiesinweek ?: 0;
                     break;
 
                 case 'teammemberscount':
-                    $sql = "LEFT JOIN (SELECT ra.userid, count(*) as members
+                    $sql = new join_raw("SELECT ra.userid, count(*) as members
                             FROM {role_assignments} ra, {context} c, {user} u
                             WHERE (ra.userid = :rauserid) AND ra.contextid = c.id AND c.instanceid = u.id
-                            AND c.contextlevel = :context_user GROUP BY ra.userid) ram ON (ram.userid = u.id)";
+                            AND c.contextlevel = :context_user GROUP BY ra.userid", 'ram', 'userid', 'u.id', join::TYPE_LEFT_JOIN,
+                            ['rauserid' => $userid, 'context_user' => CONTEXT_USER]
+                        );
 
                     $query->select('ram.members', 'teammembers');
-                    $query->join_raw($sql, ['rauserid' => $userid, 'context_user' => CONTEXT_USER]);
+                    $query->join_raw($sql);
                     $transforms['teammemberscount'] = fn($courses, $userdata) => $userdata->teammembers ?: 0;
                     break;
 
@@ -455,9 +456,10 @@ class myprofile_widget extends abstract_widget {
                     }
                     if (!isset($transforms['earnedskillpoints'])) {
                         $query->select('tsup.points', 'earnedskillpoints');
-                        $query->join_raw('LEFT JOIN (
-                            SELECT DISTINCT userid, SUM(points) AS points FROM {tool_skills_userpoints} GROUP BY userid
-                        ) tsup ON tsup.userid=u.id', []);
+                        $query->join_raw(new join_raw(
+                            'SELECT DISTINCT userid, SUM(points) AS points FROM {tool_skills_userpoints} GROUP BY userid',
+                            'tsup', "userid", 'u.id', join::TYPE_LEFT_JOIN)
+                        );
 
                         $transforms['earnedskillpoints'] = fn($courses, $userdata) => $userdata->earnedskillpoints ?: 0;
                     }
@@ -574,7 +576,6 @@ class myprofile_widget extends abstract_widget {
         ];
         return $this->data;
     }
-
 
     /**
      * Check the myprofile contains any data to render.
@@ -736,7 +737,6 @@ class myprofile_widget extends abstract_widget {
         return $usercount;
     }
 
-
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
@@ -768,5 +768,4 @@ class myprofile_widget extends abstract_widget {
 
         return $filtercollection;
     }
-
 }

@@ -34,6 +34,7 @@ $string['completionoverridedate'] = "Completion override date";
 $string['completionstate'] = 'Are you sure you want to override the current completion state of this activity for this user?';
 $string['currentgrade'] = "Current grade";
 $string['datasource:activity_completion_data_source'] = 'Activity Completion';
+$string['datasource:activity_completion_data_source_help'] = 'List of user activity completion details.';
 $string['due'] = 'Due';
 $string['grade'] = 'Grade';
 $string['grademax'] = "Grade max";

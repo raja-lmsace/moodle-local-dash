@@ -24,23 +24,25 @@
 
 use dashaddon_activities\local\block_dash\data_grid\filter\activity_customfield_condition;
 
-
 /**
- * Checks if the Time Management plugin is installed and enabled.
+ * Checks if the Timetable plugin is installed and enabled.
  *
- * @return bool True if the Time Management plugin is installed and enabled, false otherwise.
+ * @return bool True if the Timetable plugin is installed, false otherwise.
  */
-function dashaddon_activities_is_timemangement_installed() {
-    global $DB, $CFG;
-    $tools = \core_plugin_manager::instance()->get_subplugins_of_plugin('local_learningtools');
-    if (in_array('ltool_timemanagement', array_keys($tools))) {
-        $status = $DB->get_field('local_learningtools_products', 'status', ['shortname' => 'timemanagement']);
-        if ($status) {
-            require_once($CFG->dirroot.'/local/learningtools/ltool/timemanagement/lib.php');
+function dashaddon_activities_is_timetable_installed() {
+    global $CFG;
+    static $result;
+
+    if ($result == null) {
+        if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
+            require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
+            $result = true;
+        } else {
+            $result = false;
         }
-        return ($status) ? true : false;
     }
-    return false;
+
+    return $result;
 }
 
 /**
@@ -65,21 +67,21 @@ function dashaddon_activities_is_designer_pro_installed() {
  * Get module user duedate.
  *
  * @param object $mod
+ * @param int $userid
  * @return int|bool Mod due date if available otherwiser returns false.
  */
-function dashaddon_activities_get_mod_user_duedate($mod) {
-    global $DB, $USER, $CFG;
-    require_once($CFG->dirroot . "/local/learningtools/ltool/timemanagement/lib.php");
+function dashaddon_activities_get_mod_user_duedate($mod, $userid) {
+    global $DB;
     $course = $mod->get_course();
-    if (function_exists('ltool_timemanagement_get_course_user_enrollment')) {
-        $userenrolments = ltool_timemanagement_get_course_user_enrollment($course->id, $USER->id);
-        if (!empty($userenrolments)) {
-            $timestarted = $userenrolments[0]['timestart'];
-            $record = $DB->get_record('ltool_timemanagement_modules', ['cmid' => $mod->id]);
-            if ($record) {
-                list('startdate' => $startdate, 'duedate' => $duedate) = ltool_timemanagement_cal_coursemodule_managedates(
-                        $record, $timestarted);
-            }
+    $record = $DB->get_record('tool_timetable_modules', ['cmid' => $mod->id ?? 0]);
+    $timemanagement = new \tool_timetable\time_management($course->id);
+    $userenrolments = $timemanagement->get_course_user_enrollment($userid, $course->id);
+    if (!empty($userenrolments)) {
+        $timestarted = $userenrolments[0]['timestart'] ?? 0;
+        $timeended = $userenrolments[0]['timeend'] ?? 0;
+        if ($record) {
+            $moduledates = $timemanagement->calculate_coursemodule_managedates($record, $timestarted, $timeended);
+            $duedate = $moduledates['duedate'] ?? false;
         }
     }
     return $duedate ?? false;

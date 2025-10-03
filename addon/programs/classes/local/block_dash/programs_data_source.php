@@ -27,6 +27,8 @@ namespace dashaddon_programs\local\block_dash;
 use block_dash\local\data_source\abstract_data_source;
 use block_dash\local\data_grid\filter\filter_collection;
 use block_dash\local\dash_framework\query_builder\builder;
+use block_dash\local\dash_framework\query_builder\join;
+use block_dash\local\dash_framework\query_builder\join_raw;
 use block_dash\local\dash_framework\query_builder\where;
 use dashaddon_program\local\block_dash\data_grid\filter\tags_program_filter;
 use dashaddon_programs\local\dash_framework\structure\programs_table;
@@ -67,10 +69,10 @@ class programs_data_source extends abstract_data_source {
             ->select('epp.contextid', 'epp_ctx')
             ->select('pclist.cohortid', 'cohortid')
 
-            ->join_raw("
-                LEFT JOIN (SELECT pc.programid, $concat as cohortid
+            ->join_raw(new join_raw("SELECT pc.programid, $concat as cohortid
                 FROM {enrol_programs_cohorts} pc
-                GROUP BY pc.programid) pclist ON pclist.programid = epp.id", [])
+                GROUP BY pc.programid", 'pclist', 'programid', 'epp.id', join::TYPE_LEFT_JOIN, [])
+            )
             ->from('enrol_programs_programs', 'epp');
 
         // Config the program is not restricted to the cohort users.
@@ -78,14 +80,13 @@ class programs_data_source extends abstract_data_source {
 
         if ($cohortids) {
             list($insql, $inparams) = $DB->get_in_or_equal($cohortids, SQL_PARAMS_NAMED, 'ch');
-            $builder->join_raw("
-                LEFT JOIN (
-                    SELECT pc.programid, $concat as cohortid
+            $builder->join_raw(
+                new join_raw("SELECT pc.programid, $concat as cohortid
                     FROM {enrol_programs_cohorts} pc
                     WHERE pc.cohortid $insql
-                    GROUP BY pc.programid
-                ) pcuser ON pcuser.programid = epp.id
-            ", $inparams);
+                    GROUP BY pc.programid", 'pcuser', 'programid', 'epp.id', join::TYPE_LEFT_JOIN, $inparams
+                )
+            );
             $builder->select("pcuser.cohortid", "pcusercohort");
             // If cohort is configured then user should assigned in any of the cohorts.
             $cohortsql .= ' OR pcuser.cohortid IS NOT NULL';

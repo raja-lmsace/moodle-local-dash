@@ -1,4 +1,4 @@
-# Dash 
+# Dash
 This is the local companion plugin for the additional features (addons) in Dash Plus, Dash Pro and Dash Premium.
 
 ## Addons

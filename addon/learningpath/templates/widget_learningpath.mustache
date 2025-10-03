@@ -42,6 +42,17 @@
                 <a href="{{{data.nextcourseurl}}}" class="btn btn-primary">{{data.infobutton}}</a>
             </div>
         {{/data.infobutton}}
+
+        {{#data.showinfo}}
+          <div class="kpi-display">
+            {{#data.selectedkpi}}
+              <p><b>{{data.kpivalue}}</b> <span>{{data.kpilabel}}</span></p>
+            {{/data.selectedkpi}}
+          </div>
+        {{/data.showinfo}}
+
+
+
     </div>
     {{/data.showinfo}}
 

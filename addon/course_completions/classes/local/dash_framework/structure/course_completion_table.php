@@ -24,6 +24,7 @@
 
 namespace dashaddon_course_completions\local\dash_framework\structure;
 
+use block_dash\local\dash_framework\query_builder\join_raw;
 use block_dash\local\dash_framework\structure\field;
 use block_dash\local\dash_framework\structure\field_interface;
 use block_dash\local\dash_framework\structure\table;
@@ -43,7 +44,6 @@ use block_dash\local\data_grid\field\attribute\course_information_url_attribute;
  * @package dashaddon_course_completions
  */
 class course_completion_table extends table {
-
     /**
      * Build a new table.
      */
@@ -72,13 +72,12 @@ class course_completion_table extends table {
 
             new field('total_activities', new lang_string('totalactivitiescompletion', 'block_dash'), $this,
             'ccc200.totalactivities', [], ['supports_sorting' => false], '', null,
-            '   LEFT JOIN (
-                    SELECT ccc.course, COUNT(*) AS totalactivities
+                new join_raw('SELECT ccc.course, COUNT(*) AS totalactivities
                     FROM {course_completion_criteria} ccc
                     WHERE ccc.criteriatype = 4
-                    GROUP BY ccc.course
-                ) ccc200 ON ccc200.course = c.id',
-                true, // Force join even if not visible
+                    GROUP BY ccc.course', 'ccc200', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
+                ),
+                true, // Force join even if not visible.
             ),
 
             new field('completed_activities', new lang_string('completedactivities', 'block_dash'), $this,

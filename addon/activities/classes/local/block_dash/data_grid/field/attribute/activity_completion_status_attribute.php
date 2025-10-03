@@ -52,9 +52,14 @@ class activity_completion_status_attribute extends abstract_field_attribute {
             return "";
         }
 
+        if ($cm == null) {
+            return "";
+        }
+
         $completion = new \completion_info($cm->get_course());
-        if ($completion->is_tracked_user($USER)) {
-            $completiondata = $completion->get_data($cm, false);
+
+        if ($completion->is_tracked_user($record->u_id ?? $USER->id)) {
+            $completiondata = $completion->get_data($cm, false, $record->u_id ?? $USER->id);
             if ($completiondata->completionstate == COMPLETION_COMPLETE ||
                 $completiondata->completionstate == COMPLETION_COMPLETE_PASS) {
                 return get_string('completed');

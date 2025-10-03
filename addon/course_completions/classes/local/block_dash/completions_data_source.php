@@ -72,7 +72,6 @@ require_once($CFG->dirroot.'/local/dash/lib.php');
  * Completions data source.
  */
 class completions_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *
@@ -242,7 +241,7 @@ class completions_data_source extends abstract_data_source {
 
         $compfiltercollection->add_filter(new current_course_condition('c_current_course', 'c.id'));
 
-        $compfiltercollection->add_filter(new my_groups_condition('my_groups', 'gm300.id'));
+        $compfiltercollection->add_filter(new my_groups_condition('my_groups', 'gm300.groupid'));
 
         $compfiltercollection->add_filter(new enrollment_self_condition('self_enrollments', 'e.enrol'));
 

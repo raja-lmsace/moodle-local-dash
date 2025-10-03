@@ -123,10 +123,11 @@ class activity_completion_status_condition extends condition {
 
             foreach ($filterparams as $status) {
                 if ($status == 'completed') {
-                    $sql = 'cmc.completionstate <> 0 AND cm.deletioninprogress = 0 AND cm.visible = 1';
+                    $sql = '(cmc.completionstate IS NOT NULL
+                        AND cmc.completionstate <> 0 AND cm.deletioninprogress = 0 AND cm.visible = 1)';
                 } else {
-                    $sql = 'cmc.completionstate IS NULL OR cmc.completionstate = 0 AND cm.deletioninprogress = 0 AND
-                        cm.visible = 1 ';
+                    $sql = '(cmc.completionstate IS NULL OR cmc.completionstate = 0 AND cm.deletioninprogress = 0 AND
+                        cm.visible = 1) ';
                 }
             }
             return [$sql, $params];

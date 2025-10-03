@@ -22,7 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 /**
  * Get user due activies.
  *
@@ -74,16 +73,18 @@ function dashaddon_myprofile_get_user_dueactivities($courseid, $userid) {
 function dashaddon_myprofile_get_mod_user_duedate($mod, $userid, $duestatus = false) {
     global $DB;
     $course = $mod->get_course();
-    $userenrolments = ltool_timemanagement_get_course_user_enrollment($course->id, $userid);
+    $record = $DB->get_record('tool_timetable_modules', ['cmid' => $mod->id ?? 0]);
+    $timemanagement = new \tool_timetable\time_management($course->id);
+    $userenrolments = $timemanagement->get_course_user_enrollment($userid, $course->id);
     if (!empty($userenrolments)) {
-        $timestarted = $userenrolments[0]['timestart'];
-        $record = $DB->get_record('ltool_timemanagement_modules', ['cmid' => $mod->id]);
+        $timestarted = $userenrolments[0]['timestart'] ?? 0;
+        $timeended = $userenrolments[0]['timeend'] ?? 0;
         if ($record) {
-            list('startdate' => $startdate, 'duedate' => $duedate) = ltool_timemanagement_cal_coursemodule_managedates(
-                    $record, $timestarted);
+            $moduledates = $timemanagement->calculate_coursemodule_managedates($record, $timestarted, $timeended);
+            $duedate = $moduledates['duedate'] ?? false;
         }
     }
-    return $duedate ?? false;;
+    return $duedate ?? false;
 }
 
 /**
@@ -92,7 +93,6 @@ function dashaddon_myprofile_get_mod_user_duedate($mod, $userid, $duestatus = fa
  * Modified from format_designer.
  */
 class cm_completion {
-
     /**
      * @var cm_info
      */
@@ -154,7 +154,7 @@ class cm_completion {
      */
     public static function timetool_duedate($cm, $userid, $timemanagement=false) {
 
-        if (self::is_timemanagement_installed() && function_exists('ltool_timemanagement_get_mod_user_info')) {
+        if (self::is_timemanagement_installed()) {
             $duedate = dashaddon_myprofile_get_mod_user_duedate($cm, $userid);
             return $duedate ?? false;
         }
@@ -186,17 +186,18 @@ class cm_completion {
      * @return bool
      */
     public static function is_timemanagement_installed() {
-        global $DB, $CFG;
+        global $CFG;
+        static $result;
 
-        $tools = \core_plugin_manager::instance()->get_subplugins_of_plugin('local_learningtools');
-        if (in_array('ltool_timemanagement', array_keys($tools))) {
-            $status = $DB->get_field('local_learningtools_products', 'status', ['shortname' => 'timemanagement']);
-            if ($status) {
-                require_once($CFG->dirroot.'/local/learningtools/ltool/timemanagement/lib.php');
+        if ($result == null) {
+            if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
+                require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
+                $result = true;
+            } else {
+                $result = false;
             }
-            return ($status) ? true : false;
         }
-        return false;
-    }
 
+        return $result;
+    }
 }

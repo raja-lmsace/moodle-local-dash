@@ -92,7 +92,8 @@ class activity_completion_data_source extends abstract_data_source {
      */
     public function get_query_template(): builder {
         global $USER, $DB, $USER, $PAGE;
-        $builder = new builder();
+
+        $builder = new \local\dash\addon\activity_completion\local\block_dash\builder();
         $builder
             ->select('uniqueid', 'unique_id')
             ->select('cm.id', 'cm_id')
@@ -108,22 +109,24 @@ class activity_completion_data_source extends abstract_data_source {
             ->select('gt.id', 'gt_id')
             ->select('gg.itemid', 'gg_itemid')
             ->select('gg.finalgrade', 'gg_finalgrade')
+            ->select('ue.userid', 'ue_userid')
             ->from('course_modules', 'cm')
             ->join('modules', 'm', 'id', 'cm.module AND m.visible = 1')
             ->join('course', 'c', 'id', 'cm.course')
-            ->join('enrol', 'e', 'courseid', 'c.id')
-            ->join('user_enrolments', 'ue', 'enrolid', 'e.id')
-            ->join('user', 'u', 'id', 'ue.userid', join::TYPE_RIGHT_JOIN)
-            ->join('course_modules_completion', 'cmc', 'coursemoduleid', 'cm.id AND cmc.userid = u.id', join::TYPE_LEFT_JOIN)
             ->join('course_categories', 'cc', 'id', 'c.category')
             ->join('course_sections', 'cs', 'id', 'cm.section')
+            ->join('enrol', 'e', 'courseid', 'c.id')
+            ->join('user_enrolments', 'ue', 'enrolid', 'e.id')
+            ->join('user', 'u', 'id', 'ue.userid')
+            ->join('course_modules_completion', 'cmc', 'coursemoduleid', 'cm.id AND cmc.userid = ue.userid', join::TYPE_LEFT_JOIN)
             ->join('grade_items', 'gt', 'itemmodule', 'm.name AND gt.iteminstance = cm.instance', join::TYPE_LEFT_JOIN)
-            ->join('grade_grades', 'gg', 'itemid', 'gt.id AND gg.userid = u.id', join::TYPE_LEFT_JOIN);
+            ->join('grade_grades', 'gg', 'itemid', 'gt.id AND gg.userid = ue.userid', join::TYPE_LEFT_JOIN);
 
-        if (dashaddon_activity_completion_is_timemangement_installed()) {
+        if (dashaddon_activity_completion_is_timetable_installed()) {
             $builder->select('tm.duedatecustom', 'tm_duedate');
-            $builder->join('ltool_timemanagement_modules', 'tm', 'cmid', 'cm.id', join::TYPE_LEFT_JOIN);
+            $builder->join('tool_timetable_modules', 'tm', 'cmid', 'cm.id', join::TYPE_LEFT_JOIN);
         }
+
         $activityfilterpreferences = $this->get_preferences('filters');
         if (dashaddon_activities_is_local_metadata_installed()) {
             $coursemodulefields = $DB->get_records('local_metadata_field', ['contextlevel' => CONTEXT_MODULE]);
@@ -166,7 +169,6 @@ class activity_completion_data_source extends abstract_data_source {
 
         $builder->rawcondition('u.deleted = 0');
         $builder->where_raw("cm.deletioninprogress = 0 AND (cm.visible = 1 OR cm.visible = $bypassadmin)");
-        $builder->orderby('u.id', 'asc');
 
         // Js include.
         $PAGE->requires->js_call_amd('dashaddon_activity_completion/overrideactivitycompletion', 'init',
@@ -210,7 +212,9 @@ class activity_completion_data_source extends abstract_data_source {
         $cmfiltercollection->add_filter(new activity_purpose_field_filter('cm_purpose', ''));
 
         // Activity status filter.
-        $cmfiltercollection->add_filter(new activity_status_filter('activity_status', ''));
+        if (dashaddon_activity_completion_is_timetable_installed()) {
+            $cmfiltercollection->add_filter(new activity_status_filter('activity_status', ''));
+        }
 
         // User filter.
         $cmfiltercollection->add_filter(new user_filter('u_id', 'u.id', get_string('user')));
@@ -328,7 +332,9 @@ class activity_completion_data_source extends abstract_data_source {
         $cmfiltercollection->add_filter(new activity_modulename_condition('modulename', 'm.id'));
 
         // Activity status.
-        $cmfiltercollection->add_filter(new activity_status_condition('activitystatus', ''));
+        if (dashaddon_activity_completion_is_timetable_installed()) {
+            $cmfiltercollection->add_filter(new activity_status_condition('activitystatus', ''));
+        }
 
         if (dashaddon_activities_is_local_metadata_installed()) {
             dashaddon_activities_customfield_conditions($cmfiltercollection);
@@ -367,6 +373,15 @@ class activity_completion_data_source extends abstract_data_source {
      */
     public function supports_currentscript() {
         return false;
+    }
+
+    /**
+     * Load the pagination via ajax.
+     *
+     * For the large data sets, it is better to load the pagination via ajax.
+     */
+    public function supports_ajax_pagination() {
+        return true;
     }
 
 }

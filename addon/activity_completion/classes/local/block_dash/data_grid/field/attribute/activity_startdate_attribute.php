@@ -59,7 +59,7 @@ class activity_startdate_attribute extends abstract_field_attribute {
         if ($data) {
             $startdate = userdate($data, get_string('strftimedatefullshort'));
         }
-        if (dashaddon_activity_completion_is_timemangement_installed()) {
+        if (dashaddon_activity_completion_is_timetable_installed()) {
             $startdate = $this->get_mod_user_startdate($cm, $userid) ?
                 userdate($this->get_mod_user_startdate($cm, $userid), get_string('strftimedatefullshort'))
                 : $startdate;
@@ -75,19 +75,17 @@ class activity_startdate_attribute extends abstract_field_attribute {
      * @return int|bool Mod start date if available otherwiser returns false.
      */
     public function get_mod_user_startdate($mod, $userid) {
-        global $DB, $USER, $CFG;
-        require_once($CFG->dirroot . "/local/learningtools/ltool/timemanagement/lib.php");
+        global $DB;
         $course = $mod->get_course();
-        $userid = (!empty($userid)) ? $userid : $USER->id;
-        if (function_exists('ltool_timemanagement_get_course_user_enrollment')) {
-            $userenrolments = ltool_timemanagement_get_course_user_enrollment($course->id, $userid);
-            if (!empty($userenrolments)) {
-                $timestarted = $userenrolments[0]['timestart'];
-                $record = $DB->get_record('ltool_timemanagement_modules', ['cmid' => $mod->id]);
-                if ($record) {
-                    list('startdate' => $startdate, 'duedate' => $duedate) = ltool_timemanagement_cal_coursemodule_managedates(
-                            $record, $timestarted);
-                }
+        $record = $DB->get_record('tool_timetable_modules', ['cmid' => $mod->id ?? 0]);
+        $timemanagement = new \tool_timetable\time_management($course->id);
+        $userenrolments = $timemanagement->get_course_user_enrollment($userid, $course->id);
+        if (!empty($userenrolments)) {
+            $timestarted = $userenrolments[0]['timestart'] ?? 0;
+            $timeended = $userenrolments[0]['timeend'] ?? 0;
+            if ($record) {
+                $moduledates = $timemanagement->calculate_coursemodule_managedates($record, $timestarted, $timeended);
+                $startdate = $moduledates['startdate'] ?? false;
             }
         }
         return $startdate ?? false;

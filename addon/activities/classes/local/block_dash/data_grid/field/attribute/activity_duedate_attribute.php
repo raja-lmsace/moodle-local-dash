@@ -48,6 +48,7 @@ class activity_duedate_attribute extends abstract_field_attribute {
      * @throws \moodle_exception
      */
     public function transform_data($data, \stdClass $record) {
+        global $USER;
         $cm = cm_info::create(get_coursemodule_from_id('', $record->cm_id));
         $duedate = "";
         // When the course complete the duedate attribute return empty string.
@@ -55,11 +56,17 @@ class activity_duedate_attribute extends abstract_field_attribute {
             $record->cm_modcompletionstatus == COMPLETION_COMPLETE_PASS)) {
                 return $duedate;
         }
+
+        if ($cm == null) {
+            return $duedate;
+        }
+
         if ($data) {
             $duedate = userdate($data, get_string('strftimedatefullshort'));
         }
-        if (dashaddon_activities_is_timemangement_installed()) {
-            $duedate = dashaddon_activities_get_mod_user_duedate($cm) ? userdate(dashaddon_activities_get_mod_user_duedate($cm),
+        if (dashaddon_activities_is_timetable_installed()) {
+            $duedate = dashaddon_activities_get_mod_user_duedate($cm, $record->u_id ?? $USER->id) ?
+                userdate(dashaddon_activities_get_mod_user_duedate($cm, $record->u_id ?? $USER->id),
                 get_string('strftimedatefullshort'))
                 : $duedate;
         }

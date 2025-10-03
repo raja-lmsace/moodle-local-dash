@@ -476,6 +476,7 @@ class info {
                 $docicon = $OUTPUT->pix_icon('docs', $statusfielddata->enrolinstancename, 'core',
                     ['class' => 'iconhelp icon-pre', 'role' => 'presentation']);
                 $statusfielddata->docicon = $docicon;
+                $statusfielddata->datatoggle = $CFG->branch >= 500 ? 'data-bs-toggle' : 'data-toggle';
                 $enrolstatusoutput .= $OUTPUT->render_from_template(
                     'dashaddon_course_enrols/status_field', $statusfielddata
                 );

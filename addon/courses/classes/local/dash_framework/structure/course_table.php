@@ -24,6 +24,7 @@
 
 namespace dashaddon_courses\local\dash_framework\structure;
 
+use block_dash\local\dash_framework\query_builder\join_raw;
 use moodle_url;
 use lang_string;
 use block_dash\local\dash_framework\structure\field;
@@ -54,7 +55,6 @@ use block_dash\local\data_grid\field\attribute\course_information_url_attribute;
  * @package dashaddon_courses
  */
 class course_table extends table {
-
     /**
      * Build a new table.
      */
@@ -123,29 +123,29 @@ class course_table extends table {
                 new tags_attribute(['component' => 'core', 'itemtype' => 'course']),
             ]),
 
-            new field('total_activities', new lang_string('totalactivities', 'block_dash'), $this, 'cm100.totalactivities', [], ['supports_sorting' => false], '', null,
-            '   LEFT JOIN (
-                    SELECT cm.course, COUNT(*) AS totalactivities
+            new field('total_activities', new lang_string('totalactivities', 'block_dash'), $this, 'cm100.totalactivities', [],
+            ['supports_sorting' => false], '', null,
+                new join_raw('SELECT cm.course, COUNT(*) AS totalactivities
                     FROM {course_modules} cm
                     WHERE cm.visible = 1
-                    GROUP BY cm.course
-                ) cm100 ON cm100.course = c.id'
+                    GROUP BY cm.course', 'cm100', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
+                )
             ),
-            new field('users_completed', new lang_string('userscompleted', 'block_dash'), $this, 'ccp100_count.userscompleted', [], ['supports_sorting' => false], '', null,
-            '   LEFT JOIN (
-                    SELECT ccp.course, COUNT(*) AS userscompleted
+            new field('users_completed', new lang_string('userscompleted', 'block_dash'), $this, 'ccp100_count.userscompleted', [],
+            ['supports_sorting' => false], '', null,
+                new join_raw('SELECT ccp.course, COUNT(*) AS userscompleted
                     FROM {course_completions} ccp
                     WHERE ccp.timecompleted > 0
-                    GROUP BY ccp.course
-                ) ccp100_count ON ccp100_count.course = c.id'
+                    GROUP BY ccp.course', 'ccp100_count', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
+                )
             ),
-            new field('users_not_completed', new lang_string('usersnotcompleted', 'block_dash'), $this, 'ccp200_count.usersnotcompleted', [], ['supports_sorting' => false], '', null,
-            '   LEFT JOIN (
-                    SELECT ccp.course, COUNT(*) AS usersnotcompleted
+            new field('users_not_completed', new lang_string('usersnotcompleted', 'block_dash'), $this,
+            'ccp200_count.usersnotcompleted', [], ['supports_sorting' => false], '', null,
+                new join_raw('SELECT ccp.course, COUNT(*) AS usersnotcompleted
                     FROM {course_completions} ccp
                     WHERE ccp.timecompleted IS NULL
-                    GROUP BY ccp.course
-                ) ccp200_count ON ccp200_count.course = c.id'
+                    GROUP BY ccp.course', 'ccp200_count', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
+                )
             ),
 
             new field('status', new lang_string('status', 'block_dash'), $this, "

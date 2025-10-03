@@ -24,6 +24,8 @@
 
 namespace dashaddon_activities\local\dash_framework\structure;
 
+use block_dash\local\dash_framework\query_builder\join;
+use block_dash\local\dash_framework\query_builder\join_raw;
 use block_dash\local\dash_framework\structure\table;
 use block_dash\local\dash_framework\structure\field;
 use block_dash\local\dash_framework\structure\field_interface;
@@ -65,7 +67,6 @@ use lang_string;
  * Activities table structure definitions for activities datasource.
  */
 class activities_table extends table {
-
     /**
      * Build a new table.
      */
@@ -92,19 +93,18 @@ class activities_table extends table {
         global $DB;
 
         $records = $DB->get_records_menu('modules', null, '', 'id, name');
-        $activitysqlstart = "
-            CASE m.name
-        ";
-        $activitysqlend = "END";
-        $activitynamesql = '';
-        $activitymodifiydatesql = '';
-        foreach ($records as $record) {
-            $activitynamesql .= " WHEN '$record' THEN (SELECT name FROM {". $record. "} WHERE id = cm.instance)";
-            $activitymodifiydatesql .= " WHEN '$record' THEN (SELECT timemodified FROM {". $record. "} WHERE id = cm.instance)";
+
+        $activitynamejoin = '';
+        $activitynameselect = [];
+        $activitymodifiydate = [];
+        foreach ($records as $key => $record) {
+            $activitynameselect[] = "{$record}.name";
+            $activitymodifiydate[] = "{$record}.timemodified";
+            $activitynamejoin .= " LEFT JOIN {". $record. "} {$record} ON {$record}.id = cm.instance AND m.name = '{$record}' ";
         }
 
-        $activitynamesql = $activitysqlstart . $activitynamesql . $activitysqlend;
-        $activitymodifiydatesql = $activitysqlstart . $activitymodifiydatesql . $activitysqlend;
+        $activitynamesql = 'mds.activityname';
+        $activitymodifiydatesql = 'mds.timemodified';
 
         $fields = [
             new field('id', new lang_string('activity'), $this, 'cm.id', [
@@ -219,6 +219,26 @@ class activities_table extends table {
                 $i++;
             }
         }
+
+        // Include the additional joins for the activity names.
+        $this->additionaljoins[] = new join(
+            'modulenames',
+            'mds',
+            'cmid',
+            'cm.id',
+        );
+
+        // Activity name and timemodified fields.
+        $activitynamesql = 'COALESCE(' . implode(', ', $activitynameselect) . ', null) as activityname';
+        $activitymodifiydatesql = 'COALESCE(' . implode(', ', $activitymodifiydate) . ', null) as timemodified';
+
+        $this->sqlctelist['modulenames'] = "WITH {modulenames} AS (
+            SELECT cm.id AS cmid, $activitynamesql, $activitymodifiydatesql
+            FROM {course_modules} cm
+            JOIN {modules} m ON m.id = cm.module
+            $activitynamejoin
+        )";
+
         return $fields;
     }
 }

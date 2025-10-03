@@ -28,3 +28,25 @@ $string['field:customorder_help'] = "Users can enter course IDs separated by com
 $string['learningpath:reportuser'] = 'Caluculate In report';
 $string['pluginname'] = 'Widget: Learning path';
 $string['widget:learningpath'] = ' Learning path widget';
+// Prerequisites filter strings
+$string['courseprerequisites'] = 'Course Prerequisites';
+$string['selectprerequisitecourses'] = 'Select courses whose prerequisites should be shown';
+$string['selectprerequisitecourses_help'] = 'This dropdown lets you choose courses for which you want to show prerequisites. You can select multiple courses.';
+$string['prerequisitesfilter'] = 'Prerequisites Filter';
+$string['currentcourse'] = 'Current course prerequisites';
+$string['testhelpbutton'] = 'This is for testing';
+// KPI dropdown labels.
+$string['kpi:completedcourses'] = 'Completed Courses';
+// $string['kpi:inprogresscourses'] = 'Courses In Progress';
+
+$string['none'] = 'None';
+// Dropdown field label.
+$string['field:kpitype'] = 'KPI 1';
+$string['completedcourseslabel'] = 'Completed Courses';
+$string['kpi:percentagecompleted'] = 'Course Completion'; 
+$string['kpi:badges'] = 'Badges';
+$string['kpi:period'] = 'Period';
+$string['kpi:period_help'] = 'Earliest course start to latest course end for the learning path (e.g. Jun 2025 - Jul 2025).';
+
+
+

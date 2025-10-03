@@ -39,7 +39,6 @@ require_once("$CFG->dirroot/blocks/dash/lib.php");
  * @package local_dash
  */
 class events_info {
-
     /**
      * Default color classname.
      */

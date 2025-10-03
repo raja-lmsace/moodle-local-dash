@@ -128,7 +128,7 @@ class enrolments_widget extends abstract_widget {
      * @return void
      */
     public function build_widget() {
-        global $PAGE, $USER;
+        global $PAGE, $USER, $CFG;
 
         $this->enrolmentsort = $this->get_default_sorting();
         $this->enrolstatus = 'all';
@@ -167,11 +167,11 @@ class enrolments_widget extends abstract_widget {
             'hascapenrol' => info::has_capability('dashaddon/course_enrols:enrol'),
             'hascapviewdetails' => info::has_capability('dashaddon/course_enrols:viewdetails'),
             'capviewprofiledash' => $capviewprofiledash,
+            'datatoggle' => $CFG->branch >= 500 ? 'data-bs-toggle' : 'data-toggle',
+            'datatarget' => $CFG->branch >= 500 ? 'data-bs-target' : 'data-target',
         ];
         return $this->data;
     }
-
-
 
     /**
      * Get table pagination class.

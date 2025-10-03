@@ -48,6 +48,10 @@ class activity_icon_attribute extends abstract_field_attribute {
     public function transform_data($data, \stdClass $record) {
         global $DB;
         $cm = cm_info::create(get_coursemodule_from_id('', $data));
-        return html_writer::tag('img', '', ['src' => $cm->get_icon_url(), 'class' => 'icon-responsive']);
+        if ($cm != null) {
+            return html_writer::tag('img', '', ['src' => $cm->get_icon_url(), 'class' => 'icon-responsive']);
+        } else {
+            return '';
+        }
     }
 }

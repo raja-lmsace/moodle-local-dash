@@ -53,7 +53,7 @@ class activity_link_attribute extends abstract_field_attribute {
         $value = $this->get_field()->get_name() == 'modulebgimagelink' ? $data : $name;
 
         $cm = cm_info::create(get_coursemodule_from_id('', $record->cm_id));
-        if ($cm->availableinfo && !$cm->uservisible) {
+        if ($cm != null && $cm->availableinfo && !$cm->uservisible) {
             return $value;
         } else {
             return html_writer::link(new moodle_url("/mod/$module/view.php", ['id' => $record->cm_id]), $value);

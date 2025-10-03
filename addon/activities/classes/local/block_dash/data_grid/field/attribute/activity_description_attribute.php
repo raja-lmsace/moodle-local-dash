@@ -50,9 +50,10 @@ class activity_description_attribute extends abstract_field_attribute {
         $instance = $DB->get_record($module->name, ['id' => $record->cm_instance]);
         $cm = cm_info::create(get_coursemodule_from_id($module->name, $data));
         $modulecontext = context_module::instance($data);
-        $cmcontent = format_module_intro($module->name,
-                                    $instance, $cm->id, false);
-
+        if ($cm == null) {
+            return '';
+        }
+        $cmcontent = format_module_intro($module->name, $instance, $cm->id, false);
         list($intro, $format) = external_format_text($cmcontent,
                                     FORMAT_HTML, $modulecontext->id, $cm->modname, 'intro', $cm->id, ['noclean' => true]);
         return $intro;

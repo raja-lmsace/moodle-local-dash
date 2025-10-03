@@ -42,7 +42,7 @@
                             <h5 class="mb-0">
                                 <button class="btn btn-link
                                 {{#collapsible}}collapsed{{/collapsible}}"
-                                {{#collapsible}}data-toggle="collapse"{{/collapsible}} data-target="#course-section-content-{{id}}" 
+                                {{#collapsible}}{{datatoggle}}="collapse"{{/collapsible}} {{datatarget}}="#course-section-content-{{id}}"
                                 aria-expanded={{expanded}} aria-controls="course-section-content-{{id}}">{{{name}}}</button>
                                 {{^uservisible}}
                                     <i class="fa fa-lock"></i>
@@ -66,7 +66,7 @@
                         </div>
 
                         {{#uservisible}}
-                        <div id="course-section-content-{{id}}" class="collapse {{#expanded}}show{{/expanded}}" 
+                        <div id="course-section-content-{{id}}" class="collapse {{#expanded}}show{{/expanded}}"
                             aria-labelledby="course-section-head-{{id}}" {{^expanded}} data-parent="#course-section-accordion" {{/expanded}}>
                             {{^hidemodules}}
                             <div class="card-body">
