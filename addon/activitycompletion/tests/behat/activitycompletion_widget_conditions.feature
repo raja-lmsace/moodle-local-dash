@@ -126,6 +126,7 @@ Feature: Add activity completion widget conditions in dash block
     And I press "Save changes"
     And I open the "Activity completion" block preference
     Then I click on "Conditions" "link"
+    And I set the field "config_preferences[filters][current_course][enabled]" to "0"
     And I set the field "config_preferences[filters][c_course][enabled]" to "1"
     And I set the field "config_preferences[filters][c_course][courseids][]" to "C2"
     And I press "Save changes"
@@ -232,6 +233,8 @@ Feature: Add activity completion widget conditions in dash block
     And I add the "Dash" block
     And I click on "#id_config_data_source_idnumber_dashaddon_activitycompletionwidgetactivitycompletion_widget" "css_element"
     And I configure the "New Dash" block
+    And I reload the page
+    And I configure the "New Dash" block
     And I set the field "Block title" to "Activity completion"
     And I press "Save changes"
     And I open the "Activity completion" block preference
@@ -244,7 +247,7 @@ Feature: Add activity completion widget conditions in dash block
     And I am on "Course 2" course homepage
     And ".activity-completion-widget" "css_element" should exist
     And I click on "Show chart data" "link"
-    And I should see "66.7%" in the "Assignment 5" "table_row"
+    And I should see "50%" in the "Assignment 5" "table_row"
     And I should see "100%" in the "Assignment 6" "table_row"
     And I log in as "admin"
     And I am on "Course 2" course homepage
@@ -257,7 +260,7 @@ Feature: Add activity completion widget conditions in dash block
     And I am on "Course 2" course homepage
     And ".activity-completion-widget" "css_element" should exist
     And I click on "Show chart data" "link"
-    And I should see "50%" in the "Assignment 5" "table_row"
+    And I should see "33%" in the "Assignment 5" "table_row"
     And I should not see "66.7%" in the "Assignment 5" "table_row"
     And I should see "100%" in the "Assignment 6" "table_row"
 
@@ -307,6 +310,7 @@ Feature: Add activity completion widget conditions in dash block
     And I press "Save changes"
     And I open the "Activity completion" block preference
     And I click on "Conditions" "link"
+    And I set the field "config_preferences[filters][current_course][enabled]" to "0"
     And I set the field "config_preferences[filters][parentrole][enabled]" to "1"
     And I set the field "config_preferences[filters][parentrole][roleids][]" to "Parent"
     And I press "Save changes"
@@ -316,7 +320,7 @@ Feature: Add activity completion widget conditions in dash block
     And ".activity-completion-widget" "css_element" should exist
     And I click on "Show chart data" "link"
     And I should see "100%" in the "Assignment 1" "table_row"
-    And I should see "66.7%" in the "Assignment 5" "table_row"
+    And I should see "50%" in the "Assignment 5" "table_row"
     And I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
@@ -329,4 +333,4 @@ Feature: Add activity completion widget conditions in dash block
     And ".activity-completion-widget" "css_element" should exist
     And I click on "Show chart data" "link"
     And I should see "100%" in the "Assignment 1" "table_row"
-    And I should see "50%" in the "Assignment 5" "table_row"
+    And I should see "67%" in the "Assignment 5" "table_row"

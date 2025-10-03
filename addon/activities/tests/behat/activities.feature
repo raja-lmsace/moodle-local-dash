@@ -59,6 +59,8 @@ Feature: Add activities widget in dash block
         | Region | content |
     And I press "Save changes"
     Then I open the "Activities" block preference
+    And I reload the page
+    Then I open the "Activities" block preference
     Then I click on "Fields" "link"
     And I click on "Select all" "button"
     Then I click on "Filters" "link"

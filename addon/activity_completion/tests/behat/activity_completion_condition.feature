@@ -59,6 +59,7 @@ Feature: Add activity completion condition datasource in dash block
       | Block title  | Activity completion |
       | Region       | content   |
     And I press "Save changes"
+    And I reload the page
     And I open the "Activity completion" block preference
     And I click on "Fields" "link"
     And I set the field "Users: First name" to "0"
