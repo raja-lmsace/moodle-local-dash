@@ -99,3 +99,224 @@ Feature: Add activities widget in dash block
     And I should see "Test page 1" in the "Activities" "block"
     And I should see "Test assignment 1" in the "Activities" "block"
     And I should see "Test assignment 2" in the "Activities" "block"
+
+  Scenario: check the activities datasource fields
+    Given I log in as "student1"
+    And ".dash-block-content .dash-table" "css_element" should exist
+    And I should see "Test choice 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    And I should see "Test choice 2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(2)" "css_element"
+    And I should see "Test page 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(2)" "css_element"
+    And I should see "Test assignment 1" in the ".dash-table tbody tr:nth-child(8) td:nth-child(2)" "css_element"
+    # Description
+    And I should see "Test choice 01 description" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    And I should see "Test choice 02 description" in the ".dash-table tbody tr:nth-child(2) td:nth-child(6)" "css_element"
+    And I should see "Test page 01 description" in the ".dash-table tbody tr:nth-child(5) td:nth-child(6)" "css_element"
+    # Id number
+    And I should see "choice1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
+    And I should see "choice2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(7)" "css_element"
+    And I should see "page" in the ".dash-table tbody tr:nth-child(5) td:nth-child(7)" "css_element"
+    And I should see "assign1" in the ".dash-table tbody tr:nth-child(8) td:nth-child(7)" "css_element"
+    # Type
+    And I should see "Activity" in the ".dash-table tbody tr:nth-child(1) td:nth-child(9)" "css_element"
+    And I should see "Resource" in the ".dash-table tbody tr:nth-child(5) td:nth-child(9)" "css_element"
+    And I should see "Activity" in the ".dash-table tbody tr:nth-child(8) td:nth-child(9)" "css_element"
+    # Module Name
+    And I should see "Choice" in the ".dash-table tbody tr:nth-child(1) td:nth-child(10)" "css_element"
+    And I should see "Page" in the ".dash-table tbody tr:nth-child(5) td:nth-child(10)" "css_element"
+    And I should see "Assignment" in the ".dash-table tbody tr:nth-child(8) td:nth-child(10)" "css_element"
+    # Module Image.
+    Then "//table[contains(@class, 'dash-table')]//tr[1]//td[1]//img[contains(@src, 'image.php') and contains(@src, '/boost/choice')]" "xpath_element" should exist
+    Then "//table[contains(@class, 'dash-table')]//tr[5]//td[1]//img[contains(@src, 'image.php') and contains(@src, '/boost/page')]" "xpath_element" should exist
+    Then "//table[contains(@class, 'dash-table')]//tr[8]//td[1]//img[contains(@src, 'image.php') and contains(@src, '/boost/assign')]" "xpath_element" should exist
+    # Purpose.
+    And I should see "Communication" in the ".dash-table tbody tr:nth-child(1) td:nth-child(11)" "css_element"
+    And I should see "Content" in the ".dash-table tbody tr:nth-child(5) td:nth-child(11)" "css_element"
+    And I should see "Assessment" in the ".dash-table tbody tr:nth-child(8) td:nth-child(11)" "css_element"
+    # Completion status.
+    And I should see "Not completed" in the ".dash-table tbody tr:nth-child(1) td:nth-child(12)" "css_element"
+    And I should see "Not completed" in the ".dash-table tbody tr:nth-child(5) td:nth-child(12)" "css_element"
+    And I should see "" in the ".dash-table tbody tr:nth-child(8) td:nth-child(12)" "css_element"
+    # Completion due date.
+    And I should see "##+2day##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(14)" "css_element"
+    And I should see "##+5day##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(5) td:nth-child(14)" "css_element"
+    Then I click on ".dash-table tbody tr:nth-child(1) td:nth-child(5) a" "css_element"
+    Then I should see "Test choice 1"
+    And I press "Mark as done"
+    Then I follow "Dashboard"
+    Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(5) a" "css_element"
+    Then I should see "Test page 1"
+    Then I wait "10" seconds
+    And I press "Mark as done"
+    Then I follow "Dashboard"
+    # check the activity completion or not.
+    And I should see "Completed" in the ".dash-table tbody tr:nth-child(1) td:nth-child(12)" "css_element"
+    And I should see "Completed" in the ".dash-table tbody tr:nth-child(5) td:nth-child(12)" "css_element"
+    # Completion date.
+    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(13)" "css_element"
+    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
+    # Module section.
+    Then I should see "General" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
+    # # Module section link.
+    # Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(15) a" "css_element"
+    # Then I should see "Topic 1"
+    # Then I follow "Dashboard"
+    # Then I click on ".dash-table tbody tr:nth-child(8) td:nth-child(15) a" "css_element"
+    # Then I should see "Topic 2"
+    # Then I follow "Dashboard"
+    # Module path
+    Then I should see "Category 01 / Course 2 / General" in the ".dash-table tbody tr:nth-child(1) td:nth-child(16)" "css_element"
+
+  Scenario: check the activities datasource filters
+    Given I log in as "student1"
+    # Category filter
+    And ".dash-block-content .dash-table" "css_element" should exist
+    Then I click on "select[name='cc_id'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Category 01')]" "xpath_element"
+    And I should not see "Test choice 2" in the "Activities" "block"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should not see "Test choice 3" in the "Activities" "block"
+    Then I click on "select[name='cc_id'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Category 02')]" "xpath_element"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should see "Test choice 3" in the "Activities" "block"
+    And I should not see "Test assignment 1" in the "Activities" "block"
+    Then I reload the page
+
+    # Course filter
+    Then I click on "select[name='c_id'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Course 1')]" "xpath_element"
+    And I should see "Test choice 2" in the "Activities" "block"
+    And I should see "Test page 2" in the "Activities" "block"
+    And I should not see "Test choice 1" in the "Activities" "block"
+    And I should not see "Test choice 3" in the "Activities" "block"
+    Then I click on "select[name='c_id'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Course 2')]" "xpath_element"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should see "Test choice 2" in the "Activities" "block"
+    Then I reload the page
+    # Module filter
+    Then I click on "select[name='m_id'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Choice')]" "xpath_element"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should see "Test choice 2" in the "Activities" "block"
+    Then I click on "select[name='m_id'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Page')]" "xpath_element"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should see "Test page 1" in the "Activities" "block"
+    Then I should not see "Test assign 1" in the "Activities" "block"
+    Then I reload the page
+    # Activity type.
+    Then I click on "select[name='cm_type'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Activity')]" "xpath_element"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should see "Test assignment 1" in the "Activities" "block"
+    And I should not see "Test page 1" in the "Activities" "block"
+    Then I click on "select[name='cm_type'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Resource')]" "xpath_element"
+    And I should see "Test page 1" in the "Activities" "block"
+    And I should see "Test assignment 1" in the "Activities" "block"
+    Then I reload the page
+
+    # Activities tags.
+    Then I click on "select[name='cm_tags'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Tag of Assignment')]" "xpath_element"
+    And I should see "Test assignment 1" in the "Activities" "block"
+    And I should not see "Test page 1" in the "Activities" "block"
+    And I should not see "Test choice 1" in the "Activities" "block"
+    Then I reload the page
+
+    Then I click on "select[name='cm_tags'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Tag of Choice')]" "xpath_element"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should not see "Test assignment 1" in the "Activities" "block"
+    And I should not see "Test page 1" in the "Activities" "block"
+    Then I reload the page
+
+    Then I click on "select[name='cm_tags'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Tag of Page')]" "xpath_element"
+    And I should see "Test page 1" in the "Activities" "block"
+    And I should not see "Test assignment 1" in the "Activities" "block"
+    And I should not see "Test choice 1" in the "Activities" "block"
+    Then I reload the page
+
+    Then I click on "select[name='cm_tags'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Tag of Assignment')]" "xpath_element"
+    Then I click on "select[name='cm_tags'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Tag of Choice')]" "xpath_element"
+    And I should see "Test assignment 1" in the "Activities" "block"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should not see "Test page 1" in the "Activities" "block"
+    Then I reload the page
+    # Module purpose.
+    Then I click on "select[name='cm_purpose'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Communication')]" "xpath_element"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should see "Test choice 2" in the "Activities" "block"
+    And I should not see "Test assignment 1" in the "Activities" "block"
+    And I should not see "Test page 1" in the "Activities" "block"
+    Then I reload the page
+    Then I click on "select[name='cm_purpose'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Content')]" "xpath_element"
+    And I should see "Test page 1" in the "Activities" "block"
+    And I should not see "Test choice 1" in the "Activities" "block"
+    And I should not see "Test assignment 1" in the "Activities" "block"
+    Then I reload the page
+    Then I click on "select[name='cm_purpose'] + span .selection" "css_element"
+    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Assessment')]" "xpath_element"
+    And I should see "Test assignment 1" in the "Activities" "block"
+    And I should not see "Test page 1" in the "Activities" "block"
+    And I should not see "Test choice 1" in the "Activities" "block"
+
+  Scenario: Activities datasource : tags condition
+    Given I log in as "student1"
+    And ".dash-block-content .dash-table" "css_element" should exist
+    And I should see "Test assignment 1" in the "Activities" "block"
+    And I should see "Test page 1" in the "Activities" "block"
+    And I should see "Test choice 1" in the "Activities" "block"
+    Then I log out
+    # Set tag as Tag of choice
+    And I log in as "admin"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    Then I open the "Activities" block preference
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
+    And I click on "Activities tags" "checkbox"
+    And I set the field "Tags" to "Tag of Choice"
+    And I press "Save changes"
+    And I click on "Reset Dashboard for all users" "button"
+    # Tag of choice
+    Given I log in as "student1"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should not see "Test assignment 1" in the "Activities" "block"
+    And I should not see "Test page 1" in the "Activities" "block"
+    Then I log out
+    #Set tag as Tag of Assignment
+    Then I log in as "admin"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    Then I open the "Activities" block preference
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
+    And I set the field "Tags" to "Tag of Assignment"
+    And I press "Save changes"
+    And I click on "Reset Dashboard for all users" "button"
+    # Tag of Assignment
+    Given I log in as "student1"
+    And I should see "Test assignment 1" in the "Activities" "block"
+    And I should not see "Test choice 1" in the "Activities" "block"
+    And I should not see "Test page 1" in the "Activities" "block"
+    Then I log out
+    # Set tag as Tag of choice, Tag of Page
+    Then I log in as "admin"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    Then I open the "Activities" block preference
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
+    And I set the field "Tags" to "Tag of Choice, Tag of Page"
+    And I press "Save changes"
+    And I click on "Reset Dashboard for all users" "button"
+    # Tag of choice
+    Given I log in as "student1"
+    And I should not see "Test assignment 1" in the "Activities" "block"
+    And I should see "Test choice 1" in the "Activities" "block"
+    And I should see "Test page 1" in the "Activities" "block"
+    Then I log out
