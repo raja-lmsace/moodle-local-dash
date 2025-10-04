@@ -58,7 +58,8 @@ Feature: Add activities widget in dash block
     And I press "Save changes"
     And I open the "Activities" blocks action menu
     And I click on "Preferences" "link" in the ".block-controls .dropdown-menu" "css_element"
-    Then I click on "Fields" "link"
+    And I wait "20" seconds
+    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
     Then I click on "Filters" "link"
     Then I set the following fields to these values:
