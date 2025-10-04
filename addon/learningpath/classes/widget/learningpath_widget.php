@@ -184,8 +184,7 @@ class learningpath_widget extends abstract_widget {
      * @return void
      */
     public function build_widget() {
-        global $PAGE;
-        global $DB,$USER;
+        global $PAGE, $DB, $USER;
         $this->data = [];
 
         // Current userid.
@@ -260,107 +259,105 @@ class learningpath_widget extends abstract_widget {
 
         $this->data['detailsarea'] = $this->get_preferences('detailsarea');
         $this->data['showinfo'] = $this->get_preferences('infoarea');
-        
-        //kpi
+
+        // Kpi.
         $this->data['showkpi'] = $this->get_preferences('infoarea');
 
-            
-        $selectedkpi = $this->get_preferences('kpitype'); 
+        $selectedkpi = $this->get_preferences('kpitype');
         $this->data['selectedkpi'] = $selectedkpi;
-        
+
         list($courses, $completedcourses, $nextcourse) = $this->get_possible_completion_courses();
         $totalcourses = count($courses);
 
-        if ($selectedkpi === 'completedcourses') {                    //total course completed
+        if ($selectedkpi === 'completedcourses') {
             $this->data['kpivalue'] = $completedcourses . ' / ' . $totalcourses;
             $this->data['kpilabel'] = get_string('kpi:completedcourses', 'dashaddon_learningpath');
-        }else if ($selectedkpi === 'percentagecompleted') {           //course percentage
+        } else if ($selectedkpi === 'percentagecompleted') {
             $percentage = $totalcourses > 0 ? round(($completedcourses / $totalcourses) * 100) : 0;
             $this->data['kpivalue'] = $percentage . '%';
             $this->data['kpilabel'] = get_string('kpi:percentagecompleted', 'dashaddon_learningpath');
-        }else if ($selectedkpi === 'badges') {                        //badge
+        } else if ($selectedkpi === 'badges') {
             $courseids = array_keys($courses);
             $earnedbadges = 0;
             $totalbadges = 0;
-    
-          if (!empty($courseids)){         
-              list($insql, $inparams) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'course');
 
-              $sql_total = "
-                  SELECT COUNT(DISTINCT b.id)
+            if (!empty($courseids)) {
+                list($insql, $inparams) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'course');
+
+                $sqltotal = "
+                    SELECT COUNT(DISTINCT b.id)
                     FROM {badge} b
                     LEFT JOIN {badge_criteria} bc ON bc.badgeid = b.id
                     LEFT JOIN {badge_criteria_param} bcp ON bcp.critid = bc.id
-                   WHERE (b.courseid $insql) 
-                      OR (b.courseid IS NULL AND bcp.value IN (" . implode(',', $courseids) . "))
-              ";
-    
-              $totalbadges = (int)$DB->count_records_sql($sql_total, $inparams);
+                    WHERE (b.courseid $insql)
+                        OR (b.courseid IS NULL AND bcp.value IN (" . implode(',', $courseids) . "))
+                ";
 
-  
-              $sql_earned = "
-                  SELECT COUNT(DISTINCT b.id)
+                $totalbadges = (int)$DB->count_records_sql($sqltotal, $inparams);
+
+                $sqlearned = "
+                    SELECT COUNT(DISTINCT b.id)
                     FROM {badge} b
                     LEFT JOIN {badge_issued} bi ON bi.badgeid = b.id AND bi.userid = :userid AND bi.visible = 1
                     LEFT JOIN {badge_criteria} bc ON bc.badgeid = b.id
                     LEFT JOIN {badge_criteria_param} bcp ON bcp.critid = bc.id
-                   WHERE bi.id IS NOT NULL
-                     AND ((b.courseid $insql) 
-                      OR (b.courseid IS NULL AND bcp.value IN (" . implode(',', $courseids) . ")))
-              ";
+                    WHERE bi.id IS NOT NULL
+                        AND ((b.courseid $insql)
+                        OR (b.courseid IS NULL AND bcp.value IN (" . implode(',', $courseids) . ")))
+                ";
 
-              $params = array_merge(['userid' => $USER->id], $inparams);
-              $earnedbadges = (int)$DB->get_field_sql($sql_earned, $params);
+                $params = array_merge(['userid' => $USER->id], $inparams);
+                $earnedbadges = (int)$DB->get_field_sql($sqlearned, $params);
             }
 
-              $this->data['kpivalue'] = $earnedbadges . ' / ' . $totalbadges;
-              $this->data['kpilabel'] = get_string('kpi:badges', 'dashaddon_learningpath');
-        } else if ($selectedkpi === 'period'){           //period       
-              $courseids = array_keys($courses);
-              $periodvalue = '';
-          
-              if (!empty($courseids)) {
-                  list($insql, $params) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'course');
-          
-                  $sql = "SELECT
-                              MIN(NULLIF(startdate, 0)) AS earliest_start,
-                              MAX(NULLIF(enddate, 0))   AS latest_end
-                            FROM {course}
-                           WHERE id $insql";
-          
-                  $dates = $DB->get_record_sql($sql, $params);
-          
-                  if ($dates) {
-                      $earliestYear = $dates->earliest_start ? userdate($dates->earliest_start, '%Y') : '';
-                      $latestYear   = $dates->latest_end   ? userdate($dates->latest_end, '%Y') : '';
-          
-                      $earliestMonth = $dates->earliest_start ? userdate($dates->earliest_start, '%b') : '';
-                      $latestMonth   = $dates->latest_end   ? userdate($dates->latest_end, '%b') : '';
-          
-                      if ($earliestYear && $latestYear) {
-                          if ($earliestYear === $latestYear) {
-                              
-                              $periodvalue = $earliestMonth . ' - ' . $latestMonth . ' ' . $earliestYear;
-                            } else {
-                             
-                              $periodvalue = $earliestMonth . ' ' . $earliestYear . ' - ' .
-                                             $latestMonth . ' ' . $latestYear;
-                            }
-                        } else if ($earliestYear) {
-                          $periodvalue = $earliestMonth . ' ' . $earliestYear;
-                        } else if ($latestYear) {
-                                $periodvalue = $latestMonth . ' ' . $latestYear;
+            $this->data['kpivalue'] = $earnedbadges . ' / ' . $totalbadges;
+            $this->data['kpilabel'] = get_string('kpi:badges', 'dashaddon_learningpath');
+        } else if ($selectedkpi === 'period') {
+            $courseids = array_keys($courses);
+            $periodvalue = '';
+
+            if (!empty($courseids)) {
+                list($insql, $params) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'course');
+
+                $sql = "SELECT
+                            MIN(NULLIF(startdate, 0)) AS earliest_start,
+                            MAX(NULLIF(enddate, 0))   AS latest_end
+                        FROM {course}
+                        WHERE id $insql";
+
+                $dates = $DB->get_record_sql($sql, $params);
+
+                if ($dates) {
+                    $earliestyear = $dates->earliest_start ? userdate($dates->earliest_start, '%Y') : '';
+                    $latestyear   = $dates->latest_end   ? userdate($dates->latest_end, '%Y') : '';
+
+                    $earliestMonth = $dates->earliest_start ? userdate($dates->earliest_start, '%b') : '';
+                    $latestMonth   = $dates->latest_end   ? userdate($dates->latest_end, '%b') : '';
+
+                    if ($earliestyear && $latestyear) {
+                        if ($earliestyear === $latestyear) {
+
+                            $periodvalue = $earliestMonth . ' - ' . $latestMonth . ' ' . $earliestyear;
+                        } else {
+
+                            $periodvalue = $earliestMonth . ' ' . $earliestyear . ' - ' .
+                                            $latestMonth . ' ' . $latestyear;
                         }
+                    } else if ($earliestyear) {
+                        $periodvalue = $earliestMonth . ' ' . $earliestyear;
+                    } else if ($latestyear) {
+                            $periodvalue = $latestMonth . ' ' . $latestyear;
                     }
                 }
-                
-                    $this->data['kpivalue'] = $periodvalue;
-                    $this->data['kpilabel'] = get_string('kpi:period', 'dashaddon_learningpath');
-        }else {
-                    $this->data['kpivalue'] = '';
-                    $this->data['kpilabel'] = '';
+            }
+
+            $this->data['kpivalue'] = $periodvalue;
+            $this->data['kpilabel'] = get_string('kpi:period', 'dashaddon_learningpath');
+        } else {
+            $this->data['kpivalue'] = '';
+            $this->data['kpilabel'] = '';
         }
-        
+
         $this->data['showlearningpath'] = count($courses) > 0 ? true : false;
         $stringvar = [
             'completed' => $completedcourses,
@@ -382,12 +379,16 @@ class learningpath_widget extends abstract_widget {
         return $this->data;
     }
 
+    /**
+     * Get the total completed courses count.
+     *
+     * @return int $completedcourses
+     */
     public function get_completed_courses_count() {
         list($courses, $completedcourses) = $this->get_possible_completion_courses();
         return $completedcourses;
     }
 
-    
     /**
      * Generate report for courses that are user enrolled.
      *
@@ -417,13 +418,12 @@ class learningpath_widget extends abstract_widget {
             get_string('coursetags', 'dashaddon_learningpath')));
 
         $filtercollection->add_filter(new course_prerequisites_condition('course_prerequisites', 'c.id'));
-        
+
         $filtercollection->add_filter(new current_course_prerequisites_condition('current_course_prerequisites', 'c.id'));
-        
+
         local_dash_customfield_conditions($filtercollection);
         return $filtercollection;
     }
-
 
     /**
      * Fetch the accessible courses based on the conditions and process the data to create doughnut chart using moodle chart api
@@ -600,26 +600,26 @@ class learningpath_widget extends abstract_widget {
             $mform->addElement('advcheckbox', 'config_preferences[infoarea]',
                 get_string('field:infoarea', 'block_dash'), '', [0, 1]);
             $mform->addHelpButton('config_preferences[infoarea]', 'field:infoarea', 'block_dash');
-            
+
            //kpioptions
             $kpioptions = [
-                null => get_string('none', 'dashaddon_learningpath'), 
+                null => get_string('none', 'dashaddon_learningpath'),
                 'completedcourses' => get_string('kpi:completedcourses', 'dashaddon_learningpath'),
                 'percentagecompleted' => get_string('kpi:percentagecompleted', 'dashaddon_learningpath'),
                 'badges' => get_string('kpi:badges', 'dashaddon_learningpath'),
                 'period' => get_string('kpi:period', 'dashaddon_learningpath'),
             ];
-            
+
             $mform->addElement(
-                'select', // 
+                'select', //
                 'config_preferences[kpitype]',
                 get_string('field:kpitype', 'dashaddon_learningpath'),
                 $kpioptions
             );
 
             $mform->setType('config_preferences[kpitype]', PARAM_TEXT);
-            
-            // Hide dropdown 
+
+            // Hide dropdown
             $mform->hideIf('config_preferences[kpitype]', 'config_preferences[infoarea]', 'notchecked');
 
 
