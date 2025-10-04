@@ -153,9 +153,9 @@ Feature: Dash program to show the list of cohort course
     And I press "Save changes"
     #--student login-- Enable condition 1
     Then I open the "course completion cohort" block preference
-    And I click on "Fields" "link"
+    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I set the field "Course completion: Progress bar (completed / total activities)" to "0"
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I click on "Cohorts" "checkbox"
     And I set the field "config_preferences[filters][cohort][cohorts][]" to "Cohort2"
     And I press "Save changes"
@@ -177,7 +177,7 @@ Feature: Dash program to show the list of cohort course
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn editing mode on
     Then I open the "course completion cohort" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I click on ".select2-selection__clear" "css_element"
     And I set the field "config_preferences[filters][cohort][cohorts][]" to "Cohort1"
     And I press "Save changes"
@@ -196,7 +196,7 @@ Feature: Dash program to show the list of cohort course
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn editing mode on
     Then I open the "course completion cohort" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I click on "Cohorts" "checkbox"
     And I click on "Users in one of my cohorts" "checkbox"
     And I press "Save changes"

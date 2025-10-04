@@ -59,7 +59,7 @@ Feature: Add activities widget in dash block
         | Region | content |
     And I press "Save changes"
     Then I open the "Activities" block preference
-    Then I click on "Fields" "link"
+    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
     Then I click on "Filters" "link"
     Then I set the following fields to these values:
@@ -279,7 +279,7 @@ Feature: Add activities widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     Then I open the "Activities" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I click on "Activities tags" "checkbox"
     And I set the field "Tags" to "Tag of Choice"
     And I press "Save changes"
@@ -295,7 +295,7 @@ Feature: Add activities widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     Then I open the "Activities" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "Tags" to "Tag of Assignment"
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
@@ -310,7 +310,7 @@ Feature: Add activities widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     Then I open the "Activities" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "Tags" to "Tag of Choice, Tag of Page"
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"

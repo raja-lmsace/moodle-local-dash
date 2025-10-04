@@ -54,7 +54,7 @@ Feature: Add activity widget in dash block
     Then I open the "Activities" block preference
     And I reload the page
     Then I open the "Activities" block preference
-    Then I click on "Fields" "link"
+    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
@@ -66,7 +66,7 @@ Feature: Add activity widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     Then I open the "Activities" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I click on "Course categories" "checkbox"
     And I set the field "id_config_preferences_filters_c_course_categories_condition_coursecategories" to "Category 01"
     And I press "Save changes"
@@ -76,7 +76,7 @@ Feature: Add activity widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     Then I open the "Activities" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "id_config_preferences_filters_c_course_categories_condition_coursecategories" to "Category 01, Category 02"
     And I press "Save changes"
     And I should see "Assignment 1"
@@ -86,7 +86,7 @@ Feature: Add activity widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     Then I open the "Activities" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I click on "Include subcategories" "checkbox"
     And I set the field "id_config_preferences_filters_c_course_categories_condition_coursecategories" to "Category 01, Category 02"
     And I press "Save changes"
@@ -100,7 +100,7 @@ Feature: Add activity widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     Then I open the "Activities" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I click on "Courses" "checkbox"
     And I set the field "id_config_preferences_filters_c_course_courseids" to "C1"
     And I press "Save changes"
@@ -109,7 +109,7 @@ Feature: Add activity widget in dash block
     And I should not see "Assignment 2"
     # Course : Course 02
     Then I open the "Activities" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "id_config_preferences_filters_c_course_courseids" to "C1,C2"
     And I press "Save changes"
     And I should see "Assignment 1"

@@ -90,7 +90,7 @@ Feature: Add course completion widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I open the "Course completions" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "My enrolled courses" to "1"
     And I set the field "With role(s)" to "Student"
     And I press "Save changes"
@@ -107,7 +107,7 @@ Feature: Add course completion widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I open the "Course completions" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "config_preferences[filters][coursedates][enabled]" to "1"
     And I set the field "Course dates" to "Past"
     And I press "Save changes"
@@ -122,7 +122,7 @@ Feature: Add course completion widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I open the "Course completions" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I should see "Field 1"
     And I set the field "Field 1" to "1"
     And I set the field with xpath "//input[@name='config_preferences[filters][text][value]']" to "test"

@@ -291,7 +291,7 @@ Feature: Add activity completion datasource in dash block
     And I set the field "User" to "1"
     And I set the field "Course" to "1"
     And I set the field "Activity" to "1"
-    And I click on "Fields" "link"
+    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I set the field "Users: First name" to "0"
     And I set the field "Users: Fullname linked" to "1"
     And I press "Save changes"

@@ -115,7 +115,7 @@ Feature: Dash program to show the list of course categories data
     And I open the "Course Categories" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
-    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue" in the "Edit preferences" "dialogue"
     And I click on "Course categories" "checkbox"
     And I set the field "id_config_preferences_filters_c_course_categories_condition_coursecategories" to "Category 3"
     And I press "Save changes"
@@ -137,7 +137,7 @@ Feature: Dash program to show the list of course categories data
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I open the "Course Categories" block preference
-    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue" in the "Edit preferences" "dialogue"
     And I click on "Include subcategories" "checkbox"
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"

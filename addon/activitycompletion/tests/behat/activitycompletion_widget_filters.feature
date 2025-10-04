@@ -107,7 +107,7 @@ Feature: Add activity completion widget filters in dash block
     And I open the "Activity completion with course sections filter" block preference
     Then I click on "Filters" "link"
     And I set the field "Course sections" to "1"
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "config_preferences[filters][c_course][enabled]" to "1"
     And I set the field "config_preferences[filters][c_course][courseids][]" to "C1"
     And I press "Save changes"

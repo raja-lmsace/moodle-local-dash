@@ -125,7 +125,7 @@ Feature: Add activity completion widget conditions in dash block
       | Region | content |
     And I press "Save changes"
     And I open the "Activity completion" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "config_preferences[filters][current_course][enabled]" to "0"
     And I set the field "config_preferences[filters][c_course][enabled]" to "1"
     And I set the field "config_preferences[filters][c_course][courseids][]" to "C2"
@@ -148,7 +148,7 @@ Feature: Add activity completion widget conditions in dash block
     And I set the field "Block title" to "Activity completion"
     And I press "Save changes"
     And I open the "Activity completion" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "config_preferences[filters][current_course][enabled]" to "1"
     And I press "Save changes"
     And I am on "Course 2" course homepage
@@ -167,7 +167,7 @@ Feature: Add activity completion widget conditions in dash block
     And I set the field "Block title" to "Activity completion"
     And I press "Save changes"
     And I open the "Activity completion" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "config_preferences[filters][current_course][enabled]" to "1"
     And I press "Save changes"
     And I log out
@@ -182,7 +182,7 @@ Feature: Add activity completion widget conditions in dash block
     And I am on "Course 2" course homepage
     And I turn dash block editing mode on
     And I open the "Activity completion" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "config_preferences[filters][group][enabled]" to "1"
     And I press "Save changes"
     And I log out
@@ -203,7 +203,7 @@ Feature: Add activity completion widget conditions in dash block
     And I set the field "Block title" to "Activity completion"
     And I press "Save changes"
     And I open the "Activity completion" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "config_preferences[filters][current_course][enabled]" to "1"
     And I press "Save changes"
     And I log in as "student2"
@@ -216,7 +216,7 @@ Feature: Add activity completion widget conditions in dash block
     And I am on "Course 2" course homepage
     And I turn dash block editing mode on
     And I open the "Activity completion" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "config_preferences[filters][users_mycohort][enabled]" to "1"
     And I press "Save changes"
     And I log in as "student2"
@@ -238,7 +238,7 @@ Feature: Add activity completion widget conditions in dash block
     And I set the field "Block title" to "Activity completion"
     And I press "Save changes"
     And I open the "Activity completion" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "config_preferences[filters][current_course][enabled]" to "1"
     And I set the field "config_preferences[filters][cohort][enabled]" to "1"
     And I set the field "config_preferences[filters][cohort][cohorts][]" to "Cohort2"
@@ -253,7 +253,7 @@ Feature: Add activity completion widget conditions in dash block
     And I am on "Course 2" course homepage
     And I turn dash block editing mode on
     And I open the "Activity completion" block preference
-    Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I set the field "config_preferences[filters][cohort][enabled]" to "0"
     And I press "Save changes"
     And I log in as "student2"
