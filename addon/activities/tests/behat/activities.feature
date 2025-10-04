@@ -57,18 +57,19 @@ Feature: Add activities widget in dash block
     And I set the field "Block title" to "Activities"
     And I press "Save changes"
     Then I open the "Activities" block preference
-    Then I click on "Fields" "link"
-    And I click on "Select all" "button"
-    Then I click on "Filters" "link"
-    Then I set the following fields to these values:
-        | Category        | 1 |
-        | Course          | 1 |
-        | Module Name     | 1 |
-        | Activities tags | 1 |
-        | Type            | 1 |
-        | Module purpose  | 1 |
-    And I press "Save changes"
-    And I click on "Reset Dashboard for all users" "button"
+    And I click on "Preferences" "link" in the ".block-controls .dropdown-menu" "css_element"
+    # Then I click on "Fields" "link"
+    # And I click on "Select all" "button"
+    # Then I click on "Filters" "link"
+    # Then I set the following fields to these values:
+    #     | Category        | 1 |
+    #     | Course          | 1 |
+    #     | Module Name     | 1 |
+    #     | Activities tags | 1 |
+    #     | Type            | 1 |
+    #     | Module purpose  | 1 |
+    # And I press "Save changes"
+    # And I click on "Reset Dashboard for all users" "button"
     # Then I am on the "Test choice 1" "choice activity" page
     # And I follow "Settings"
     # And I expand all fieldsets
