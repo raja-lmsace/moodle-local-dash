@@ -55,7 +55,7 @@ class course_prerequisites_condition extends condition {
         if ($label = parent::get_label()) {
             return $label;
         }
-        return get_string('courseprerequisites', 'dashaddon_learningpath');
+        return get_string('courseprerequisites', 'block_dash');
     }
 
     /**
@@ -124,7 +124,7 @@ class course_prerequisites_condition extends condition {
         $select = $mform->addElement(
             'select',
             $fieldname . '[prerequisitecourses]',
-            get_string('selectprerequisitecourses', 'dashaddon_learningpath'),
+            get_string('selectprerequisitecourses', 'block_dash'),
             $courseoptions,
             ['class' => 'select2-form']
         );

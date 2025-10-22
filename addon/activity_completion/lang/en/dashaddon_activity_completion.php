@@ -49,4 +49,5 @@ $string['tablealias_cm'] = "Activity Completion";
 $string['tablealias_cma'] = 'Action';
 $string['tablealias_cmc'] = "Activity Completion";
 $string['tablealias_cmg'] = 'Activity grade';
+$string['upgradeplugin'] = 'This plugin requires installation of <b> {$a} </b> to enable.';
 $string['viewactivity'] = "View activity";

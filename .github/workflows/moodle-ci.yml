@@ -28,18 +28,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php: "8.2"
+          - php: "8.3"
             moodle-branch: "MOODLE_500_STABLE"
             database: "mariadb"
-          - php: "8.2"
+          - php: "8.3"
             moodle-branch: "MOODLE_500_STABLE"
             database: "pgsql"
-          # - php: "8.2"
-          #   moodle-branch: "MOODLE_405_STABLE"
-          #   database: "mariadb"
-          # - php: "8.2"
-          #   moodle-branch: "MOODLE_405_STABLE"
-          #   database: "pgsql"
+          - php: "8.2"
+            moodle-branch: "MOODLE_405_STABLE"
+            database: "mariadb"
+          - php: "8.2"
+            moodle-branch: "MOODLE_405_STABLE"
+            database: "pgsql"
 
     steps:
       - name: Check out repository code
@@ -63,7 +63,7 @@ jobs:
 
       - name: Install moodle-plugin-ci
         run: |
-          moodle-plugin-ci add-plugin --clone https://github.com/raja-lmsace/moodle-block-dash.git
+          moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-block_dash.git --branch dev
           moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-tool_skills.git --branch dev
           moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-tool_certificate.git --branch MOODLE_400_STABLE
           moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-mod_coursecertificate.git --branch MOODLE_400_STABLE
@@ -79,37 +79,37 @@ jobs:
         if: ${{ always() }}
         run: moodle-plugin-ci phplint
 
-      # - name: PHP Mess Detector
-      #   if: ${{ always() }}
-      #   run: moodle-plugin-ci phpmd
+      - name: PHP Mess Detector
+        if: ${{ always() }}
+        run: moodle-plugin-ci phpmd
 
-      # - name: Moodle Code Checker
-      #   if: ${{ always() }}
-      #   run: moodle-plugin-ci codechecker --max-warnings 0
+      - name: Moodle Code Checker
+        if: ${{ always() }}
+        run: moodle-plugin-ci codechecker --max-warnings 0
 
-      # - name: Moodle PHPDoc Checker
-      #   if: ${{ always() }}
-      #   run: moodle-plugin-ci phpdoc
+      - name: Moodle PHPDoc Checker
+        if: ${{ always() }}
+        run: moodle-plugin-ci phpdoc
 
-      # - name: Validating
-      #   if: ${{ always() }}
-      #   run: moodle-plugin-ci validate
+      - name: Validating
+        if: ${{ always() }}
+        run: moodle-plugin-ci validate
 
-      # - name: Check upgrade savepoints
-      #   if: ${{ always() }}
-      #   run: moodle-plugin-ci savepoints
+      - name: Check upgrade savepoints
+        if: ${{ always() }}
+        run: moodle-plugin-ci savepoints
 
-      # - name: Mustache Lint
-      #   if: ${{ always() }}
-      #   run: moodle-plugin-ci mustache
+      - name: Mustache Lint
+        if: ${{ always() }}
+        run: moodle-plugin-ci mustache
 
-      # - name: Grunt
-      #   if: ${{ always() }}
-      #   run: moodle-plugin-ci grunt
+      - name: Grunt
+        if: ${{ always() }}
+        run: moodle-plugin-ci grunt
 
-      # - name: PHPUnit tests
-      #   if: ${{ always() }}
-      #   run: moodle-plugin-ci phpunit
+      - name: PHPUnit tests
+        if: ${{ always() }}
+        run: moodle-plugin-ci phpunit
 
       - name: Behat features
         if: ${{ always() }}

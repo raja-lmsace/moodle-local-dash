@@ -940,12 +940,14 @@ form fieldset .fitem.fitem_f .felement {
     flex-direction: row-reverse;
     align-items: center;
 }
-.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-left,
+        .block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-left,1
 .block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-right {
     width: 100%;
 }
-.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-left img:not(.icon-responsive),
-.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-right img:not(.icon-responsive) {
+.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card
+.card-footer-left img:not(.icon-responsive),
+.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card
+.card-footer-right img:not(.icon-responsive) {
     max-width: 200px;
 }
 .block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-right img {

@@ -80,7 +80,7 @@ class current_course_prerequisites_condition extends condition {
      * @return string
      */
     public function get_label() {
-        return get_string('currentcourse', 'dashaddon_learningpath');
+        return get_string('currentcourse', 'block_dash');
     }
 }
  

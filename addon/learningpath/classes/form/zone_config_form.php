@@ -1,0 +1,212 @@
+<?php
+// filepath: d:\xampp\htdocs\moodle\moodle-50\local\dash\addon\learningpath\classes\form\zone_config_form.php
+
+namespace dashaddon_learningpath\form;
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->libdir . '/formslib.php');
+
+/**
+ * Zone configuration form.
+ *
+ * @package    dashaddon_learningpath
+ * @copyright  2024
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class zone_config_form extends \moodleform {
+
+    /**
+     * Form definition.
+     */
+    protected function definition() {
+        $mform = $this->_form;
+        $customdata = $this->_customdata;
+
+        $blockid = $customdata['blockid'];
+        $svgs = $customdata['svgs'];
+        $courses = $customdata['courses'];
+
+        // Hidden field for block ID.
+        $mform->addElement('hidden', 'blockid', $blockid);
+        $mform->setType('blockid', PARAM_INT);
+
+        // Create tabs using HTML.
+        if (!empty($svgs)) {
+            $tabshtml = $this->render_tabs($svgs);
+            $mform->addElement('html', $tabshtml);
+
+            // Add form elements for each SVG type.
+            foreach ($svgs as $svg) {
+                $this->add_svg_section($mform, $svg, $courses);
+            }
+
+            // Close tabs HTML.
+            $mform->addElement('html', '</div></div>');
+        }
+    }
+
+    /**
+     * Render tabs HTML.
+     *
+     * @param array $svgs SVG data
+     * @return string HTML for tabs
+     */
+    private function render_tabs($svgs) {
+        $html = '<div class="zone-config-container">';
+        $html .= '<ul class="nav nav-tabs mb-3" role="tablist" id="zone-tabs">';
+
+        foreach ($svgs as $svg) {
+            $active = $svg['first'] ? 'active' : '';
+            $selected = $svg['first'] ? 'true' : 'false';
+            $html .= '<li class="nav-item">';
+            $html .= sprintf(
+                '<a class="nav-link %s" id="%s-tab" data-toggle="tab" href="#%s-content" role="tab" aria-controls="%s-content" aria-selected="%s">%s</a>',
+                $active,
+                $svg['svgtype'],
+                $svg['svgtype'],
+                $svg['svgtype'],
+                $selected,
+                $svg['displayname']
+            );
+            $html .= '</li>';
+        }
+
+        $html .= '</ul>';
+        $html .= '<div class="tab-content">';
+
+        return $html;
+    }
+
+    /**
+     * Add SVG section with zones.
+     *
+     * @param object $mform Form object
+     * @param array $svg SVG data
+     * @param array $courses Available courses
+     */
+    private function add_svg_section($mform, $svg, $courses) {
+        $svgtype = $svg['svgtype'];
+        $active = $svg['first'] ? 'show active' : '';
+
+        // Start tab pane.
+        $html = sprintf(
+            '<div class="tab-pane fade %s" id="%s-content" role="tabpanel" aria-labelledby="%s-tab">',
+            $active,
+            $svgtype,
+            $svgtype
+        );
+        $html .= '<div class="row">';
+
+        // SVG Display Column.
+        $html .= '<div class="col-md-8">';
+        $html .= '<div class="svg-container border p-3">';
+        $html .= '<h5>' . $svg['displayname'] . ' ' . get_string('preview', 'core') . '</h5>';
+        $html .= '<div class="svg-wrapper">';
+        $html .= $svg['svgcontent'];
+        $html .= '</div></div></div>';
+
+        // Zone List Column.
+        $html .= '<div class="col-md-4">';
+        $html .= '<div class="zone-list border p-3">';
+        $html .= '<h5>' . get_string('zones_found', 'block_dash') . ' (' . count($svg['zones']) . ')</h5>';
+
+        $mform->addElement('html', $html);
+
+        // Add form elements for each zone.
+        if (!empty($svg['zones'])) {
+            foreach ($svg['zones'] as $zone) {
+                $this->add_zone_config($mform, $svgtype, $zone, $courses);
+            }
+        } else {
+            $mform->addElement('html', '<div class="alert alert-info">' .
+                get_string('no_zones_found', 'block_dash') . '</div>');
+        }
+
+        // Close zone list and tab pane.
+        $mform->addElement('html', '</div></div></div></div>');
+    }
+
+    /**
+     * Add zone configuration form elements.
+     *
+     * @param object $mform Form object
+     * @param string $svgtype SVG type
+     * @param array $zone Zone data
+     * @param array $courses Available courses
+     */
+    private function add_zone_config($mform, $svgtype, $zone, $courses) {
+        $zoneid = $zone['id'];
+        $prefix = "zone_{$svgtype}_{$zoneid}";
+
+        // Start zone item container.
+        $disabled = !$zone['enabled'] ? 'zone-disabled' : '';
+        $html = sprintf(
+            '<div class="zone-item mb-3 p-2 border-bottom %s" data-zone-id="%s" data-zone-type="%s">',
+            $disabled,
+            $zoneid,
+            $zone['type']
+        );
+
+        // Zone Type.
+        $html .= '<div class="zone-type">';
+        $html .= '<strong>' . get_string('zone_type', 'block_dash') . ':</strong> ';
+        $html .= $zone['typename'];
+        $html .= '</div>';
+
+        // Zone ID.
+        $html .= '<div class="zone-id">';
+        $html .= '<strong>' . get_string('zone_id', 'block_dash') . ':</strong> ';
+        $html .= '<code>' . $zoneid . '</code>';
+        $html .= '</div>';
+
+        $mform->addElement('html', $html);
+
+        // Enable/Disable checkbox.
+        $mform->addElement(
+            'advcheckbox',
+            $prefix . '_enabled',
+            get_string('zone_enabled', 'block_dash'),
+            '',
+            [0, 1]
+        );
+        $mform->setDefault($prefix . '_enabled', $zone['enabled']);
+
+        // Course selection dropdown.
+        $courseoptions = [0 => get_string('none', 'block_dash')];
+        foreach ($courses as $course) {
+            $courseoptions[$course['id']] = $course['fullname'];
+        }
+
+        $mform->addElement(
+            'autocomplete',
+            $prefix . '_courseid',
+            get_string('assign_course', 'block_dash'),
+            $courseoptions
+        );
+        $mform->setDefault($prefix . '_courseid', $zone['courseid'] ?? 0);
+
+        // Hidden field for zone ID.
+        $mform->addElement('hidden', $prefix . '_zoneid', $zoneid);
+        $mform->setType($prefix . '_zoneid', PARAM_TEXT);
+
+        // Hidden field for zone type.
+        $mform->addElement('hidden', $prefix . '_zonetype', $zone['type']);
+        $mform->setType($prefix . '_zonetype', PARAM_TEXT);
+
+        // Close zone item container.
+        $mform->addElement('html', '</div>');
+    }
+
+    /**
+     * Form validation.
+     *
+     * @param array $data Form data
+     * @param array $files Uploaded files
+     * @return array Validation errors
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+        return $errors;
+    }
+}

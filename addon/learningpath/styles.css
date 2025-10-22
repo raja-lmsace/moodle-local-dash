@@ -149,6 +149,117 @@
     }
 }
 
+/* Assignment information in course details */
+.assignment-info-block {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+    border-radius: 4px;
+}
+
+.assignment-info-block .assignment-info-title {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.assignment-info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.assignment-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.assignment-info-item:last-child {
+    border-bottom: none;
+}
+
+.assignment-info-item.assignment-tags-item {
+    /* flex-direction: column; */
+    /* flex-wrap: wrap; */
+    align-items: flex-start;
+}
+.assignment-info-item.assignment-tags-item .assignment-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: right;
+    gap: 5px;
+}
+
+.assignment-info-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.assignment-info-value {
+    font-size: 14px;
+    color: #212529;
+}
+
+.assignment-info-value.assignment-due {
+    font-weight: bold;
+    color: #dc3545;
+}
+
+.assignment-info-value.assignment-type-0 {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.assignment-info-value.assignment-type-1 {
+    color: #6c757d;
+}
+
+.assignment-info-value.assignment-priority {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.assignment-info-value.assignment-priority.priority-low {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.assignment-info-value.assignment-priority.priority-normal {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.assignment-info-value.assignment-priority.priority-high {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.assignment-info-value.assignment-tags {
+    padding: 5px 10px;
+    background-color: #e7f3ff;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #004085;
+}
+
+@media (max-width: 767.98px) {
+    .assignment-info-item {
+        /* flex-direction: column; */
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+
 /* End of Modal course details area */
 
 /* Learning path */
@@ -483,3 +594,664 @@
 }
 
 /* End of Course details */
+
+.learningpath-sidebar {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fff;
+    margin-top: 20px;
+}
+
+/* Default styling when not in sidebar mode */
+.learning-path-widget:not(.sidebar) .learningpath-sidebar {
+    max-width: 500px;
+    width: 100%;
+    margin-top: 30px;
+}
+
+/* Info area and details area - toggle display */
+.learningpath-sidebar .learningpath-info-area,
+.learningpath-sidebar .learningpath-course-details {
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* Course details in sidebar */
+.learningpath-sidebar .learningpath-course-details .details-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+}
+
+.learningpath-sidebar .learningpath-course-details .details-header h5 {
+    margin: 0;
+    flex: 1;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+.learningpath-sidebar .learningpath-course-details .details-back,
+.learningpath-sidebar .learningpath-course-details .details-close {
+    padding: 5px;
+    color: #666;
+    font-size: 18px;
+    line-height: 1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.learningpath-sidebar .learningpath-course-details .details-back:hover,
+.learningpath-sidebar .learningpath-course-details .details-close:hover {
+    color: #333;
+    transform: scale(1.1);
+}
+
+.learningpath-sidebar .learningpath-course-details .details-content {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Adjust grid layout block within sidebar */
+.learningpath-sidebar .details-content .grid-layout-block {
+    margin: 0;
+}
+
+.learningpath-sidebar .details-content .grid-layout {
+    margin-bottom: 15px;
+}
+
+.learningpath-sidebar .details-content .grid-layout .img-block {
+    height: 180px;
+}
+
+.learningpath-sidebar .details-content .pagination {
+    margin-top: 15px;
+}
+/* Sidebar toggle button - positioned within the widget block */
+.learning-path-widget.sidebar .sidebar-toggle {
+    position: absolute;
+    left: 10px;
+    top: 0;
+    z-index: 100;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 10px 12px;
+    transition: all 0.3s ease;
+}
+
+.learning-path-widget.sidebar .sidebar-toggle:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+.learning-path-widget.sidebar .sidebar-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.learning-path-widget.sidebar .sidebar-toggle i {
+    font-size: 18px;
+    color: #ccc;
+}
+
+.learning-path-widget.sidebar .sidebar-toggle.collapsed i::before {
+    content: '\f0c9'; /* fa-bars */
+}
+
+.learning-path-widget.sidebar .sidebar-toggle:not(.collapsed) i::before {
+    content: '\f00d'; /* fa-times */
+}
+
+/* Sidebar layout for learning path widget */
+.learning-path-widget.sidebar {
+    position: relative;
+    padding-top: 50px; /* Space for toggle button */
+}
+
+.learning-path-widget.sidebar .learningpath-sidebar {
+    max-width: 400px;
+    width: 100%;
+    float: left;
+    margin-right: 30px;
+}
+
+.learning-path-widget.sidebar .learningpath-sidebar.collapse:not(.show) {
+    display: none;
+}
+
+.learning-path-widget.sidebar .learning-path-block {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow: hidden; /* Creates new block formatting context */
+    margin-top: 20px;
+}
+
+/* When sidebar is shown, adjust layout */
+.learning-path-widget.sidebar .learningpath-sidebar.collapse.show ~ .learning-path-block {
+    margin-left: 0;
+}
+
+/* Responsive adjustments for sidebar layout */
+@media (max-width: 991px) {
+    .learning-path-widget.sidebar .learningpath-sidebar {
+        float: none;
+        max-width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .learning-path-widget.sidebar .learning-path-block {
+        width: 100%;
+    }
+}
+
+.dash-learning-path .container {
+    display: flex;
+    gap: 50px;
+}
+.dash-learning-path .learningpath-stats-block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.dash-learning-path .learningpath-stats-block .stats-block {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    flex: 1 1 43%;
+}
+.dash-learning-path .learningpath-stats-block .stats-block p span {
+    width: 100%;
+    display: flex;
+}
+.dash-learning-path .learningpath-stats-block .stats-block p b {
+    font-size: 17px;
+}
+
+/* Status KPI colors */
+.dash-learning-path .learningpath-stats-block .stats-block.status-ontrack {
+    background-color: #d4edda;
+    border-left: 4px solid #28a745;
+}
+
+.dash-learning-path .learningpath-stats-block .stats-block.status-ontrack p span {
+    color: #28a745;
+}
+
+.dash-learning-path .learningpath-stats-block .stats-block.status-notontrack {
+    background-color: #f8d7da;
+    /* border-left: 4px solid #dc3545; */
+    box-shadow: 0 2px 8px rgba(17, 181, 106, 0.1);
+}
+
+.dash-learning-path .learningpath-stats-block .stats-block.status-notontrack p span {
+    color: #dc3545;
+}
+
+.dash-learning-path .accordion {
+    margin-top: 30px;
+}
+.dash-learning-path .accordion .accordion-item .accordion-button {
+    width: 100%;
+    font-size: 14px;
+    color: #333;
+    text-align: left;
+    border: 1px solid #eee;
+    background: none;
+}
+.dash-learning-path .accordion .accordion-item .accordion-button + .progress-block {
+    display: none;
+}
+.dash-learning-path .accordion .accordion-item .accordion-button + .progress-block .progress {
+    width: 100%;
+    border-radius: 0;
+    height: 8px;
+    margin-bottom: 2px;
+    background-color: #e9ecef;
+}
+.dash-learning-path .accordion .accordion-item .accordion-button.collapsed + .progress-block {
+    padding: 20px;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+.dash-learning-path .accordion .accordion-collapse .progress-block .progress {
+    margin: 10px 0;
+    height: 25px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+}
+.dash-learning-path .accordion .accordion-collapse.collapse .progress-block,
+.dash-learning-path .accordion .accordion-collapse.collapsing .progress-block {
+    display: none;
+}
+.dash-learning-path .accordion .accordion-collapse.collapse.show .progress-block,
+.dash-learning-path .accordion .accordion-collapse.collapsing.show .progress-block {
+    display: block;
+    padding: 15px;
+}
+.dash-learning-path .accordion .accordion-collapse.collapse .accordion-body {
+    padding: 0;
+}
+
+/* Course progress item styling */
+.dash-learning-path .course-progress-item {
+    margin-bottom: 20px;
+}
+.dash-learning-path .course-progress-item:last-child {
+    margin-bottom: 0;
+}
+.dash-learning-path .course-progress-item .course-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.learningpath-course-completion .progress-bars-preview .progress-mini:has(.course-unavailable),
+.dash-learning-path .course-progress-item .progress .course-unavailable {
+    background-color: var(--secondary, var(--bs-secondary));
+}
+.learningpath-course-completion .progress-bars-preview .progress-mini:has(.course-inprogress),
+.dash-learning-path .course-progress-item .progress .course-inprogress {
+    background-color: var(--warning, var(--bs-warning));
+}
+.learningpath-course-completion .progress-bars-preview .progress-mini:has(.course-completed),
+.dash-learning-path .course-progress-item .progress .course-completed {
+    background-color: var(--success, var(--bs-success));
+}
+.dash-learning-path .course-progress-item .course-name {
+    font-weight: 500;
+    color: #333;
+    text-decoration: none;
+    flex: 1;
+}
+
+.dash-learning-path .course-progress-item .course-name:hover {
+    color: var(--primary, var(--bs-primary));
+}
+
+.dash-learning-path .course-progress-item .course-percentage {
+    font-weight: bold;
+    font-size: 14px;
+    color: #666;
+    margin-left: 10px;
+}
+
+/* Color coding by status */
+.dash-learning-path .course-progress-item.status-completed .course-percentage {
+    color: var(--success, var(--bs-success));
+}
+.dash-learning-path .course-progress-item.status-inprogress .course-percentage {
+    color: var(--warning, var(--bs-warning));
+}
+.dash-learning-path .course-progress-item.status-unavailable .course-percentage {
+    color: var(--secondary, var(--bs-secondary));
+}
+
+.dash-learning-path .course-progress-item.status-notstarted .course-percentage {
+    color: #6c757d;
+}
+
+/* Progress bar colors */
+.dash-learning-path .progressbar {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+}
+.dash-learning-path .progressbar.unavailable {
+    background-color: var(--secondary, var(--bs-secondary));
+}
+.dash-learning-path .progressbar.course-inprogress {
+    background-color: var(--warning, var(--bs-warning));
+}
+.dash-learning-path .progressbar.course-completed {
+    background-color: var(--success, var(--bs-success));
+}
+.dash-learning-path .faculty-block,
+.dash-learning-path .badges-block {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 30px;
+}
+.dash-learning-path .faculty-block ul,
+.dash-learning-path .badges-block ul {
+    padding-left: 0;
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+}
+.dash-learning-path .faculty-block ul li,
+.dash-learning-path .badges-block ul li {
+    /* width: 100%; */
+    text-align: center;
+}
+.dash-learning-path .faculty-block ul li img,
+.dash-learning-path .badges-block ul li img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    object-position: top;
+    overflow-clip-margin: unset;
+    border-radius: 50%;
+    background-color: #f4f4f4;
+}
+
+/* Badge earned/not-earned styles */
+.dash-learning-path .badges-block .badge-item {
+    position: relative;
+    list-style: none;
+    transition: all 0.3s ease;
+}
+
+.dash-learning-path .badges-block .badge-wrapper {
+    position: relative;
+    display: inline-block;
+    transition: all .5s ease;
+}
+.dash-learning-path .badges-block .badge-wrapper:hover img {
+    border: 3px solid var(--primary, var(--bs-primary));
+    transition: all .5s ease;
+}
+
+/* Not earned badges - grayed out */
+.dash-learning-path .badges-block .badge-not-earned img {
+    filter: grayscale(100%);
+    opacity: 0.4;
+}
+
+.dash-learning-path .badges-block .badge-not-earned:hover img {
+    opacity: 0.6;
+}
+
+/* Earned badges - full color with indicator */
+.dash-learning-path .badges-block .badge-earned img {
+    filter: none;
+    opacity: 1;
+    box-shadow: 0 2px 8px rgba(17, 181, 106, 0.3);
+}
+
+.dash-learning-path .badges-block .badge-earned:hover img {
+    transform: scale(1.05);
+}
+
+/* Earned indicator (checkmark) */
+.dash-learning-path .badges-block .badge-earned-indicator {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #11b56a;
+    color: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 2px solid #fff;
+}
+
+.dash-learning-path .badges-block .badge-earned-indicator i {
+    margin: 0;
+}
+
+/* Faculty/Coaches styles */
+.dash-learning-path .faculty-block .faculty-list,
+.dash-learning-path .badges-block .badges-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 0;
+    list-style: none;
+    margin-top: 20px;
+}
+
+.dash-learning-path .faculty-block .faculty-member {
+    list-style: none;
+}
+
+.dash-learning-path .faculty-block .faculty-link {
+    display: block;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.dash-learning-path .faculty-block .faculty-link:hover {
+    transform: translateY(-3px);
+}
+
+.dash-learning-path .faculty-block .faculty-avatar {
+    position: relative;
+}
+
+.dash-learning-path .faculty-block .faculty-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f4f4f4;
+    transition: border-color 0.2s ease;
+}
+
+.dash-learning-path .faculty-block .faculty-link:hover .faculty-picture {
+    border-color: var(--primary, var(--bs-primary));
+}
+
+.dash-learning-path .faculty-block .faculty-name {
+    display: none;
+}
+
+/* Learning path name block */
+.dash-learning-path .learningpath-name-block {
+    margin-top: 20px;
+    padding: 15px;
+    border-bottom: 2px solid #eee;
+}
+
+.dash-learning-path .learningpath-name-block .learningpath-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.dash-learning-path .learningpath-items {
+    width: 100%;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 30px;
+}
+.dash-learning-path .learningpath-items ul {
+    padding-left: 0;
+}
+.dash-learning-path .learningpath-items ul li {
+    width: 70px;
+    height: 70px;
+    color: #fff;
+    border: 3px solid #333;
+    border-radius: 50%;
+    background-color: rgb(4, 4, 48);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.dash-learning-path .learningpath-items ul li:before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+/* Improved Course Completion Section */
+.learningpath-course-completion {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    margin-top: 30px;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.learningpath-course-completion .completion-header {
+    padding: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    user-select: none;
+}
+
+.learningpath-course-completion .completion-header:hover {
+    background-color: #f8f9fa;
+}
+
+.learningpath-course-completion .completion-header .completion-header-top .completion-title-row {
+    margin-bottom: 0;
+}
+.learningpath-course-completion .completion-header.collapsed .completion-header-top {
+    margin-bottom: 15px;
+}
+
+.learningpath-course-completion .completion-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.learningpath-course-completion .completion-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.learningpath-course-completion .collapse-indicator {
+    font-size: 14px;
+    color: #666;
+    transition: transform 0.3s ease;
+}
+
+.learningpath-course-completion .completion-header[aria-expanded="true"] .collapse-indicator {
+    transform: rotate(180deg);
+}
+
+.learningpath-course-completion .completion-period {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.learningpath-course-completion .completion-period .period-label {
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.learningpath-course-completion .completion-period .period-dates {
+    color: #333;
+}
+
+.learningpath-course-completion .completion-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.learningpath-course-completion .completion-status .status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.learningpath-course-completion .completion-status.status-ontrack {
+    background-color: #d4edda;
+    color: #28a745;
+}
+
+.learningpath-course-completion .completion-status.status-ontrack .status-indicator {
+    background-color: #28a745;
+}
+
+.learningpath-course-completion .completion-status.status-notontrack {
+    background-color: #f8d7da;
+    color: #dc3545;
+}
+
+.learningpath-course-completion .completion-status.status-notontrack .status-indicator {
+    background-color: #dc3545;
+}
+
+/* Progress bars preview - colorful mini bars */
+.learningpath-course-completion .progress-bars-preview {
+    display: flex;
+    gap: 3px;
+    margin-top: 12px;
+}
+.learningpath-course-completion .completion-header:not(.collapsed) .progress-bars-preview {
+    display: none;
+}
+.learningpath-course-completion .progress-bars-preview .progress-mini {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: #e9ecef;
+    overflow: hidden;
+}
+
+.learningpath-course-completion .progress-bars-preview .progress-bar {
+    transition: width 0.3s ease;
+}
+
+/* Collapsible body */
+.learningpath-course-completion .completion-body {
+    border-top: 1px solid #eee;
+}
+
+.learningpath-course-completion .completion-details {
+    padding: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .learningpath-course-completion .completion-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .learningpath-course-completion .completion-header {
+        padding: 15px;
+    }
+
+    .learningpath-course-completion .completion-details {
+        padding: 15px;
+    }
+}
