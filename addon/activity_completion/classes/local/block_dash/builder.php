@@ -27,6 +27,7 @@ namespace local\dash\addon\activity_completion\local\block_dash;
  * Custom builder to add two step query to handle large data sets.
  */
 class builder extends \block_dash\local\dash_framework\query_builder\builder {
+
     /**
      * Get number of records this query will return.
      *
@@ -46,7 +47,7 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         $joins = $builder->joins;
         $rawjoins = $builder->rawjoins;
 
-        foreach ($builder->rawjoins as $key => $join) {
+        foreach ( $builder->rawjoins as $key => $join) {
             if (strpos($wheres, $join->get_alias()) === false) {
                 unset($builder->rawjoins[$key]);
             }
@@ -181,8 +182,8 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         $rawjoins = $this->rawjoins;
 
         // Remove the joins and selects which are not used in the where clause.
-        foreach ($this->rawjoins as $key => $join) {
-            if (strpos($wheres, $join->get_alias()) === false && strpos($orderby, $join->get_alias() . '.') === false) {
+        foreach ( $this->rawjoins as $key => $join) {
+            if (strpos($wheres, $join->get_alias()) === false && strpos($orderby, $join->get_alias().'.') === false) {
                 unset($this->rawjoins[$key]);
             }
         }
@@ -270,4 +271,6 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
 
         return $results;
     }
+
 }
+

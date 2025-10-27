@@ -67,6 +67,7 @@ use lang_string;
  * Activities table structure definitions for activities datasource.
  */
 class activities_table extends table {
+
     /**
      * Build a new table.
      */

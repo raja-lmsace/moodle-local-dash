@@ -46,16 +46,13 @@ Feature: Add activity widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I create dash "Activities" datasource
-    And I wait "2" seconds
     Then I configure the "New Dash" block
     And I set the field "Block title" to "Activities"
     And I set the following fields to these values:
       | Region | content |
     And I press "Save changes"
     Then I open the "Activities" block preference
-    And I reload the page
-    Then I open the "Activities" block preference
-    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
+    Then I click on "Fields" "link"
     And I click on "Select all" "button"
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"

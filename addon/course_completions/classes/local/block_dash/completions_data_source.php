@@ -72,6 +72,7 @@ require_once($CFG->dirroot.'/local/dash/lib.php');
  * Completions data source.
  */
 class completions_data_source extends abstract_data_source {
+
     /**
      * Constructor.
      *
@@ -93,13 +94,12 @@ class completions_data_source extends abstract_data_source {
      * @return string
      */
     public function get_query_template(): builder {
+
         $builder = new builder();
         $builder
             ->select('ccp.id', 'ccp_id')
             ->from('course_completions', 'ccp')
             ->join('user', 'u', 'id', 'ccp.userid')
-            ->join('groups_members', 'gm', 'userid', 'u.id', join::TYPE_LEFT_JOIN)
-            ->join('groups', 'g', 'id', 'gm.groupid', join::TYPE_LEFT_JOIN)
             ->join('course', 'c', 'id', 'ccp.course')
             ->join('course_categories', 'cc', 'id', 'c.category')
             ->join('enrol', 'e', 'courseid', 'c.id')
@@ -241,7 +241,7 @@ class completions_data_source extends abstract_data_source {
 
         $compfiltercollection->add_filter(new current_course_condition('c_current_course', 'c.id'));
 
-        $compfiltercollection->add_filter(new my_groups_condition('my_groups', 'gm300.groupid'));
+        $compfiltercollection->add_filter(new my_groups_condition('my_groups', 'gm300.id'));
 
         $compfiltercollection->add_filter(new enrollment_self_condition('self_enrollments', 'e.enrol'));
 

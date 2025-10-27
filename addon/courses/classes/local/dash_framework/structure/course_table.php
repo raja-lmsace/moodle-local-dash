@@ -55,6 +55,7 @@ use block_dash\local\data_grid\field\attribute\course_information_url_attribute;
  * @package dashaddon_courses
  */
 class course_table extends table {
+
     /**
      * Build a new table.
      */
@@ -123,24 +124,21 @@ class course_table extends table {
                 new tags_attribute(['component' => 'core', 'itemtype' => 'course']),
             ]),
 
-            new field('total_activities', new lang_string('totalactivities', 'block_dash'), $this, 'cm100.totalactivities', [],
-            ['supports_sorting' => false], '', null,
+            new field('total_activities', new lang_string('totalactivities', 'block_dash'), $this, 'cm100.totalactivities', [], ['supports_sorting' => false], '', null,
                 new join_raw('SELECT cm.course, COUNT(*) AS totalactivities
                     FROM {course_modules} cm
                     WHERE cm.visible = 1
                     GROUP BY cm.course', 'cm100', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
                 )
             ),
-            new field('users_completed', new lang_string('userscompleted', 'block_dash'), $this, 'ccp100_count.userscompleted', [],
-            ['supports_sorting' => false], '', null,
+            new field('users_completed', new lang_string('userscompleted', 'block_dash'), $this, 'ccp100_count.userscompleted', [], ['supports_sorting' => false], '', null,
                 new join_raw('SELECT ccp.course, COUNT(*) AS userscompleted
                     FROM {course_completions} ccp
                     WHERE ccp.timecompleted > 0
                     GROUP BY ccp.course', 'ccp100_count', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
                 )
             ),
-            new field('users_not_completed', new lang_string('usersnotcompleted', 'block_dash'), $this,
-            'ccp200_count.usersnotcompleted', [], ['supports_sorting' => false], '', null,
+            new field('users_not_completed', new lang_string('usersnotcompleted', 'block_dash'), $this, 'ccp200_count.usersnotcompleted', [], ['supports_sorting' => false], '', null,
                 new join_raw('SELECT ccp.course, COUNT(*) AS usersnotcompleted
                     FROM {course_completions} ccp
                     WHERE ccp.timecompleted IS NULL

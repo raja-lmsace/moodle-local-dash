@@ -30,7 +30,6 @@ $string['activitytype'] = "Type";
 $string['completiondate'] = "Completion date";
 $string['courselink'] = "Course link";
 $string['datasource:activities_data_source'] = 'Activities';
-$string['datasource:activities_data_source_help'] = 'List of Activities information details.';
 $string['modcompletionstatus'] = "Completion status";
 $string['modicon'] = "Module icon";
 $string['modname'] = "Module Name";

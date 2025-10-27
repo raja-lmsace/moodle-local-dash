@@ -44,6 +44,7 @@ use block_dash\local\data_grid\field\attribute\course_information_url_attribute;
  * @package dashaddon_course_completions
  */
 class course_completion_table extends table {
+
     /**
      * Build a new table.
      */
@@ -77,7 +78,7 @@ class course_completion_table extends table {
                     WHERE ccc.criteriatype = 4
                     GROUP BY ccc.course', 'ccc200', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
                 ),
-                true, // Force join even if not visible.
+                true, // Force join even if not visible
             ),
 
             new field('completed_activities', new lang_string('completedactivities', 'block_dash'), $this,

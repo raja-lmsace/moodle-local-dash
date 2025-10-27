@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+
 /**
  * Get user due activies.
  *
@@ -93,6 +94,7 @@ function dashaddon_myprofile_get_mod_user_duedate($mod, $userid, $duestatus = fa
  * Modified from format_designer.
  */
 class cm_completion {
+
     /**
      * @var cm_info
      */
@@ -189,15 +191,16 @@ class cm_completion {
         global $CFG;
         static $result;
 
-        if ($result == null) {
-            if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
-                require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
-                $result = true;
-            } else {
-                $result = false;
+            if ($result == null) {
+                if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
+                    require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
+                    $result = true;
+                } else {
+                    $result = false;
+                }
             }
-        }
 
         return $result;
     }
+
 }

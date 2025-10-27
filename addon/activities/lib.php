@@ -24,6 +24,7 @@
 
 use dashaddon_activities\local\block_dash\data_grid\filter\activity_customfield_condition;
 
+
 /**
  * Checks if the Timetable plugin is installed and enabled.
  *
@@ -33,14 +34,14 @@ function dashaddon_activities_is_timetable_installed() {
     global $CFG;
     static $result;
 
-    if ($result == null) {
-        if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
-            require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
-            $result = true;
-        } else {
-            $result = false;
+        if ($result == null) {
+            if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
+                require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
+                $result = true;
+            } else {
+                $result = false;
+            }
         }
-    }
 
     return $result;
 }

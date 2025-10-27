@@ -1,7 +1,4 @@
 {
-  "subplugintypes": {
-    "dashaddon": "addon"
-  },
   "plugintypes": {
     "dashaddon": "local/dash/addon"
   }

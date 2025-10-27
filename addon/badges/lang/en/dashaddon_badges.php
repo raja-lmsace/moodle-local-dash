@@ -29,7 +29,6 @@ $string['badgeimagelink'] = 'Badge link';
 $string['badgeimageurl'] = 'Badge Image URL';
 $string['badgeurl'] = 'Badge URL';
 $string['datasource:badge_data_source'] = 'Badges';
-$string['datasource:badge_data_source_help'] = 'List of user badge details.';
 $string['dateissued'] = 'Issued date';
 $string['origin'] = 'Origin';
 $string['pluginname'] = 'Data source: Badges';

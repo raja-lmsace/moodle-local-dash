@@ -61,14 +61,14 @@ function dashaddon_activity_completion_is_timetable_installed() {
     global $CFG;
     static $result;
 
-    if ($result == null) {
-        if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
-            require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
-            $result = true;
-        } else {
-            $result = false;
+        if ($result == null) {
+            if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
+                require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
+                $result = true;
+            } else {
+                $result = false;
+            }
         }
-    }
 
     return $result;
 }
@@ -99,6 +99,7 @@ function dashaddon_activity_completion_output_fragment_grade_activity_form($args
  * Set a activity grade form.
  */
 class activitygrade_form extends \moodleform {
+
     /**
      * Add elements to form.
      */

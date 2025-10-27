@@ -272,50 +272,12 @@ function local_dash_get_coursefields() {
             $fields[$field->id] = $field->fullname;
         }
     }
-
     return $fields;
 }
 
-function local_dash_get_custom_coursefields() {
-   $fields = [0 => get_string('choose', 'local_dash')];
-    if (class_exists('\core_course\customfield\course_handler')) {
-        $coursehandler = \core_course\customfield\course_handler::create();
-        foreach ($coursehandler->get_fields() as $customfield) {
-            if ($customfield->get('type') === 'select') { 
-                $fields[$customfield->get('id')] = $customfield->get('name');
-            }
-        }
-    } else {
-        global $DB;
-        foreach ($DB->get_records('course_info_field') as $customfield) {
-            $fields[$customfield->id] = $customfield->fullname;
-        }
-    }
 
-    return $fields;
-}
 
-function local_dash_get_custom_field_options($fieldid) {
-    $options = [0 => get_string('choose', 'local_dash')];
-    if (empty($fieldid)) {
-        return $options;
-    }
-    $field = \core_customfield\field_controller::create($fieldid);
-    if ($field && $field->get('type') === 'select') {
-        $configdata = $field->get_configdata_property('options');
 
-        if (!empty($configdata)) {
-            $lines = explode("\n", trim($configdata));
-            foreach ($lines as $key => $val) {
-                $val = trim($val); 
-                if ($val !== '') { 
-                    $options[$key + 1] = format_string($val); 
-                }
-            }
-        }
-    }
-    return $options;
-}
 
 /**
  * Get card block column class.

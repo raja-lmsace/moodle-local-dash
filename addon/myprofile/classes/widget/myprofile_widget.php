@@ -45,6 +45,7 @@ require_once("$CFG->dirroot/calendar/externallib.php");
  * My profile widget class helps to generate the Key performance indicators of the user and their basic informations.
  */
 class myprofile_widget extends abstract_widget {
+
     /**
      * Key of the cache to store user login streak count.
      *
@@ -405,8 +406,7 @@ class myprofile_widget extends abstract_widget {
                     $lastweek = strtotime('this week');
                     $cmcparams = ['cmcuserid' => $userid, 'cmclastweek' => $lastweek];
 
-                    $sql = new join_raw(
-                            "SELECT DISTINCT userid, count(*) AS completedactivitiesinweek FROM {course_modules_completion}
+                    $sql = new join_raw("SELECT DISTINCT userid, count(*) AS completedactivitiesinweek FROM {course_modules_completion}
                             WHERE timemodified >= :cmclastweek AND userid = :cmcuserid AND completionstate >= 1
                             GROUP BY userid", 'cmc', 'userid', 'u.id', join::TYPE_LEFT_JOIN, $cmcparams);
 
@@ -577,6 +577,7 @@ class myprofile_widget extends abstract_widget {
         return $this->data;
     }
 
+
     /**
      * Check the myprofile contains any data to render.
      *
@@ -737,6 +738,7 @@ class myprofile_widget extends abstract_widget {
         return $usercount;
     }
 
+
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
@@ -768,4 +770,5 @@ class myprofile_widget extends abstract_widget {
 
         return $filtercollection;
     }
+
 }
