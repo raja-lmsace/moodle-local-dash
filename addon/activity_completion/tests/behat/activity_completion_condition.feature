@@ -69,54 +69,54 @@ Feature: Add activity completion condition datasource in dash block
     #---Admin log out---#
     And I log out
 
-  # Scenario: Activity completion datasource: Course
-  #   #---Admin login---#
-  #   And I log in as "admin"
-  #   And I navigate to "Appearance > Default Dashboard page" in site administration
-  #   And I turn dash block editing mode on
-  #   #---Set course in conditions---#
-  #   And I wait until the page is ready
-  #   And I open the "Activity completion" block preference
-  #   And I click on "Conditions" "link"
-  #   And I click on "Courses" "checkbox"
-  #   And I set the field "config_preferences[filters][c_course][courseids][]" to "C1"
-  #   And I press "Save changes"
-  #   And I press "Reset Dashboard for all users"
-  #   #---Check Activities in course for enrolled users---#
-  #   And I follow "Dashboard"
-  #   And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-  #   And I should see "Assignment 1" in the ".block_dash .dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-  #   And I should see "Student 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
-  #   And I should see "Assignment 2" in the ".dash-table tbody tr:nth-child(7) td:nth-child(2)" "css_element"
-  #   And I should see "Student 2" in the ".dash-table tbody tr:nth-child(7) td:nth-child(4)" "css_element"
-  #   And I should see "Student 3" in the ".dash-table tbody tr:nth-child(8) td:nth-child(4)" "css_element"
-  #   #---Admin log out---#
-  #   And I log out
+  Scenario: Activity completion datasource: Course
+    #---Admin login---#
+    And I log in as "admin"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    #---Set course in conditions---#
+    And I wait until the page is ready
+    And I open the "Activity completion" block preference
+    And I click on "Conditions" "link"
+    And I click on "Courses" "checkbox"
+    And I set the field "config_preferences[filters][c_course][courseids][]" to "C1"
+    And I press "Save changes"
+    And I press "Reset Dashboard for all users"
+    #---Check Activities in course for enrolled users---#
+    And I follow "Dashboard"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "Assignment 1" in the ".block_dash .dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    And I should see "Student 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
+    And I should see "Assignment 2" in the ".dash-table tbody tr:nth-child(7) td:nth-child(2)" "css_element"
+    And I should see "Student 2" in the ".dash-table tbody tr:nth-child(7) td:nth-child(4)" "css_element"
+    And I should see "Student 3" in the ".dash-table tbody tr:nth-child(8) td:nth-child(4)" "css_element"
+    #---Admin log out---#
+    And I log out
 
-  # Scenario Outline: Activity completion: Course date
-  #   #---Admin login---#
-  #   And I log in as "admin"
-  #   And I navigate to "Appearance > Default Dashboard page" in site administration
-  #   And I turn dash block editing mode on
-  #   #---Set course in conditions---#
-  #   And I open the "Activity completion" block preference
-  #   And I click on "Conditions" "link"
-  #   And I click on "Course dates" "checkbox"
-  #   And I set the field "config_preferences[filters][c_coursedates][coursedates][]" to "<coursedate>"
-  #   And I click on "Fields" "link"
-  #   And I set the field "Course: Short name" to "1"
-  #   And I set the field "Per page" to "30"
-  #   And I press "Save changes"
-  #   And I press "Reset Dashboard for all users"
-  #   #---Check Activities course dates---#
-  #   And I follow "Dashboard"
-  #   And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-  #   And I should see "<name>" in the ".dash-table tbody tr:nth-child(<Nrow>) td:nth-child(4)" "css_element"
-  #   And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(2)" "css_element"
-  #   And I should see "<course>" in the ".dash-table tbody tr:nth-child(<Crow>) td:nth-child(5)" "css_element"
-  #   Examples:
-  #     | coursedate | name 		 | Nrow | activity 		 | Arow | course | Crow |
-  #     | past 		 	 | Student 2 | 21		| Assignment 5 | 21 	| C4 		 | 21 	|
+  Scenario Outline: Activity completion: Course date
+    #---Admin login---#
+    And I log in as "admin"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    #---Set course in conditions---#
+    And I open the "Activity completion" block preference
+    And I click on "Conditions" "link"
+    And I click on "Course dates" "checkbox"
+    And I set the field "config_preferences[filters][c_coursedates][coursedates][]" to "<coursedate>"
+    And I click on "Fields" "link"
+    And I set the field "Course: Short name" to "1"
+    And I set the field "Per page" to "30"
+    And I press "Save changes"
+    And I press "Reset Dashboard for all users"
+    #---Check Activities course dates---#
+    And I follow "Dashboard"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "<name>" in the ".dash-table tbody tr:nth-child(<Nrow>) td:nth-child(4)" "css_element"
+    And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(2)" "css_element"
+    And I should see "<course>" in the ".dash-table tbody tr:nth-child(<Crow>) td:nth-child(5)" "css_element"
+    Examples:
+      | coursedate | name 		 | Nrow | activity 		 | Arow | course | Crow |
+      | past 		 	 | Student 2 | 21		| Assignment 5 | 21 	| C4 		 | 21 	|
 
   Scenario Outline: Activity completion: Course future date
     #---Admin login---#
@@ -179,174 +179,174 @@ Feature: Add activity completion condition datasource in dash block
       | notcompleted | Student 2 | 7 	  | Assignment 2 | 8  	| C1 		 | 7 	  |
       | notcompleted | Student 3 | 9    | Assignment 2 | 9 	  | C1 	 	 | 9 	  |
 
-  # Scenario: Activity completion datasource:User I manage
-  #   #---Admin login---#
-  #   Given I log in as "admin"
-  #   And I navigate to "Users > Permissions > Define roles" in site administration
-  #   And I click on "Add a new role" "button"
-  #   #And I wait until the page is ready
-  #   And I click on "Continue" "button"
-  #   #And I wait until the page is ready
-  #   #---Create new parent role---#
-  #   And I set the following fields to these values:
-  #     | Short name                              | Parent |
-  #     | Custom full name                        | Parent |
-  #     | contextlevel30                          | 1      |
-  #     | moodle/user:viewdetails                 | 1      |
-  #     | moodle/user:viewalldetails              | 1      |
-  #     | moodle/user:readuserblogs               | 1      |
-  #     | moodle/user:readuserposts               | 1      |
-  #     | moodle/user:viewuseractivitiesreport    | 1      |
-  #     | moodle/user:editprofile                 | 1      |
-  #     | tool/policy:acceptbehalf                | 1      |
-  #     | dashaddon/activity_completion:editgrade | 1      |
-  #   And I click on "Create this role" "button"
-  #   And I follow "Dashboard"
-  #   #---Assign parent to child---#
-  #   And I am on the "student1" "user > profile" page
-  #   And I click on "Preferences" "link" in the ".profile_tree" "css_element"
-  #   And I follow "Assign roles relative to this user"
-  #   And I follow "Parent"
-  #   And I set the field "addselect" to "parent 1 (student1@example.com)"
-  #   And I click on "Add" "button" in the "#page-content" "css_element"
-  #   #---Condition setting---#
-  #   And I navigate to "Appearance > Default Dashboard page" in site administration
-  #   And I turn dash block editing mode on
-  #   #---Set User i manage in conditions---#
-  #   And I open the "Activity completion" block preference
-  #   And I click on "Conditions" "link"
-  #   And I set the field "config_preferences[filters][parentrole][enabled]" to "1"
-  #   And I press "Save changes"
-  #   And I press "Reset Dashboard for all users"
-  #   #---Check parent and child users---#
-  #   And I follow "Dashboard"
-  #   And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-  #   #---Admin log out---#
-  #   And I log out
-  #   #---Parent login---#
-  #   And I log in as "parent"
-  #   And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-  #   And I should see "Student 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
+  Scenario: Activity completion datasource:User I manage
+    #---Admin login---#
+    Given I log in as "admin"
+    And I navigate to "Users > Permissions > Define roles" in site administration
+    And I click on "Add a new role" "button"
+    #And I wait until the page is ready
+    And I click on "Continue" "button"
+    #And I wait until the page is ready
+    #---Create new parent role---#
+    And I set the following fields to these values:
+      | Short name                              | Parent |
+      | Custom full name                        | Parent |
+      | contextlevel30                          | 1      |
+      | moodle/user:viewdetails                 | 1      |
+      | moodle/user:viewalldetails              | 1      |
+      | moodle/user:readuserblogs               | 1      |
+      | moodle/user:readuserposts               | 1      |
+      | moodle/user:viewuseractivitiesreport    | 1      |
+      | moodle/user:editprofile                 | 1      |
+      | tool/policy:acceptbehalf                | 1      |
+      | dashaddon/activity_completion:editgrade | 1      |
+    And I click on "Create this role" "button"
+    And I follow "Dashboard"
+    #---Assign parent to child---#
+    And I am on the "student1" "user > profile" page
+    And I click on "Preferences" "link" in the ".profile_tree" "css_element"
+    And I follow "Assign roles relative to this user"
+    And I follow "Parent"
+    And I set the field "addselect" to "parent 1 (student1@example.com)"
+    And I click on "Add" "button" in the "#page-content" "css_element"
+    #---Condition setting---#
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    #---Set User i manage in conditions---#
+    And I open the "Activity completion" block preference
+    And I click on "Conditions" "link"
+    And I set the field "config_preferences[filters][parentrole][enabled]" to "1"
+    And I press "Save changes"
+    And I press "Reset Dashboard for all users"
+    #---Check parent and child users---#
+    And I follow "Dashboard"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    #---Admin log out---#
+    And I log out
+    #---Parent login---#
+    And I log in as "parent"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "Student 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
 
-  # Scenario: Activity completion datasource:Current user
-  # 	#---Admin login---#
-  #   And I log in as "admin"
-  #   And I navigate to "Appearance > Default Dashboard page" in site administration
-  #   And I turn dash block editing mode on
-  #   #---Set course in conditions---#
-  #   And I open the "Activity completion" block preference
-  #   And I click on "Conditions" "link"
-  #   And I set the field "config_preferences[filters][current_user][enabled]" to "1"
-  #   And I press "Save changes"
-  #   And I press "Reset Dashboard for all users"
-  #   #---Check Current users in each activites---#
-  #   And I follow "Dashboard"
-  #   And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-  #   And I should not see "Student 1" in the ".dash-table" "css_element"
-  #   #---Admin log out---#
-  #   And I log out
-  #   #---student log in---#
-  #   And I log in as "student1"
-  #   And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-  #   And I should see "Student 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
+  Scenario: Activity completion datasource:Current user
+  	#---Admin login---#
+    And I log in as "admin"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    #---Set course in conditions---#
+    And I open the "Activity completion" block preference
+    And I click on "Conditions" "link"
+    And I set the field "config_preferences[filters][current_user][enabled]" to "1"
+    And I press "Save changes"
+    And I press "Reset Dashboard for all users"
+    #---Check Current users in each activites---#
+    And I follow "Dashboard"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should not see "Student 1" in the ".dash-table" "css_element"
+    #---Admin log out---#
+    And I log out
+    #---student log in---#
+    And I log in as "student1"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "Student 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
 
-  # Scenario Outline: Activity completion datasource:Module name
-  #   Given the following "activities" exist:
-  #     | activity | name   | course  | idnumber | intro             | section |
-  #     | book   	 | Book 	| C1      | book   	 | Welcome to book   | 1       |
-  #     | choice   | Choice | C1      | choice   | Welcome to choice | 1       |
-  #     | forum 	 | Forum 	| C1 			| forum 	 | Welcome to forum  | 1 			 |
-  #   #---Admin login---#
-  #   And I log in as "<user>"
-  #   And I navigate to "Appearance > Default Dashboard page" in site administration
-  #   And I turn dash block editing mode on
-  #   #---Set course in conditions---#
-  #   And I open the "Activity completion" block preference
-  #   And I click on "Conditions" "link"
-  #   And I set the field "config_preferences[filters][modulename][enabled]" to "1"
-  #   And I set the field "config_preferences[filters][modulename][modules][]" to "<id>"
-  #   And I press "Save changes"
-  #   And I press "Reset Dashboard for all users"
-  #   #---Admin log out---#
-  #   And I log out
-  #   And I log in as "<user1>"
-  #   #---Check Activities name list---#
-  #   And I follow "Dashboard"
-  #   And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-  #   And I should see "<activity1>" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-  #   And I log out
-  #   Examples:
-  #     | user  | user1 	 | activity1 	  | id      |
-  #     | admin | student1 | Assignment 1 | assign  |
-  #     | admin | student1 | Book 		  	| book    |
-  #     | admin | student2 | Forum 				| forum   |
+  Scenario Outline: Activity completion datasource:Module name
+    Given the following "activities" exist:
+      | activity | name   | course  | idnumber | intro             | section |
+      | book   	 | Book 	| C1      | book   	 | Welcome to book   | 1       |
+      | choice   | Choice | C1      | choice   | Welcome to choice | 1       |
+      | forum 	 | Forum 	| C1 			| forum 	 | Welcome to forum  | 1 			 |
+    #---Admin login---#
+    And I log in as "<user>"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    #---Set course in conditions---#
+    And I open the "Activity completion" block preference
+    And I click on "Conditions" "link"
+    And I set the field "config_preferences[filters][modulename][enabled]" to "1"
+    And I set the field "config_preferences[filters][modulename][modules][]" to "<id>"
+    And I press "Save changes"
+    And I press "Reset Dashboard for all users"
+    #---Admin log out---#
+    And I log out
+    And I log in as "<user1>"
+    #---Check Activities name list---#
+    And I follow "Dashboard"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "<activity1>" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    And I log out
+    Examples:
+      | user  | user1 	 | activity1 	  | id      |
+      | admin | student1 | Assignment 1 | assign  |
+      | admin | student1 | Book 		  	| book    |
+      | admin | student2 | Forum 				| forum   |
 
-  # Scenario Outline: Activity completion datasource:Cohorts condition
-  #   And the following "cohorts" exist:
-  #     | name    | idnumber  |
-  #     | Cohort1 | cohortid1 |
-  #     | Cohort2 | cohortid2 |
-  #   And the following "cohort members" exist:
-  #     | user     | cohort    |
-  #     | student1 | cohortid1 |
-  #     | teacher1 | cohortid1 |
-  #     | student2 | cohortid2 |
-  #     | teacher2 | cohortid2 |
-  #   #---Admin login---#
-  #   And I log in as "<user>"
-  #   And I navigate to "Appearance > Default Dashboard page" in site administration
-  #   And I turn dash block editing mode on
-  #   #---Set course in conditions---#
-  #   And I open the "Activity completion" block preference
-  #   And I click on "Conditions" "link"
-  #   And I set the field "config_preferences[filters][cohort][enabled]" to "1"
-  #   And I set the field "config_preferences[filters][cohort][cohorts][]" to "<cohorts>"
-  #   And I press "Save changes"
-  #   And I press "Reset Dashboard for all users"
-  #   #---Admin log out---#
-  #   And I log out
-  #   And I log in as "<loguser>"
-  #   #---Check Cohort members---#
-  #   And I follow "Dashboard"
-  #   And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-  #   And I should see "<user1>" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
-  #   And I should see "<user2>" in the ".dash-table tbody tr:nth-child(6) td:nth-child(4)" "css_element"
-  #   Examples:
-  #     | user  | cohorts | loguser  | user1 		 | user2  	 |
-  #     | admin | Cohort1 | student1 | Student 1 | teacher 1 |
-  #     | admin | Cohort2 | student2 | Student 2 | teacher 2 |
+  Scenario Outline: Activity completion datasource:Cohorts condition
+    And the following "cohorts" exist:
+      | name    | idnumber  |
+      | Cohort1 | cohortid1 |
+      | Cohort2 | cohortid2 |
+    And the following "cohort members" exist:
+      | user     | cohort    |
+      | student1 | cohortid1 |
+      | teacher1 | cohortid1 |
+      | student2 | cohortid2 |
+      | teacher2 | cohortid2 |
+    #---Admin login---#
+    And I log in as "<user>"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    #---Set course in conditions---#
+    And I open the "Activity completion" block preference
+    And I click on "Conditions" "link"
+    And I set the field "config_preferences[filters][cohort][enabled]" to "1"
+    And I set the field "config_preferences[filters][cohort][cohorts][]" to "<cohorts>"
+    And I press "Save changes"
+    And I press "Reset Dashboard for all users"
+    #---Admin log out---#
+    And I log out
+    And I log in as "<loguser>"
+    #---Check Cohort members---#
+    And I follow "Dashboard"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "<user1>" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
+    And I should see "<user2>" in the ".dash-table tbody tr:nth-child(6) td:nth-child(4)" "css_element"
+    Examples:
+      | user  | cohorts | loguser  | user1 		 | user2  	 |
+      | admin | Cohort1 | student1 | Student 1 | teacher 1 |
+      | admin | Cohort2 | student2 | Student 2 | teacher 2 |
 
-  # Scenario Outline: Activity completion datasource:Members of my cohort(s) only
-  #   And the following "cohorts" exist:
-  #     | name    | idnumber  |
-  #     | Cohort1 | cohortid1 |
-  #     | Cohort2 | cohortid2 |
-  #   And the following "cohort members" exist:
-  #     | user     | cohort    |
-  #     | student1 | cohortid1 |
-  #     | teacher1 | cohortid1 |
-  #     | student2 | cohortid2 |
-  #     | teacher2 | cohortid2 |
-  #   #---Admin login---#
-  #   And I log in as "<user>"
-  #   And I navigate to "Appearance > Default Dashboard page" in site administration
-  #   And I turn dash block editing mode on
-  #   #---Set course in conditions---#
-  #   And I open the "Activity completion" block preference
-  #   And I click on "Conditions" "link"
-  #   And I set the field "config_preferences[filters][users_mycohort][enabled]" to "1"
-  #   And I press "Save changes"
-  #   And I press "Reset Dashboard for all users"
-  #   #---Admin log out---#
-  #   And I log out
-  #   And I log in as "<loguser>"
-  #   #---Check Cohort members---#
-  #   And I follow "Dashboard"
-  #   And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-  #   And I should see "<user1>" in the ".dash-table tbody tr:nth-child(<tr1>) td:nth-child(4)" "css_element"
-  #   And I should see "<user2>" in the ".dash-table tbody tr:nth-child(<tr2>) td:nth-child(4)" "css_element"
-  #   Examples:
-  #     | user  | cohorts | loguser  | user1 		 | user2  	 | tr1 | tr2 |
-  #     | admin | Cohort1 | student1 | Student 1 | teacher 1 | 1 	 | 5 	 |
-  #     | admin | Cohort2 | student2 | Student 2 | teacher 2 | 1	 | 6 	 |
-  #     | admin | Cohort2 | teacher1 | Student 1 | teacher 1 | 1 	 | 5 	 |
+  Scenario Outline: Activity completion datasource:Members of my cohort(s) only
+    And the following "cohorts" exist:
+      | name    | idnumber  |
+      | Cohort1 | cohortid1 |
+      | Cohort2 | cohortid2 |
+    And the following "cohort members" exist:
+      | user     | cohort    |
+      | student1 | cohortid1 |
+      | teacher1 | cohortid1 |
+      | student2 | cohortid2 |
+      | teacher2 | cohortid2 |
+    #---Admin login---#
+    And I log in as "<user>"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    #---Set course in conditions---#
+    And I open the "Activity completion" block preference
+    And I click on "Conditions" "link"
+    And I set the field "config_preferences[filters][users_mycohort][enabled]" to "1"
+    And I press "Save changes"
+    And I press "Reset Dashboard for all users"
+    #---Admin log out---#
+    And I log out
+    And I log in as "<loguser>"
+    #---Check Cohort members---#
+    And I follow "Dashboard"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "<user1>" in the ".dash-table tbody tr:nth-child(<tr1>) td:nth-child(4)" "css_element"
+    And I should see "<user2>" in the ".dash-table tbody tr:nth-child(<tr2>) td:nth-child(4)" "css_element"
+    Examples:
+      | user  | cohorts | loguser  | user1 		 | user2  	 | tr1 | tr2 |
+      | admin | Cohort1 | student1 | Student 1 | teacher 1 | 1 	 | 5 	 |
+      | admin | Cohort2 | student2 | Student 2 | teacher 2 | 1	 | 6 	 |
+      | admin | Cohort2 | teacher1 | Student 1 | teacher 1 | 1 	 | 5 	 |
