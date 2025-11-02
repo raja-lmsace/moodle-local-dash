@@ -113,10 +113,19 @@ class zone_config_form extends \moodleform {
 
         $mform->addElement('html', $html);
 
+        // Group zones by parent groups
+        $groupedzones = $this->group_zones_by_parent($svg['zones']);
+
         // Add form elements for each zone.
-        if (!empty($svg['zones'])) {
-            foreach ($svg['zones'] as $zone) {
-                $this->add_zone_config($mform, $svgtype, $zone, $courses);
+        if (!empty($groupedzones)) {
+            foreach ($groupedzones as $item) {
+                if ($item['isgroup']) {
+                    // This is a group with children
+                    $this->add_group_zone($mform, $svgtype, $item, $courses);
+                } else {
+                    // This is a standalone zone
+                    $this->add_zone_config($mform, $svgtype, $item['zone'], $courses, false);
+                }
             }
         } else {
             $mform->addElement('html', '<div class="alert alert-info">' .
@@ -128,22 +137,118 @@ class zone_config_form extends \moodleform {
     }
 
     /**
+     * Group zones by parent groups
+     *
+     * @param array $zones All zones
+     * @return array Grouped zones
+     */
+    private function group_zones_by_parent($zones) {
+        $result = [];
+        $currentgroup = null;
+        //print_r($zones);
+        foreach ($zones as $zone) {
+            if ($zone['zonetype'] == 'g') {
+                // If there was a previous group, add it to results first
+                if ($currentgroup !== null) {
+                    $result[] = $currentgroup;
+                }
+
+                // Start a new group
+                $currentgroup = [
+                    'isgroup' => true,
+                    'groupzone' => $zone,
+                    'children' => []
+                ];
+            } else {
+                // Regular zone (not a group)
+                if ($currentgroup !== null) {
+                    // Add to current group as a child
+                    $currentgroup['children'][] = $zone;
+                } else {
+                    // Standalone zone (not in a group)
+                    $result[] = [
+                        'isgroup' => false,
+                        'zone' => $zone
+                    ];
+                }
+            }
+        }
+
+        // Add the last group if exists
+        if ($currentgroup !== null) {
+            $result[] = $currentgroup;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Add group zone with children
+     *
+     * @param object $mform Form object
+     * @param string $svgtype SVG type
+     * @param array $groupitem Group item with children
+     * @param array $courses Available courses
+     */
+    private function add_group_zone($mform, $svgtype, $groupitem, $courses) {
+        $groupzone = $groupitem['groupzone'];
+        $children = $groupitem['children'];
+
+        // Group header HTML - NO FORM FIELDS FOR THE GROUP ITSELF.
+        $html = '<div class="zone-group mb-4 p-3" style="background-color: #f8f9fa; border-left: 4px solid #007bff;">';
+        $html .= '<div class="zone-group-header mb-2">';
+        $html .= '<h6 class="mb-1"><i class="fa fa-folder-open"></i> ';
+        $html .= '<strong>' . get_string('zone_type_group', 'block_dash') . '</strong>';
+        $html .= '</h6>';
+        $html .= '<small class="text-muted">';
+        $html .= get_string('zone_id', 'block_dash') . ': <code>' . $groupzone['id'] . '</code>';
+        $html .= '</small>';
+        $html .= '</div>';
+
+        $mform->addElement('html', $html);
+
+        // Add each child zone with form fields.
+        if (!empty($children)) {
+            $html = '<div class="zone-group-children pl-3">';
+            $mform->addElement('html', $html);
+
+            foreach ($children as $childzone) {
+                $this->add_zone_config($mform, $svgtype, $childzone, $courses, true);
+            }
+
+            $mform->addElement('html', '</div>');
+        } else {
+            // No children in group.
+            $html = '<div class="alert alert-warning ml-3">';
+            $html .= get_string('group_no_children', 'block_dash');
+            $html .= '</div>';
+            $mform->addElement('html', $html);
+        }
+
+        // Close group container.
+        $mform->addElement('html', '</div>');
+    }
+
+    /**
      * Add zone configuration form elements.
      *
      * @param object $mform Form object
      * @param string $svgtype SVG type
      * @param array $zone Zone data
      * @param array $courses Available courses
+     * @param bool $isgroupchild Whether this zone is inside a group
      */
-    private function add_zone_config($mform, $svgtype, $zone, $courses) {
+    private function add_zone_config($mform, $svgtype, $zone, $courses, $isgroupchild = false) {
         $zoneid = $zone['id'];
-        $prefix = "zone_{$svgtype}_{$zoneid}";
 
+        $prefix = $zoneid;
         // Start zone item container.
         $disabled = !$zone['enabled'] ? 'zone-disabled' : '';
+        $childclass = $isgroupchild ? 'zone-group-child' : '';
         $html = sprintf(
-            '<div class="zone-item mb-3 p-2 border-bottom %s" data-zone-id="%s" data-zone-type="%s">',
+            '<div class="zone-item mb-3 p-2 border-bottom %s %s" data-zone-id="%s" data-zone-type="%s">',
             $disabled,
+            $childclass,
             $zoneid,
             $zone['type']
         );
@@ -168,6 +273,7 @@ class zone_config_form extends \moodleform {
             $prefix . '_enabled',
             get_string('zone_enabled', 'block_dash'),
             '',
+            ['group' => 1],
             [0, 1]
         );
         $mform->setDefault($prefix . '_enabled', $zone['enabled']);
@@ -191,7 +297,7 @@ class zone_config_form extends \moodleform {
         $mform->setType($prefix . '_zoneid', PARAM_TEXT);
 
         // Hidden field for zone type.
-        $mform->addElement('hidden', $prefix . '_zonetype', $zone['type']);
+        $mform->addElement('hidden', $prefix . '_zonetype', $zone['zonetype']);
         $mform->setType($prefix . '_zonetype', PARAM_TEXT);
 
         // Close zone item container.

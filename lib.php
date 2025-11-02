@@ -89,20 +89,6 @@ function local_dash_register_widgets() {
     return [];
 }
 
-/**
- * Get icon mapping for font-awesome.
- *
- * @return array
- */
-function local_dash_get_fontawesome_icon_map() {
-    return [
-        'local_dash:completed' => 'fa-check',
-        'local_dash:viewed' => 'fa-eye',
-        'local_dash:default' => 'fa-bell',
-        'local_dash:updated' => 'fa-pencil',
-        'local_dash:deleted' => 'fa-trash',
-    ];
-}
 
 /**
  * Dash plugin file definitions, List of fileareas used in local_dash plugin.
@@ -307,9 +293,9 @@ function local_dash_get_custom_field_options($fieldid) {
         if (!empty($configdata)) {
             $lines = explode("\n", trim($configdata));
             foreach ($lines as $key => $val) {
-                $val = trim($val); 
-                if ($val !== '') { 
-                    $options[$key + 1] = format_string($val); 
+                $val = trim($val);
+                if ($val !== '') {
+                    $options[$key + 1] = format_string($val);
                 }
             }
         }
@@ -423,4 +409,212 @@ function local_dash_upgrade_blocks_data_source_idnumber() {
         }
     }
     return true;
+}
+
+
+
+/**
+ * Helper function to build the map of FA icons to be used in the smart menu item icon autocomplete setting.
+ * It returns both the Moodle core icon mappings and all other available FontAwesome icons.
+ *
+ * @return array An array which holds the full icon map.
+ */
+function local_dash_build_fa_icon_map() {
+    global $CFG, $PAGE;
+    // Check if we have the icon map in the cache.
+    $cache = \cache::make('local_dash', 'fontawesomeicons');
+    $iconmap = $cache->get('iconmap');
+
+    // If the icon map is already in the cache, return it.
+    if ($iconmap !== false) {
+        return $iconmap;
+    }
+
+    // Initialize icon map if not in cache.
+    $iconmap = [];
+
+    // Step 1: Get all Moodle core icon mappings.
+
+    // Load the theme config.
+    $theme = \core\output\theme_config::load($PAGE->theme->name);
+
+    // Get the FA system.
+    $faiconsystem = \core\output\icon_system_fontawesome::instance($theme->get_icon_system());
+
+    // Get the raw icon map.
+    $iconmapraw = $faiconsystem->get_core_icon_map();
+
+    // Iterate over the raw icon map.
+    foreach ($iconmapraw as $iconname => $faname) {
+        // Fill the icon into the icon list.
+        $iconmap[$iconname] = [
+            'class' => $faname,
+            'source' => 'core',
+        ];
+    }
+
+    // Define the FontAwesome variables file path first.
+    $variablesfile = $CFG->dirroot . '/theme/boost/scss/fontawesome/_variables.scss';
+
+    // If the variables file exists.
+    if (file_exists($variablesfile)) {
+        // Read the variables file content.
+        $content = file_get_contents($variablesfile);
+
+        // Step 2: Add all available FontAwesome solid icons from $fa-icons array.
+
+        // Extract the $fa-icons section using a quite simple approach.
+        // Find the beginning of $fa-icons array.
+        $faiconsstart = strpos($content, '$fa-icons:');
+        if ($faiconsstart !== false) {
+            // Find the end of $fa-icons array (right before $fa-brand-icons starts).
+            $fabrandstart = strpos($content, '$fa-brand-icons:', $faiconsstart);
+            if ($fabrandstart !== false) {
+                // Extract just the $fa-icons section.
+                $faiconsection = substr($content, $faiconsstart, $fabrandstart - $faiconsstart);
+
+                // Extract all icon names from the $fa-icons array with a simple pattern.
+                preg_match_all('/"([a-z0-9\-]+)"/', $faiconsection, $solidmatches);
+
+                // If we found any icon names.
+                if (!empty($solidmatches[1])) {
+                    // Process the icons.
+                    foreach ($solidmatches[1] as $iconname) {
+                        $fasolidclass = 'fa-' . $iconname;
+
+                        // Add icon to the icon map, ignoring the fact by purpose that the icon could already be there from core.
+                        $iconmap['local_dash:fa-' . $iconname] = [
+                            'class' => $fasolidclass,
+                            'source' => 'fasolid',
+                        ];
+                    }
+                }
+            }
+        }
+
+        // Step 3: Add all available FontAwesome brand icons from $fa-brand-icons array.
+
+        // Find the beginning of $fa-brand-icons array.
+        $fabrandstart = strpos($content, '$fa-brand-icons:');
+        if ($fabrandstart !== false) {
+            // Extract the $fa-brand-icons section.
+            $fabrandsection = substr($content, $fabrandstart);
+
+            // Extract all brand icon names from the $fa-brand-icons array with a simple pattern.
+            preg_match_all('/"([a-z0-9\-]+)"/', $fabrandsection, $brandmatches);
+
+            // If we found any brand icon names.
+            if (!empty($brandmatches[1])) {
+                // Process the brand icons.
+                foreach ($brandmatches[1] as $brandname) {
+                    $fabrandclass = 'fa-' . $brandname;
+
+                    // Add brand icon to the icon map.
+                    $iconmap['local_dash:fa-' . $brandname] = [
+                        'class' => $fabrandclass,
+                        'source' => 'fabrand',
+                    ];
+                }
+            }
+        }
+    }
+
+    // Sort the icons array by key.
+    asort($iconmap);
+
+    // Step 4: Add the blank FontAwesome icon to the very beginning of the icon map.
+    // This icon is not contained in the FontAwesome variables file, but should be usable as smart menu item.
+    $blankicon = [
+        'class' => 'fa-fw',
+        'source' => 'fablank',
+    ];
+    $iconmap = ['local_dash:fa-fw' => $blankicon] + $iconmap;
+
+    // Store the icon map in cache for future requests.
+    $cache->set('iconmap', $iconmap);
+
+    // Return icon map.
+    return $iconmap;
+}
+
+
+
+/**
+ * Map icons for font-awesome themes.
+ * This function is only processed when the Moodle cache is cleared and not on every page load.
+ * That's why we created the local_dash_reset_fontawesome_icon_map function and call it everytime a smart menu item
+ * is saved with an icon.
+ */
+function local_dash_get_fontawesome_icon_map() {
+    // Init icon mapping with icons which are included in any case.
+    $iconmapping = [
+        'local_dash:info' => 'fa-info-circle',
+    ];
+
+    // Get the FontAwesome icons which are used by smart menus currently.
+    $faicons = local_dash_get_all_fa_icons();
+
+    // Get the list of all Font Awesome icons.
+    $allicons = local_dash_build_fa_icon_map();
+
+    // Process the icons one by one.
+    foreach ($faicons as $i) {
+        // Determine the fa class.
+        $faclass = str_replace('local_dash:', '', $i);
+
+        // Append known icon source.
+        if ($allicons[$i]['source'] == 'fasolid') {
+            $faclass .= ' fas';
+        } else if ($allicons[$i]['source'] == 'fabrand') {
+            $faclass .= ' fab';
+        }
+
+        // Add the icon to the mapping.
+        $iconmapping[$i] = $faclass;
+    }
+
+    // Return.
+    return $iconmapping;
+}
+
+
+function local_dash_get_all_fa_icons() {
+    global $DB;
+
+    // Define the query to search for icons in the config_plugins table.
+    $sql = "SELECT DISTINCT value
+            FROM {config_plugins}
+            WHERE plugin = 'local_dash'
+              AND " . $DB->sql_like('name', ':pattern') . "
+              AND value IS NOT NULL
+              AND value != ''";
+
+    // Get the icons from the database.
+    $icons = $DB->get_fieldset_sql($sql, ['pattern' => 'customvisualicon_%']);
+
+    // Drop non-FA icons.
+    $icons = array_filter($icons, function ($icon) {
+        // Check if the icon is a Font Awesome icon.
+        return (strpos($icon, 'local_dash:fa-') === 0);
+    });
+
+
+   /*  $defaulticons =  [
+        'local_dash:completed' => 'fa-check',
+        'local_dash:viewed' => 'fa-eye',
+        'local_dash:default' => 'fa-bell',
+        'local_dash:updated' => 'fa-pencil',
+        'local_dash:deleted' => 'fa-trash',
+    ]; */
+
+    return $icons;
+}
+
+function local_dash_reset_fontawesome_icon_map() {
+    $instance = \core\output\icon_system::instance(\core\output\icon_system::FONTAWESOME);
+    $cache = \cache::make('core', 'fontawesomeiconmapping');
+    $mapkey = 'mapping_' . preg_replace('/[^a-zA-Z0-9_]/', '_', get_class($instance));
+    $cache->delete($mapkey);
+    // And rebuild it brutally.
+    $instance->get_icon_name_map();
 }

@@ -333,16 +333,25 @@ function  dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
     global $DB, $PAGE, $CFG, $USER;
     require_once($CFG->dirroot . '/enrol/locallib.php');
     require_once($CFG->libdir . '/gradelib.php');
+    require_once $CFG->dirroot.'/grade/lib.php';
+    require_once $CFG->dirroot.'/grade/querylib.php';
     // Filter the disabled enrollments.
     $context = \context_course::instance($courseid);
     $course = get_course($courseid);
     $courseprogress = \core_completion\progress::get_course_progress_percentage($course);
     $courseprogress = $courseprogress ? round($courseprogress) : 0;
-    $report['completed'] = ($courseprogress == 100) ? true : false;
-    $report['inprogress'] = ($courseprogress != 100 && $courseprogress > 0) ? true : false;
+    $completion = new completion_info($course);
     $report['notstarted'] = ($courseprogress == 0) ? true : false;
+    if ($DB->record_exists('course_completion_crit_compl', ['course' => $courseid, 'userid' => $userid])) {
+        $report['inprogress'] =  true;
+
+    } else {
+        $report['inprogress'] = ($courseprogress > 0) ? true : false;
+    }
+    $report['completed'] = ($completion->is_course_complete($userid) || $courseprogress == 100) ? true : false;
     $report['progress'] = $courseprogress;
     $report['available'] = false;
+
     $now = time();
 
     if (!$report['completed'] && !$report['inprogress']) {
@@ -378,20 +387,26 @@ function  dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
         }
     }
 
-    // if ($report['completed'] && is_enrolled($context, $userid)) {
-    //     $grade_items = grade_item::fetch_all(['courseid' => $courseid]);
-    //     foreach ($grade_items as $item) {
-    //         if (!empty($item->gradepass)) {
-    //             $grade = grade_grade::fetch(['itemid' => $item->id, 'userid' => $userid]);
-    //             if (!$grade || $grade->finalgrade === null || $grade->finalgrade < $item->gradepass) {
-    //                 $report['failed'] = true;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // }
-
+    if (!$report['completed'] && $record = $DB->get_record('course_completion_criteria', ['course' => $courseid,
+        'criteriatype' => COMPLETION_CRITERIA_TYPE_GRADE])) {
+            if ($record && dashaddon_learningpath_is_possible_failed($course, $userid) && !$DB->record_exists('course_completion_crit_compl', ['userid' => $userid, 'criteriaid' => $record->id, 'course' => $courseid])) {
+                $report['failed'] = true;
+            }
+    }
     return $report;
+}
+
+function dashaddon_learningpath_is_possible_failed($course, $userid) {
+    global $DB;
+    $coursegradeitems = $DB->get_records('grade_items', ['courseid' => $course->id, 'itemtype' => 'mod']);
+    foreach ($coursegradeitems as $item) {
+        $sql = "SELECT * FROM {grade_grades} WHERE itemid = :itemid AND userid = :userid AND finalgrade IS NOT NULL";
+        if (!$DB->record_exists_sql($sql, ['itemid' => $item->id, 'userid' => $userid])) {
+            return false;
+        }
+    }
+    return true;
+
 }
 
 /**

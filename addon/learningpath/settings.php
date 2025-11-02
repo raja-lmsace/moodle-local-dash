@@ -191,7 +191,7 @@ if ($hassiteconfig) {
     ];
 
     $defaultcourseimgsize = new \admin_setting_configselect(
-        'dashaddon_learningpath/defaultcourseimgsize',
+        'block_dash/defaultcourseimgsize',
         get_string('courseimgsize', 'block_dash'),
         get_string('courseimgsize_desc', 'block_dash'),
         'dot',

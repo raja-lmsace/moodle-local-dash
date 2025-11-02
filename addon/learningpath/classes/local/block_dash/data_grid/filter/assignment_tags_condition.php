@@ -91,17 +91,24 @@ class assignment_tags_condition extends condition {
      */
     public function get_course_ids_from_tags() {
         global $DB, $CFG;
-
+    
         $values = $this->get_values();
+        if (!empty($values) && !is_array($values)) {
+            $values = [$values];
+        }
+    
         $userid = $this->get_user_id();
-
-        // Build the tag conditions.
+        $params = ['userid' => $userid];
+        $tagconditions = [];
+    
         if (!empty($values)) {
-            $tagconditions = [];
-            $params = ['userid' => $userid];
             $i = 0;
-
             foreach ($values as $tag) {
+                $tag = trim($tag);
+                if ($tag === '' || $tag === null) {
+                    continue;
+                }
+    
                 $paramname = 'tag_' . $i;
                 if ($CFG->dbtype === 'pgsql') {
                     $tagconditions[] = $DB->sql_like('CAST(tags AS TEXT)', ':' . $paramname, false, false);
@@ -111,20 +118,19 @@ class assignment_tags_condition extends condition {
                 $params[$paramname] = '%"' . $DB->sql_like_escape($tag) . '"%';
                 $i++;
             }
-
-            $tagsql = ' AND (' . implode(' OR ', $tagconditions) . ')';
-        } else {
-            // No specific tags selected - get all courses assigned to user.
-            $tagsql = '';
-            $params = ['userid' => $userid];
         }
-
+    
+        $tagsql = '';
+        if (!empty($tagconditions)) {
+            $tagsql = ' AND (' . implode(' OR ', $tagconditions) . ')';
+        }
+    
         $sql = "SELECT DISTINCT courseid
                 FROM {tool_timetable_course_overrides}
                 WHERE userid = :userid" . $tagsql;
-
+    
         $courseids = $DB->get_fieldset_sql($sql, $params);
-
+    
         return $courseids ? $courseids : [];
     }
 

@@ -13,7 +13,7 @@ class svg_parser {
      * @param string $svgcontent SVG content
      * @return array Array of zones
      */
-    public static function parse_zones($svgcontent) {
+   /*  public static function parse_zones($svgcontent) {
         $zones = [];
         $supportedelements = self::get_supported_elements();
 
@@ -58,6 +58,103 @@ class svg_parser {
         }
 
         return $zones;
+    } */
+
+
+    /**
+     * Parse SVG content and extract zones in order.
+     * @param string $svgcontent SVG content
+     * @return array Array of zones in the order they appear in SVG
+     */
+    public static function parse_zones($svgcontent, $type) {
+        $zones = [];
+        $supportedelements = self::get_supported_elements();
+
+        if (empty($svgcontent)) {
+            return $zones;
+        }
+
+        // Load SVG into DOMDocument for better parsing.
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadXML($svgcontent);
+        libxml_clear_errors();
+
+        // Get the SVG root element
+        $svgElement = $dom->documentElement;
+
+        // Counter for each element type
+        $typecounters = [];
+
+        // Initialize counters for all supported types
+        foreach ($supportedelements as $elementtype) {
+            $typecounters[$elementtype] = 0;
+        }
+
+        // Traverse all child nodes in document order
+        $allnodes = self::get_all_nodes_in_order($svgElement);
+
+        foreach ($allnodes as $element) {
+            // Check if this element is a supported zone type
+            $elementtype = strtolower($element->nodeName);
+
+            if (!in_array($elementtype, $supportedelements)) {
+                continue;
+            }
+
+            // Get the index for this element type
+            $zoneindex = $typecounters[$elementtype];
+
+            // Generate zone ID.
+            $zoneid = 'zone_' . $type . '_' . $elementtype . '_' . $zoneindex;
+
+            // Get existing ID or use generated one
+            $existingid = $element->getAttribute('id');
+            if (!empty($existingid)) {
+                $zoneid = $existingid;
+            }
+
+            $zones[] = [
+                'id' => $zoneid,
+                'type' => $elementtype,
+                'zoneindex' => $zoneindex,
+                'typename' => self::get_type_display_name($elementtype),
+                'attributes' => self::get_element_attributes($element),
+                'position' => self::calculate_center_position($element, $elementtype)
+            ];
+
+            // Increment counter for this type
+            $typecounters[$elementtype]++;
+        }
+
+        return $zones;
+    }
+
+
+    /**
+     * Get all nodes in document order (depth-first traversal).
+     * @param \DOMElement $element
+     * @return array Array of DOMElements
+     */
+    private static function get_all_nodes_in_order($element) {
+        $nodes = [];
+
+        // Add current element if it's an element node
+        if ($element->nodeType === XML_ELEMENT_NODE) {
+            $nodes[] = $element;
+        }
+
+        // Traverse children
+        if ($element->hasChildNodes()) {
+            foreach ($element->childNodes as $child) {
+                if ($child->nodeType === XML_ELEMENT_NODE) {
+                    $childnodes = self::get_all_nodes_in_order($child);
+                    $nodes = array_merge($nodes, $childnodes);
+                }
+            }
+        }
+
+        return $nodes;
     }
 
     /**

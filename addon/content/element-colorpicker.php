@@ -57,7 +57,7 @@ class moodlequickform_dashaddon_content_colorpicker extends MoodleQuickForm_text
         if (empty($class)) {
             $class = '';
         }
-        $this->updateAttributes(['class' => $class.' theme_boost_union-form-colour-picker ']);
+        $this->updateAttributes(['class' => $class.' local_dash-form-colour-picker ']);
     }
 
     /**

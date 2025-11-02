@@ -80,7 +80,7 @@ class behat_local_dash extends behat_base {
      *
      * This can be used on front page, course, category or modules pages.
      *
-     * @Given /^I navigate to settings in current page administratcreateion$/
+     * @Given /^I navigate to settings in current page administration$/
      *
      * @throws ExpectationException
      * @return void

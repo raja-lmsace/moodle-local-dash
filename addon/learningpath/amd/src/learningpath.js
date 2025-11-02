@@ -20,9 +20,10 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
         this.contextId = contextid;
         this.uniqueId = uniqueid;
         this.isgrid = grid;
-        if (this.isgrid && parseInt(data.detailsarea)) {
+        if (this.isgrid && parseInt(data.infoarea)) {
             this.processGridModel();
         }
+
 
         if (!data.courses) {
             return;
@@ -32,12 +33,6 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
 
         Selectors.classes.dashBlock = Selectors.dashBlock + data.blockid;
         Selectors.classes.svgParent = Selectors.svgParent + uniqueid;
-
-       /*  var svgList = document.querySelectorAll(Selectors.classes.dashBlock + ' svg');
-
-        Array.from(svgList).forEach((svg, i) => {
-            new BuildSVGPath(svg, i, uniqueid, contextid, self);
-        }); */
 
         // Find all SVG containers (they have data-svg-index from template)
         var svgContainers = document.querySelectorAll(Selectors.classes.dashBlock + ' .svg-block[data-svg-index]');
@@ -52,16 +47,16 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
 
             if (svg) {
                 // Pass the svg element and index from template.
-                new BuildSVGPath(svg, svgIndex, uniqueid, contextid, self);
+                new BuildSVGPath(svg, svgIndex, uniqueid, contextid, self, viewport);
             }
         });
     }
 
     learningPath.prototype.processGridModel = function () {
         var self = this;
-        var girds = document.querySelectorAll("#learningpath-gird-" + self.uniqueId + " li.grid-block");
-        if (girds) {
-            girds.forEach((element) => {
+        var grids = document.querySelectorAll("#learningpath-grid-" + self.uniqueId + " li.grid-block");
+        if (grids) {
+            grids.forEach((element) => {
                 $(element).click(function (e) {
                     self.showCircleDetails(e);
                 })
@@ -93,6 +88,16 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
         var self = this;
         var learingPathID = event.target.closest(".learning-path-block").getAttribute("id");
         var widgetContainer = event.target.closest(".learning-path-widget");
+
+        // Remove active class from all course elements.
+        self.closeIconElementClass();
+
+        // Add active class to current clicked element
+        var clickedElement = event.currentTarget;
+        if (clickedElement) {
+            clickedElement.classList.add('element-active');
+        }
+
 
         // Check if sidebar mode is active
         var isSidebarMode = widgetContainer && widgetContainer.classList.contains('sidebar');
@@ -133,16 +138,43 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
         }
     }
 
+    learningPath.prototype.closeIconElementClass = function () {
+        var self = this;
+        var allCourseElements = document.querySelectorAll(
+            "#learningpath-svg-" + self.uniqueId + " .course-circle, " +
+            "#learningpath-svg-" + self.uniqueId + " .course-zone, " +
+            "#learningpath-svg-tab-" + self.uniqueId + " .course-circle, " +
+            "#learningpath-svg-tab-" + self.uniqueId + " .course-zone, " +
+            "#learningpath-svg-mob-" + self.uniqueId + " .course-circle, " +
+            "#learningpath-svg-mob-" + self.uniqueId + " .course-zone, " +
+            "#learningpath-grid-" + self.uniqueId + " .grid-block"
+        );
+        if (allCourseElements) {
+            console.log(allCourseElements);
+            allCourseElements.forEach(function(el) {
+                el.classList.remove('element-active');
+            });
+        }
+    }
+
     learningPath.prototype.showDetailsInSidebar = function (event, learingPathID) {
         var self = this;
         var detailsContainer = document.getElementById("learningpath-course-details-" + this.uniqueId);
         var detailsContent = document.getElementById("learningpath-details-content-" + this.uniqueId);
         var infoArea = document.getElementById("learningpath-info-area-" + this.uniqueId);
         var sidebarCollapse = document.getElementById("learningpath-sidebar-" + this.uniqueId);
-        var toggleButton = document.querySelector('.learning-path-widget.sidebar .sidebar-toggle[data-target="#learningpath-sidebar-' + this.uniqueId + '"]');
+        var toggleButton = document.querySelector('.learning-path-widget.sidebar .learningpath-sidebar-' + this.uniqueId);
 
         if (!detailsContainer || !detailsContent || !infoArea) {
             return;
+        }
+
+
+        if (toggleButton) {
+            toggleButton.onclick = function() {
+                // Remove active class from all course elements.
+                self.closeIconElementClass();
+            };
         }
 
         // Function to load and show details
@@ -214,6 +246,9 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
                     toggleButton.style.display = 'block';
                 }
                 $(sidebarCollapse).collapse('hide');
+
+                // Remove active class from all course elements.
+               self.closeIconElementClass();
             };
         }
     }
@@ -221,22 +256,23 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
     class BuildSVGPath {
 
 
-        constructor(svg, index, uniqueid, contextid, learningPath) {
+        constructor(svg, index, uniqueid, contextid, learningPath, viewport) {
             this.svg = svg;
             this.index = index;
             this.uniqueid = uniqueid;
             this.contextId = contextid;
             this.learningPath = learningPath;
+            this.viewport = viewport;
 
             this.path = null;
             this.pathLength = null;
             this.startPoint = null;
             this.endPoint = null;
-
             this.setupSVGSize();
+
             // Check positioning mode from Data object.
             if (Data.positioning === 'zones') {
-                this.createZonePositioning();
+               this.createZonePositioning();
             } else {
                 // Default: path-based positioning
                 this.createCoursePaths();
@@ -245,78 +281,449 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
         }
 
 
-
         /**
-         * Create zone-based positioning for courses
-         * Simply sets course IDs on configured SVG zone elements
+         * Create zone-based positioning for courses with shape transformation.
          */
         createZonePositioning() {
             var self = this;
-
-            // Get zone configurations for this block
+            // Get zone configurations for this block.
             if (!Data.zoneconfigs || Data.zoneconfigs.length === 0) {
-                console.log('No zone configurations found');
                 return;
             }
 
-            console.log('Processing zone configurations:', Data.zoneconfigs);
+            // Create defs element for patterns (reusing existing pattern system).
+            var defs = this.svg.querySelector('defs');
+            if (!defs) {
+                defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                this.svg.appendChild(defs);
+            }
 
-            // Process each configured zone
-            Data.zoneconfigs.forEach(function(zoneConfig) {
-                // Only process enabled zones with courses
-                if (parseInt(zoneConfig.enabled) && zoneConfig.courseid) {
+            var imageWidth = Data.courseimgwidth;
+            var imageHeight = Data.courseimgheight;
 
-                    // e.g., zonetype='rect', zoneindex=0 means first <rect> element.
-                    var elements = self.svg.querySelectorAll(zoneConfig.zonetype);
+            // Check if we should use original SVG shapes.
+            var useSvgShape = Data.defaultshape === 'svgshape';
 
-                    if (!elements || elements.length === 0) {
-                        console.log('No elements found for zone type:', zoneConfig.zonetype);
-                        return;
-                    }
+            // This prevents issues with DOM changes affecting our element selection
+            var elementMap = {};
+
+            // Get all unique zone types from configs
+            var zoneTypes = {};
+            Data.zoneconfigs[this.viewport].forEach(function(config) {
+                zoneTypes[config.zonetype] = true;
+            });
 
 
-                    var zoneElement = elements[zoneConfig.zoneindex];
+            // For each zone type, get all elements and store them with a marker
+            Object.keys(zoneTypes).forEach(function(zoneType) {
+                var elements = Array.from(self.svg.querySelectorAll(zoneType));
+                elements.forEach(function(element, index) {
+                    var key = zoneType + '_' + index;
+                    // Mark the element with a unique data attribute so we can identify it later
+                    element.setAttribute('data-original-zone-key', key);
+                    elementMap[key] = element;
+                });
+            });
 
-                    if (!zoneElement) {
-                        console.log('Zone element not found:', zoneConfig.zonetype, 'at index', zoneConfig.zoneindex);
-                        return;
-                    }
 
-                    // Find the course data.
-                    var course = Data.courses.find(c => c.info.id == zoneConfig.courseid);
-                    if (!course) {
-                        console.log('Course not found:', zoneConfig.courseid);
-                        return;
-                    }
+            //Process each zone config
+            Data.zoneconfigs[this.viewport].forEach(function(zoneConfig) {
+                if (!parseInt(zoneConfig.enabled) || !zoneConfig.courseid) {
+                    return;
+                }
 
-                    console.log('Setting course', course.info.id, 'to zone', zoneConfig.zoneid);
+                var zoneType = zoneConfig.zonetype;
+                var zoneIndex = zoneConfig.zoneindex;
+                var configKey = zoneType + '_' + zoneIndex;
 
-                    // Add classes for styling and interaction
-                    zoneElement.classList.add('course-zone', 'clickable-zone');
-                    var courseInd = "circle-course-" + course.info.id;
-                    zoneElement.classList.add(courseInd);
+                // Get the original element from our pre-built map
+                var originalElement = elementMap[configKey];
+                if (!originalElement) {
+                    console.log('Element not found in map:', configKey);
+                    return;
+                }
 
-                    // Set course ID on the zone element.
-                    zoneElement.setAttribute('data-courseid', course.info.id);
-                    zoneElement.setAttribute('data-zone', 'true');
-                    zoneElement.setAttribute('data-zonetype', zoneConfig.zonetype);
-                    zoneElement.setAttribute('data-zoneindex', zoneConfig.zoneindex);
+                // Check if this element was already transformed (it will have data-zone="transformed" attribute)
+                if (originalElement.getAttribute('data-zone') === 'transformed') {
+                    console.log('Element already transformed, skipping:', configKey);
+                    return;
+                }
 
-                    // Set completion status.
-                    /* var completionStatus = 'notstarted';
+                // Check if element is still in the DOM (has a parent)
+                if (!originalElement.parentNode) {
+                    console.log('Element no longer in DOM:', configKey);
+                    return;
+                }
+
+                // Find the course data.
+                var course = Data.courses.find(c => c.info.id == zoneConfig.courseid);
+
+                if (!course) {
+                    console.log('Course not found:', zoneConfig.courseid);
+                    return;
+                }
+
+                // Calculate center position of the original zone element.
+                var centerPos = self.calculateZoneCenter(originalElement);
+
+                // Calculate radius based on original element size.
+                //var bbox = originalElement.getBBox();
+                var bbox = self.getSafeBBox(originalElement);
+                var radius = Math.min(bbox.width, bbox.height) / 2;
+
+                // Create pattern for course image if not using dot or number visual.
+                var isVisualNumber = Data.coursevisual === 'number' || Data.isvisualnumber;
+                var isVisualimg = Data.coursevisual === 'courseimg';
+                var isVisualcustom = Data.coursevisual === 'custom';
+
+                var courseIndex = Data.courses.findIndex(c => c.info.id == zoneConfig.courseid);
+
+                var prevCourseId = zoneConfig.prevcourse || 0;
+                var prevCourseItem = prevCourseId > 0 ? "circle-course-" + prevCourseId : "";
+
+                var nextCourseId = zoneConfig.nextcourse || 0;
+                var nextCourseItem = nextCourseId > 0 ? "circle-course-" + nextCourseId : "";
+
+                var parentElement = originalElement.parentNode;
+                var targetElement = null;
+
+                if (useSvgShape) {
+                    // Use original SVG shape - just add attributes and styling
+                    originalElement.classList.add('course-circle', 'course-zone', 'clickable-zone');
+                    originalElement.classList.add('circle-course-' + course.info.id);
+
+                    originalElement.setAttribute('data-courseid', course.info.id);
+                    originalElement.setAttribute('data-zone', 'transformed'); // Mark as transformed
+                    originalElement.setAttribute('data-zonetype', zoneConfig.zonetype);
+                    originalElement.setAttribute('data-zoneindex', zoneConfig.zoneindex);
+                    originalElement.setAttribute('data-prevcourse', prevCourseId);
+                    originalElement.setAttribute('data-prevcourse-item', prevCourseItem);
+                    originalElement.setAttribute('data-nextcourse', nextCourseId);
+                    originalElement.setAttribute('data-nextcourse-item', nextCourseItem);
+
+                    // Apply completion status styling
+                    var completionStatus = course.report.inprogress ? 'inprogress' : 'notstarted';
+                    completionStatus = course.report.completed ? 'completed' : completionStatus;
+
                     if (course.report.unavailable) {
                         completionStatus = 'unavailable';
+                    } else if (course.report.available) {
+                        completionStatus = 'available';
                     } else if (course.report.failed) {
                         completionStatus = 'failed';
                     } else if (course.report.completed) {
                         completionStatus = 'completed';
                     } else if (course.report.inprogress) {
                         completionStatus = 'inprogress';
-                    } else if (course.report.available) {
-                        completionStatus = 'available';
-                    } */
+                    } else {
+                        completionStatus = 'notstarted';
+                    }
+
+                    originalElement.classList.add(completionStatus);
+                    originalElement.setAttribute('data-course-status', completionStatus);
+
+                    // Apply stroke color based on status
+                    if (course.statuscolor) {
+                        originalElement.setAttribute('stroke', course.statuscolor);
+                        originalElement.setAttribute('stroke-width', '6');
+                    }
+                    // Keep original fill or apply pattern if needed
+                    if (!Data.dotimg && isVisualimg) {
+                        var imagePath = course.img;
+                        var image = self.createImage(imagePath);
+                        var patternID = 'dash-' + Data.blockid + '-course-' + course.info.id + '-pattern-zone-' + self.index;
+                        var pattern = self.createPattern(image, patternID);
+                        defs.appendChild(pattern);
+                        originalElement.setAttribute('fill', 'url(#' + patternID + ')');
+                    } else if (isVisualcustom && course.statuscolor) {
+                        originalElement.setAttribute('fill', course.statuscolor);
+                    }
+
+                    targetElement = originalElement;
+
+                } else {
+                    // Transform to custom shape - existing behavior
+
+                    // Create pattern for course image if not using dot or number visual.
+                    var patternID = false;
+
+                    if (!Data.dotimg && isVisualimg) {
+                        var imagePath = course.img;
+                        var image = self.createImage(imagePath);
+                        patternID = 'dash-' + Data.blockid + '-course-' + course.info.id + '-pattern-zone-' + self.index;
+                        var pattern = self.createPattern(image, patternID);
+                        defs.appendChild(pattern);
+                    } else if (!Data.dotimg && isVisualcustom) {
+                        patternID = false;
+                    }
+
+                    // Create point object similar to path-based positioning.
+                    var point = {
+                        x: centerPos.x,
+                        y: centerPos.y,
+                        length: 0 // Not used in zone mode.
+                    };
+
+                    // Reuse existing createShape() method to create the shape element.
+                    var shapeElement = self.createShape(point, course, patternID, radius, Data.courses, courseIndex);
+
+                    if (!shapeElement) {
+                        console.log('Could not create shape for course:', course.info.id);
+                        return;
+                    }
+
+                    shapeElement.setAttribute('data-courseid', course.info.id);
+                    shapeElement.setAttribute('data-zone', 'transformed'); // Mark as transformed
+                    shapeElement.setAttribute('data-zonetype', zoneConfig.zonetype);
+                    shapeElement.setAttribute('data-zoneindex', zoneConfig.zoneindex);
+                    shapeElement.setAttribute('stroke-width', '2');
+                    shapeElement.classList.add('course-zone', 'clickable-zone');
+
+                    shapeElement.setAttribute('data-prevcourse', prevCourseId);
+                    shapeElement.setAttribute('data-prevcourse-item', prevCourseItem);
+                    shapeElement.setAttribute('data-nextcourse', nextCourseId);
+                    shapeElement.setAttribute('data-nextcourse-item', nextCourseItem);
+
+                    // Replace original zone element with new shape.
+                    parentElement.replaceChild(shapeElement, originalElement);
+
+                    targetElement = shapeElement;
                 }
+
+                // If using number visual, create text overlay.
+                if (isVisualNumber && course.coursenumber) {
+                    var numberText = self.createCourseNumber(centerPos, course, radius);
+                    // Insert text right after the shape element.
+                    if (targetElement && parentElement) {
+                        parentElement.insertBefore(numberText, targetElement.nextSibling);
+                    }
+                }
+
+                // If course has an icon, create icon overlay.
+                if (course.icon) {
+                    var iconElement = self.createIconOverlay(centerPos, course, radius);
+                    if (iconElement && targetElement && parentElement) {
+                        parentElement.insertBefore(iconElement, targetElement.nextSibling);
+                    }
+                }
+
+                var infoicon = self.createInfoAreaIcon(centerPos, course, radius);
+                if (infoicon) {
+                    parentElement.insertBefore(infoicon, targetElement.nextSibling);
+                }
+
             });
+        };
+
+
+        createInfoAreaIcon(centerPos, course, radius) {
+             // Create foreignObject to embed HTML icon
+            var foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+
+            var iconSize = radius * 0.55; // Icon container is 20% of shape radius.
+
+            foreignObject.setAttribute('x', (centerPos.x - iconSize / 2));
+            foreignObject.setAttribute('y', (centerPos.y - radius - iconSize));
+            foreignObject.setAttribute('width', iconSize);
+            foreignObject.setAttribute('height', iconSize);
+            foreignObject.setAttribute('class', 'course-icon-overlay');
+            foreignObject.setAttribute('pointer-events', 'all'); // Allow clicks to pass through to shape
+
+            // Create div container for icon
+            var div = document.createElement('div');
+            div.style.width = '100%';
+            div.style.height = '100%';
+            div.style.alignItems = 'top';
+            div.style.borderRadius = '50%';
+            div.style.justifyContent = 'center';
+            div.style.fontSize = (iconSize * 0.8) + 'px'; // Icon size is 60% of container
+            div.innerHTML = '<i class="fa fa-caret-down"></i>'; // Icon HTML from PHP (e.g., <i class="fa fa-home"></i>)
+
+            foreignObject.appendChild(div);
+            return foreignObject;
+        }
+
+
+        /**
+         * Create icon overlay for course (for zone positioning)
+         *
+         * @param {object} centerPos Center position {x, y}
+         * @param {object} course Course data
+         * @param {number} radius Radius of the shape
+         * @returns {SVGElement|null} Foreign object with icon or null
+         */
+        createIconOverlay(centerPos, course, radius) {
+            if (!course.icon) {
+                return null;
+            }
+
+            // Create foreignObject to embed HTML icon
+            var foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+
+            var iconSize = radius * 1.1; // Icon container is 120% of shape radius
+
+            foreignObject.setAttribute('x', (centerPos.x - iconSize / 2) + 3);
+            foreignObject.setAttribute('y', (centerPos.y - iconSize / 2));
+            foreignObject.setAttribute('width', iconSize);
+            foreignObject.setAttribute('height', iconSize);
+            foreignObject.setAttribute('class', 'course-icon-overlay');
+            foreignObject.setAttribute('pointer-events', 'none'); // Allow clicks to pass through to shape
+
+            // Create div container for icon
+            var div = document.createElement('div');
+            div.style.width = '100%';
+            div.style.height = '100%';
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+            div.style.justifyContent = 'center';
+            div.style.fontSize = (iconSize * 0.6) + 'px'; // Icon size is 60% of container
+            div.style.color = '#ffffff';
+            div.innerHTML = course.icon; // Icon HTML from PHP (e.g., <i class="fa fa-home"></i>)
+
+            foreignObject.appendChild(div);
+
+            return foreignObject;
+        }
+
+
+        /**
+         * Calculate center position of a zone element.
+         */
+        calculateZoneCenter(element) {
+            var self = this;
+            var tagName = element.tagName.toLowerCase();
+            var position = { x: 0, y: 0 };
+
+            try {
+                // Get bounding box for local (untransformed) coordinates
+                //var bbox = element.getBBox();
+                var bbox = self.getSafeBBox(element);
+
+                // Calculate center in local coordinates
+                var localCenterX = bbox.x + (bbox.width / 2);
+                var localCenterY = bbox.y + (bbox.height / 2);
+
+                // Check if element has transform attribute
+                var transformAttr = element.getAttribute('transform');
+
+                if (transformAttr) {
+                    // Try MATRIX transform first: matrix(a b c d e f)
+                    var matrixMatch = transformAttr.match(/matrix\(([^)]+)\)/);
+                    if (matrixMatch) {
+                        var values = matrixMatch[1].trim().split(/[\s,]+/).map(parseFloat);
+                        if (values.length === 6) {
+                            // Matrix format: matrix(a, b, c, d, e, f)
+                            var a = values[0], b = values[1], c = values[2], d = values[3];
+                            var e = values[4], f = values[5]; // Translation values
+
+                            position.x = (a * localCenterX) + (c * localCenterY) + e;
+                            position.y = (b * localCenterX) + (d * localCenterY) + f;
+                        } else if (values.length < 6) {
+                            var len = values.length;
+                            position.x = values[len - 2];
+                            position.y = values[len - 1];
+                        } else {
+                            position.x = localCenterX;
+                            position.y = localCenterY;
+                        }
+                    } else {
+                        // Try TRANSLATE transform: translate(x y)
+                        var translateMatch = transformAttr.match(/translate\(([^\s,]+)[\s,]+([^)]+)\)/);
+
+                        if (translateMatch) {
+                            var translateX = parseFloat(translateMatch[1]) || 0;
+                            var translateY = parseFloat(translateMatch[2]) || 0;
+
+                            // Simple translation: add to local center
+                            position.x = localCenterX + translateX;
+                            position.y = localCenterY + translateY;
+
+                        } else {
+                            // No recognizable transform, use local center
+                            position.x = localCenterX;
+                            position.y = localCenterY;
+                        }
+                    }
+                } else {
+                    // No transform attribute, use local center directly
+                    position.x = localCenterX;
+                    position.y = localCenterY;
+                }
+
+            } catch (e) {
+                // Fallback
+                try {
+                    //var bbox = element.getBBox();
+                    var bbox = self.getSafeBBox(element);
+                    position.x = bbox.x + (bbox.width / 2);
+                    position.y = bbox.y + (bbox.height / 2);
+                } catch (e2) {
+                    console.error('getBBox also failed:', e2);
+                }
+            }
+
+            return position;
+        }
+
+
+        /**
+         * Calculate center of polygon from points string
+         */
+        calculatePolygonCenter(pointsStr) {
+            if (!pointsStr) {
+                return {x: 0, y: 0};
+            }
+
+            var coords = pointsStr.trim().split(/[\s,]+/).filter(c => c);
+            var sumX = 0, sumY = 0, count = 0;
+
+            for (var i = 0; i < coords.length; i += 2) {
+                if (coords[i] && coords[i + 1]) {
+                    sumX += parseFloat(coords[i]);
+                    sumY += parseFloat(coords[i + 1]);
+                    count++;
+                }
+            }
+
+            return {
+                x: count > 0 ? sumX / count : 0,
+                y: count > 0 ? sumY / count : 0
+            };
+        }
+
+        /**
+         * Create course number text overlay for zones
+         */
+        createCourseNumberForZone(centerPos, course, zoneElement) {
+            var self = this;
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
+            // Get approximate size for text scaling
+            //var bbox = zoneElement.getBBox();
+            var bbox = self.getSafeBBox(zoneElement);
+            var size = Math.min(bbox.width, bbox.height);
+            var fontSize = size * 0.3;
+
+            // Position text at center of zone
+            text.setAttribute('x', centerPos.x);
+            text.setAttribute('y', centerPos.y);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('dominant-baseline', 'central');
+            text.setAttribute('class', 'course-number-text zone-number-text');
+            text.setAttribute('pointer-events', 'none');
+
+            // Style the text
+            text.style.fontSize = fontSize + 'px';
+            text.style.fontWeight = 'bold';
+            text.style.fill = '#ffffff';
+            text.style.stroke = '#000000';
+            text.style.strokeWidth = '2px';
+            text.style.paintOrder = 'stroke';
+
+            // Add the course number
+            text.textContent = course.coursenumber || '';
+
+            return text;
         }
 
 
@@ -337,7 +744,7 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
             }
 
             // Handle zone element clicks (for zone-based positioning).
-            var zoneElements = this.svg.querySelectorAll(".course-zone");
+           /*  var zoneElements = this.svg.querySelectorAll(".course-zone");
             if (zoneElements) {
                 zoneElements.forEach((element) => {
                     $(element).click(function (e) {
@@ -356,7 +763,7 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
                         }
                     );
                 });
-            }
+            } */
         }
 
 
@@ -366,7 +773,7 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
         handleCourseClick(e) {
             var element = e.target;
             // Details are enabled, display the course details in the modal.
-            if (parseInt(Data.detailsarea)) {
+            if (parseInt(Data.infoarea)) {
                 this.learningPath.showCircleDetails(e);
             } else {
                 // Goto the course view page.
@@ -387,7 +794,8 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
                     $(element).click(function (e) {
                         e.preventDefault();
                         // Details are enabled, display the course details in the modal.
-                        if (parseInt(Data.detailsarea)) {
+                        var infoarea = e.target.closest(".learning-path-widget");
+                        if (infoarea && parseInt(infoarea.getAttribute("data-infoarea"))) {
                             self.learningPath.showCircleDetails(e);
                         } else {
                             // Goto the course view page.
@@ -474,7 +882,7 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
             }
 
             // Create a completion path.
-            this.createCompletionPath(this.svg, this.path, this.index);
+            //this.createCompletionPath(this.svg, this.path, this.index);
         }
 
 
@@ -517,7 +925,7 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
         createImagesAlongPath(svg, points, courses, imageSize) {
             var imageWidth = imageSize.width;
             var imageHeight = imageSize.height;
-            var radious = imageWidth / 2;
+            var radius = imageWidth / 2;
 
             var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
             svg.appendChild(defs);
@@ -529,20 +937,35 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
                 var patternID = false;
 
                 var isVisualNumber = Data.coursevisual === 'number' || Data.isvisualnumber;
+                var isVisualimg = Data.coursevisual === 'courseimg';
+                var isVisualcustom = Data.coursevisual === 'custom';
 
-                if (!Data.dotimg && !isVisualNumber) {
+                if (!Data.dotimg && isVisualimg) {
                     var image = self.createImage(imagePath, imageWidth, imageHeight);
                     patternID = 'dash-' + Data.blockid + '-course-' + course.info.id + '-pattern-' + self.index;
                     var pattern = self.createPattern(image, patternID);
                     defs.appendChild(pattern);
+                } else if (!Data.dotimg && isVisualcustom) {
+                    patternID = false;
                 }
-
-                var shape = self.createShape(point, course, patternID, radious, courses, i);
+                var shape = self.createShape(point, course, patternID, radius, courses, i);
                 svg.appendChild(shape);
 
+                if (course.icon) {
+                    var iconElement = self.createIconOverlay(point, course, radius);
+                    if (iconElement) {
+                        svg.appendChild(iconElement);
+                    }
+                }
+
                 if (isVisualNumber) {
-                    var numberText = self.createCourseNumber(point, course, radious);
+                    var numberText = self.createCourseNumber(point, course, radius);
                     svg.appendChild(numberText);
+                }
+
+                var infoicon = self.createInfoAreaIcon(point, course, radius);
+                if (infoicon) {
+                    svg.appendChild(infoicon);
                 }
 
             });
@@ -559,12 +982,12 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
             return [this.startPoint, this.endPoint];
         };
 
-        createImage(imagePath, imageWidth, imageHeight) {
+        createImage(imagePath, imageWidth = 0, imageHeight = 0) {
 
             var image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
 
-            image.setAttribute('width', imageWidth);
-            image.setAttribute('height', imageHeight);
+            image.setAttribute('width', '1');
+            image.setAttribute('height', '1');
             image.setAttribute('x', "0");
             image.setAttribute('y', "0");
             image.setAttribute('href', imagePath);
@@ -577,9 +1000,12 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
 
             var pattern = document.createElementNS('http://www.w3.org/2000/svg', 'pattern');
             pattern.id = patternID;
-            // pattern.setAttribute('patternUnits', 'userSpaceOnUse');
             pattern.setAttribute('width', '1');
             pattern.setAttribute('height', '1');
+            pattern.setAttribute('x', '0');
+            pattern.setAttribute('y', '0');
+            pattern.setAttribute('patternContentUnits', 'objectBoundingBox');
+
             pattern.appendChild(image);
 
             return pattern;
@@ -698,20 +1124,23 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
         }
 
         createShape(point, course, patternID, radius, courses, i) {
+            var self = this;
             // Determine shape to use
             let shape = Data.defaultshape || 'circle';
-
+            var isVisualcustom = Data.coursevisual === 'custom';
             // Check if course has a custom shape based on custom field
             if (course.shape) {
                 shape = course.shape;
             }
 
             const shapeData = this.getShapeData(shape, point.x, point.y, radius);
+
             const element = document.createElementNS('http://www.w3.org/2000/svg', shapeData.element);
 
             element.classList.add('course-circle');
             element.classList.add('course-shape');
             element.classList.add('course-shape-' + shape);
+            element.classList.add('imgsize-' + Data.imgsize);
 
             var courseInd = "circle-course-" + course.info.id;
             element.classList.add(courseInd);
@@ -756,7 +1185,7 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
 
             element.classList.add(completionStatus);
 
-            if (!patternID) {
+            if (!patternID && Data.dotimg) {
                 element.classList.add('dot-image');
             }
 
@@ -771,7 +1200,7 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
             var attrs = {
                 'fill': patternID ? 'url(#' + patternID + ')' : 'none',
                 'stroke-width': '4',
-                'stroke': "var(--gray)",
+                'stroke': course.statuscolor ? course.statuscolor : "var(--gray)",
                 'data-course-status': completionStatus,
                 'data-title': decode(course.info.fullname),
                 'data-toggle': 'tooltip',
@@ -790,6 +1219,11 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
 
             for (var attr in attrs) {
                 element.setAttribute(attr, attrs[attr]);
+            }
+
+            if (isVisualcustom) {
+                var statusColor = course.statuscolor;
+                element.setAttribute('fill', statusColor);
             }
 
             return element;
@@ -914,6 +1348,278 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
             text.innerHTML = "<p class='finish-element'> " + Data.strings.finish + " </p>";
 
             svg.appendChild(text);
+        }
+
+
+        /**
+         * Safe getBBox method that handles hidden elements
+         * @param {SVGElement} element - The SVG element to get bounding box for
+         * @returns {DOMRect} Bounding box rectangle
+         */
+        getSafeBBox(element) {
+            var bbox = { x: 0, y: 0, width: 0, height: 0 };
+            var attempts = 0;
+            var maxAttempts = 2;
+
+            while (attempts < maxAttempts) {
+                try {
+                    bbox = element.getBBox();
+
+                    // Check if we got valid dimensions
+                    if (bbox.width > 0 && bbox.height > 0) {
+                        return bbox;
+                    }
+
+                    // First attempt failed, try making element visible
+                    if (attempts === 0) {
+
+                        // Find the SVG container and make it visible
+                        var svg = element.closest('svg');
+                        var svgContainer = svg ? svg.closest('.svg-block') : null;
+
+                        if (svgContainer) {
+                            var computedStyle = window.getComputedStyle(svgContainer);
+                            if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
+                                // Store original styles on the element itself for cleanup
+                                element._originalDisplay = svgContainer.style.display;
+                                element._originalVisibility = svgContainer.style.visibility;
+                                element._originalPosition = svgContainer.style.position;
+                                element._originalLeft = svgContainer.style.left;
+                                element._originalTop = svgContainer.style.top;
+                                element._originalZIndex = svgContainer.style.zIndex;
+                                element._svgContainer = svgContainer;
+
+                                // Make temporarily visible off-screen
+                                svgContainer.style.display = 'block';
+                                svgContainer.style.visibility = 'visible';
+                                svgContainer.style.position = 'absolute';
+                                svgContainer.style.left = '-9999px';
+                                svgContainer.style.top = '-9999px';
+                                svgContainer.style.zIndex = '-1';
+
+                                // Continue to next attempt
+                                attempts++;
+                                continue;
+                            }
+                        }
+                    }
+
+                    // If we reach here, both attempts failed
+                    break;
+
+                } catch (e) {
+                    console.error('Error getting bbox on attempt', attempts + 1, ':', e);
+                    break;
+                }
+            }
+
+            // Restore original styles if they were changed
+            this.restoreElementStyles(element);
+
+            // If still no valid bbox, fallback to attribute calculation
+            if (bbox.width === 0 && bbox.height === 0) {
+                bbox = this.calculateBBoxFromAttributes(element);
+            }
+
+            return bbox;
+        }
+
+
+        /**
+         * Restore original styles for an element
+         * @param {SVGElement} element - The element to restore styles for
+         */
+        restoreElementStyles(element) {
+            if (element._svgContainer) {
+                element._svgContainer.style.display = element._originalDisplay || '';
+                element._svgContainer.style.visibility = element._originalVisibility || '';
+                element._svgContainer.style.position = element._originalPosition || '';
+                element._svgContainer.style.left = element._originalLeft || '';
+                element._svgContainer.style.top = element._originalTop || '';
+                element._svgContainer.style.zIndex = element._originalZIndex || '';
+                
+                // Clean up temporary properties
+                delete element._originalDisplay;
+                delete element._originalVisibility;
+                delete element._originalPosition;
+                delete element._originalLeft;
+                delete element._originalTop;
+                delete element._originalZIndex;
+                delete element._svgContainer;
+            }
+        }
+
+        /**
+         * Get bbox from hidden SVG element by temporarily making it visible
+         * @param {SVGElement} element - The SVG element
+         * @returns {DOMRect} Bounding box rectangle
+         */
+        getBBoxFromHiddenElement(element) {
+            var self = this;
+            var bbox = { x: 0, y: 0, width: 0, height: 0 };
+
+            try {
+                // Find the SVG container
+                var svg = element.closest('svg');
+                var svgContainer = svg ? svg.closest('.svg-block') : null;
+                var wasHidden = false;
+                var originalStyles = {};
+
+                if (svgContainer) {
+                    var computedStyle = window.getComputedStyle(svgContainer);
+                    if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
+                        // Store original styles
+                        originalStyles.display = svgContainer.style.display;
+                        originalStyles.visibility = svgContainer.style.visibility;
+                        originalStyles.position = svgContainer.style.position;
+                        originalStyles.left = svgContainer.style.left;
+                        originalStyles.top = svgContainer.style.top;
+                        originalStyles.zIndex = svgContainer.style.zIndex;
+
+                        // Make temporarily visible off-screen
+                        svgContainer.style.display = 'block';
+                        svgContainer.style.visibility = 'visible';
+                        svgContainer.style.position = 'absolute';
+                        svgContainer.style.left = '-9999px';
+                        svgContainer.style.top = '-9999px';
+                        svgContainer.style.zIndex = '-1';
+                        wasHidden = true;
+                    }
+                }
+
+                // Try to get bbox again
+                //bbox = element.getBBox();
+                bbox = this.getSafeBBox(element);
+
+                // Restore original styles
+                if (wasHidden && svgContainer) {
+                    svgContainer.style.display = originalStyles.display || '';
+                    svgContainer.style.visibility = originalStyles.visibility || '';
+                    svgContainer.style.position = originalStyles.position || '';
+                    svgContainer.style.left = originalStyles.left || '';
+                    svgContainer.style.top = originalStyles.top || '';
+                    svgContainer.style.zIndex = originalStyles.zIndex || '';
+                }
+
+                // If still no valid bbox, fallback to attribute calculation
+                if (bbox.width === 0 && bbox.height === 0) {
+                    bbox = this.calculateBBoxFromAttributes(element);
+                }
+
+            } catch (e) {
+                console.error('Error in getBBoxFromHiddenElement:', e);
+                bbox = this.calculateBBoxFromAttributes(element);
+            }
+
+            return bbox;
+        }
+
+
+        /**
+         * Calculate bounding box from element attributes as fallback
+         * @param {SVGElement} element - The SVG element
+         * @returns {Object} Bounding box object {x, y, width, height}
+         */
+        calculateBBoxFromAttributes(element) {
+            var bbox = { x: 0, y: 0, width: 0, height: 0 };
+            var tagName = element.tagName.toLowerCase();
+
+            try {
+                switch (tagName) {
+                    case 'ellipse':
+                        var cx = parseFloat(element.getAttribute('cx')) || 0;
+                        var cy = parseFloat(element.getAttribute('cy')) || 0;
+                        var rx = parseFloat(element.getAttribute('rx')) || 30;
+                        var ry = parseFloat(element.getAttribute('ry')) || 30;
+
+                        bbox = {
+                            x: cx - rx,
+                            y: cy - ry,
+                            width: rx * 2,
+                            height: ry * 2
+                        };
+                        break;
+
+                    case 'circle':
+                        var cx = parseFloat(element.getAttribute('cx')) || 0;
+                        var cy = parseFloat(element.getAttribute('cy')) || 0;
+                        var r = parseFloat(element.getAttribute('r')) || 30;
+
+                        bbox = {
+                            x: cx - r,
+                            y: cy - r,
+                            width: r * 2,
+                            height: r * 2
+                        };
+                        break;
+
+                    case 'rect':
+                        bbox = {
+                            x: parseFloat(element.getAttribute('x')) || 0,
+                            y: parseFloat(element.getAttribute('y')) || 0,
+                            width: parseFloat(element.getAttribute('width')) || 60,
+                            height: parseFloat(element.getAttribute('height')) || 60
+                        };
+                        break;
+
+                    case 'polygon':
+                    case 'polyline':
+                        var points = element.getAttribute('points');
+                        if (points) {
+                            bbox = this.calculatePolygonBBox(points);
+                        } else {
+                            bbox = { x: -30, y: -30, width: 60, height: 60 };
+                        }
+                        break;
+
+                    default:
+                        bbox = { x: -30, y: -30, width: 60, height: 60 };
+                        console.warn('Unknown element type for bbox calculation:', tagName);
+                        break;
+                }
+
+            } catch (e) {
+                console.error('Error calculating bbox from attributes:', e);
+                bbox = { x: -30, y: -30, width: 60, height: 60 };
+            }
+
+            return bbox;
+        }
+
+        /**
+         * Calculate bounding box for polygon/polyline from points
+         * @param {string} pointsStr - Points string attribute
+         * @returns {Object} Bounding box object
+         */
+        calculatePolygonBBox(pointsStr) {
+            var coords = pointsStr.trim().split(/[\s,]+/).filter(c => c && !isNaN(c));
+
+            if (coords.length < 4) {
+                return { x: -30, y: -30, width: 60, height: 60 };
+            }
+
+            var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+            for (var i = 0; i < coords.length; i += 2) {
+                if (coords[i] !== undefined && coords[i + 1] !== undefined) {
+                    var x = parseFloat(coords[i]);
+                    var y = parseFloat(coords[i + 1]);
+
+                    if (!isNaN(x) && !isNaN(y)) {
+                        minX = Math.min(minX, x);
+                        minY = Math.min(minY, y);
+                        maxX = Math.max(maxX, x);
+                        maxY = Math.max(maxY, y);
+                    }
+                }
+            }
+
+            return {
+                x: minX,
+                y: minY,
+                width: maxX - minX,
+                height: maxY - minY
+            };
         }
     }
 

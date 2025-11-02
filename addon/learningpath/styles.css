@@ -95,11 +95,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 10px;
 }
 
 .grid-layout-block .grid-layout .progress-block .progress {
     height: 12px;
-    border-radius: 0;
+    margin-top: 15px;
 }
 
 .grid-layout-block .grid-layout .progress-block .progress .progress-bar.progress-not-started {
@@ -117,8 +118,16 @@
     padding-left: 0;
     padding-right: 0;
 }
+.grid-layout-block .grid-layout .card-body .summary-block {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+}
 
 .grid-layout-block .grid-layout .card-body .btn-block a {
+    max-width: 180px;
+    margin: 0 auto;
     display: block;
 }
 
@@ -309,6 +318,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 90%;
+    padding-top: 30px;
     padding-left: 0;
     margin: 0 auto;
     overflow: hidden;
@@ -319,7 +329,7 @@
 
 .grid-block {
     position: relative;
-    visibility: hidden;
+    /* visibility: hidden; */
     outline: 1px solid transparent;
     /* fix for jagged edges in FF on hover transition */
 }
@@ -362,7 +372,7 @@
     -webkit-clip-path: polygon(-35% 50%, 50% 0%, 100% 29%, 100% 69%, 50% 98%, 50% 98%);
 }
 
-.learning-path-grid .grid-block .grid-item.notstarted .grid-link {
+/* .learning-path-grid .grid-block .grid-item.notstarted .grid-link {
     background: #666;
 }
 
@@ -370,15 +380,15 @@
     background: #ccc;
     filter: grayscale(100%);
     opacity: .5;
-}
+} */
 
-.learning-path-grid .grid-block .grid-item.inprogress .grid-link {
+/* .learning-path-grid .grid-block .grid-item.inprogress .grid-link {
     background: #00b2ff;
 }
 
 .learning-path-grid .grid-block .grid-item.completed .grid-link {
     background: #11b56a;
-}
+} */
 
 /* HEX CONTENT */
 .grid-block img {
@@ -522,7 +532,75 @@
 /* Course details */
 .course-circle {
     cursor: pointer;
+    position: relative;
 }
+
+/* Shape of Path and Zone */
+.dash-learning-path .learningpath-sidebar.show ~ .svg-block .course-circle:not(.element-active) {
+    opacity: .2;
+}
+.dash-learning-path .course-circle.element-active ~ foreignObject {
+    overflow: visible;
+    position: relative;
+}
+.dash-learning-path .course-circle ~ foreignObject > div {
+    display: none;
+}
+.dash-learning-path .course-circle.element-active + foreignObject > div,
+.dash-learning-path .course-circle.element-active + text + foreignObject > div {
+    display: flex;
+}
+.dash-learning-path.in-path .course-circle.element-active + foreignObject > div,
+.dash-learning-path.in-path .course-circle.element-active + text + foreignObject > div {
+    position: absolute;
+    top: -20px;
+    left: 0;
+}
+
+/* Shape size */
+/* Path */
+.dash-learning-path .course-circle.course-shape-triangle.element-active + foreignObject > div,
+.dash-learning-path .course-circle.course-shape-triangle.element-active + text + foreignObject > div {
+    top: -24px;
+}
+.dash-learning-path .course-circle.course-shape-hexagon.element-active + foreignObject > div,
+.dash-learning-path .course-circle.course-shape10exagon.element-active + text + foreignObject > div {
+    top: -10px;
+}
+.dash-learning-path .course-circle.course-shape-hexagon.imgsize-medium.element-active + foreignObject > div,
+.dash-learning-path .course-circle.course-shape10exagon.imgsize-medium.element-active + text + foreignObject > div {
+    top: -14px;
+}
+.dash-learning-path .course-circle.course-shape-hexagon.imgsize-small.element-active + foreignObject > div,
+.dash-learning-path .course-circle.course-shape10exagon.imgsize-small.element-active + text + foreignObject > div {
+    top: -16px;
+}
+.dash-learning-path .course-circle.course-shape-hexagon.imgsize-tiny.element-active + foreignObject > div,
+.dash-learning-path .course-circle.course-shape10exagon.imgsize-tiny.element-active + text + foreignObject > div {
+    top: -18px;
+}
+.dash-learning-path .course-circle.course-shape-hexagon.imgsize-dot.element-active + foreignObject > div,
+.dash-learning-path .course-circle.course-shape10exagon.imgsize-dot.element-active + text + foreignObject > div {
+    top: -18px;
+}
+.dash-learning-path .course-circle.element-active ~ foreignObject > div i {
+    font-size: 20px;
+    color: #000;
+}
+
+/* Zone*/
+.zone-position.dash-learning-path .svg-block {
+    padding-top: 20px;
+}
+.zone-position.dash-learning-path .svg-block svg {
+    overflow: visible;
+}
+
+/* Small size */
+.dash-learning-path.in-path .learning-path-block.svg-block svg:has(.imgsize-small) {
+    padding-top: 20px;
+}
+
 
 .course-circle.completed {
     stroke: #11b56a;
@@ -623,7 +701,6 @@
     gap: 10px;
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 2px solid #eee;
 }
 
 .learningpath-sidebar .learningpath-course-details .details-header h5 {
@@ -744,6 +821,23 @@
     border-radius: 10px;
     overflow: hidden; /* Creates new block formatting context */
     margin-top: 20px;
+}
+.learning-path-widget.sidebar .learning-path-block .grid-block {
+    position: relative;
+    z-index: 0;
+}
+.learning-path-widget.sidebar .learning-path-block #gridLayout:has(.element-active) {
+    gap: 5px 0;
+}
+.learning-path-widget.sidebar .learning-path-block .grid-block.element-active:before {
+    content: '\f0d7';
+    font-size: 24px;
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
+    font-weight: var(--fa-style, 900);
+    position: absolute;
+    top: -27px;
+    left: 37%;
+    z-index: 1;
 }
 
 /* When sidebar is shown, adjust layout */

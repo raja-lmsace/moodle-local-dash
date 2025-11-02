@@ -28,7 +28,7 @@
 
 }}
 {{#data.showlearningpath}}
-<div class="learning-path-widget dash-learning-path {{#data.showinfosidebar}}sidebar{{/data.showinfosidebar}}" data-blockid="{{blockid}}">
+<div class="learning-path-widget dash-learning-path {{#data.showinfosidebar}}sidebar{{/data.showinfosidebar}} {{#data.zoneposition}}zone-position{{/data.zoneposition}} {{^data.zoneposition}}in-path{{/data.zoneposition}}" data-blockid="{{blockid}}" data-infoarea="{{data.infoarea}}">
 
     {{#data.showinfotop}}
         <div class="learning-path-header alert {{#data.completedlearingpath}} alert-success{{/data.completedlearingpath}}{{^data.completedlearingpath}} alert-secondary{{/data.completedlearingpath}}">
@@ -46,7 +46,11 @@
     {{/data.showinfotop}}
 
     {{#data.showinfosidebar}}
-        <button class="btn btn-link sidebar-toggle collapsed" type="button" data-toggle="collapse" data-target="#learningpath-sidebar-{{uniqueid}}" aria-expanded="false" aria-controls="learningpath-sidebar-{{uniqueid}}">
+        <button class="btn btn-link sidebar-toggle collapsed learningpath-sidebar-{{uniqueid}}" type="button"
+            {{#data.use_bs5}}data-bs-toggle="collapse" data-bs-target="#learningpath-sidebar-{{uniqueid}}"{{/data.use_bs5}}
+            {{^data.use_bs5}}data-toggle="collapse" data-target="#learningpath-sidebar-{{uniqueid}}"{{/data.use_bs5}} aria-expanded="false"
+            aria-controls="learningpath-sidebar-{{uniqueid}}">
+
             <i class="fa-solid fa-bars"></i>
         </button>
 
@@ -77,7 +81,7 @@
     {{/data.showinfosidebar}}
 
     {{#data.pathdesktop}}
-        <div class="learning-path-block svg-block d-none d-lg-block d-xl-block"
+        <div class="learning-path-block svg-block learningpath-block-{{uniqueid}} d-lg-flex d-xl-flex d-none"
             id="learningpath-svg-{{uniqueid}}"
             data-svg-index="0"
             data-viewport="desktop">
@@ -86,7 +90,7 @@
     {{/data.pathdesktop}}
 
     {{#data.pathtablet}}
-        <div class="learning-path-block svg-block d-none d-md-block d-lg-none d-xl-none"
+        <div class="learning-path-block svg-block learningpath-block-{{uniqueid}} d-md-flex d-none d-lg-none d-xl-none"
             id="learningpath-svg-tab-{{uniqueid}}"
             data-svg-index="1"
             data-viewport="tablet">
@@ -95,7 +99,7 @@
     {{/data.pathtablet}}
 
     {{#data.pathmobile}}
-        <div class="learning-path-block svg-block d-block d-sm-block d-md-none d-lg-none d-xl-none"
+        <div class="learning-path-block svg-block learningpath-block-{{uniqueid}} d-flex d-sm-flex d-md-none d-lg-none d-xl-none"
             id="learningpath-svg-mob-{{uniqueid}}"
             data-svg-index="2"
             data-viewport="mobile">
@@ -105,106 +109,220 @@
 
     {{#data}}
         <style>
-        
-        #learningpath-svg-{{uniqueid}} .course-circle.completed,
-        #learningpath-svg-{{uniqueid}} path[mask] {
-            stroke: {{completedcirclecolor}} !important;
-            -webkit-filter: none;
-            filter: none;
-        }
-        
-        #learningpath-svg-{{uniqueid}} .course-circle.inprogress,
-        #learningpath-svg-{{uniqueid}} .course-circle.inprogress-flag {
-            stroke: {{inprogresscirclecolor}} !important;
-            -webkit-filter: none;
-            filter: none;
-        }
-        
-        #learningpath-svg-{{uniqueid}} .course-circle.notstarted {
-        stroke: {{notstartedcirclecolor}} !important;
-        -webkit-filter: none;
-        filter: none;
-        }
-        
-        #learningpath-svg-{{uniqueid}} .course-circle.unavailable {
-            stroke: {{unavailablecirclecolor}} !important;
-            -webkit-filter: none;
-            filter: none;
-        }
-        
-        #learningpath-svg-{{uniqueid}} .course-circle.available,
-        #learningpath-svg-{{uniqueid}} .course-circle.available-flag {
-            stroke: {{availablecirclecolor}} !important;
-            -webkit-filter: none;
-            filter: none;
-        }
-        
-        #learningpath-svg-{{uniqueid}} .course-circle.failed,
-        #learningpath-svg-{{uniqueid}} .course-circle.failed-flag {
-            stroke: {{failedcirclecolor}} !important;
-            -webkit-filter: none;
-            filter: none;
-        }
-        
-        </style>
-        {{/data}}
+            #learningpath-svg-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-{{uniqueid}} path[mask],
+            #learningpath-svg-tab-{{uniqueid}} path[mask],
+            #learningpath-svg-mob-{{uniqueid}} path[mask] {
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{completedcirclecolor}}) drop-shadow(0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 {{completedcirclecolor}})
+            }
 
-            
+            #learningpath-svg-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-{{uniqueid}} .course-circle.inprogress-flag,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress-flag,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress-flag {
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}})
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.notstarted{
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}})
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.unavailable{
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}})
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-{{uniqueid}} .course-circle.available-flag,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.available-flag,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.available-flag{
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}})
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-{{uniqueid}} .course-circle.failed-flag,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.failed-flag,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.failed-flag {
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}})
+            }
+
+
+            {{! Zones }}
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.completed,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.completed,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.completed,
+            .zone-position #learningpath-svg-{{uniqueid}} path[mask],
+            .zone-position #learningpath-svg-tab-{{uniqueid}} path[mask],
+            .zone-position #learningpath-svg-mob-{{uniqueid}} path[mask] {
+                filter: drop-shadow(0 0 .04rem 0 {{completedcirclecolor}}) drop-shadow(0 0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 {{completedcirclecolor}})
+            }
+
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.inprogress,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress,
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.inprogress-flag,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress-flag,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress-flag {
+                filter: drop-shadow(0 0 .04rem {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}})
+            }
+
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.notstarted,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.notstarted,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.notstarted{
+                filter: drop-shadow(0 0 .04rem {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}})
+            }
+
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.unavailable,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.unavailable,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.unavailable{
+                filter: drop-shadow(0 0 .04rem {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}})
+            }
+
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.available,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.available,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.available,
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.available-flag,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.available-flag,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.available-flag{
+                filter: drop-shadow(0 0 .04rem {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}})
+            }
+
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.failed,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.failed,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.failed,
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.failed-flag,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.failed-flag,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.failed-flag {
+                filter: drop-shadow(0 0 .04rem {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}})
+            }
+
+            .learning-path-grid .grid-block .grid-item.completed .grid-link {
+                background: {{completedcirclecolor}};
+            }
+
+            .learning-path-grid .grid-block .grid-item.inprogress .grid-link {
+                background: {{inprogresscirclecolor}};
+            }
+
+            .learning-path-grid .grid-block .grid-item.notstarted .grid-link {
+                background: {{notstartedcirclecolor}};
+            }
+
+            .learning-path-grid .grid-block .grid-item.unavailable .grid-link {
+                background: {{unavailablecirclecolor}};
+            }
+
+            .learning-path-grid .grid-block .grid-item.available .grid-link {
+                background: {{availablecirclecolor}};
+            }
+
+            .learning-path-grid .grid-block .grid-item.failed .grid-link {
+                background: {{failedcirclecolor}};
+            }
+        </style>
+    {{/data}}
+
+
     {{#data}}
     {{#data.isvisualnone}}
-    <style>
+        <style>
 
-    #learningpath-svg-{{uniqueid}} .course-circle {
-        fill: {{completedcirclecolor}};
-    }
+            #learningpath-svg-{{uniqueid}} .course-circle {
+                fill: {{completedcirclecolor}};
+                stroke: #fff;
+                border-radius: 50%;
+            }
 
-    #learningpath-svg-{{uniqueid}} .course-circle.completed {
-        fill: {{completedcirclecolor}} !important;
-    }
-    #learningpath-svg-{{uniqueid}} .course-circle.inprogress {
-        fill: {{inprogresscirclecolor}} !important;
-    }
-    #learningpath-svg-{{uniqueid}} .course-circle.notstarted {
-        fill: {{notstartedcirclecolor}} !important;
-    }
-    #learningpath-svg-{{uniqueid}} .course-circle.available {
-        fill: {{availablecirclecolor}} !important;
-    }
-    #learningpath-svg-{{uniqueid}} .course-circle.unavailable {
-        fill: {{unavailablecirclecolor}} !important;
-    }
-    #learningpath-svg-{{uniqueid}} .course-circle.failed {
-        fill: {{failedcirclecolor}} !important;
-    }
-    </style>
+            #learningpath-svg-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.completed {
+                fill: {{completedcirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress {
+                fill: {{inprogresscirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.notstarted {
+                fill: {{notstartedcirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.available {
+                fill: {{availablecirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.unavailable {
+                fill: {{unavailablecirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.failed {
+                fill: {{failedcirclecolor}};
+            }
+        </style>
     {{/data.isvisualnone}}
 
     {{#data.isvisualnumber}}
-    <style>
+        <style>
+            #learningpath-svg-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.completed {
+                fill: {{completedcirclecolor}};
+            }
 
-    #learningpath-svg-{{uniqueid}} .course-circle {
-        fill: {{completedcirclecolor}};
-    }
-
-    #learningpath-svg-{{uniqueid}} .course-circle.completed {
-        fill: {{completedcirclecolor}} !important;
-    }
-    #learningpath-svg-{{uniqueid}} .course-circle.inprogress {
-        fill: {{inprogresscirclecolor}} !important;
-    }
-    #learningpath-svg-{{uniqueid}} .course-circle.notstarted {
-        fill: {{notstartedcirclecolor}} !important;
-    }
-    #learningpath-svg-{{uniqueid}} .course-circle.available {
-        fill: {{availablecirclecolor}} !important;
-    }
-    #learningpath-svg-{{uniqueid}} .course-circle.unavailable {
-        fill: {{unavailablecirclecolor}} !important;
-    }
-    #learningpath-svg-{{uniqueid}} .course-circle.failed {
-        fill: {{failedcirclecolor}} !important;
-    }
-    </style>
+            #learningpath-svg-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress {
+                fill: {{inprogresscirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.notstarted {
+                fill: {{notstartedcirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.available {
+                fill: {{availablecirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.unavailable{
+                fill: {{unavailablecirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.failed {
+                fill: {{failedcirclecolor}};
+            }
+        </style>
     {{/data.isvisualnumber}}
     {{/data}}
 
@@ -234,7 +352,7 @@
         </div>
         {{/data.showinfo}}
 
-    <div id="learningpath-gird-{{uniqueid}}" class="learning-path-grid learning-path-block {{^data.pathdesktop}} desktop-show {{/data.pathdesktop}} {{^data.pathtablet}} tablet-show {{/data.pathtablet}} {{^data.pathmobile}} mobile-show {{/data.pathmobile}}">
+    <div id="learningpath-grid-{{uniqueid}}" class="learning-path-grid learning-path-block {{^data.pathdesktop}} desktop-show {{/data.pathdesktop}} {{^data.pathtablet}} tablet-show {{/data.pathtablet}} {{^data.pathmobile}} mobile-show {{/data.pathmobile}}">
         {{> dashaddon_learningpath/grid_layout}}
     </div>
 
@@ -245,6 +363,7 @@
 require(['jquery', 'dashaddon_learningpath/learningpath'], function($, LearnigPath) {
     LearnigPath.init('{{uniqueid}}', {{{data.dataset}}}, {{data.pagecontextid}}, {{data.isgrid}});
 });
+
 {{/js}}
 
 

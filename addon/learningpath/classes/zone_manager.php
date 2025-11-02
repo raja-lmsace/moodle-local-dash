@@ -54,6 +54,7 @@ class zone_manager {
                 $record->svgtype = $svgtype;
                 $record->zoneid = $zone['zoneid'];
                 $record->zonetype = $zone['type'];
+                $record->zoneindex = $zone['zoneindex'];
                 $record->enabled = $zone['enabled'] ? 1 : 0;
                 $record->courseid = $zone['courseid'];
                 $record->timecreated = time();

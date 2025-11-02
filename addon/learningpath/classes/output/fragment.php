@@ -23,15 +23,32 @@ class fragment {
      * @return string
      */
     public static function zone_config($args) {
-        global $PAGE, $OUTPUT;
+        global $PAGE, $OUTPUT, $DB;
 
         $blockid = $args['blockid'];
         $context = context_block::instance($blockid);
+        $paths = (array) json_decode($args['paths'], true);
+        // Update the block config data.
+        if ($configdata = $DB->get_field('block_instances', 'configdata', array('id' => $blockid))) {
+            $config = unserialize_object(base64_decode($configdata));
+            $config->preferences['positioning'] = 'zones';
+            if(isset($paths)) {
+                //$paths = $args['paths'];
+                $config->preferences['desktoppath'] = $paths['desktoppath'] ?? $config->preferences['desktoppath'] ?? '0';
+                $config->preferences['tabletpath'] = $paths['tabletpath'] ?? $config->preferences['tabletpath'] ?? '0';
+                $config->preferences['mobilepath'] = $paths['mobilepath'] ?? $config->preferences['mobilepath'] ?? '0';
+            }
+            $configdata = base64_encode(serialize($config));
+            $DB->set_field('block_instances', 'configdata', $configdata, array('id' => $blockid));
+        }
 
         // Check if form is being submitted.
         if (!empty($args['submitbutton'])) {
             return self::process_zone_config_submission($args);
         }
+
+        $blockid = $args['blockid'];
+
 
         // Get zone configuration data.
         $data = self::get_zone_config($blockid);
@@ -73,14 +90,6 @@ class fragment {
                 ]);
             }
 
-            // Update the block config data.
-            if ($configdata = $DB->get_field('block_instances', 'configdata', array('id' => $blockid))) {
-                $config = unserialize_object(base64_decode($configdata));
-                $config->preferences['positioning'] = 'zones';
-                $configdata = base64_encode(serialize($config));
-                $DB->set_field('block_instances', 'configdata', $configdata, array('id' => $blockid));
-            }
-
             // Initialize zone manager.
             $zonemanager = new zone_manager($blockid);
 
@@ -98,14 +107,28 @@ class fragment {
                     if (preg_match($pattern, $key, $matches)) {
                         $zoneid_from_key = $matches[1]; // Extract the zone ID from the key.
                         $prefix = "zone_{$svgtype}_{$zoneid_from_key}";
-
                         // Get the actual zone ID from the form data.
                         $actual_zoneid = $formdata[$key];
+
+
+                        $zone_pattern = "/^zone_([a-z]+)_([a-z]+)_(\d+)$/";
+                        $viewport = '';
+                        $zonetype = '';
+                        $zoneindex = 0;
+
+                        if (preg_match($zone_pattern, $prefix, $zone_matches)) {
+                            //print_r($zone_matches);
+                            $viewport = $zone_matches[1];   // e.g., "desktop", "tablet", "mobile"
+                            $zonetype = $zone_matches[2];   // e.g., "ellipse", "rect", "circle"
+                            $zoneindex = (int)$zone_matches[3];
+                        }
 
                         // Get zone data.
                         $zone_data = [
                             'zoneid' => $actual_zoneid,
-                            'type' => $formdata[$prefix . '_zonetype'] ?? '',
+                            'viewport' => $viewport,
+                            'type' => $zonetype,
+                            'zoneindex' => $zoneindex,
                             'enabled' => false,
                             'courseid' => null
                         ];
@@ -223,14 +246,20 @@ class fragment {
                 $svgcontent = dashaddon_learningpath_get_filename_path($type . '_learningpath', $filename);
 
                 if (!empty($svgcontent)) {
-                    $parsedzones = svg_parser::parse_zones($svgcontent->get_content());
+                    $parsedzones = svg_parser::parse_zones($svgcontent->get_content(), $type);
                     $savedzones = $zonemanager->get_zones($type);
+                    $parsedzones = array_map(function($zone) use ($svgcount) {
+                        $zone['svgindex'] = $svgcount;
+                        return $zone;
+                    }, $parsedzones);
+
                     $zones = self::merge_zone_data($parsedzones, $savedzones, $blockid);
 
                     $result['svgs'][] = [
                         'filename' => $filename,
                         'displayname' => ucfirst($type),
                         'svgtype' => $type,
+                        'svgindex' => $svgcount,
                         'svgcontent' => svg_parser::add_zone_attributes($svgcontent->get_content()),
                         'zones' => $zones,
                         'first' => $svgcount === 0,
@@ -306,14 +335,21 @@ class fragment {
         $result = [];
         foreach ($parsedzones as $parsed) {
             $saved = isset($savedbyid[$parsed['id']]) ? $savedbyid[$parsed['id']] : null;
-            $courseid = $DB->get_field('dashaddon_learningpath_zones', 'courseid', ['zoneid' => $parsed['id'], 'zonetype' => $parsed['type'], 'blockid' => $blockid]);
-            $status = $DB->get_field('dashaddon_learningpath_zones', 'enabled', ['zoneid' => $parsed['id'], 'zonetype' => $parsed['type'], 'blockid' => $blockid]);
+            // Try to get existing zone data from database using zonetype and zoneindex.
+            $existingzone = $DB->get_record('dashaddon_learningpath_zones', [
+                'zoneid' => $parsed['id'],
+                'zonetype' => $parsed['type'],
+                'zoneindex' => $parsed['zoneindex'],
+                'blockid' => $blockid
+            ]);
+
             $result[] = [
                 'id' => $parsed['id'],
-                'type' => $parsed['type'],
+                'zonetype' => $parsed['type'],
+                'zoneindex' => $parsed['zoneindex'],
                 'typename' => $parsed['typename'],
-                'enabled' => $status ? (bool)$status : false,
-                'courseid' => $courseid ?? 0,
+                'enabled' => $existingzone ? (bool)$existingzone->enabled : false,
+                'courseid' => $existingzone ? (int)$existingzone->courseid : 0,
                 'position' => $parsed['position']
             ];
         }

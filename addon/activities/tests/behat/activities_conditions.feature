@@ -46,7 +46,6 @@ Feature: Add activity widget in dash block
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I create dash "Activities" datasource
-    And I wait "2" seconds
     Then I configure the "New Dash" block
     And I set the field "Block title" to "Activities"
     And I set the following fields to these values:

@@ -1,14 +1,14 @@
 define(['jquery', 'core/fragment', 'core/modal_events',
-    'core/notification', 'core/modal_save_cancel'], function ($, Fragment, ModalEvents, notification, SaveCancelModal) {
+    'core/notification', 'core/modal_save_cancel', 'core/str'], function ($, Fragment, ModalEvents, notification, SaveCancelModal, Str) {
 
 
-    const ZoneConfig = function (blockid, contextid) {
+    const ZoneConfig = function (zoneuniqueid, blockid, contextid) {
         var self = this;
+        this.zoneuniqueid = zoneuniqueid;
         this.blockid = blockid;
         this.contextId = contextid;
-        console.log("zoneConfig init for blockid " + blockid);
-
-        $(document).on('click', '.modal-body [data-action="configure-zones"]', function(e) {
+        $zoneconfigid = '#' + zoneuniqueid;
+        $(document).on('click', '.modal-body ' + $zoneconfigid, function(e) {
             console.log("Configure zones clicked");
             e.preventDefault();
             var blockid = $(this).data('blockid');
@@ -24,22 +24,19 @@ define(['jquery', 'core/fragment', 'core/modal_events',
     ZoneConfig.prototype.openZoneConfig = function(blockid) {
         var self = this;
         SaveCancelModal.create({
-            title: M.util.get_string('configure_zones_title', 'block_dash'),
+            title: Str.get_string('configure_zones_title', 'block_dash'),
             large: true,
             body: self.getZoneBody(blockid)
         }).then(function(modal) {
-
 
             modal.getRoot().on(ModalEvents.bodyRendered, function() {
                 self.initZoneConfigEvents(modal, blockid);
             });
 
-
             modal.getRoot().on(ModalEvents.save, e => {
                 e.preventDefault();
-                self.saveZoneConfiguration(blockid, modal);
+                self.saveZoneConfiguration(modal);
             });
-
 
             // Handle hidden event.
             modal.getRoot().on(ModalEvents.hidden, () => {
@@ -59,7 +56,7 @@ define(['jquery', 'core/fragment', 'core/modal_events',
      * @param {int} blockid Block instance ID
      * @param {Object} modal The modal object
      */
-    ZoneConfig.prototype.saveZoneConfiguration = function(blockid, modal) {
+    ZoneConfig.prototype.saveZoneConfiguration = function(modal) {
             var self = this;
             const form = modal.getRoot().find('form');
             if (!form) {
@@ -74,25 +71,22 @@ define(['jquery', 'core/fragment', 'core/modal_events',
             // Submit via fragment.
             Fragment.loadFragment('dashaddon_learningpath', 'handler', self.contextId, {
                 method: 'zone_config',
-                blockid: blockid,
+                blockid: self.blockid,
                 submitbutton: 1,
                 formdata: formData,
             }).then(function(response) {
-                    var result = JSON.parse(response);
-                    console.log(result);
-                    if (result.success) {
-                        console.log('Zones saved successfully');
-                        modal.hide();
-                        modal.destroy();
-                        return response;
-                    } else {
-                        notification.addNotification({
-                            message: result.error || 'Error saving zones',
-                            type: 'error'
-                        });
-                    }
+                var result = JSON.parse(response);
+                if (result.success) {
+                    modal.hide();
+                    modal.destroy();
+                    return response;
+                } else {
+                    notification.addNotification({
+                        message: result.error || 'Error saving zones',
+                        type: 'error'
+                    });
+                }
             }).catch(function(error) {
-                console.log("call zone_config error");
                 modal.setBody(self.getZoneBody(blockid, JSON.stringify(form.serialize())));
                 return modal;
             });
@@ -100,11 +94,21 @@ define(['jquery', 'core/fragment', 'core/modal_events',
 
 
     ZoneConfig.prototype.getZoneBody = function(blockid, formdata = null) {
+        var desktoppath = document.querySelectorAll("select[name='config_preferences[desktoppath]']")[0];
+        var mobilepath =  document.querySelectorAll("select[name='config_preferences[mobilepath]']")[0];
+        var tabletpath =  document.querySelectorAll("select[name='config_preferences[tabletpath]']")[0];
+        var paths = {
+            desktoppath: desktoppath ? desktoppath.value : null,
+            mobilepath: mobilepath ? mobilepath.value : null,
+            tabletpath: tabletpath ? tabletpath.value : null
+        };
+
         var self = this;
         var params = {
-            blockid: blockid,
+            blockid: self.blockid,
             method: 'zone_config',
-            formdata: formdata
+            formdata: formdata,
+            paths: JSON.stringify(paths)
         };
         return Fragment.loadFragment('dashaddon_learningpath', 'handler', self.contextId, params);
     };
@@ -165,8 +169,8 @@ define(['jquery', 'core/fragment', 'core/modal_events',
 
 
     return {
-        init: function (blockid, contextid) {
-            return new ZoneConfig(blockid, contextid);
+        init: function (zoneuniqueid, blockid, contextid) {
+            return new ZoneConfig(zoneuniqueid, blockid, contextid);
         }
     };
 });

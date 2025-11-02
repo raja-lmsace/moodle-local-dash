@@ -29,11 +29,11 @@
 }}
 <ul id="gridLayout">
 {{#data.courses}}
-<li class="grid-block grid-course-{{info.id}}" data-title="{{{info.fullname}}}" data-toggle="tooltip"
+<li class="grid-block grid-course-{{info.id}} imgsize-{{data.imgsize}}" data-title="{{{info.fullname}}}" data-toggle="tooltip"
     data-courseid="{{info.id}}" data-grid="1" data-prevcourse="{{prevnavcourse}}" data-nextcourse="{{nextnavcourse}}">
     <div class="grid-item {{completionstatus}}">
-        <a class="grid-link" href="{{#data.detailsarea}}#{{/data.detailsarea}}{{^data.detailsarea}}{{info.url}}{{/data.detailsarea}}">
-        <img src="{{img}}" alt=""/>
+        <a class="grid-link" href="{{#data.infoarea}}javascript:void(0){{/data.infoarea}}{{^data.infoarea}}{{info.url}}{{/data.infoarea}}">
+            <img src="{{img}}" alt=""/>
         </a>
     </div>
 </li>

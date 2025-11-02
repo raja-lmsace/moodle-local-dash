@@ -60,7 +60,12 @@
 {{! Course Progress Accordion - Expandable progress bars }}
 {{#data.displaypathindex}}
 <div class="learningpath-course-completion" id="courseCompletionBlock">
-    <div class="completion-header collapsed" data-toggle="collapse" data-target="#collapseCourseProgress" aria-expanded="false" aria-controls="collapseCourseProgress" role="button">
+    <div class="completion-header collapsed"
+    {{#data.use_bs5}}data-bs-toggle="collapse" data-bs-target="#collapseCourseProgress"{{/data.use_bs5}}
+    {{^data.use_bs5}}data-toggle="collapse" data-target="#collapseCourseProgress"{{/data.use_bs5}}
+    aria-expanded="false"
+    aria-controls="collapseCourseProgress"
+    role="button">
         <div class="completion-header-top">
             <div class="completion-title-row">
                 <h4 class="completion-title">{{#str}}coursecompletion, block_dash{{/str}}</h4>
