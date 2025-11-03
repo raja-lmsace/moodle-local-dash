@@ -50,29 +50,14 @@ Feature: Add activity completion condition datasource in dash block
       | Assignment 4 | student1  | Insects are hexapod invertebrates of the class Insecta. |
       | Assignment 5 | student2  | Assignment 5 grading - scale |
       | Assignment 6 | student3  | Assignment 6 grading - point |
-    #---Admin loggedin---#
-    And I log in as "admin"
-    And I turn dash block editing mode on
-    And I create dash "Activity Completion" datasource
-    And I configure the "New Dash" block
-    And I set the following fields to these values:
-      | Block title  | Activity completion |
-      | Region       | content   |
-    And I press "Save changes"
-    And I wait until the page is ready
-    And I open the "Activity completion" block preference
-    And I click on "Fields" "link"
-    And I set the field "Users: First name" to "0"
-    And I set the field "Users: Fullname linked" to "1"
-    And I press "Save changes"
-    And I press "Reset Dashboard for all users"
-    #---Admin log out---#
-    And I log out
+    And the following "block_dash > dash blocks default" exist:
+      | type       | name                  | title               | Fields                                               |
+      | datasource | activity_completion   | Activity completion | Module icon, Activity name, Section, Fullname linked |
 
   Scenario: Activity completion datasource: Course
     #---Admin login---#
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+   And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Set course in conditions---#
     And I wait until the page is ready
@@ -96,7 +81,7 @@ Feature: Add activity completion condition datasource in dash block
   Scenario Outline: Activity completion: Course date
     #---Admin login---#
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+   And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Set course in conditions---#
     And I open the "Activity completion" block preference
@@ -121,7 +106,7 @@ Feature: Add activity completion condition datasource in dash block
   Scenario Outline: Activity completion: Course future date
     #---Admin login---#
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+   And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Set course in conditions---#
     And I open the "Activity completion" block preference
@@ -152,7 +137,7 @@ Feature: Add activity completion condition datasource in dash block
   Scenario Outline: Activity completion datasource: activity completion status
   	#---Admin login---#
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+   And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Set course in conditions---#
     And I open the "Activity completion" block preference
@@ -184,9 +169,7 @@ Feature: Add activity completion condition datasource in dash block
     Given I log in as "admin"
     And I navigate to "Users > Permissions > Define roles" in site administration
     And I click on "Add a new role" "button"
-    #And I wait until the page is ready
     And I click on "Continue" "button"
-    #And I wait until the page is ready
     #---Create new parent role---#
     And I set the following fields to these values:
       | Short name                              | Parent |
@@ -210,7 +193,7 @@ Feature: Add activity completion condition datasource in dash block
     And I set the field "addselect" to "parent 1 (student1@example.com)"
     And I click on "Add" "button" in the "#page-content" "css_element"
     #---Condition setting---#
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+   And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Set User i manage in conditions---#
     And I open the "Activity completion" block preference
@@ -231,7 +214,7 @@ Feature: Add activity completion condition datasource in dash block
   Scenario: Activity completion datasource:Current user
   	#---Admin login---#
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+   And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Set course in conditions---#
     And I open the "Activity completion" block preference
@@ -258,7 +241,7 @@ Feature: Add activity completion condition datasource in dash block
       | forum 	 | Forum 	| C1 			| forum 	 | Welcome to forum  | 1 			 |
     #---Admin login---#
     And I log in as "<user>"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+   And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Set course in conditions---#
     And I open the "Activity completion" block preference
@@ -294,7 +277,7 @@ Feature: Add activity completion condition datasource in dash block
       | teacher2 | cohortid2 |
     #---Admin login---#
     And I log in as "<user>"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+   And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Set course in conditions---#
     And I open the "Activity completion" block preference
@@ -329,7 +312,7 @@ Feature: Add activity completion condition datasource in dash block
       | teacher2 | cohortid2 |
     #---Admin login---#
     And I log in as "<user>"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+   And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Set course in conditions---#
     And I open the "Activity completion" block preference
@@ -347,6 +330,6 @@ Feature: Add activity completion condition datasource in dash block
     And I should see "<user2>" in the ".dash-table tbody tr:nth-child(<tr2>) td:nth-child(4)" "css_element"
     Examples:
       | user  | cohorts | loguser  | user1 		 | user2  	 | tr1 | tr2 |
-      | admin | Cohort1 | student1 | Student 1 | teacher 1 | 1 	 | 5 	 |
+      | admin | Cohort1 | student1 | Student 1 | teacher 1 | 1 	 | 4 	 |
       | admin | Cohort2 | student2 | Student 2 | teacher 2 | 1	 | 6 	 |
-      | admin | Cohort2 | teacher1 | Student 1 | teacher 1 | 1 	 | 5 	 |
+      | admin | Cohort2 | teacher1 | Student 1 | teacher 1 | 1 	 | 4 	 |
