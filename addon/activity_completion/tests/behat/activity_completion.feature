@@ -263,6 +263,7 @@ Feature: Add activity completion datasource in dash block
     And I set the field "User" to "1"
     And I set the field "Course" to "1"
     And I set the field "Activity" to "1"
+    And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
     #---Admin log out---#
     And I log out
