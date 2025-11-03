@@ -63,7 +63,7 @@ jobs:
 
       - name: Install moodle-plugin-ci
         run: |
-          moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-block_dash.git --branch dev
+          moodle-plugin-ci add-plugin --clone https://github.com/raja-lmsace/moodle-block-dash.git
           moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-tool_skills.git --branch dev
           moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-tool_certificate.git --branch MOODLE_400_STABLE
           moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-mod_coursecertificate.git --branch MOODLE_400_STABLE
