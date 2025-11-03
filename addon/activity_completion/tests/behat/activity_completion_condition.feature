@@ -70,9 +70,9 @@ Feature: Add activity completion condition datasource in dash block
     #---Check Activities in course for enrolled users---#
     And I follow "Dashboard"
     And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-    And I should see "Assignment 1" in the ".block_dash .dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    And I should see "Assignment 1" in the ".block_dash .dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
     And I should see "Student 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
-    And I should see "Assignment 2" in the ".dash-table tbody tr:nth-child(7) td:nth-child(2)" "css_element"
+    And I should see "Assignment 2" in the ".dash-table tbody tr:nth-child(7) td:nth-child(1)" "css_element"
     And I should see "Student 2" in the ".dash-table tbody tr:nth-child(7) td:nth-child(4)" "css_element"
     And I should see "Student 3" in the ".dash-table tbody tr:nth-child(8) td:nth-child(4)" "css_element"
     #---Admin log out---#
@@ -97,7 +97,7 @@ Feature: Add activity completion condition datasource in dash block
     And I follow "Dashboard"
     And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
     And I should see "<name>" in the ".dash-table tbody tr:nth-child(<Nrow>) td:nth-child(4)" "css_element"
-    And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(2)" "css_element"
+    And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(1)" "css_element"
     And I should see "<course>" in the ".dash-table tbody tr:nth-child(<Crow>) td:nth-child(5)" "css_element"
     Examples:
       | coursedate | name 		 | Nrow | activity 		 | Arow | course | Crow |
@@ -128,7 +128,7 @@ Feature: Add activity completion condition datasource in dash block
     And I follow "Dashboard"
     And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
     And I should see "<name>" in the ".dash-table tbody tr:nth-child(<Nrow>) td:nth-child(4)" "css_element"
-    And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(2)" "css_element"
+    And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(1)" "css_element"
     And I should see "<course>" in the ".dash-table tbody tr:nth-child(<Crow>) td:nth-child(5)" "css_element"
     Examples:
       | coursedate | name 		 | Nrow | activity 		 | Arow | course | Crow |
@@ -152,7 +152,7 @@ Feature: Add activity completion condition datasource in dash block
     And I follow "Dashboard"
     And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
     And I should see "<name>" in the ".dash-table tbody tr:nth-child(<Nrow>) td:nth-child(4)" "css_element"
-    And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(2)" "css_element"
+    And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(1)" "css_element"
     And I should see "<course>" in the ".dash-table tbody tr:nth-child(<Crow>) td:nth-child(5)" "css_element"
     Examples:
       | status 			 | name 		 | Nrow | activity 		 | Arow | course | Crow |
@@ -161,8 +161,8 @@ Feature: Add activity completion condition datasource in dash block
       | notcompleted | Student 2 | 2 	  | Assignment 1 | 2 	  | C1 		 | 2 	  |
       | notcompleted | Student 3 | 3 	  | Assignment 1 | 3 	  | C1 		 | 3 	  |
       | notcompleted | Student 1 | 6 	  | Assignment 2 | 6 	  | C1 		 | 6 	  |
-      | notcompleted | Student 2 | 7 	  | Assignment 2 | 8  	| C1 		 | 7 	  |
-      | notcompleted | Student 3 | 9    | Assignment 2 | 9 	  | C1 	 	 | 9 	  |
+      | notcompleted | Student 2 | 7 	  | Assignment 2 | 7  	| C1 		 | 7 	  |
+      | notcompleted | Student 3 | 8    | Assignment 2 | 8 	  | C1 	 	 | 8 	  |
 
   Scenario: Activity completion datasource:User I manage
     #---Admin login---#
@@ -256,7 +256,7 @@ Feature: Add activity completion condition datasource in dash block
     #---Check Activities name list---#
     And I follow "Dashboard"
     And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-    And I should see "<activity1>" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    And I should see "<activity1>" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
     And I log out
     Examples:
       | user  | user1 	 | activity1 	  | id      |
