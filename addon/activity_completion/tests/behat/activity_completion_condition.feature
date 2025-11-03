@@ -57,7 +57,7 @@ Feature: Add activity completion condition datasource in dash block
   Scenario: Activity completion datasource: Course
     #---Admin login---#
     And I log in as "admin"
-   And I am on the "block_dash > Default Dashboard" page
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Set course in conditions---#
     And I wait until the page is ready
