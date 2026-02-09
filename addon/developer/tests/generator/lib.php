@@ -22,13 +22,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Dashaddon developer data generator.
  */
 class dashaddon_developer_generator extends component_generator_base {
-
     /**
      * Create a custom data source record.
      *

@@ -221,8 +221,10 @@ class activities_data_source extends abstract_data_source {
                     case 'textarea':
                         break;
                     default:
-                        if (class_exists('\customfield_multicategory\condition_helper')
-                            && \customfield_multicategory\condition_helper::should_skip_default_filter($field->get('type'))) {
+                        if (
+                            class_exists('\customfield_multicategory\condition_helper') &&
+                            \customfield_multicategory\condition_helper::should_skip_default_filter($field->get('type'))
+                        ) {
                             break;
                         }
                         $filtercollection->add_filter(new customfield_filter(

@@ -26,7 +26,6 @@
  * Dashaddon developer behat data generator.
  */
 class behat_dashaddon_developer_generator extends behat_generator_base {
-
     /**
      * Map of short attribute names to full class names.
      */
@@ -73,11 +72,11 @@ class behat_dashaddon_developer_generator extends behat_generator_base {
         if (!empty($data['fieldattribute'])) {
             $attrs = json_decode($data['fieldattribute'], true);
             if (is_array($attrs)) {
-                $attrs = array_map(function($fieldattrs) {
+                $attrs = array_map(function ($fieldattrs) {
                     if (!is_array($fieldattrs)) {
                         return $fieldattrs;
                     }
-                    return array_map(function($attr) {
+                    return array_map(function ($attr) {
                         return $this->resolve_attribute_name($attr);
                     }, $fieldattrs);
                 }, $attrs);
