@@ -285,7 +285,12 @@ class custom_data_source_form extends persistent_form {
         $header = '<h5 class="tablefields">' . get_string('fieldstatichdr', 'block_dash') . '</h5>';
 
         $fieldattrs = [];
-        $fieldattrs[] =& $mform->createElement('select', 'fieldattribute', get_string('fieldtransformdata', 'block_dash'), $attributes);
+        $fieldattrs[] =& $mform->createElement(
+            'select',
+            'fieldattribute',
+            get_string('fieldtransformdata', 'block_dash'),
+            $attributes
+        );
         $fieldattrs[] =& $mform->createElement('submit', 'addattributebtn', '+');
 
         $attrvalues = [];
@@ -300,8 +305,22 @@ class custom_data_source_form extends persistent_form {
             $mform->createElement('html', '<div class="select-fields-group">'),
             $mform->createElement('static', 'fieldstatichdr', $header),
             $mform->createElement('autocomplete', 'selectfield', get_string('field', 'block_dash'), $tablefields, $options),
-            $mform->createElement('group', 'fieldattributegrp', get_string('fieldtransformdata', 'block_dash'), $fieldattrs, null, false),
-            $mform->createElement('group', 'attributevaluegrp', get_string('fieldcustomdata', 'block_dash'), $attrvalues, null, false),
+            $mform->createElement(
+                'group',
+                'fieldattributegrp',
+                get_string('fieldtransformdata', 'block_dash'),
+                $fieldattrs,
+                null,
+                false
+            ),
+            $mform->createElement(
+                'group',
+                'attributevaluegrp',
+                get_string('fieldcustomdata', 'block_dash'),
+                $attrvalues,
+                null,
+                false
+            ),
 
             $mform->createElement('submit', 'deletefield', get_string('deletefield', 'block_dash'), ['class' => 'd-none'], false),
             $mform->createElement(
@@ -342,7 +361,6 @@ class custom_data_source_form extends persistent_form {
             false,
             'deletefield'
         );
-        // exit;
 
         $mform->registerNoSubmitButton('addattributebtn');
 
@@ -462,13 +480,11 @@ class custom_data_source_form extends persistent_form {
      * @param stdClass|array $defaultvalues object or array of default values
      */
     function set_data($defaultvalues) {
-
         if (is_object($defaultvalues)) {
             $defaultvalues = (array) $defaultvalues;
         }
 
         if ($attrs = optional_param_array('addattributebtn', false, PARAM_ALPHANUMEXT)) {
-
             $fieldattributes = $this->_form->getSubmitValue('fieldattribute');
 
             $key = array_key_last($attrs);
@@ -489,7 +505,8 @@ class custom_data_source_form extends persistent_form {
     /**
      * Method to add a repeating group of elements to a form.
      *
-     * Modified version of the original method in moodleform to make the field attribute and field values in array format for the loop in field definition.
+     * Modified version of the original method in moodleform to make the field attribute and
+     * field values in array format for the loop in field definition.
      *
      * @param array $elementobjs Array of elements or groups of elements that are to be repeated
      * @param int $repeats no of times to repeat elements initially
@@ -512,9 +529,17 @@ class custom_data_source_form extends persistent_form {
      *         in each of the elements
      * @return int no of repeats of element in this page
      */
-    public function repeat_elements($elementobjs, $repeats, $options, $repeathiddenname,
-                                    $addfieldsname, $addfieldsno = 5, $addstring = null, $addbuttoninside = false,
-                                    $deletebuttonname = '') {
+    public function repeat_elements(
+        $elementobjs,
+        $repeats,
+        $options,
+        $repeathiddenname,
+        $addfieldsname,
+        $addfieldsno = 5,
+        $addstring = null,
+        $addbuttoninside = false,
+        $deletebuttonname = ''
+        ) {
         if ($addstring === null) {
             $addstring = get_string('addfields', 'form', $addfieldsno);
         } else {
@@ -523,15 +548,15 @@ class custom_data_source_form extends persistent_form {
         $repeats = $this->optional_param($repeathiddenname, $repeats, PARAM_INT);
         $addfields = $this->optional_param($addfieldsname, '', PARAM_TEXT);
         $oldrepeats = $repeats;
-        if (!empty($addfields)){
+        if (!empty($addfields)) {
             $repeats += $addfieldsno;
         }
         $mform =& $this->_form;
         $mform->registerNoSubmitButton($addfieldsname);
         $mform->addElement('hidden', $repeathiddenname, $repeats);
         $mform->setType($repeathiddenname, PARAM_INT);
-        //value not to be overridden by submitted value
-        $mform->setConstants([$repeathiddenname=>$repeats]);
+        // Value not to be overridden by submitted value.
+        $mform->setConstants([$repeathiddenname => $repeats]);
         $namecloned = [];
         $no = 1;
         for ($i = 0; $i < $repeats; $i++) {
@@ -546,7 +571,7 @@ class custom_data_source_form extends persistent_form {
                 }
             }
 
-            foreach ($elementobjs as $elementobj){
+            foreach ($elementobjs as $elementobj) {
                 $elementclone = fullclone($elementobj);
                 $this->repeat_elements_fix_clone($i, $elementclone, $namecloned);
 
@@ -576,35 +601,34 @@ class custom_data_source_form extends persistent_form {
                 $no++;
             }
         }
-        for ($i=0; $i<$repeats; $i++) {
-            foreach ($options as $elementname => $elementoptions){
-                $pos=strpos($elementname, '[');
-                if ($pos!==FALSE){
-                    $realelementname = substr($elementname, 0, $pos)."[$i]";
+        for ($i = 0; $i < $repeats; $i++) {
+            foreach ($options as $elementname => $elementoptions) {
+                $pos = strpos($elementname, '[');
+                if ($pos !== FALSE) {
+                    $realelementname = substr($elementname, 0, $pos) . "[$i]";
                     $realelementname .= substr($elementname, $pos);
-                }else {
-                    $realelementname = $elementname."[$i]";
+                } else {
+                    $realelementname = $elementname . "[$i]";
                 }
-                foreach ($elementoptions as  $option => $params){
-
+                foreach ($elementoptions as  $option => $params) {
                     switch ($option){
-                        case 'default' :
+                        case 'default':
                             $mform->setDefault($realelementname, str_replace('{no}', $i + 1, $params));
                             break;
-                        case 'helpbutton' :
+                        case 'helpbutton':
                             $params = array_merge([$realelementname], $params);
                             call_user_func_array([&$mform, 'addHelpButton'], $params);
                             break;
-                        case 'disabledif' :
-                        case 'hideif' :
+                        case 'disabledif':
+                        case 'hideif':
                             $pos = strpos($params[0], '[');
                             $ending = '';
                             if ($pos !== false) {
                                 $ending = substr($params[0], $pos);
                                 $params[0] = substr($params[0], 0, $pos);
                             }
-                            foreach ($namecloned as $num => $name){
-                                if ($params[0] == $name){
+                            foreach ($namecloned as $num => $name) {
+                                if ($params[0] == $name) {
                                     $params[0] = $params[0] . "[$i]" . $ending;
                                     break;
                                 }
@@ -613,8 +637,8 @@ class custom_data_source_form extends persistent_form {
                             $function = ($option === 'disabledif') ? 'disabledIf' : 'hideIf';
                             call_user_func_array([&$mform, $function], $params);
                             break;
-                        case 'rule' :
-                            if (is_string($params)){
+                        case 'rule':
+                            if (is_string($params)) {
                                 $params = [null, $params, null, 'client'];
                             }
                             $params = array_merge([$realelementname], $params);
@@ -663,7 +687,8 @@ class custom_data_source_form extends persistent_form {
     public function create_field_attributes($element, $index) {
 
         // Verify the element is field attribute or attribute value group. otherwise, return directly.
-        if (!($element instanceof \HTML_QuickForm_group) ||
+        if (
+            !($element instanceof \HTML_QuickForm_group) ||
             (str_contains($element->getName(), 'fieldattributegrp') === false &&
             str_contains($element->getName(), 'attributevaluegrp') === false)
         ) {

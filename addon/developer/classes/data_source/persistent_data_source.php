@@ -179,7 +179,7 @@ class persistent_data_source extends abstract_data_source {
      * @param string $value
      * @return string|int
      */
-    public function update_current_user($value)  {
+    public function update_current_user($value) {
         global $USER;
 
         if (str_contains($value, '[LOGINUSER')) {
