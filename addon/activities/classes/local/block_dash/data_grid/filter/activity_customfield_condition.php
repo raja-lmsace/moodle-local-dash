@@ -37,7 +37,6 @@ use MoodleQuickForm;
  * @package dashaddon_activities
  */
 class activity_customfield_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -71,7 +70,8 @@ class activity_customfield_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -130,11 +130,11 @@ class activity_customfield_condition extends condition {
         if (isset($this->get_preferences()['value']) && !empty($fieldid)) {
             $name = strtolower($this->get_name());
             $value = $this->get_preferences()['value'];
-            $valuecheck = $DB->sql_compare_text(':value_'.$name);
+            $valuecheck = $DB->sql_compare_text(':value_' . $name);
             $sql = "cm.id IN (
                 SELECT instanceid FROM {local_metadata} mfd WHERE mfd.fieldid = :fieldid_$name AND mfd.data=$valuecheck
             )";
-            $params = ['fieldid_'.$name => $fieldid, 'value_'.$name => $value];
+            $params = ['fieldid_' . $name => $fieldid, 'value_' . $name => $value];
             return [$sql, $params];
         }
     }

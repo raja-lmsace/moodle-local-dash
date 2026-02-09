@@ -32,7 +32,6 @@ use stdClass;
  * List the cohorts assigned to the programs
  */
 class program_cohort_attribute extends abstract_field_attribute {
-
     /**
      * List the cohorts assigned to the programs
      *
@@ -53,6 +52,3 @@ class program_cohort_attribute extends abstract_field_attribute {
         return $result;
     }
 }
-
-
-

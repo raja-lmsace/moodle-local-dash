@@ -31,7 +31,6 @@ use block_dash\local\data_grid\filter\select_filter;
  * @package local_dash
  */
 class tags_field_filter extends select_filter {
-
     /**
      * Current component.
      *

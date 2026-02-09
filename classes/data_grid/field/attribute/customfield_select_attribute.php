@@ -52,7 +52,6 @@ class customfield_select_attribute extends abstract_field_attribute {
                 $metafield = $DB->get_record("local_metadata_field", ['id' => $field->id]);
                 $options = explode("\n", $metafield->param1);
             }
-
         } else if (method_exists($field, 'get_options')) {
             // Moodle 3.10 and up.
             $options = $field->get_options();

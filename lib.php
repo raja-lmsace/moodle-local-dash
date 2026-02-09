@@ -104,8 +104,10 @@ function local_dash_register_widgets() {
  */
 function local_dash_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
 
-    if ($context->contextlevel == CONTEXT_SYSTEM && ($filearea === 'courseimage' || $filearea === 'programbg')
-        || $filearea === 'dashthumbnailimage' || $filearea === 'dashbgimage' || $filearea === 'calendareventsimage') {
+    if (
+        $context->contextlevel == CONTEXT_SYSTEM && ($filearea === 'courseimage' || $filearea === 'programbg')
+        || $filearea === 'dashthumbnailimage' || $filearea === 'dashbgimage' || $filearea === 'calendareventsimage'
+    ) {
         // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
         $itemid = 0;
 
@@ -113,14 +115,16 @@ function local_dash_pluginfile($course, $cm, $context, $filearea, $args, $forced
         // user really does have access to the file in question.
         // Extract the filename / filepath from the $args array.
         $filename = array_pop($args); // The last item in the $args array.
-        if ($filearea === 'programbg' || $filearea === 'dashthumbnailimage'
-            || $filearea === 'dashbgimage' || $filearea === 'calendareventsimage') {
+        if (
+            $filearea === 'programbg' || $filearea === 'dashthumbnailimage'
+            || $filearea === 'dashbgimage' || $filearea === 'calendareventsimage'
+        ) {
             $filepath = '/';
         } else {
             if (!$args) {
                 $filepath = '/';
             } else {
-                $filepath = '/'.implode('/', $args).'/';
+                $filepath = '/' . implode('/', $args) . '/';
             }
         }
 
@@ -151,16 +155,18 @@ function local_dash_extend_settings_navigation($settingsnav, $context) {
     if ($PAGE->pagetype == 'my-index' && array_key_exists('dashboard', core_component::get_plugin_list('dashaddon'))) {
         require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
         $dashboard = $DB->get_record('dashaddon_dashboard_dash', ['shortname' => 'coredashboard']);
-        $dashbgimage = dashaddon_dashboard_get_dashboard_background($dashboard->id);
-        if ($dashbgimage) {
-            // Course background image style css content.
-            $style = "body {
-                        background-image: url('" . $dashbgimage . "');
-                        background-size: cover;
-                        background-repeat: no-repeat;
-                        background-position: center;
-                    }";
-            $CFG->additionalhtmltopofbody = html_writer::tag('style', $style);
+        if (isset($dashboard->id)) {
+            $dashbgimage = dashaddon_dashboard_get_dashboard_background($dashboard->id);
+            if ($dashbgimage) {
+                // Course background image style css content.
+                $style = "body {
+                            background-image: url('" . $dashbgimage . "');
+                            background-size: cover;
+                            background-repeat: no-repeat;
+                            background-position: center;
+                        }";
+                $CFG->additionalhtmltopofbody = html_writer::tag('style', $style);
+            }
         }
     }
 
@@ -171,7 +177,7 @@ function local_dash_extend_settings_navigation($settingsnav, $context) {
         $redirecturl = ($url != '') ? $url : $redirecturl;
 
         if ($PAGE->bodyid == 'page-course-index-category') {
-            if ($url != '' && strpos($url, $CFG->wwwroot) != true ) {
+            if ($url != '' && strpos($url, $CFG->wwwroot) != true) {
                 $redirecturl = new moodle_url($url);
             }
             redirect($redirecturl);
@@ -179,10 +185,12 @@ function local_dash_extend_settings_navigation($settingsnav, $context) {
     }
 
     $manager = \core_plugin_manager::instance();
-    if (($PAGE->bodyid == 'page-my-index'
+    if (
+        ($PAGE->bodyid == 'page-my-index'
         || substr($PAGE->bodyid, 0, 21) == 'page-totara-dashboard')
         && (is_siteadmin() || has_capability('local/dash:managedashboards', $PAGE->context))
-        && $PAGE->user_is_editing()) {
+        && $PAGE->user_is_editing()
+    ) {
         $dashaddondash = $manager->get_plugin_info('dashaddon_dashboard');
         if ($dashaddondash && $dashaddondash->get_status() != core_plugin_manager::PLUGIN_STATUS_MISSING) {
             $currentbtn = $PAGE->button;
@@ -228,7 +236,6 @@ function local_dash_customfield_conditions(&$filter) {
             $select = $alias . '.value';
             $filter->add_filter(new course_customfield_condition($alias, $select, $field->get_formatted_name()));
         }
-
     } else {
         global $DB;
         foreach ($DB->get_records('course_info_field') as $field) {
@@ -262,12 +269,17 @@ function local_dash_get_coursefields() {
     return $fields;
 }
 
+/**
+ * Get custom course fields.
+ *
+ * @return array Array of custom course fields
+ */
 function local_dash_get_custom_coursefields() {
-   $fields = [0 => get_string('choose', 'local_dash')];
+    $fields = [0 => get_string('choose', 'local_dash')];
     if (class_exists('\core_course\customfield\course_handler')) {
         $coursehandler = \core_course\customfield\course_handler::create();
         foreach ($coursehandler->get_fields() as $customfield) {
-            if ($customfield->get('type') === 'select') { 
+            if ($customfield->get('type') === 'select') {
                 $fields[$customfield->get('id')] = $customfield->get('name');
             }
         }
@@ -281,6 +293,12 @@ function local_dash_get_custom_coursefields() {
     return $fields;
 }
 
+/**
+ * Get custom field options.
+ *
+ * @param int $fieldid Field ID
+ * @return array Array of field options
+ */
 function local_dash_get_custom_field_options($fieldid) {
     $options = [0 => get_string('choose', 'local_dash')];
     if (empty($fieldid)) {
@@ -325,7 +343,7 @@ function local_dash_get_card_column_customclass($column) {
         case 1:
             return 'twelve-column-block';
         default:
-          return '';
+            return '';
     }
 }
 /**
@@ -366,7 +384,7 @@ function local_dash_output_fragment_icons_list($args) {
             $component = isset($icon[0]) ? $icon[0] : '';
 
             // Render the pix icon.
-            $icon = new \pix_icon($iconstr,  "", $component);
+            $icon = new \pix_icon($iconstr, "", $component);
             $icons[] = [
                 'icon' => $faiconsystem->render_pix_icon($OUTPUT, $icon),
                 'value' => $iconkey,
@@ -577,7 +595,11 @@ function local_dash_get_fontawesome_icon_map() {
     return $iconmapping;
 }
 
-
+/**
+ * Get all Font Awesome icons used in custom visual icons.
+ *
+ * @return array Array of FontAwesome icon identifiers
+ */
 function local_dash_get_all_fa_icons() {
     global $DB;
 
@@ -598,18 +620,14 @@ function local_dash_get_all_fa_icons() {
         return (strpos($icon, 'local_dash:fa-') === 0);
     });
 
-
-   /*  $defaulticons =  [
-        'local_dash:completed' => 'fa-check',
-        'local_dash:viewed' => 'fa-eye',
-        'local_dash:default' => 'fa-bell',
-        'local_dash:updated' => 'fa-pencil',
-        'local_dash:deleted' => 'fa-trash',
-    ]; */
-
     return $icons;
 }
 
+/**
+ * Reset Font Awesome icon map cache.
+ *
+ * @return void
+ */
 function local_dash_reset_fontawesome_icon_map() {
     $instance = \core\output\icon_system::instance(\core\output\icon_system::FONTAWESOME);
     $cache = \cache::make('core', 'fontawesomeiconmapping');

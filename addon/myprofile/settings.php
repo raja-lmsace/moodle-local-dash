@@ -25,7 +25,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-
     $name = 'dashaddon_myprofile/loginstreakdays';
     $title = get_string('loginstreakdays', 'block_dash');
     $description = get_string('loginstreakdaysdesc', 'block_dash');

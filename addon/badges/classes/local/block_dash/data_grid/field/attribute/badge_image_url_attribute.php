@@ -33,7 +33,6 @@ use moodle_url;
  * Transforms data to badge image url.
  */
 class badge_image_url_attribute extends abstract_field_attribute {
-
     /**
      * Generate the badge image url based on the badge id.
      *

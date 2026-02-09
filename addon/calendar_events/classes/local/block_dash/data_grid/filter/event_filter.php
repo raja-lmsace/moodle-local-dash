@@ -30,7 +30,6 @@ use block_dash\local\data_grid\filter\select_filter;
  * Filters results to specific condition of calendar events type (Site, course, category, group, user, other)
  */
 class event_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      *
@@ -70,10 +69,9 @@ class event_filter extends select_filter {
     public function get_sql_and_params() {
         global $USER, $DB;
 
-        list($sql, $types) = parent::get_sql_and_params();
+        [$sql, $types] = parent::get_sql_and_params();
 
         if (is_array($types)) {
-
             $sql = [];
             $params = [];
 
@@ -81,7 +79,7 @@ class event_filter extends select_filter {
                 switch ($type) {
                     case "site":
                         $sql[] = "(ce.eventtype = :cesite_$key) ";
-                        $params += ['cesite_'.$key => 'site'];
+                        $params += ['cesite_' . $key => 'site'];
                         break;
                     case "category":
                         $sql[] = "(ce.categoryid > :cecate$key)";
@@ -89,15 +87,15 @@ class event_filter extends select_filter {
                         break;
                     case "course":
                         $sql[] = "(ce.courseid > :cecourseid$key AND ce.groupid <= 0)";
-                        $params += ['cecourseid'.$key => 1];
+                        $params += ['cecourseid' . $key => 1];
                         break;
                     case "group":
                         $sql[] = "(ce.groupid > :cegroup$key)";
-                        $params += ['cegroup'.$key => 0];
+                        $params += ['cegroup' . $key => 0];
                         break;
                     case "user":
                         $sql[] = "(ce.eventtype = :ceuser$key) ";
-                        $params += ['ceuser'.$key => 'user'];
+                        $params += ['ceuser' . $key => 'user'];
                         break;
                     case "other":
                         $sql[] = "(
@@ -113,7 +111,7 @@ class event_filter extends select_filter {
                 }
             }
 
-            return ['('.implode(' OR ', $sql).')', $params];
+            return ['(' . implode(' OR ', $sql) . ')', $params];
         }
         return false;
     }

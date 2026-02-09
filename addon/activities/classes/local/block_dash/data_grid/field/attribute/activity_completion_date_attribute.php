@@ -35,7 +35,6 @@ use cm_info;
  * @package dashaddon_activities
  */
 class activity_completion_date_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -48,8 +47,10 @@ class activity_completion_date_attribute extends abstract_field_attribute {
     public function transform_data($data, \stdClass $record) {
         global $DB, $USER;
 
-        if (($record->cm_modcompletionstatus == COMPLETION_COMPLETE ||
-            $record->cm_modcompletionstatus == COMPLETION_COMPLETE_PASS) && $record->cm_modcompletiondate) {
+        if (
+            ($record->cm_modcompletionstatus == COMPLETION_COMPLETE ||
+            $record->cm_modcompletionstatus == COMPLETION_COMPLETE_PASS) && $record->cm_modcompletiondate
+        ) {
                 return userdate($record->cm_modcompletiondate, get_string('strftimedatefullshort'));
         }
         return;

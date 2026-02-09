@@ -34,7 +34,6 @@ use dashaddon_developer\data_grid\field\custom_sql_field_definition;
  * @package dashaddon_developer
  */
 class custom_layout extends persistent {
-
     /**
      * Table to store the layout data.
      */

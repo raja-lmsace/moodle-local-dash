@@ -27,7 +27,6 @@ use context_course;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class before_http_headers {
-
     /**
      * Callback allowing to add warning on the filter settings page
      *
@@ -36,7 +35,6 @@ class before_http_headers {
     public static function callback(\core\hook\output\before_http_headers $hook): void {
         global $PAGE, $DB;
         try {
-
             // First rule out conditions where a redirect should never happen.
             // Also skip is $CFG->kickstart_pro is false.
             if (AJAX_SCRIPT || is_siteadmin()) {

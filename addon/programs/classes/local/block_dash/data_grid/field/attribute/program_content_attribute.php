@@ -32,7 +32,6 @@ use moodle_url;
  * Generate the content of the program.
  */
 class program_content_attribute extends abstract_field_attribute {
-
     /**
      * Generate the content of the program.
      *
@@ -53,6 +52,3 @@ class program_content_attribute extends abstract_field_attribute {
         return \html_writer::tag('div', $myouput->get_program_content($program), ['class' => 'dashaddon-programs-content']);
     }
 }
-
-
-

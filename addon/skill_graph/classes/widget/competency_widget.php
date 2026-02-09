@@ -34,7 +34,6 @@ use dashaddon_skill_graph\data_grid\filter\competency_condition;
  * SkillGraph widget class contains the layout information and generate the data for widget.
  */
 class competency_widget extends abstract_widget {
-
     /**
      * List of available competencies for the selected framework.
      *
@@ -237,7 +236,7 @@ class competency_widget extends abstract_widget {
      * @param int $level Level depth of competency tree.
      * @return void
      */
-    protected function get_top_level_competencies($data, $level=0) {
+    protected function get_top_level_competencies($data, $level = 0) {
         if (!empty($data)) {
             $setcount = 1;
             foreach ($data as $row => $competency) {
@@ -248,7 +247,6 @@ class competency_widget extends abstract_widget {
                 $this->dataset[$nextindex]['data'][$row] = 1;
                 $this->dataset[$nextindex]['backgroundColor'][$row] = $this->competency_colors($competency);
                 $this->competencylabels[] = format_string($competency->shortname);
-
             }
 
             // Fill the missing competency rows.
@@ -259,7 +257,7 @@ class competency_widget extends abstract_widget {
                 $rangearr = array_combine(array_keys($rangearr), array_fill(0, count($rangearr), 0));
                 $updateddataset = array_replace($rangearr, $value['data']);
                 // Increase the data to setup the content.
-                array_walk($updateddataset, function(&$value) use ($count) {
+                array_walk($updateddataset, function (&$value) use ($count) {
                     $value = $value * $count;
                 });
                 $count = $count + 3;
@@ -285,7 +283,6 @@ class competency_widget extends abstract_widget {
      */
     protected function insert_child_dataset($data, $level, $row) {
         if (self::COMPETENCY_DEPTH >= $level) {
-
             $childcount = range(0, count($data));
             array_pop($childcount); // Remove the last element.
             foreach ($childcount as $key => $value) {
@@ -389,7 +386,6 @@ class competency_widget extends abstract_widget {
                     'grade'       => $result->get('grade'),
                 ];
             }
-
         }
     }
 

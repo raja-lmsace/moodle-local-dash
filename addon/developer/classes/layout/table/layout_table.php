@@ -34,7 +34,6 @@ require_once($CFG->libdir . '/tablelib.php');
  * @package dashaddon_developer
  */
 class layout_table extends \table_sql {
-
     /**
      * Define the headers and columns of this table.
      *
@@ -64,8 +63,10 @@ class layout_table extends \table_sql {
      * @return string
      */
     public function col_name($data) {
-        return \html_writer::link(new \moodle_url('/local/dash/addon/developer/customlayouts.php', ['id' => $data->id]),
-            $data->name);
+        return \html_writer::link(
+            new \moodle_url('/local/dash/addon/developer/customlayouts.php', ['id' => $data->id]),
+            $data->name
+        );
     }
 
     /**
@@ -79,10 +80,14 @@ class layout_table extends \table_sql {
     public function col_actions($data) {
         global $OUTPUT;
 
-        return $OUTPUT->single_button(new \moodle_url('/local/dash/addon/developer/customlayout.php',
-                ['action' => 'edit', 'id' => $data->id]), get_string('edit', 'block_dash'), 'get') .
-            $OUTPUT->single_button(new \moodle_url('/local/dash/addon/developer/customlayout.php',
-                ['action' => 'delete', 'id' => $data->id]), get_string('delete', 'block_dash'), 'get');
+        return $OUTPUT->single_button(new \moodle_url(
+            '/local/dash/addon/developer/customlayout.php',
+            ['action' => 'edit', 'id' => $data->id]
+        ), get_string('edit', 'block_dash'), 'get') .
+            $OUTPUT->single_button(new \moodle_url(
+                '/local/dash/addon/developer/customlayout.php',
+                ['action' => 'delete', 'id' => $data->id]
+            ), get_string('delete', 'block_dash'), 'get');
     }
 
     /**
@@ -95,7 +100,7 @@ class layout_table extends \table_sql {
     public function query_db($pagesize, $useinitialsbar = true) {
         global $DB;
 
-        list($wsql, $params) = $this->get_sql_where();
+        [$wsql, $params] = $this->get_sql_where();
 
         $sql = 'SELECT * FROM {dashaddon_developer_layout} l ' . $wsql;
 

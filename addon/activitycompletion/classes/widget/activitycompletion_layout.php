@@ -30,7 +30,6 @@ use block_dash\local\widget\abstract_layout;
  * Layout section for the activity completion widget.
  */
 class activitycompletion_layout extends abstract_layout {
-
     /**
      * Tempalte mustache file name, the layout uses.
      *

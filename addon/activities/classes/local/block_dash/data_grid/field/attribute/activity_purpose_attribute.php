@@ -47,8 +47,10 @@ class activity_purpose_attribute extends abstract_field_attribute {
 
         $modulename = $DB->get_field("modules", 'name', ['id' => $record->cm_module]);
         $cm = cm_info::create(get_coursemodule_from_id('', $record->cm_id));
-        if ($cm != null && $cm->get_course()->format == 'designer' &&
-            dashaddon_activities_is_designer_pro_installed()) {
+        if (
+            $cm != null && $cm->get_course()->format == 'designer' &&
+            dashaddon_activities_is_designer_pro_installed()
+        ) {
             $modpurpose = \format_designer\options::get_option($data, 'purpose');
             if (!$modpurpose) {
                 $modpurpose = get_config('local_designer', "purpose_" . $modulename);

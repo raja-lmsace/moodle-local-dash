@@ -36,7 +36,6 @@ use MoodleQuickForm;
  * Filters results to specific calendar events based activities completion status.
  */
 class event_activities_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -66,7 +65,8 @@ class event_activities_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
 
@@ -77,8 +77,11 @@ class event_activities_condition extends condition {
             'both' => get_string('eventactivity:both', 'block_dash'),
         ];
 
-        $mform->addElement('select', $fieldname . '[eventactivitycompletion]',
-            get_string('eventactivitycompletion', 'block_dash'), $choices,
+        $mform->addElement(
+            'select',
+            $fieldname . '[eventactivitycompletion]',
+            get_string('eventactivitycompletion', 'block_dash'),
+            $choices,
             ['class' => 'elect2-form']
         );
         $mform->hideIf($fieldname . '[eventactivitycompletion]', $fieldname . '[enabled]');
@@ -97,7 +100,6 @@ class event_activities_condition extends condition {
         $preferences = $this->get_preferences();
 
         if (isset($preferences['eventactivitycompletion']) && $preferences['eventactivitycompletion'] && $preferences['enabled']) {
-
             // Confirm the dash is addon on user profile page, then use the profile page user as report user.
             $isprofilepage = $PAGE->pagelayout == 'mypublic' && $PAGE->pagetype == 'user-profile';
             $userid = $isprofilepage ? $PAGE->context->instanceid : $USER->id;
@@ -114,7 +116,6 @@ class event_activities_condition extends condition {
 
             // Get the not completed activities.
             if ($method == 'incomplete') {
-
                 // Completed modules by user.
                 $completionsql = "(
                     SELECT coursemoduleid
@@ -127,10 +128,9 @@ class event_activities_condition extends condition {
                 $sql[] = "cm.id NOT IN $completionsql";
             }
 
-            return ['('.implode(' AND ', $sql).')', $params];
+            return ['(' . implode(' AND ', $sql) . ')', $params];
         }
 
         return null;
     }
-
 }

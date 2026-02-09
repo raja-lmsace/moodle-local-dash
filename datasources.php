@@ -21,7 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../config.php');
+require(__DIR__ . '/../../config.php');
 require_once("$CFG->libdir/adminlib.php");
 
 global $USER;
@@ -41,13 +41,16 @@ require_capability('local/dash:managedatasources', $context);
 
 echo $OUTPUT->header();
 
-if (array_key_exists('developer', core_component::get_plugin_list('dashaddon')) &&
-    has_capability('dashaddon/developer:managecustomdatasources', \context_system::instance())) {
+if (
+    array_key_exists('developer', core_component::get_plugin_list('dashaddon')) &&
+    has_capability('dashaddon/developer:managecustomdatasources', \context_system::instance())
+) {
     echo $OUTPUT->single_button(
         new moodle_url('/local/dash/addon/developer/customdatasource.php', ['action' => 'create']),
         get_string('createcustomdatasource', 'block_dash'),
         'get',
-        ['class' => 'pull-right']);
+        ['class' => 'pull-right']
+    );
 
     echo $OUTPUT->heading(get_string('customdatasources', 'block_dash'));
     $table = new \dashaddon_developer\data_source\table\custom_data_source_table('datasources');

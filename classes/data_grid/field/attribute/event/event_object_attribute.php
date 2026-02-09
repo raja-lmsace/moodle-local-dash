@@ -35,7 +35,6 @@ use logstore_standard\log\store;
  * @package local_dash
  */
 class event_object_attribute extends abstract_field_attribute {
-
     /**
      * List of Events data.
      *

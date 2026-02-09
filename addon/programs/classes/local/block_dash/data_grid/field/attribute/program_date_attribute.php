@@ -33,7 +33,6 @@ use stdClass;
  * Transforms data to program dates.
  */
 class program_date_attribute extends abstract_field_attribute {
-
     /**
      * Converts json data to program dates.
      *
@@ -57,6 +56,3 @@ class program_date_attribute extends abstract_field_attribute {
         return $result;
     }
 }
-
-
-

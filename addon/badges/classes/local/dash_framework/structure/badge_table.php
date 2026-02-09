@@ -44,7 +44,6 @@ use block_dash\local\dash_framework\structure\field_interface;
  * Badges table structure definitions for badge datasource.
  */
 class badge_table extends table {
-
     /**
      * Build a new table.
      */
@@ -89,11 +88,11 @@ class badge_table extends table {
             ]),
 
             new field('badgeurl', new lang_string('badgeurl', 'dashaddon_badges'), $this, 'bd.id', [
-                new moodle_url_attribute(['url' => new moodle_url('/badges/overview.php', ['id' => 'bd_id'] ) ]),
+                new moodle_url_attribute(['url' => new moodle_url('/badges/overview.php', ['id' => 'bd_id']) ]),
             ]),
 
             new field('badgebutton', new lang_string('badgebutton', 'dashaddon_badges'), $this, 'bd.id', [
-                new moodle_url_attribute(['url' => new moodle_url('/badges/overview.php', ['id' => 'bd_id'] ) ]),
+                new moodle_url_attribute(['url' => new moodle_url('/badges/overview.php', ['id' => 'bd_id']) ]),
                 new button_attribute(['label' => new lang_string('viewbadge', 'dashaddon_badges')]),
             ]),
 

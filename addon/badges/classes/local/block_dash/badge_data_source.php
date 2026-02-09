@@ -41,7 +41,6 @@ use mod_forum\local\exporters\group;
  * Badges data source template queries and filter conditions defined.
  */
 class badge_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *

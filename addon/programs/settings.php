@@ -25,11 +25,16 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-
     $name = "local_dash/programbg";
     $title = get_string("programbg", 'block_dash');
     $description = get_string("programbg_desc", 'block_dash');
     $setting = new \admin_setting_configstoredfile(
-        $name, $title, $description, 'programbg', 0, ['maxfiles' => 1, 'accepted_types' => ['.jpg', '.jpeg', '.jpe', '.png']]);
+        $name,
+        $title,
+        $description,
+        'programbg',
+        0,
+        ['maxfiles' => 1, 'accepted_types' => ['.jpg', '.jpeg', '.jpe', '.png']]
+    );
     $page->add($setting);
 }

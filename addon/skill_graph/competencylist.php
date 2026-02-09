@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../../../config.php');
+require(__DIR__ . '/../../../../config.php');
 
 require_login();
 
@@ -81,4 +81,3 @@ echo html_writer::div(html_writer::table($table), 'mt-5');
 $PAGE->requires->js_call_amd('dashaddon_skill_graph/skill_progress', 'init', []);
 
 echo $OUTPUT->footer();
-

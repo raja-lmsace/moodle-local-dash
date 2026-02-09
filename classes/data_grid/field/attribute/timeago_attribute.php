@@ -61,7 +61,6 @@ class timeago_attribute extends abstract_field_attribute {
                 's' => 'second',
             ];
             foreach ($string as $k => &$v) {
-
                 $diffvalue = (isset($$k)) ? $$k : $diff->$k;
                 if ($diffvalue) {
                     $v = $diffvalue . ' ' . $v . ($diffvalue > 1 ? 's' : '');

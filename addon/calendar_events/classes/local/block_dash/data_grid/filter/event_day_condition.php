@@ -36,7 +36,6 @@ use MoodleQuickForm;
  * Filters results to specific event day condition status.
  */
 class event_day_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -66,7 +65,8 @@ class event_day_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
 
@@ -82,8 +82,11 @@ class event_day_condition extends condition {
             'sunday' => get_string('filter:sunday', 'block_dash'),
         ];
 
-        $select = $mform->addElement('select', $fieldname . '[eventday]',
-            get_string('event:filterday', 'block_dash'), $choices,
+        $select = $mform->addElement(
+            'select',
+            $fieldname . '[eventday]',
+            get_string('event:filterday', 'block_dash'),
+            $choices,
             ['class' => 'select2-form']
         );
         $mform->hideIf($fieldname . '[eventday]', $fieldname . '[enabled]');
@@ -106,12 +109,10 @@ class event_day_condition extends condition {
 
             $timezone = core_date::get_user_timezone_object();
             foreach ($types as $key => $type) {
-
-                $param1 = 'cedayc_startday_'.$key;
-                $param2 = 'cedayc_endday_'.$key;
+                $param1 = 'cedayc_startday_' . $key;
+                $param2 = 'cedayc_endday_' . $key;
 
                 switch ($type) {
-
                     case 'tuesday':
                         $startofday = (new DateTime('tuesday this week', $timezone))->getTimestamp();
                         $endofday = (new DateTime('tuesday this week 23:59:59', $timezone))->getTimestamp();
@@ -170,9 +171,7 @@ class event_day_condition extends condition {
                 }
             }
 
-            return ['('.implode(' OR ', $sql).')', $params];
+            return ['(' . implode(' OR ', $sql) . ')', $params];
         }
-
     }
-
 }

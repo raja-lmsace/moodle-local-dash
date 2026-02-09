@@ -52,7 +52,6 @@ use moodle_url;
  * @package dashaddon_course_completions
  */
 class user_enrolments_table extends table {
-
     /**
      * Build a new table.
      */

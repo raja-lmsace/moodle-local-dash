@@ -30,7 +30,6 @@ use context_system;
  * Class dashboard helper.
  */
 class helper {
-
     /**
      * Postupdate the filemanager files.
      * @param object $dashboard
@@ -48,7 +47,7 @@ class helper {
         global $DB;
         $options = [];
         if ($shortname) {
-            $pagetypepattern = 'dashaddon-dashboard-'. $shortname;
+            $pagetypepattern = 'dashaddon-dashboard-' . $shortname;
             $sql = "SELECT bi.id, bi.blockname FROM {block_instances} bi
                         JOIN {block} b ON bi.blockname = b.name
                         LEFT JOIN {block_positions} bp ON bp.blockinstanceid = bi.id
@@ -78,8 +77,15 @@ class helper {
         $itemid = isset($dashboard->id) ? $dashboard->id : null;
         $filemanagers = ['dashthumbnailimage', 'dashbgimage'];
         foreach ($filemanagers as $filemanager) {
-            $dashboard = file_prepare_standard_filemanager($dashboard, $filemanager, self::get_filemanager_options(),
-                \context_system::instance(), 'local_dash', $filemanager, $itemid);
+            $dashboard = file_prepare_standard_filemanager(
+                $dashboard,
+                $filemanager,
+                self::get_filemanager_options(),
+                \context_system::instance(),
+                'local_dash',
+                $filemanager,
+                $itemid
+            );
         }
         return $dashboard;
     }

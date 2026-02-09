@@ -33,7 +33,6 @@ use block_dash\local\data_grid\filter\course_condition;
  * @package local_dash
  */
 class completion_status_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -46,7 +45,7 @@ class completion_status_attribute extends abstract_field_attribute {
     public function transform_data($data, \stdClass $record) {
         global $DB, $USER;
         if ($data) {
-            return get_string('status:'.$data, 'block_dash');
+            return get_string('status:' . $data, 'block_dash');
         } else {
             return get_string('status:notenrolled', 'block_dash');
         }

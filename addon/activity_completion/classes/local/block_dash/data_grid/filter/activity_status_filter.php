@@ -32,7 +32,6 @@ use cm_info;
  * Completed activity status based filter option.
  */
 class activity_status_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -71,7 +70,7 @@ class activity_status_filter extends select_filter {
     public function get_sql_and_params() {
         global $USER, $DB;
 
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
 
         if (is_array($params)) {
             $sql = [];
@@ -81,19 +80,19 @@ class activity_status_filter extends select_filter {
                         $sql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
                                 UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) > :now_$key + 86000) AND
                                 cmc.completionstate = 0";
-                        $params += ['now_'.$key => time()];
+                        $params += ['now_' . $key => time()];
                         break;
                     case 'due':
                         $sql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
                                 UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) <= :now_$key + 86000) AND
                                 cmc.completionstate = 0 ";
-                        $params += ['now_'.$key => time(), 'now1_'.$key => time()];
+                        $params += ['now_' . $key => time(), 'now1_' . $key => time()];
                         break;
                     case 'overdue':
                         $sql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
                                 UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) <= :now_$key) AND
                                 cmc.completionstate = 0 ";
-                        $params += ['now_'.$key => time()];
+                        $params += ['now_' . $key => time()];
                         break;
                     case 'complete':
                         $sql[] = "(cmc.completionstate <> 0 AND (cmc.timemodified <=
@@ -105,7 +104,7 @@ class activity_status_filter extends select_filter {
                         break;
                 }
             }
-            return ['('.implode(' OR ', $sql).')', $params];
+            return ['(' . implode(' OR ', $sql) . ')', $params];
         }
         return false;
     }

@@ -32,7 +32,6 @@ use MoodleQuickForm;
  * Parent role condition.
  */
 class relations_role_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -97,7 +96,7 @@ class relations_role_condition extends condition {
         $params = ['userid' => $USER->id];
 
         if ($roleids) {
-            list($relationsql, $relationsparams) = $DB->get_in_or_equal($roleids, SQL_PARAMS_NAMED);
+            [$relationsql, $relationsparams] = $DB->get_in_or_equal($roleids, SQL_PARAMS_NAMED);
             $params = array_merge($params, $relationsparams);
             $rolecondition = "AND ra.roleid $relationsql";
         } else {
@@ -124,7 +123,8 @@ class relations_role_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -137,8 +137,13 @@ class relations_role_condition extends condition {
             }
         }
 
-        $select = $mform->addElement('select', $fieldname . '[roleids]',
-            get_string('withroles', 'block_dash'), $roles, ['class' => 'select2-form']);
+        $select = $mform->addElement(
+            'select',
+            $fieldname . '[roleids]',
+            get_string('withroles', 'block_dash'),
+            $roles,
+            ['class' => 'select2-form']
+        );
         $mform->hideIf($fieldname . '[roleids]', $fieldname . '[enabled]');
         $select->setMultiple(true);
     }

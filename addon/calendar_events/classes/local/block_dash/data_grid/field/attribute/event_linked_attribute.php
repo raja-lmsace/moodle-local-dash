@@ -31,7 +31,6 @@ use stdClass;
  * Calendar events linked data attribute for dash.
  */
 class event_linked_attribute extends linked_data_attribute {
-
     /**
      * Transform the label in data to linked element using the URL from options add to this attribute.
      * Label field may contains data in any format like image tag or plain strings.
@@ -50,7 +49,6 @@ class event_linked_attribute extends linked_data_attribute {
         }
 
         if ($url) {
-
             $url = clone $url; // Deep clone the url.
             foreach ($url->params() as $key => $value) {
                 if (isset($record->$value)) {
@@ -65,6 +63,3 @@ class event_linked_attribute extends linked_data_attribute {
         return '';
     }
 }
-
-
-

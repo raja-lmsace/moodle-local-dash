@@ -35,7 +35,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class course_customfield_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -55,7 +54,8 @@ class course_customfield_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -104,7 +104,6 @@ class course_customfield_condition extends condition {
                 $data->instance_form_definition($mform);
                 return $data->get_form_element_name();
             }
-
         } else {
             $tableprefix = 'course';
             $params = [];
@@ -146,7 +145,7 @@ class course_customfield_condition extends condition {
         if (isset($this->get_preferences()['value']) && !empty($fieldid)) {
             $name = $this->get_name();
             $value = $this->get_preferences()['value'];
-            $valuecheck = $DB->sql_compare_text(':value_'.$name);
+            $valuecheck = $DB->sql_compare_text(':value_' . $name);
             if (block_dash_is_totara()) {
                 $sql = "c.id IN (
                     SELECT courseid FROM {course_info_data} cd WHERE cd.fieldid = :fieldid_$name AND cd.data=$valuecheck
@@ -156,7 +155,7 @@ class course_customfield_condition extends condition {
                     SELECT instanceid FROM {customfield_data} cd WHERE cd.fieldid = :fieldid_$name AND cd.value=$valuecheck
                 )";
             }
-            $params = ['fieldid_'.$name => $fieldid, 'value_'.$name => $value];
+            $params = ['fieldid_' . $name => $fieldid, 'value_' . $name => $value];
             return [$sql, $params];
         }
     }

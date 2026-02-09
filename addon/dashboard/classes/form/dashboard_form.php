@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
 require_once($CFG->dirroot . '/cohort/lib.php');
-require_once($CFG->dirroot. "/local/dash/addon/dashboard/lib.php");
+require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
 
 /**
  * Form for editing block preferences.
@@ -41,7 +41,6 @@ require_once($CFG->dirroot. "/local/dash/addon/dashboard/lib.php");
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class dashboard_form extends persisten_form {
-
     /**
      * Dashboard class object.
      *
@@ -87,7 +86,6 @@ class dashboard_form extends persisten_form {
         // Context settings section.
         $mform->addElement('header', 'contextsettings', get_string('contextsettings', 'block_dash'));
         if ($this->get_persistent()->get('shortname') != 'coredashboard') {
-
             $options = $DB->get_records_sql_menu('SELECT c.id, c.fullname FROM {course} c
                                                     JOIN {context} ctx ON ctx.contextlevel = :contextlevel
                                                     AND ctx.instanceid = c.id
@@ -123,8 +121,13 @@ class dashboard_form extends persisten_form {
             $mform->hideIf('categoryid', 'contexttype', 'neq', 'category');
 
             // Course selector.
-            $mform->addElement('autocomplete', 'courseid', get_string('selectcourse', 'block_dash'), $options,
-                    ['multiple' => false, 'includefrontpage' => false]);
+            $mform->addElement(
+                'autocomplete',
+                'courseid',
+                get_string('selectcourse', 'block_dash'),
+                $options,
+                ['multiple' => false, 'includefrontpage' => false]
+            );
             $mform->hideIf('courseid', 'contexttype', 'neq', 'course');
 
             if (local_dash_secondarynav()) {
@@ -143,7 +146,6 @@ class dashboard_form extends persisten_form {
             $mform->addElement('advcheckbox', 'redirecttodashboard', get_string('redirecttodashboard', 'block_dash'));
             $mform->hideIf('redirecttodashboard', 'contexttype', 'neq', 'course');
             $mform->setDefault('redirecttodashboard', 0);
-
         } else {
             $mform->addElement('hidden', 'secondarynav', 0);
             $mform->setType('secondarynav', PARAM_INT);
@@ -203,8 +205,12 @@ class dashboard_form extends persisten_form {
         $iconlist = $faiconsystem->get_core_icon_map();
         array_unshift($iconlist, '');
         // Create element.
-        $iconwidget = $mform->addElement('select', 'dashicon',
-                get_string('dashicon', 'block_dash'), $iconlist);
+        $iconwidget = $mform->addElement(
+            'select',
+            'dashicon',
+            get_string('dashicon', 'block_dash'),
+            $iconlist
+        );
         $mform->setType('dashicon', PARAM_TEXT);
         $iconwidget->setMultiple(false);
         $mform->addHelpButton('dashicon', 'dashicon', 'block_dash');
@@ -213,23 +219,33 @@ class dashboard_form extends persisten_form {
         $PAGE->requires->js_call_amd('local_dash/fontawesome-popover', 'init', ['#id_dashicon', $systemcontextid]);
 
         // Add thumbnail image as filemanager element.
-        $mform->addElement('filemanager', 'dashthumbnailimage',
-                get_string('dashthumbnailimg', 'block_dash'), null, [
+        $mform->addElement(
+            'filemanager',
+            'dashthumbnailimage',
+            get_string('dashthumbnailimg', 'block_dash'),
+            null,
+            [
                         'subdirs' => 0,
                         'maxfiles' => 1,
                         'accepted_types' => 'web_image',
                         'return_types' => FILE_INTERNAL,
-        ]);
+            ]
+        );
         $mform->addHelpButton('dashthumbnailimage', 'dashthumbnailimg', 'block_dash');
 
         // Add background image as filemanager element.
-        $mform->addElement('filemanager', 'dashbgimage',
-                get_string('dashbgimg', 'block_dash'), null, [
+        $mform->addElement(
+            'filemanager',
+            'dashbgimage',
+            get_string('dashbgimg', 'block_dash'),
+            null,
+            [
                         'subdirs' => 0,
                         'maxfiles' => 1,
                         'accepted_types' => 'web_image',
                         'return_types' => FILE_INTERNAL,
-        ]);
+            ]
+        );
 
         // On page navigation settings.
         $mform->addElement('header', 'onpagenavigationsettings', get_string('onpagenavigation', 'block_dash'));
@@ -237,8 +253,13 @@ class dashboard_form extends persisten_form {
         // Included blocks.
         $blocksoptions = \dashaddon_dashboard\helper::get_dashaddondash_pageblocks($this->get_persistent()->get('shortname'));
         if (!empty($blocksoptions)) {
-            $mform->addElement('autocomplete', 'includedblocks',
-                get_string('includedblocks', 'block_dash'), $blocksoptions, ['multiple' => 'multiple']);
+            $mform->addElement(
+                'autocomplete',
+                'includedblocks',
+                get_string('includedblocks', 'block_dash'),
+                $blocksoptions,
+                ['multiple' => 'multiple']
+            );
             $mform->setType('includedblocks', PARAM_TEXT);
 
             // Display dashboard title.
@@ -247,8 +268,12 @@ class dashboard_form extends persisten_form {
                 1 => get_string('always', 'block_dash'),
                 2 => get_string('onlywhensticky', 'block_dash'),
             ];
-            $mform->addElement('select', 'displaydashboardtitle',
-                get_string('displaydashboardtitle', 'block_dash'), $displaytitleoptions);
+            $mform->addElement(
+                'select',
+                'displaydashboardtitle',
+                get_string('displaydashboardtitle', 'block_dash'),
+                $displaytitleoptions
+            );
             $mform->setDefault('displaydashboardtitle', 0);
 
             // Display call to action.
@@ -271,8 +296,12 @@ class dashboard_form extends persisten_form {
                     $mform->addElement('select', 'ctacampaignid', get_string('selectcampaign', 'block_dash'), $campaignoptions);
                     $mform->hideIf('ctacampaignid', 'ctalink', 'neq', 'campaign');
                 } else {
-                    $mform->addElement('static', 'ctacampaignidinfo', get_string('selectcampaign', 'block_dash'),
-                        get_string('nocampaignsareavailable', 'block_dash'));
+                    $mform->addElement(
+                        'static',
+                        'ctacampaignidinfo',
+                        get_string('selectcampaign', 'block_dash'),
+                        get_string('nocampaignsareavailable', 'block_dash')
+                    );
                     $mform->hideIf('ctacampaignidinfo', 'ctalink', 'neq', 'campaign');
                 }
             } else {
@@ -288,9 +317,8 @@ class dashboard_form extends persisten_form {
             $mform->addElement('text', 'ctacustomurltext', get_string('customurltext', 'block_dash'));
             $mform->setType('ctacustomurltext', PARAM_TEXT);
             $mform->hideIf('ctacustomurltext', 'ctalink', 'neq', 'custom');
-
         } else {
-            $mform->addElement('static', 'onpagenavigationnoblocks', '' , get_string('blocksnotfound', 'block_dash'));
+            $mform->addElement('static', 'onpagenavigationnoblocks', '', get_string('blocksnotfound', 'block_dash'));
         }
 
         $this->add_action_buttons();

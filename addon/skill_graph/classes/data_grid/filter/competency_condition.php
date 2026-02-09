@@ -37,7 +37,6 @@ use core_competency\api;
  * @package dashaddon_skill_graph
  */
 class competency_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -88,7 +87,8 @@ class competency_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.

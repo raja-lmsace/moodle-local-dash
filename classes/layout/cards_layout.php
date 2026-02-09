@@ -47,7 +47,6 @@ define('CARD_LAYOUT_NORMAL_MODE', 'none');
  * Boostrap cards layout2 for course format.
  */
 class cards_layout extends abstract_layout {
-
     /**
      * Get layout template filename.
      * @return string
@@ -62,8 +61,10 @@ class cards_layout extends abstract_layout {
      * @return bool
      */
     public function supports_pagination() {
-        if ($this->get_data_source()->get_preferences('layoutmode') == CARD_LAYOUT_SLIDER_MODE
-            || $this->get_data_source()->get_preferences('layoutmode') == CARD_LAYOUT_MASONRY_MODE) {
+        if (
+            $this->get_data_source()->get_preferences('layoutmode') == CARD_LAYOUT_SLIDER_MODE
+            || $this->get_data_source()->get_preferences('layoutmode') == CARD_LAYOUT_MASONRY_MODE
+        ) {
             return false;
         } else {
             return true;
@@ -168,9 +169,12 @@ class cards_layout extends abstract_layout {
         global $CFG;
         if ($form->get_tab() == preferences_form::TAB_FIELDS) {
             // Register the dashcolorpicker element. - LMSACE.
-            require_once($CFG->dirroot.'/blocks/dash/form/element-colorpicker.php');
-            \MoodleQuickForm::registerElementType('dashcolorpicker', $CFG->dirroot.'/blocks/dash/form/element-colorpicker.php',
-            'moodlequickform_dashcolorpicker');
+            require_once($CFG->dirroot . '/blocks/dash/form/element-colorpicker.php');
+            \MoodleQuickForm::registerElementType(
+                'dashcolorpicker',
+                $CFG->dirroot . '/blocks/dash/form/element-colorpicker.php',
+                'moodlequickform_dashcolorpicker'
+            );
 
             // Layout mode - LMSACE.
             $mform->addElement('select', 'config_preferences[layoutmode]', get_string('layoutmode', 'block_dash'), [
@@ -246,15 +250,23 @@ class cards_layout extends abstract_layout {
             $mform->setDefault('config_preferences[infinite]', true);
             $mform->hideIf('config_preferences[infinite]', 'config_preferences[layoutmode]', 'ne', 'slider');
 
-            $mform->addElement('select', 'config_preferences[rows]', get_string('rows', 'block_dash'),
-                array_combine(range(1, 10), range(1, 10)));
+            $mform->addElement(
+                'select',
+                'config_preferences[rows]',
+                get_string('rows', 'block_dash'),
+                array_combine(range(1, 10), range(1, 10))
+            );
             $mform->setType('config_preferences[rows]', PARAM_INT);
             $mform->addHelpButton('config_preferences[rows]', 'rows', 'block_dash');
             $mform->setDefault('config_preferences[rows]', 1);
             $mform->hideIf('config_preferences[rows]', 'config_preferences[layoutmode]', 'ne', 'slider');
 
-            $mform->addElement('select', 'config_preferences[slidesPerRow]', get_string('slidesPerRow', 'block_dash'),
-                array_combine(range(1, 10), range(1, 10)));
+            $mform->addElement(
+                'select',
+                'config_preferences[slidesPerRow]',
+                get_string('slidesPerRow', 'block_dash'),
+                array_combine(range(1, 10), range(1, 10))
+            );
             $mform->setType('config_preferences[slidesPerRow]', PARAM_INT);
             $mform->addHelpButton('config_preferences[slidesPerRow]', 'slidesPerRow', 'block_dash');
             $mform->setDefault('config_preferences[slidesPerRow]', 1);
@@ -315,24 +327,37 @@ class cards_layout extends abstract_layout {
 
             $options = [];
             // Check course or user.
-            if (in_array("dashaddon_courses\local\dash_framework\structure\course_table", array_map('get_class',
-                $this->get_data_source()->get_tables()))) {
+            if (
+                in_array("dashaddon_courses\local\dash_framework\structure\course_table", array_map(
+                    'get_class',
+                    $this->get_data_source()->get_tables()
+                ))
+            ) {
                 $handler = \core_course\customfield\course_handler::create();
                 $fields = $handler->get_fields();
                 foreach ($fields as $field) {
                     $alias = 'c_f_' . strtolower($field->get('shortname'));
                     $options[$alias] = format_string($field->get_formatted_name());
                 }
-            } else if (in_array("block_dash\local\dash_framework\structure\user_table", array_map('get_class',
-                $this->get_data_source()->get_tables()))) {
+            } else if (
+                in_array("block_dash\local\dash_framework\structure\user_table", array_map(
+                    'get_class',
+                    $this->get_data_source()->get_tables()
+                ))
+            ) {
                 $fields = profile_get_custom_fields();
                 foreach ($fields as $field) {
                     $alias = 'u_pf_' . strtolower($field->shortname);
                     $options[$alias] = format_string($field->name);
                 }
             }
-            $select = $mform->addElement('select', 'config_preferences[layoutstyles]',
-                get_string('styleoptions', 'block_dash'), $options, ['class' => 'select2-form']);
+            $select = $mform->addElement(
+                'select',
+                'config_preferences[layoutstyles]',
+                get_string('styleoptions', 'block_dash'),
+                $options,
+                ['class' => 'select2-form']
+            );
                 $mform->addHelpButton('config_preferences[layoutstyles]', 'styleoptions', 'block_dash');
             $select->setMultiple(true);
 
@@ -355,7 +380,9 @@ class cards_layout extends abstract_layout {
 
             $noneoption = [null => get_string('none', 'block_dash')];
 
-            $mform->addElement('select', 'config_preferences[backgroundimagefield]',
+            $mform->addElement(
+                'select',
+                'config_preferences[backgroundimagefield]',
                 get_string('backgroundimagefield', 'block_dash'),
                 array_merge(
                     $noneoption,
@@ -365,52 +392,97 @@ class cards_layout extends abstract_layout {
             $mform->setType('config_preferences[backgroundimagefield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[backgroundimagefield]', 'backgroundimagefield', 'block_dash');
 
-            $mform->addElement('select', 'config_preferences[imageurlfield]', get_string('imageurlfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[imageurlfield]',
+                get_string('imageurlfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $courseimageurlfields)));
+                    $courseimageurlfields
+                ))
+            );
             $mform->setType('config_preferences[imageurlfield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[imageurlfield]', 'imageurlfield', 'block_dash');
 
-            $mform->addElement('select', 'config_preferences[imageoverlayfield]', get_string('imageoverlayfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[imageoverlayfield]',
+                get_string('imageoverlayfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[imageoverlayfield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[imageoverlayfield]', 'imageoverlayfield', 'block_dash');
 
-            $mform->addElement('select', 'config_preferences[subheadingfield]', get_string('subheadingfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[subheadingfield]',
+                get_string('subheadingfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[subheadingfield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[subheadingfield]', 'subheadingfield', 'block_dash');
 
-            $mform->addElement('select', 'config_preferences[headingfield]', get_string('headingfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[headingfield]',
+                get_string('headingfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[headingfield]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[bodyfield]', get_string('bodyfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[bodyfield]',
+                get_string('bodyfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[bodyfield]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[body2field]', get_string('bodyfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[body2field]',
+                get_string('bodyfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[body2field]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[body3field]', get_string('bodyfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[body3field]',
+                get_string('bodyfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[body3field]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[footerfield]', get_string('footerfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[footerfield]',
+                get_string('footerfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[footerfield]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[footerrightfield]', get_string('footerrightfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[footerrightfield]',
+                get_string('footerrightfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[footerrightfield]', PARAM_TEXT);
 
             $mform->addElement('html', '<hr>');
@@ -422,8 +494,12 @@ class cards_layout extends abstract_layout {
                 'floating' => get_string('strfloating', 'block_dash'),
                 'modal' => get_string('strmodal', 'block_dash'),
             ];
-            $mform->addElement('select', 'config_preferences[details_area]', get_string('details_area', 'block_dash'),
-                $detailsareaoptions);
+            $mform->addElement(
+                'select',
+                'config_preferences[details_area]',
+                get_string('details_area', 'block_dash'),
+                $detailsareaoptions
+            );
             $mform->setType('config_preferences[details_area]', PARAM_TEXT);
             $mform->setDefault('config_preferences[details_area]', 'disabled');
             $mform->addHelpButton('config_preferences[details_area]', 'details_area', 'block_dash');
@@ -432,59 +508,105 @@ class cards_layout extends abstract_layout {
                 'like_item' => get_string('like_item', 'block_dash'),
                 'fit_content' => get_string('fit_content', 'block_dash'),
             ];
-            $mform->addElement('select', 'config_preferences[details_area_size]', get_string('details_area_size', 'block_dash'),
-                $detailsareasizeoptions);
+            $mform->addElement(
+                'select',
+                'config_preferences[details_area_size]',
+                get_string('details_area_size', 'block_dash'),
+                $detailsareasizeoptions
+            );
             $mform->setType('config_preferences[details_area_size]', PARAM_TEXT);
             $mform->setDefault('config_preferences[details_area_size]', 'like_item');
             $mform->addHelpButton('config_preferences[details_area_size]', 'details_area_size', 'block_dash');
             $mform->hideIf('config_preferences[details_area_size]', 'config_preferences[details_area]', 'eq', 'disabled');
             $mform->hideIf('config_preferences[details_area_size]', 'config_preferences[details_area]', 'eq', 'modal');
 
-            $mform->addElement('select', 'config_preferences[details_title]', get_string('details_title', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[details_title]',
+                get_string('details_title', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[details_title]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_title]', 'config_preferences[details_area]', 'eq', 'disabled');
 
-            $mform->addElement('select', 'config_preferences[details_body_1]', get_string('details_body_1', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[details_body_1]',
+                get_string('details_body_1', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[details_body_1]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_body_1]', 'config_preferences[details_area]', 'eq', 'disabled');
 
-            $mform->addElement('select', 'config_preferences[details_body_2]', get_string('details_body_2', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[details_body_2]',
+                get_string('details_body_2', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[details_body_2]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_body_2]', 'config_preferences[details_area]', 'eq', 'disabled');
 
-            $mform->addElement('select', 'config_preferences[details_body_3]', get_string('details_body_3', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[details_body_3]',
+                get_string('details_body_3', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[details_body_3]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_body_3]', 'config_preferences[details_area]', 'eq', 'disabled');
 
-            $mform->addElement('select', 'config_preferences[details_footer_left]', get_string('details_footer_left', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[details_footer_left]',
+                get_string('details_footer_left', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[details_footer_left]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_footer_left]', 'config_preferences[details_area]', 'eq', 'disabled');
 
-            $mform->addElement('select', 'config_preferences[details_footer_right]', get_string('details_footer_right',
-                'block_dash'), array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+            $mform->addElement('select', 'config_preferences[details_footer_right]', get_string(
+                'details_footer_right',
+                'block_dash'
+            ), array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                $this->get_data_source()->get_available_fields()
+            )));
             $mform->setType('config_preferences[details_footer_right]', PARAM_TEXT);
-            $mform->hideIf('config_preferences[details_footer_right]', 'config_preferences[details_area]',
-                'eq', 'disabled');
+            $mform->hideIf(
+                'config_preferences[details_footer_right]',
+                'config_preferences[details_area]',
+                'eq',
+                'disabled'
+            );
 
-            $mform->addElement('dashcolorpicker', 'config_preferences[details_bg_color]',
-                get_string('details_bg_color', 'block_dash'));
+            $mform->addElement(
+                'dashcolorpicker',
+                'config_preferences[details_bg_color]',
+                get_string('details_bg_color', 'block_dash')
+            );
             $mform->setType('config_preferences[details_bg_color]', PARAM_TEXT);
-            $mform->hideIf('config_preferences[details_bg_color]', 'config_preferences[details_area]',
-                'eq', 'disabled');
+            $mform->hideIf(
+                'config_preferences[details_bg_color]',
+                'config_preferences[details_area]',
+                'eq',
+                'disabled'
+            );
 
-            $mform->addElement('dashcolorpicker', 'config_preferences[details_text_color]',
-                get_string('details_text_color', 'block_dash'));
+            $mform->addElement(
+                'dashcolorpicker',
+                'config_preferences[details_text_color]',
+                get_string('details_text_color', 'block_dash')
+            );
             $mform->setType('config_preferences[details_text_color]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_text_color]', 'config_preferences[details_area]', 'eq', 'disabled');
         }

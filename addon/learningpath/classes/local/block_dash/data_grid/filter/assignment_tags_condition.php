@@ -91,16 +91,16 @@ class assignment_tags_condition extends condition {
      */
     public function get_course_ids_from_tags() {
         global $DB, $CFG;
-    
+
         $values = $this->get_values();
         if (!empty($values) && !is_array($values)) {
             $values = [$values];
         }
-    
+
         $userid = $this->get_user_id();
         $params = ['userid' => $userid];
         $tagconditions = [];
-    
+
         if (!empty($values)) {
             $i = 0;
             foreach ($values as $tag) {
@@ -108,7 +108,7 @@ class assignment_tags_condition extends condition {
                 if ($tag === '' || $tag === null) {
                     continue;
                 }
-    
+
                 $paramname = 'tag_' . $i;
                 if ($CFG->dbtype === 'pgsql') {
                     $tagconditions[] = $DB->sql_like('CAST(tags AS TEXT)', ':' . $paramname, false, false);
@@ -119,18 +119,18 @@ class assignment_tags_condition extends condition {
                 $i++;
             }
         }
-    
+
         $tagsql = '';
         if (!empty($tagconditions)) {
             $tagsql = ' AND (' . implode(' OR ', $tagconditions) . ')';
         }
-    
+
         $sql = "SELECT DISTINCT courseid
                 FROM {tool_timetable_course_overrides}
                 WHERE userid = :userid" . $tagsql;
-    
+
         $courseids = $DB->get_fieldset_sql($sql, $params);
-    
+
         return $courseids ? $courseids : [];
     }
 
@@ -146,7 +146,7 @@ class assignment_tags_condition extends condition {
         $courseids = $this->get_course_ids_from_tags();
 
         if (!empty($courseids)) {
-            list($insql, $params) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'cid_' . $this->get_name() . '_');
+            [$insql, $params] = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'cid_' . $this->get_name() . '_');
             $sql = $this->get_select() . ' ' . $insql;
 
             return [$sql, $params];
@@ -231,4 +231,3 @@ class assignment_tags_condition extends condition {
         $mform->hideIf($fieldname . '[tags]', $fieldname . '[enabled]');
     }
 }
-

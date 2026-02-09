@@ -36,7 +36,6 @@ require_once($CFG->libdir . '/tablelib.php');
  * @package dashaddon_developer
  */
 class custom_data_source_table extends \table_sql {
-
     /**
      * Sessions_report_table constructor.
      *
@@ -88,13 +87,21 @@ class custom_data_source_table extends \table_sql {
         global $OUTPUT;
 
         return $OUTPUT->single_button(
-                new \moodle_url('/local/dash/addon/developer/customdatasource.php',
-                    ['action' => 'edit', 'id' => $data->get('id')]),
-                get_string('edit', 'block_dash'), 'get') .
+            new \moodle_url(
+                '/local/dash/addon/developer/customdatasource.php',
+                ['action' => 'edit', 'id' => $data->get('id')]
+            ),
+            get_string('edit', 'block_dash'),
+            'get'
+        ) .
             $OUTPUT->single_button(
-                new \moodle_url('/local/dash/addon/developer/customdatasource.php',
-                    ['action' => 'delete', 'id' => $data->get('id')]),
-                get_string('delete', 'block_dash'), 'get');
+                new \moodle_url(
+                    '/local/dash/addon/developer/customdatasource.php',
+                    ['action' => 'delete', 'id' => $data->get('id')]
+                ),
+                get_string('delete', 'block_dash'),
+                'get'
+            );
     }
 
     /**
@@ -111,7 +118,12 @@ class custom_data_source_table extends \table_sql {
             $this->pageable(false);
         }
 
-        $this->rawdata = custom_data_source::get_records([], $this->get_sql_sort(), 'ASC', $this->get_page_start(),
-            $this->get_page_size());
+        $this->rawdata = custom_data_source::get_records(
+            [],
+            $this->get_sql_sort(),
+            'ASC',
+            $this->get_page_start(),
+            $this->get_page_size()
+        );
     }
 }

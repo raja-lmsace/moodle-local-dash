@@ -33,7 +33,6 @@ use block_dash\local\data_grid\filter\course_condition;
  * @package local_dash
  */
 class enrollment_options_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -61,7 +60,7 @@ class enrollment_options_attribute extends abstract_field_attribute {
     public function get_course_enrollment_options(int $courseid): ?string {
         $enrolinstances = enrol_get_instances($courseid, true);
         // Filter the instance basecd on the availability.
-        $instances = array_filter($enrolinstances, function($instance) {
+        $instances = array_filter($enrolinstances, function ($instance) {
             global $USER;
 
             if (!in_array($instance->enrol, ['self', 'credit', 'autoenrol', 'guest', 'fee'])) {
@@ -69,7 +68,6 @@ class enrollment_options_attribute extends abstract_field_attribute {
             }
 
             return self::is_self_enrollment($instance) ? true : false;
-
         });
 
         $credits = '';
@@ -105,8 +103,11 @@ class enrollment_options_attribute extends abstract_field_attribute {
                         : get_string('enrollmentoptions:credits', 'block_dash', $credits);
                     break;
                 case "fee":
-                    return get_string('enrollmentoptions:cost', 'block_dash',
-                        ['cost' => $instance->cost, 'currency' => $instance->currency]);
+                    return get_string(
+                        'enrollmentoptions:cost',
+                        'block_dash',
+                        ['cost' => $instance->cost, 'currency' => $instance->currency]
+                    );
                     break;
                 default:
                     return '-';

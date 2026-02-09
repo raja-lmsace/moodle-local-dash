@@ -26,7 +26,6 @@ namespace dashaddon_activitycompletion\widget;
 
 use block_dash\local\widget\abstract_widget;
 use dashaddon_activitycompletion\widget\activitycompletion_layout;
-
 use block_dash\local\data_grid\filter\filter_collection;
 use block_dash\local\data_source\form\preferences_form;
 use block_dash\local\data_grid\filter\course_condition;
@@ -43,7 +42,6 @@ use Exception;
  * Activity completion progress widget.
  */
 class activitycompletion_widget extends abstract_widget {
-
     /**
      * Color Hex code for notcompleted activity progress dataset.
      *
@@ -173,8 +171,8 @@ class activitycompletion_widget extends abstract_widget {
     public function generate_activitycompletion_filter() {
 
         $this->before_data();
-        list($sql, $params) = $this->get_filter_collection()->get_sql_and_params();
-        return $sql ? [" AND ".$sql[0], $params] : [];
+        [$sql, $params] = $this->get_filter_collection()->get_sql_and_params();
+        return $sql ? [" AND " . $sql[0], $params] : [];
     }
 
     /**
@@ -199,8 +197,11 @@ class activitycompletion_widget extends abstract_widget {
 
         $filtercollection->add_filter(new cohort_condition('cohort', 'u.id'));
 
-        $filtercollection->add_filter(new course_sections_filter('c_sections', 'cs.id',
-            get_string('widget:course_sections', 'block_dash')));
+        $filtercollection->add_filter(new course_sections_filter(
+            'c_sections',
+            'cs.id',
+            get_string('widget:course_sections', 'block_dash')
+        ));
 
         $filtercollection->add_filter(new mygroups_filter('my_groups', 'gm300.groupid', get_string('groups')));
 
@@ -225,7 +226,7 @@ class activitycompletion_widget extends abstract_widget {
         global $DB, $COURSE, $USER;
 
         $coursemodules = [];
-        list($conditionsql, $params) = $this->generate_activitycompletion_filter();
+        [$conditionsql, $params] = $this->generate_activitycompletion_filter();
         $insql = '';
         $insparams = [];
 
@@ -242,7 +243,7 @@ class activitycompletion_widget extends abstract_widget {
             WHERE rc.permission = 1 AND rc.capability = :capability ";
         $roles = $DB->get_records_sql($rolesql, ['capability' => 'dashaddon/activitycompletion:reportuser']);
         $roles = array_column($roles, 'roleid');
-        list($roleinsql, $roleinparams) = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'rl');
+        [$roleinsql, $roleinparams] = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'rl');
 
         $sql = "SELECT ue.*, cm.id as cmid, cm.module as moduleid, cm.completion as cmcompletion, cm.section as cmsection,
             c.fullname as coursename, c.id as courseid, u.id as userid, u.firstname as firstname
@@ -337,7 +338,6 @@ class activitycompletion_widget extends abstract_widget {
 
         $colors = $this->get_completion_data_colors();
         foreach ($coursemodules as $cmid => $record) {
-
             try {
                 $cm = \cm_info::create(get_coursemodule_from_id('', $cmid));
             } catch (Exception $e) {
@@ -386,13 +386,13 @@ class activitycompletion_widget extends abstract_widget {
 
                 $activitynames[] = $cm->name;
                 $notcompleteddata['series'][$count] = $notcompletedpercent;
-                $notcompleteddata['series_label'][$count] = $notcompletedpercent.'%';
+                $notcompleteddata['series_label'][$count] = $notcompletedpercent . '%';
                 $completeddata['series'][$count] = $completedpercent;
-                $completeddata['series_label'][$count] = $completedpercent.'%';
+                $completeddata['series_label'][$count] = $completedpercent . '%';
                 $passeddata['series'][$count] = $passedpercent;
-                $passeddata['series_label'][$count] = $passedpercent.'%';
+                $passeddata['series_label'][$count] = $passedpercent . '%';
                 $faileddata['series'][$count] = $failedpercent;
-                $faileddata['series_label'][$count] = $failedpercent.'%';
+                $faileddata['series_label'][$count] = $failedpercent . '%';
                 $count++;
             }
         }
@@ -405,8 +405,10 @@ class activitycompletion_widget extends abstract_widget {
 
         // Not Completed series.
         if (!empty($notcompleteddata['series']) && array_sum($notcompleteddata['series']) > 0) {
-            $notcompletedseries = new \core\chart_series(get_string('status:notcompleted', 'block_dash'),
-                $notcompleteddata['series']);
+            $notcompletedseries = new \core\chart_series(
+                get_string('status:notcompleted', 'block_dash'),
+                $notcompleteddata['series']
+            );
             $notcompletedseries->set_labels($notcompleteddata['series_label']);
             $notcompletedseries->set_color($colors['notcompleted']);
             $chart->add_series($notcompletedseries);

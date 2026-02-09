@@ -34,7 +34,6 @@ use block_dash\local\layout\abstract_layout;
  * Two stats layout design for reports.
  */
 class two_stat_layout extends abstract_layout {
-
     /**
      * Get layout template filename.
      * @return string
@@ -89,12 +88,19 @@ class two_stat_layout extends abstract_layout {
             $mform->addElement('text', 'config_preferences[stat_field_label]', get_string('label', 'block_dash'));
             $mform->setType('config_preferences[stat_field_label]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[stat_field_definition]', get_string('stattodisplay', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[stat_field_definition]',
+                get_string('stattodisplay', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[stat_field_definition]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[other_stat_field_definition]',
+            $mform->addElement(
+                'select',
+                'config_preferences[other_stat_field_definition]',
                 get_string('stattodisplayother', 'block_dash'),
                 array_merge(
                     $noneoption,

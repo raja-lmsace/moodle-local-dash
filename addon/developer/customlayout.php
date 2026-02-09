@@ -26,7 +26,7 @@ use block_dash\output\renderer;
 use dashaddon_developer\model\custom_layout;
 use dashaddon_developer\layout\form\custom_layout_form;
 
-require_once(__DIR__.'/../../../../config.php');
+require_once(__DIR__ . '/../../../../config.php');
 require_once("$CFG->libdir/adminlib.php");
 
 global $PAGE, $DB, $USER;
@@ -72,8 +72,11 @@ switch ($action) {
             $customlayout = new custom_layout(0, $data);
             $customlayout->create();
 
-            \core\notification::success(get_string('customlayoutcreated', 'block_dash',
-                $customlayout->to_record()));
+            \core\notification::success(get_string(
+                'customlayoutcreated',
+                'block_dash',
+                $customlayout->to_record()
+            ));
             redirect(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
         } else if ($form->is_cancelled()) {
             redirect(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
@@ -104,8 +107,11 @@ switch ($action) {
             $customlayout->from_record($data);
             $customlayout->update();
 
-            \core\notification::success(get_string('customlayoutedited', 'block_dash',
-                $customlayout->to_record()));
+            \core\notification::success(get_string(
+                'customlayoutedited',
+                'block_dash',
+                $customlayout->to_record()
+            ));
             redirect(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
         } else if ($form->is_cancelled()) {
             redirect(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
@@ -130,8 +136,11 @@ switch ($action) {
 
         if ($confirm = optional_param('confirm', 0, PARAM_BOOL)) {
             $customlayout->delete();
-            \core\notification::success(get_string('customlayoutdeleted', 'block_dash',
-                $customlayout->to_record()));
+            \core\notification::success(get_string(
+                'customlayoutdeleted',
+                'block_dash',
+                $customlayout->to_record()
+            ));
             redirect(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
         }
 

@@ -35,7 +35,6 @@ use block_dash\local\data_grid\field\attribute\date_attribute;
  * It extends the base table class to provide specific functionality for handling role assignments.
  */
 class role_assignments_table extends table {
-
     /**
      * Build a new table.
      */

@@ -25,9 +25,9 @@
 
 require_once(__DIR__ . '/../../../../../../lib/behat/behat_base.php');
 
-use Behat\Gherkin\Node\TableNode as TableNode,
-Behat\Mink\Exception\DriverException as DriverException,
-Behat\Mink\Exception\ExpectationException as ExpectationException;
+use Behat\Gherkin\Node\TableNode,
+Behat\Mink\Exception\DriverException,
+Behat\Mink\Exception\ExpectationException;
 
 /**
  * Course sections steps definitions.
@@ -38,7 +38,6 @@ Behat\Mink\Exception\ExpectationException as ExpectationException;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class behat_dashaddon_course_sections extends behat_base {
-
     /**
      * Check that the focus mode enable.
      *

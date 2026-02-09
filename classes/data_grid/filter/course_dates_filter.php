@@ -38,7 +38,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class course_dates_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      *
@@ -74,30 +73,29 @@ class course_dates_filter extends select_filter {
     public function get_sql_and_params() {
         global $USER, $DB;
 
-        list($sql, $dates) = parent::get_sql_and_params();
+        [$sql, $dates] = parent::get_sql_and_params();
 
         if (is_array($dates)) {
-
             $sql = [];
             $params = [];
             foreach ($dates as $key => $date) {
                 switch ($date) {
                     case 'past':
                         $sql[] = "(c.enddate <> 0 AND c.enddate < :cdf_now_$key)";
-                        $params += ['cdf_now_'.$key => time()];
+                        $params += ['cdf_now_' . $key => time()];
                         break;
                     case 'present':
                         $sql[] = "(c.startdate < :cdf_startdate_$key AND ( c.enddate = 0 OR c.enddate > :cdf_enddate_$key) )";
-                        $params += ['cdf_enddate_'.$key => time(), 'cdf_startdate_'.$key => time()];
+                        $params += ['cdf_enddate_' . $key => time(), 'cdf_startdate_' . $key => time()];
                         break;
                     case 'future':
                         $sql[] = "(c.startdate > :cdf_now_$key)";
-                        $params += ['cdf_now_'.$key => time()];
+                        $params += ['cdf_now_' . $key => time()];
                         break;
                 }
             }
 
-            return ['('.implode(' OR ', $sql).')', $params];
+            return ['(' . implode(' OR ', $sql) . ')', $params];
         }
         return false;
     }

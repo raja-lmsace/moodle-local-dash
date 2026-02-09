@@ -35,7 +35,6 @@ use MoodleQuickForm;
  * @package    dashaddon_learningpath
  */
 class course_prerequisites_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -69,16 +68,17 @@ class course_prerequisites_condition extends condition {
 
         $prerequisitecourseids = [];
 
-        if (isset($this->get_preferences()['prerequisitecourses']) &&
-            is_array($this->get_preferences()['prerequisitecourses'])) {
-
+        if (
+            isset($this->get_preferences()['prerequisitecourses']) &&
+            is_array($this->get_preferences()['prerequisitecourses'])
+        ) {
             $selectedcourseids = $this->get_preferences()['prerequisitecourses'];
 
             if (!empty($selectedcourseids)) {
-                // Prepare SQL IN clause
-                list($insql, $inparams) = $DB->get_in_or_equal($selectedcourseids, SQL_PARAMS_NAMED, 'crs_');
+                // Prepare SQL IN clause.
+                [$insql, $inparams] = $DB->get_in_or_equal($selectedcourseids, SQL_PARAMS_NAMED, 'crs_');
 
-                // Get all prerequisites for the selected courses
+                // Get all prerequisites for the selected courses.
                 $records = $DB->get_records_select(
                     'course_completion_criteria',
                     "criteriatype = :ctype AND course $insql",
@@ -86,7 +86,8 @@ class course_prerequisites_condition extends condition {
                 );
 
                 foreach ($records as $record) {
-                    $prerequisitecourseids[] = $record->courseinstance; // actual prerequisite course
+                    // Actual prerequisite course.
+                    $prerequisitecourseids[] = $record->courseinstance;
                 }
             }
         }
@@ -112,7 +113,7 @@ class course_prerequisites_condition extends condition {
 
         $fieldname = sprintf($fieldnameformat, $this->get_name());
 
-        // Get all courses for dropdown
+        // Get all courses for dropdown.
         $courses = $DB->get_records('course', null, 'fullname', 'id, fullname');
         $courseoptions = [0 => get_string('none')];
 
@@ -120,7 +121,7 @@ class course_prerequisites_condition extends condition {
             $courseoptions[$course->id] = format_string($course->fullname);
         }
 
-        // Add the course dropdown
+        // Add the course dropdown.
         $select = $mform->addElement(
             'select',
             $fieldname . '[prerequisitecourses]',
@@ -129,17 +130,17 @@ class course_prerequisites_condition extends condition {
             ['class' => 'select2-form']
         );
 
-        // Help button
+        // Help button.
         $mform->addHelpButton(
             $fieldname . '[prerequisitecourses]',
             'selectprerequisitecourses',
             'dashaddon_learningpath'
         );
 
-        // Hide dropdown if plugin/feature is disabled
+        // Hide dropdown if plugin/feature is disabled.
         $mform->hideIf($fieldname . '[prerequisitecourses]', $fieldname . '[enabled]');
 
-        // Allow multiple selections
+        // Allow multiple selections.
         $select->setMultiple(true);
     }
 
@@ -153,7 +154,7 @@ class course_prerequisites_condition extends condition {
         $prerequisitecourseids = $this->get_values();
 
         if (!empty($prerequisitecourseids)) {
-            list($insql, $inparams) = $this->get_in_or_equal_sql_and_params($prerequisitecourseids);
+            [$insql, $inparams] = $this->get_in_or_equal_sql_and_params($prerequisitecourseids);
             $sql = "c.id $insql";
             return [$sql, $inparams];
         }

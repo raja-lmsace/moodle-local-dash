@@ -27,7 +27,7 @@
  */
 function xmldb_dashaddon_dashboard_install() {
     global $CFG, $DB;
-    require_once($CFG->dirroot."/local/dash/addon/dashboard/lib.php");
+    require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
     set_config('enabled', 1, 'dashaddon_dashboard');
 
     // Create the dashaddon_dashboard_dash table.
@@ -75,5 +75,4 @@ function xmldb_dashaddon_dashboard_install() {
         $dbman->create_table($table);
     }
     dashaddon_dashboard_create_core_dashboard();
-
 }

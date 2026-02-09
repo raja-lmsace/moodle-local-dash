@@ -42,7 +42,6 @@ use local_dash\data_grid\filter\relations_role_condition;
  * Certificates data source template queries and condition defined.
  */
 class certificates_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *

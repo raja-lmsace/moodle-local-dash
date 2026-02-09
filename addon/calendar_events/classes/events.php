@@ -43,7 +43,6 @@ use core_calendar\local\event\container as event_container;
  * Dashaddon calendar events data widget helper class.
  */
 class events {
-
     /**
      * Event raw data.
      *
@@ -127,7 +126,6 @@ class events {
                 self::$events[$row->ce_id] = $exporter->export($renderer);
 
                 $this->event = self::$events[$row->ce_id];
-
             }
         } else {
             $this->event = self::$events[$row->ce_id];
@@ -137,7 +135,6 @@ class events {
             array_map(fn($key) => str_replace('ce_', '', $key), array_keys((array) $this->row)),
             array_values((array) $this->row)
         );
-
     }
 
     /**
@@ -160,17 +157,15 @@ class events {
             $type = 'site';
         } else if ($row->ce_eventtype == 'user') {
             $type = 'user';
-
         } else if ($row->ce_groupid != 0 && !empty($row->ce_groupid)) {
             $type = 'group';
-
-        } else if ($row->ce_courseid && ($this->rowdata->eventtype == 'course' ||
-            ($this->rowdata->modulename && $this->rowdata->instance))) {
+        } else if (
+            $row->ce_courseid && ($this->rowdata->eventtype == 'course' ||
+            ($this->rowdata->modulename && $this->rowdata->instance))
+        ) {
             $type = 'course';
-
         } else if ($row->ce_categoryid) {
             $type = 'category';
-
         } else {
             $type = 'other';
         }
@@ -218,12 +213,17 @@ class events {
                     $context = \context_coursecat::instance($this->rowdata->categoryid)->id;
                     break;
             }
-            $summary = file_rewrite_pluginfile_urls($this->data, 'pluginfile.php',
-                $context, 'calendar', 'event_description', $this->rowdata->id);
+            $summary = file_rewrite_pluginfile_urls(
+                $this->data,
+                'pluginfile.php',
+                $context,
+                'calendar',
+                'event_description',
+                $this->rowdata->id
+            );
             $summary = format_text($summary, FORMAT_HTML, ['noclean' => true]);
         }
         return $summary;
-
     }
 
     /**
@@ -237,8 +237,8 @@ class events {
      */
     public function get_endtime($duration, $row) {
         // Check if duration and start date are available.
-        if ($duration && $row->{self::$tablealias.'_startdate'}) {
-            $startdate = $row->{self::$tablealias.'_startdate'}; // Start date.
+        if ($duration && $row->{self::$tablealias . '_startdate'}) {
+            $startdate = $row->{self::$tablealias . '_startdate'}; // Start date.
             // Calculate the end time by adding the duration to the start date.
             $endtime = $startdate + $duration;
             return $endtime;
@@ -258,11 +258,10 @@ class events {
      */
     public function get_status($data, $row) {
         // Check the event has a start date.
-        if ($data && $row->{self::$tablealias.'_startdate'}) {
-
-            $starttime = $row->{self::$tablealias.'_startdate'};
+        if ($data && $row->{self::$tablealias . '_startdate'}) {
+            $starttime = $row->{self::$tablealias . '_startdate'};
             // Calculate the end time of the event if a duration is provided, otherwise end time is the same as start time.
-            $endtime = $row->{self::$tablealias.'_duration'} ? $starttime + $row->{self::$tablealias.'_duration'} : $starttime;
+            $endtime = $row->{self::$tablealias . '_duration'} ? $starttime + $row->{self::$tablealias . '_duration'} : $starttime;
 
             $now = time();
 
@@ -328,14 +327,13 @@ class events {
      * @param bool $linked If true, returns an array with 'url' and 'label', otherwise just the label.
      * @return string|array The context name or an array with 'url' and 'label' depending on $linked.
      */
-    public function get_activity_context($linked=false) {
+    public function get_activity_context($linked = false) {
         global $SITE;
 
         // Get the type of event (group, course, user, etc.).
         $type = $this->event_type();
 
         switch ($type) {
-
             case "group":
                 // Format the group name and construct the URL to the group page.
                 $contextname = $this->event->groupname ?? format_string($this->rowdata->g_name);
@@ -371,7 +369,7 @@ class events {
                 ];
 
                 foreach (\core_user\fields::get_name_fields() as $field) {
-                    $user->$field = $this->rowdata->{"u_".$field} ?? '';
+                    $user->$field = $this->rowdata->{"u_" . $field} ?? '';
                 }
                 $contextname = fullname($user);
                 $linkurl = new moodle_url('/user/view.php', ['id' => $this->rowdata->userid]);
@@ -428,7 +426,6 @@ class events {
 
         $alttext = '';
         switch ($type) {
-
             case "module":
                 if (isset($this->event->icon)) {
                     $key = 'monologo';
@@ -517,15 +514,14 @@ class events {
     public function get_image($data, $row) {
         global $PAGE, $OUTPUT, $CFG;
 
-        require_once($CFG->libdir. '/filestorage/file_storage.php');
-        require_once($CFG->dirroot. '/course/lib.php');
+        require_once($CFG->libdir . '/filestorage/file_storage.php');
+        require_once($CFG->dirroot . '/course/lib.php');
 
         // Determine the event type using the event_type method.
         $type = $this->event_type();
         $fs = get_file_storage(); // Get the file storage instance.
 
         switch ($type) {
-
             case "group":
             case "course":
                 // For the course and group events get the valid image from the determined course and make the file url.
@@ -548,7 +544,7 @@ class events {
                     'id' => $this->rowdata->userid,
                 ];
                 foreach (\core_user\fields::get_picture_fields() as $field) {
-                    $user->$field = $this->rowdata->{"u_".$field} ?? '';
+                    $user->$field = $this->rowdata->{"u_" . $field} ?? '';
                 }
                 $userpicture = new user_picture($user);
                 $userpicture->size = 1;
@@ -574,7 +570,12 @@ class events {
         $fs = get_file_storage();
 
         $files = $fs->get_area_files(
-            \context_system::instance()->id, 'local_dash', 'calendareventsimage', 0, '', false
+            \context_system::instance()->id,
+            'local_dash',
+            'calendareventsimage',
+            0,
+            '',
+            false
         );
         if (!empty($files)) {
             // Get the first file.

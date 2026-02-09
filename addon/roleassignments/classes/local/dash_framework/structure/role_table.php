@@ -37,7 +37,6 @@ use lang_string;
  * It extends the base table class to provide specific functionality for handling role assignments.
  */
 class role_table extends table {
-
     /**
      * Build a new table.
      */
@@ -64,8 +63,16 @@ class role_table extends table {
             new field('id', new lang_string('role'), $this, 'r.id', [
                 new identifier_attribute(),
             ]),
-            new field('rolename', new lang_string('rolename', 'block_dash'), $this, 'r.id',
-            [new role_name_attribute()]),
+            new field('ra_id', new lang_string('roleassignment', 'core_role'), $this, 'ra.id', [
+                new identifier_attribute(),
+            ]),
+            new field(
+                'rolename',
+                new lang_string('rolename', 'block_dash'),
+                $this,
+                'r.id',
+                [new role_name_attribute()]
+            ),
             new field('roleoriginalname', new lang_string('originalrolename', 'block_dash'), $this, 'r.id', [
                 new role_originalname_attribute(),
             ]),

@@ -29,7 +29,6 @@ use block_dash\local\data_grid\filter\select_filter;
  * Modulename based filter option.
  */
 class module_field_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -38,7 +37,7 @@ class module_field_filter extends select_filter {
         global $DB;
         $options = $DB->get_records_sql_menu("SELECT DISTINCT id, name
         FROM {modules} WHERE visible = 1");
-        $options = array_map(function($value) {
+        $options = array_map(function ($value) {
             return get_string('pluginname', $value);
         }, $options);
         $this->add_options($options);

@@ -35,7 +35,6 @@ use block_dash\local\layout\grid_layout;
  * @group widgets_test
  */
 final class smart_button_test extends \advanced_testcase {
-
     /**
      * Test user 1
      *
@@ -80,9 +79,9 @@ final class smart_button_test extends \advanced_testcase {
         $this->setAdminUser();
         global $USER;
         $this->user = $USER;
-        $this->course1 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
-        $this->course2 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
-        $this->course3 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
+        $this->course1 = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
+        $this->course2 = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
+        $this->course3 = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
         foreach (range(1, 5) as $user) {
             $this->users[$user] = self::getDataGenerator()->create_user();
         }
@@ -113,7 +112,7 @@ final class smart_button_test extends \advanced_testcase {
      */
     public function test_smartbutton(): void {
         global $CFG, $DB;
-        require_once($CFG->dirroot.'/completion/criteria/completion_criteria_activity.php');
+        require_once($CFG->dirroot . '/completion/criteria/completion_criteria_activity.php');
 
         $user = self::getDataGenerator()->create_and_enrol($this->course1, 'student');
         $user2 = self::getDataGenerator()->create_user();

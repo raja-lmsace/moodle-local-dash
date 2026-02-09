@@ -32,7 +32,6 @@ use block_dash\local\data_grid\field\sql_field_definition;
  * @package dashaddon_developer
  */
 class custom_sql_field_definition extends sql_field_definition {
-
     /**
      * @var string
      */

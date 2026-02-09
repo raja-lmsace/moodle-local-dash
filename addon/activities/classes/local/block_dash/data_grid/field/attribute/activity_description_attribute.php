@@ -54,8 +54,15 @@ class activity_description_attribute extends abstract_field_attribute {
             return '';
         }
         $cmcontent = format_module_intro($module->name, $instance, $cm->id, false);
-        list($intro, $format) = external_format_text($cmcontent,
-                                    FORMAT_HTML, $modulecontext->id, $cm->modname, 'intro', $cm->id, ['noclean' => true]);
+        [$intro, $format] = external_format_text(
+            $cmcontent,
+            FORMAT_HTML,
+            $modulecontext->id,
+            $cm->modname,
+            'intro',
+            $cm->id,
+            ['noclean' => true]
+        );
         return $intro;
     }
 }

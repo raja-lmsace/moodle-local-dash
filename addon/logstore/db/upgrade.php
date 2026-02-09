@@ -30,7 +30,7 @@
 function xmldb_dashaddon_logstore_upgrade($oldversion) {
     global $CFG;
     if ($oldversion < 2024042500) {
-        require_once($CFG->dirroot. "/local/dash/addon/logstore/lib.php");
+        require_once($CFG->dirroot . "/local/dash/addon/logstore/lib.php");
         if (empty(dashaddon_logstore_extend_added_dependencies())) {
             set_config('enabled', 1, 'dashaddon_logstore');
             upgrade_plugin_savepoint(true, 2024042500, 'dashaddon', 'logstore');

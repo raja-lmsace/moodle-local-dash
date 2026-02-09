@@ -40,7 +40,6 @@ require_once($CFG->dirroot . '/cohort/lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class custom_layout_form extends persisten_form {
-
     /**
      * Class defined to handle the submitted data from the form.
      *
@@ -71,23 +70,35 @@ class custom_layout_form extends persisten_form {
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required');
 
-        $mform->addElement('advcheckbox', 'supports_field_visibility',
-            get_string('supportsfieldvisibility', 'block_dash'));
+        $mform->addElement(
+            'advcheckbox',
+            'supports_field_visibility',
+            get_string('supportsfieldvisibility', 'block_dash')
+        );
         $mform->setType('supports_field_visibility', PARAM_INT);
         $mform->addHelpButton('supports_field_visibility', 'supportsfieldvisibility', 'block_dash');
 
-        $mform->addElement('advcheckbox', 'supports_filtering',
-            get_string('supportsfiltering', 'block_dash'));
+        $mform->addElement(
+            'advcheckbox',
+            'supports_filtering',
+            get_string('supportsfiltering', 'block_dash')
+        );
         $mform->setType('supports_filtering', PARAM_INT);
         $mform->addHelpButton('supports_filtering', 'supportsfiltering', 'block_dash');
 
-        $mform->addElement('advcheckbox', 'supports_pagination',
-            get_string('supportspagination', 'block_dash'));
+        $mform->addElement(
+            'advcheckbox',
+            'supports_pagination',
+            get_string('supportspagination', 'block_dash')
+        );
         $mform->setType('supports_pagination', PARAM_INT);
         $mform->addHelpButton('supports_pagination', 'supportspagination', 'block_dash');
 
-        $mform->addElement('advcheckbox', 'supports_sorting',
-            get_string('supportssorting', 'block_dash'));
+        $mform->addElement(
+            'advcheckbox',
+            'supports_sorting',
+            get_string('supportssorting', 'block_dash')
+        );
         $mform->setType('supports_sorting', PARAM_INT);
         $mform->addHelpButton('supports_sorting', 'supportssorting', 'block_dash');
 

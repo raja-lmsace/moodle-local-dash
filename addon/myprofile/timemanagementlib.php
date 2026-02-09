@@ -35,7 +35,7 @@ function dashaddon_myprofile_get_user_dueactivities($courseid, $userid) {
     $duecount = 0;
     $overduecount = 0;
 
-    require_once($CFG->dirroot.'/lib/completionlib.php');
+    require_once($CFG->dirroot . '/lib/completionlib.php');
 
     $modinfo = get_fast_modinfo($courseid);
     $completion = new \completion_info($modinfo->get_course());
@@ -44,15 +44,15 @@ function dashaddon_myprofile_get_user_dueactivities($courseid, $userid) {
             if (!empty($modnumbers)) {
                 foreach ($modnumbers as $modnumber) {
                     $mod = $modinfo->cms[$modnumber];
-                    if ($DB->record_exists('course_modules', ['id' => $mod->id, 'deletioninprogress' => 0])
-                        && !empty($mod) && $mod->uservisible) {
-
+                    if (
+                        $DB->record_exists('course_modules', ['id' => $mod->id, 'deletioninprogress' => 0])
+                        && !empty($mod) && $mod->uservisible
+                    ) {
                         $data = $completion->get_data($mod, true, $userid);
                         if ($data->completionstate != COMPLETION_COMPLETE) {
                             $cmcompletion = new cm_completion($mod, $userid);
                             $overduecount = ($cmcompletion->is_overdue()) ? $overduecount + 1 : $overduecount;
                             $duecount = ($cmcompletion->is_due_today()) ? $duecount + 1 : $duecount;
-
                         }
                     }
                 }
@@ -119,7 +119,6 @@ class cm_completion {
     public function __construct(cm_info $cm, $userid) {
         $this->cm = $cm;
         $this->userid = $userid;
-
     }
 
     /**
@@ -152,7 +151,7 @@ class cm_completion {
      *
      * @return int|bool Mod due date if available otherwiser returns false.
      */
-    public static function timetool_duedate($cm, $userid, $timemanagement=false) {
+    public static function timetool_duedate($cm, $userid, $timemanagement = false) {
 
         if (self::is_timemanagement_installed()) {
             $duedate = dashaddon_myprofile_get_mod_user_duedate($cm, $userid);
@@ -191,7 +190,7 @@ class cm_completion {
 
         if ($result == null) {
             if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
-                require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
+                require_once($CFG->dirroot . '/admin/tool/timetable/classes/time_management.php');
                 $result = true;
             } else {
                 $result = false;

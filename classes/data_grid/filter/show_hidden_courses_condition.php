@@ -35,7 +35,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class show_hidden_courses_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -92,5 +91,4 @@ class show_hidden_courses_condition extends condition {
 
         return [$sql, $params];
     }
-
 }

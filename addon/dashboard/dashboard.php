@@ -24,11 +24,11 @@
 
 use dashaddon_dashboard\model\dashboard;
 
-require(__DIR__.'/../../../../config.php');
+require(__DIR__ . '/../../../../config.php');
 require_once("$CFG->libdir/adminlib.php");
 require_once("$CFG->dirroot/cohort/lib.php");
-require_once($CFG->dirroot.'/lib/csslib.php');
-require_once($CFG->dirroot.'/lib/configonlylib.php');
+require_once($CFG->dirroot . '/lib/csslib.php');
+require_once($CFG->dirroot . '/lib/configonlylib.php');
 require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
 
 global $PAGE, $DB, $CFG, $USER;
@@ -80,7 +80,8 @@ $PAGE->set_title($dashboard->get('name'));
 $PAGE->set_heading($dashboard->get('name'));
 
 if (has_capability('local/dash:managedashboards', $context)) {
-    $PAGE->navbar->add(get_string('managedashboards', 'block_dash'),
+    $PAGE->navbar->add(
+        get_string('managedashboards', 'block_dash'),
         new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'),
     );
 }
@@ -136,15 +137,25 @@ $PAGE->requires->css($includestyle);
 if ($PAGE->user_is_editing()) {
     if ($context->contextlevel == CONTEXT_COURSECAT) {
         if (has_capability('local/dash:managecoursecatedashboards', $context)) {
-            $PAGE->set_button($OUTPUT->single_button(new \moodle_url('/local/dash/addon/dashboard/dashboards.php',
-                ['action' => 'edit', 'id' => $dashboard->get('id')]),
-                    get_string('editdashboard', 'block_dash'), 'get'));
+            $PAGE->set_button($OUTPUT->single_button(
+                new \moodle_url(
+                    '/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'edit', 'id' => $dashboard->get('id')]
+                ),
+                get_string('editdashboard', 'block_dash'),
+                'get'
+            ));
         }
     } else {
         if (has_capability('local/dash:managedashboards', $context)) {
-            $PAGE->set_button($OUTPUT->single_button(new \moodle_url('/local/dash/addon/dashboard/dashboards.php',
-                ['action' => 'edit', 'id' => $dashboard->get('id')]),
-                    get_string('editdashboard', 'block_dash'), 'get'));
+            $PAGE->set_button($OUTPUT->single_button(
+                new \moodle_url(
+                    '/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'edit', 'id' => $dashboard->get('id')]
+                ),
+                get_string('editdashboard', 'block_dash'),
+                'get'
+            ));
         }
     }
 }

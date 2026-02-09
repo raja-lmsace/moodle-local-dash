@@ -31,7 +31,6 @@ use block_dash\local\data_grid\filter\condition;
  * @package    dashaddon_learningpath
  */
 class current_course_prerequisites_condition extends condition {
-
     /**
      * Return WHERE SQL and params for placeholders.
      *
@@ -58,19 +57,19 @@ class current_course_prerequisites_condition extends condition {
                 'courseinstance'
             );
 
-            $prerequisitecourseids = array_map(function($r) {
+            $prerequisitecourseids = array_map(function ($r) {
                 return $r->courseinstance;
             }, $records);
 
             $prerequisitecourseids = array_unique($prerequisitecourseids);
 
             if (!empty($prerequisitecourseids)) {
-                list($insql, $inparams) = $DB->get_in_or_equal($prerequisitecourseids, SQL_PARAMS_NAMED, 'prereq');
+                [$insql, $inparams] = $DB->get_in_or_equal($prerequisitecourseids, SQL_PARAMS_NAMED, 'prereq');
                 $sql = " c.id $insql ";
                 return [$sql, $inparams];
             }
         }
-                               
+
         return false;
     }
 
@@ -83,4 +82,3 @@ class current_course_prerequisites_condition extends condition {
         return get_string('currentcourse', 'block_dash');
     }
 }
- 

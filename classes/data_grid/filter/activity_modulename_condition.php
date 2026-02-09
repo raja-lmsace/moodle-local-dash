@@ -37,7 +37,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class activity_modulename_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -68,7 +67,10 @@ class activity_modulename_condition extends condition {
      * @param string $fieldnameformat
      */
     public function build_settings_form_fields(
-        moodleform $moodleform, MoodleQuickForm $mform, $fieldnameformat = 'filters[%s]'): void {
+        moodleform $moodleform,
+        MoodleQuickForm $mform,
+        $fieldnameformat = 'filters[%s]'
+    ): void {
 
         global $DB;
 
@@ -106,10 +108,10 @@ class activity_modulename_condition extends condition {
     public function get_sql_and_params() {
         global $DB;
 
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
 
         if ($sql) {
-            list($insql, $inparams) = $DB->get_in_or_equal($this->get_preferences()['modules'], SQL_PARAMS_NAMED, 'm', true, true);
+            [$insql, $inparams] = $DB->get_in_or_equal($this->get_preferences()['modules'], SQL_PARAMS_NAMED, 'm', true, true);
             $sql = ' m.id ' . $insql;
             $params = array_merge($params, $inparams);
         }

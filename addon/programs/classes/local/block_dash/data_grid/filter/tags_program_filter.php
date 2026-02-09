@@ -32,7 +32,6 @@ use block_dash\local\data_grid\filter\select_filter;
  * @package dashaddon_programs
  */
 class tags_program_filter extends select_filter {
-
     /**
      * Current component.
      *
@@ -117,17 +116,16 @@ class tags_program_filter extends select_filter {
     public function get_sql_and_params() {
         global $DB;
 
-        list($sql, $values) = parent::get_sql_and_params();
+        [$sql, $values] = parent::get_sql_and_params();
 
         if (!empty($values)) {
-
             $collectionid = \core_tag_area::get_collection($this->component, $this->itemtype);
 
-            array_walk($values, function(&$value) {
+            array_walk($values, function (&$value) {
                 $value = \core_text::strtolower($value);
             });
 
-            list($taginsql, $taginparams) = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED, 'tgp');
+            [$taginsql, $taginparams] = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED, 'tgp');
             $sql = "epp.id IN (SELECT ti.itemid
                     FROM {tag_instance} ti
                     JOIN {tag} t ON ti.tagid = t.id

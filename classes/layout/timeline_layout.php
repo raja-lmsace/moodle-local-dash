@@ -36,7 +36,6 @@ use local_dash\data_grid\field\attribute\event\event_color_attribute;
  * Timeline layout for reports builder.
  */
 class timeline_layout extends abstract_layout {
-
     /**
      * Get layout template filename.
      * @return string
@@ -95,14 +94,24 @@ class timeline_layout extends abstract_layout {
 
             $noneoption = [null => get_string('none', 'block_dash')];
 
-            $mform->addElement('select', 'config_preferences[iconfield]', get_string('iconfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[iconfield]',
+                get_string('iconfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[iconfield]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[subheadingfield]', get_string('subheadingfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[subheadingfield]',
+                get_string('subheadingfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[subheadingfield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[subheadingfield]', 'subheadingfield', 'block_dash');
 
@@ -110,8 +119,12 @@ class timeline_layout extends abstract_layout {
             asort($icons);
             $icons = $noneoption + $icons;
 
-            $mform->addElement('select', 'config_preferences[subheadingfield_icon]',
-                get_string('subheadingfieldicon', 'block_dash'), $icons);
+            $mform->addElement(
+                'select',
+                'config_preferences[subheadingfield_icon]',
+                get_string('subheadingfieldicon', 'block_dash'),
+                $icons
+            );
             $mform->setDefault('config_preferences[subheadingfield_icon]', 'fa-clock-o');
 
             $colorfields = [];
@@ -121,33 +134,62 @@ class timeline_layout extends abstract_layout {
                 }
             }
 
-            $mform->addElement('select', 'config_preferences[badgecolorfield]', get_string('badgecolorfield', 'block_dash'),
-                array_merge($noneoption, field_definition_factory::get_field_definition_options($colorfields)));
+            $mform->addElement(
+                'select',
+                'config_preferences[badgecolorfield]',
+                get_string('badgecolorfield', 'block_dash'),
+                array_merge($noneoption, field_definition_factory::get_field_definition_options($colorfields))
+            );
             $mform->addHelpButton('config_preferences[badgecolorfield]', 'badgecolorfield', 'block_dash');
 
-            $mform->addElement('select', 'config_preferences[headingfield]', get_string('headingfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[headingfield]',
+                get_string('headingfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[headingfield]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[bodyfield]', get_string('bodyfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[bodyfield]',
+                get_string('bodyfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[bodyfield]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[bodyfield2]', get_string('bodyfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[bodyfield2]',
+                get_string('bodyfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[bodyfield2]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[bodyfield3]', get_string('bodyfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[bodyfield3]',
+                get_string('bodyfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $this->get_data_source()->get_available_fields())));
+                    $this->get_data_source()->get_available_fields()
+                ))
+            );
             $mform->setType('config_preferences[bodyfield3]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[imageurlfield]', get_string('imageurlfield', 'block_dash'),
+            $mform->addElement(
+                'select',
+                'config_preferences[imageurlfield]',
+                get_string('imageurlfield', 'block_dash'),
                 array_merge($noneoption, field_definition_factory::get_field_definition_options(
-                    $imageurlfields)));
+                    $imageurlfields
+                ))
+            );
             $mform->setType('config_preferences[imageurlfield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[imageurlfield]', 'imageurlfield', 'block_dash');
         }

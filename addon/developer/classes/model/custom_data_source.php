@@ -35,7 +35,6 @@ use dashaddon_developer\data_grid\field\custom_sql_field_definition;
  * @package dashaddon_developer
  */
 class custom_data_source extends persistent {
-
     /**
      * Source table for the developer addon.
      */
@@ -149,8 +148,28 @@ class custom_data_source extends persistent {
             if (is_null($value)) {
                 continue;
             }
-            $data->$property = json_decode($value);
+            $data->$property =  in_array($property, ['fieldattribute', 'attributevalue']) ? $this->revise_fieldattr($value) : json_decode($value);
         }
+    }
+
+    /**
+     * Make the field attribute and attribute value in array format for the loop in field definition.
+     *
+     * @param string $value
+     * @return array
+     */
+    public function revise_fieldattr($value) {
+
+        $value = json_decode($value) ?: [];
+        array_walk($value, function(&$item) {
+            if (!is_array($item)) {
+                $item = [$item];
+            }
+
+            $item = array_filter($item);
+        });
+
+        return $value;
     }
 
     /**
@@ -253,18 +272,18 @@ class custom_data_source extends persistent {
 
         $tablesalias = $this->get_table_alias();
 
-        $fieldtable = explode('.', $field);
+        $expfieldtable = explode('.', $field);
         // This field doesn't contains any table as alias, this is raise the ambious error.
-        if (!isset($fieldtable[1])) {
+        if (!isset($expfieldtable[1])) {
             return;
         }
 
         // Name of the field used in the DB table strucutes. without any alias.
-        $fieldtable = reset($fieldtable); // First element is the table.
+        $fieldtable = $expfieldtable[0]; // First element is the table.
 
         if (isset($tablesalias[$fieldtable])) {
             // Replace the table name with its alias.
-            $field = str_replace($fieldtable, $tablesalias[$fieldtable], $field);
+            $field = $tablesalias[$fieldtable] . '.' . $expfieldtable[1];
         }
 
         return $field;
@@ -289,5 +308,4 @@ class custom_data_source extends persistent {
 
         return $updatedlist ?? [];
     }
-
 }

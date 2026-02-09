@@ -33,7 +33,6 @@ use block_dash\local\data_grid\field\field_definition_interface;
  * @package dashaddon_developer
  */
 class custom_field_definition_factory implements field_definition_factory_interface {
-
     /**
      * Build and return a field definition based on unique identifier.
      *

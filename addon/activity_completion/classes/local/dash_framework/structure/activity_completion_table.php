@@ -37,7 +37,6 @@ use lang_string;
  * Activity completion table structure definitions for activity completion datasource.
  */
 class activity_completion_table extends table {
-
     /**
      * Build a new table.
      */
@@ -63,17 +62,32 @@ class activity_completion_table extends table {
     public function get_fields(): array {
         global $DB, $PAGE;
         $fields = [
-            new field('completionoverrideby', new lang_string('completionoverride', 'dashaddon_activity_completion'),
-                $this, 'cmc.overrideby', [new completion_overrideby_attribute()]),
+            new field(
+                'completionoverrideby',
+                new lang_string('completionoverride', 'dashaddon_activity_completion'),
+                $this,
+                'cmc.overrideby',
+                [new completion_overrideby_attribute()]
+            ),
 
-            new field('completionoverridedate', new lang_string('completionoverridedate', 'dashaddon_activity_completion'),
-                $this, 'cmc.timemodified', [new completion_overridedate_attribute()]),
+            new field(
+                'completionoverridedate',
+                new lang_string('completionoverridedate', 'dashaddon_activity_completion'),
+                $this,
+                'cmc.timemodified',
+                [new completion_overridedate_attribute()]
+            ),
 
             new field('moduleduedate', new lang_string('duedate', 'block_dash'), $this, 'cm.completionexpected', [
                 new activity_duedate_attribute(),
             ]),
-            new field('modulestartdate', new lang_string('startdate', 'dashaddon_activity_completion'),
-                $this, 'cm.completionexpected', [new activity_startdate_attribute()]),
+            new field(
+                'modulestartdate',
+                new lang_string('startdate', 'dashaddon_activity_completion'),
+                $this,
+                'cm.completionexpected',
+                [new activity_startdate_attribute()]
+            ),
         ];
         return $fields;
     }

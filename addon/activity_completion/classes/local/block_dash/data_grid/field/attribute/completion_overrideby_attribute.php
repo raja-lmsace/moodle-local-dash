@@ -33,7 +33,6 @@ use moodle_url;
  * @package dashaddon_activity_completion
  */
 class completion_overrideby_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -47,8 +46,10 @@ class completion_overrideby_attribute extends abstract_field_attribute {
         global $DB;
         $user = $DB->get_record('user', ['id' => $data]);
         if ($user) {
-            return \html_writer::link(new moodle_url('/user/profile.php', ['id' => $user->id]),
-                $user->firstname . " " . $user->lastname);
+            return \html_writer::link(
+                new moodle_url('/user/profile.php', ['id' => $user->id]),
+                $user->firstname . " " . $user->lastname
+            );
         }
         return "";
     }

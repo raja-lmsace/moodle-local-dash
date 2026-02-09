@@ -36,7 +36,6 @@ use dashaddon_developer\model\custom_layout;
  * @package dashaddon_developer
  */
 class persistent_layout_factory implements layout_factory_interface {
-
     /**
      * Get layout object with datasource.
      *

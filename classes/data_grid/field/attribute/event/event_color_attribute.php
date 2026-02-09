@@ -37,7 +37,6 @@ use logstore_standard\log\store;
  * @package local_dash
  */
 class event_color_attribute extends event_object_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format

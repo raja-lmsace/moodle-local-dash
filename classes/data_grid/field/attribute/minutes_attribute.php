@@ -33,7 +33,6 @@ use DateTime;
  * @package local_dash
  */
 class minutes_attribute extends abstract_field_attribute {
-
     /**
      * Convert a duration from seconds to minutes.
      *

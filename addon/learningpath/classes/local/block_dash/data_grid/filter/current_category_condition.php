@@ -32,7 +32,6 @@ use block_dash\local\data_grid\filter\condition;
  * @package dashaddon_learningpath
  */
 class current_category_condition extends condition {
-
     /**
      * Return where SQL and params for placeholders.
      *
@@ -50,7 +49,7 @@ class current_category_condition extends condition {
         }
         if ($categoryid) {
             if ($categoryrecord = $DB->get_record('course_categories', ['id' => $categoryid])) {
-                list($insql, $inparams) = $DB->get_in_or_equal($categoryrecord->id, SQL_PARAMS_NAMED);
+                [$insql, $inparams] = $DB->get_in_or_equal($categoryrecord->id, SQL_PARAMS_NAMED);
                 $sql = " c.category $insql ";
                 return [$sql, $inparams];
             }

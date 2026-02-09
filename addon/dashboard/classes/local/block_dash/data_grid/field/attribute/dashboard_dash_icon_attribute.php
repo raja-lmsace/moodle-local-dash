@@ -35,7 +35,6 @@ use cm_info;
  * @package dashaddon_dashboard
  */
 class dashboard_dash_icon_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -53,7 +52,7 @@ class dashboard_dash_icon_attribute extends abstract_field_attribute {
             $component = isset($icon[0]) ? $icon[0] : '';
 
             // Render the pix icon.
-            return $OUTPUT->pix_icon($iconstr,  '', $component);
+            return $OUTPUT->pix_icon($iconstr, '', $component);
         } else {
             return '';
         }

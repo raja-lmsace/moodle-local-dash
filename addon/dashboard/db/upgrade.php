@@ -29,7 +29,7 @@
  */
 function xmldb_dashaddon_dashboard_upgrade($oldversion) {
     global $CFG, $DB;
-    require_once($CFG->dirroot."/local/dash/addon/dashboard/lib.php");
+    require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
     dashaddon_dashboard_create_core_dashboard();
     $dbman = $DB->get_manager();
 

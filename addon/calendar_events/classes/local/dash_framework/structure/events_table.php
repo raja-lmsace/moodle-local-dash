@@ -46,7 +46,6 @@ use local_dash\data_grid\field\attribute\minutes_attribute;
  * Calendar events table structure definitions for calendar events datasource.
  */
 class events_table extends table {
-
     /**
      * Build a new table.
      */

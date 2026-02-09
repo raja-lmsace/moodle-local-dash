@@ -33,7 +33,6 @@ use block_dash\local\layout\abstract_layout;
  * One state layout for reports visual.
  */
 class one_stat_layout extends abstract_layout {
-
     /**
      * Get layout template filename.
      * @return string
@@ -88,7 +87,9 @@ class one_stat_layout extends abstract_layout {
 
             $noneoption = [null => get_string('none', 'block_dash')];
 
-            $mform->addElement('select', 'config_preferences[stat_field_definition]',
+            $mform->addElement(
+                'select',
+                'config_preferences[stat_field_definition]',
                 get_string('stattodisplay', 'block_dash'),
                 array_merge(
                     $noneoption,

@@ -39,8 +39,11 @@ trait filter_element {
      * @throws \Exception
      * @return string
      */
-    public function create_filter_element(filter_collection_interface $filtercollection,
-                                        $elementnameprefix = '', $sort = true) {
+    public function create_filter_element(
+        filter_collection_interface $filtercollection,
+        $elementnameprefix = '',
+        $sort = true
+    ) {
         global $OUTPUT;
         $options = $this->options;
 
@@ -67,4 +70,3 @@ trait filter_element {
         ]);
     }
 }
-

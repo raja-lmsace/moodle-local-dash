@@ -35,7 +35,6 @@ use block_dash\local\layout\abstract_layout;
  * Boostrap accordian layout for course format.
  */
 class accordion_layout extends abstract_layout {
-
     /**
      * Get layout template filename.
      * @return string
@@ -97,13 +96,19 @@ class accordion_layout extends abstract_layout {
                 }
             }
 
-            $mform->addElement('select', 'config_preferences[groupby_field_definition]',
+            $mform->addElement(
+                'select',
+                'config_preferences[groupby_field_definition]',
                 get_string('groupby', 'block_dash'),
-                field_definition_factory::get_field_definition_options($groupbyfields));
+                field_definition_factory::get_field_definition_options($groupbyfields)
+            );
 
-            $mform->addElement('select', 'config_preferences[group_label_field_definition]',
+            $mform->addElement(
+                'select',
+                'config_preferences[group_label_field_definition]',
                 get_string('grouplabel', 'block_dash'),
-                field_definition_factory::get_field_definition_options($grouplabelfields));
+                field_definition_factory::get_field_definition_options($grouplabelfields)
+            );
         }
 
         parent::build_preferences_form($form, $mform);

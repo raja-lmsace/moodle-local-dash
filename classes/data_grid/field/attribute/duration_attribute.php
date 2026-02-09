@@ -33,7 +33,6 @@ use DateTime;
  * @package local_dash
  */
 class duration_attribute extends abstract_field_attribute {
-
     /**
      * Convert a duration in seconds into a human-readable format (days, hours, and minutes).
      *
@@ -47,7 +46,6 @@ class duration_attribute extends abstract_field_attribute {
     public function transform_data($data, \stdClass $record) {
 
         if (is_numeric($data) && $data > 0) {
-
             // Define the number of seconds in a minute, hour, and day.
             $secondsinaminute = 60;
             $secondsinanhour = 60 * $secondsinaminute;
@@ -74,7 +72,7 @@ class duration_attribute extends abstract_field_attribute {
 
             foreach ($sections as $name => $value) {
                 if ($value > 0) {
-                    $timeparts[] = $value. ' '.$name.($value == 1 ? '' : 's');
+                    $timeparts[] = $value . ' ' . $name . ($value == 1 ? '' : 's');
                 }
             }
             // Return the formatted duration as a comma-separated string.

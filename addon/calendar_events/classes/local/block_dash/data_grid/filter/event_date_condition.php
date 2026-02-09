@@ -38,7 +38,6 @@ use MoodleQuickForm;
  * @package dashaddon_calendar_events
  */
 class event_date_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -68,7 +67,8 @@ class event_date_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
 
@@ -81,8 +81,11 @@ class event_date_condition extends condition {
             'thismonth' => get_string('filter:thismonth', 'block_dash'),
         ];
 
-        $select = $mform->addElement('select', $fieldname . '[eventdate]',
-            get_string('event:filterdate', 'block_dash'), $choices,
+        $select = $mform->addElement(
+            'select',
+            $fieldname . '[eventdate]',
+            get_string('event:filterdate', 'block_dash'),
+            $choices,
             ['class' => 'select2-form']
         );
         $mform->hideIf($fieldname . '[eventdate]', $fieldname . '[enabled]');
@@ -105,12 +108,10 @@ class event_date_condition extends condition {
 
             $timezone = core_date::get_user_timezone_object();
             foreach ($types as $key => $type) {
-
-                $param2 = 'cedatec_endtime_'.$key;
-                $param1 = 'cedatec_starttime_'.$key;
+                $param2 = 'cedatec_endtime_' . $key;
+                $param1 = 'cedatec_starttime_' . $key;
 
                 switch ($type) {
-
                     case "upcoming":
                         $startoftomorrow = (new DateTime('tomorrow midnight', $timezone))->getTimestamp();
 
@@ -144,9 +145,7 @@ class event_date_condition extends condition {
                 }
             }
 
-            return ['('.implode(' OR ', $sql).')', $params];
+            return ['(' . implode(' OR ', $sql) . ')', $params];
         }
-
     }
-
 }

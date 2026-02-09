@@ -33,7 +33,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class event_condition extends condition {
-
     /**
      * Get values from filter based on user selection. All filters must return an array of values.
      *
@@ -78,7 +77,9 @@ class event_condition extends condition {
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
-        MoodleQuickForm $mform, $fieldnameformat = 'filters[%s]'): void {
+        MoodleQuickForm $mform,
+        $fieldnameformat = 'filters[%s]'
+    ): void {
 
         global $CFG;
 

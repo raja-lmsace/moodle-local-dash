@@ -30,7 +30,7 @@
 function xmldb_dashaddon_activities_upgrade($oldversion) {
     global $CFG;
     if ($oldversion < 2024042500) {
-        require_once($CFG->dirroot. "/local/dash/addon/activities/lib.php");
+        require_once($CFG->dirroot . "/local/dash/addon/activities/lib.php");
         if (empty(dashaddon_activities_extend_added_dependencies())) {
             set_config('enabled', 1, 'dashaddon_activities');
         }

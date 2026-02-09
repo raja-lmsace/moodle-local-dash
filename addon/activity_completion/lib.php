@@ -26,7 +26,7 @@ use dashaddon_activity_completion\local\block_dash\data_grid\field\attribute\act
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/lib/formslib.php');
+require_once($CFG->dirroot . '/lib/formslib.php');
 
 /**
  * The require plugin dependencies added for the soft dependencies in the activities completion dash addon.
@@ -63,7 +63,7 @@ function dashaddon_activity_completion_is_timetable_installed() {
 
     if ($result == null) {
         if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
-            require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
+            require_once($CFG->dirroot . '/admin/tool/timetable/classes/time_management.php');
             $result = true;
         } else {
             $result = false;
@@ -81,7 +81,7 @@ function dashaddon_activity_completion_is_timetable_installed() {
  */
 function dashaddon_activity_completion_output_fragment_grade_activity_form($args) {
     global $DB;
-    list($course, $cm) = get_course_and_cm_from_cmid($args['cmid']);
+    [$course, $cm] = get_course_and_cm_from_cmid($args['cmid']);
 
     $params['gradeitemid'] = $args['gradeitemid'];
     $params['userid'] = $args['userid'];

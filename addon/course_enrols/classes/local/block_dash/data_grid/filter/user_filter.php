@@ -31,7 +31,6 @@ use block_dash\local\data_grid\filter\filter_collection_interface;
  * Filters results to specific mentess user.
  */
 class user_filter extends select_filter {
-
     use filter_element;
 
     /**
@@ -69,8 +68,10 @@ class user_filter extends select_filter {
      * @throws \Exception
      * @return string
      */
-    public function create_form_element(filter_collection_interface $filtercollection,
-                                        $elementnameprefix = '') {
+    public function create_form_element(
+        filter_collection_interface $filtercollection,
+        $elementnameprefix = ''
+    ) {
         $filter = $filtercollection->get_filter('c_mentees')->get_preferences();
         if (!empty($filter) && $filter['enabled']) {
             return $this->create_filter_element($filtercollection, $elementnameprefix);

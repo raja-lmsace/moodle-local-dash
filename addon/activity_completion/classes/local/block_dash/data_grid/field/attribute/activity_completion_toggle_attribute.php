@@ -35,7 +35,6 @@ use cm_info;
  * @package dashaddon_activity_completion
  */
 class activity_completion_toggle_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -57,7 +56,7 @@ class activity_completion_toggle_attribute extends abstract_field_attribute {
             return $togglehbtn;
         }
 
-        list($course, $cm) = get_course_and_cm_from_cmid($cmid);
+        [$course, $cm] = get_course_and_cm_from_cmid($cmid);
 
         // Set up completion object and check it is enabled.
         $completion = new \completion_info($course);
@@ -66,7 +65,6 @@ class activity_completion_toggle_attribute extends abstract_field_attribute {
         }
 
         if ($completion->is_tracked_user($userid)) {
-
             $completiondata = $completion->get_data($cm, false, $userid);
             $state = ($completiondata->completionstate == COMPLETION_COMPLETE) ? COMPLETION_INCOMPLETE : COMPLETION_COMPLETE;
 
@@ -81,7 +79,7 @@ class activity_completion_toggle_attribute extends abstract_field_attribute {
                 $togglehbtn .= html_writer::div(
                     html_writer::empty_tag('input', [ 'type' => 'checkbox', 'class' => 'custom-control-input'] + $checked) .
                     html_writer::tag('span', '', ['class' => 'custom-control-label']),
-                    $buttonclasss.' custom-control custom-switch',
+                    $buttonclasss . ' custom-control custom-switch',
                     [
                         'data-cmid' => $cmid,
                         'data-userid' => $userid,

@@ -38,7 +38,6 @@ use lang_string;
  * Activities action table structure definitions for activity completion datasource.
  */
 class activity_action_table extends table {
-
     /**
      * Build a new table.
      */

@@ -70,21 +70,32 @@ class course_completion_table extends table {
                 new identifier_attribute(),
             ]),
 
-            new field('total_activities', new lang_string('totalactivitiescompletion', 'block_dash'), $this,
-            'ccc200.totalactivities', [], ['supports_sorting' => false], '', null,
+            new field(
+                'total_activities',
+                new lang_string('totalactivitiescompletion', 'block_dash'),
+                $this,
+                'ccc200.totalactivities',
+                [],
+                ['supports_sorting' => false],
+                '',
+                null,
                 new join_raw('SELECT ccc.course, COUNT(*) AS totalactivities
                     FROM {course_completion_criteria} ccc
                     WHERE ccc.criteriatype = 4
-                    GROUP BY ccc.course', 'ccc200', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
-                ),
+                    GROUP BY ccc.course', 'ccc200', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN),
                 true, // Force join even if not visible.
             ),
 
-            new field('completed_activities', new lang_string('completedactivities', 'block_dash'), $this,
+            new field(
+                'completed_activities',
+                new lang_string('completedactivities', 'block_dash'),
+                $this,
                 '(SELECT COUNT(*) FROM {course_completion_crit_compl} cccc100
                 join {course_completion_criteria} cccc200 ON cccc200.id = cccc100.criteriaid AND cccc200.criteriatype = 4
                 WHERE cccc100.userid = u.id AND cccc100.course = c.id)',
-                [], ['supports_sorting' => false]),
+                [],
+                ['supports_sorting' => false]
+            ),
 
             new field('completed', new lang_string('coursecompleted', 'completion'), $this, 'ccp.timecompleted', [
                 new bool_attribute(),

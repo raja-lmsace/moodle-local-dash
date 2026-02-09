@@ -34,7 +34,6 @@ use dashaddon_skill_graph\data_grid\filter\competency_condition;
  * SkillGraph widget class contains the layout information and generate the data for widget.
  */
 class competency_progress_widget extends abstract_widget {
-
     /**
      * List of available competencies for the selected framework.
      *
@@ -181,7 +180,6 @@ class competency_progress_widget extends abstract_widget {
         $data = $this->build_competency_data($tree);
 
         foreach ($data as $key => $maindata) {
-
             $proficiencycount = 0;
             $childcount = 0;
             // Find the count of child competencies and proficient competencies.
@@ -214,7 +212,6 @@ class competency_progress_widget extends abstract_widget {
         global $USER;
 
         foreach ($competencies as $key => $value) {
-
             $competency = $value->competency;
 
             $compid = $competency->get('id'); // Id of the competency.
@@ -256,8 +253,13 @@ class competency_progress_widget extends abstract_widget {
             $file = reset($files);
 
             $url = \moodle_url::make_pluginfile_url(
-                $file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
-                $file->get_filename(), false
+                $file->get_contextid(),
+                $file->get_component(),
+                $file->get_filearea(),
+                $file->get_itemid(),
+                $file->get_filepath(),
+                $file->get_filename(),
+                false
             )->out(false);
         }
 

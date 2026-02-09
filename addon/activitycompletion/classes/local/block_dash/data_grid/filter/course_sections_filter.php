@@ -31,7 +31,6 @@ use block_dash\local\data_grid\filter\filter_collection_interface;
  * Filters results to specific course sections activity completion status.
  */
 class course_sections_filter extends select_filter {
-
     use filter_element;
 
     /**
@@ -101,22 +100,24 @@ class course_sections_filter extends select_filter {
     public function get_sql_and_params() {
         global $DB;
 
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
         $inparams = [];
 
         if ($sql) {
-
             $selectedsection = $this->get_values();
 
             if ($selectedsection[0] == -2) {
-
                 $modules = [];
                 $courses = $DB->get_records_sql('SELECT * FROM {course} WHERE visible = 1 AND marker != 0');
 
                 foreach ($courses as $course) {
                     $section = $DB->get_record("course_sections", ['course' => $course->id, 'section' => $course->marker]);
-                    $coursemodules = $DB->get_records("course_modules", ['section' => $section->id, 'course' => $course->id],
-                        null, 'id, course');
+                    $coursemodules = $DB->get_records(
+                        "course_modules",
+                        ['section' => $section->id, 'course' => $course->id],
+                        null,
+                        'id, course'
+                    );
                     foreach ($coursemodules as $cm) {
                         $modules[$cm->id] = [
                             'course' => $course->id,
@@ -131,18 +132,17 @@ class course_sections_filter extends select_filter {
                 }
 
                 $cmids = array_keys($modules);
-                list($insql, $inparams) = $DB->get_in_or_equal($cmids, SQL_PARAMS_NAMED);
+                [$insql, $inparams] = $DB->get_in_or_equal($cmids, SQL_PARAMS_NAMED);
 
                 $sql = 'cm.id ' . $insql;
             } else {
-
                 $modules = $DB->get_records("course_modules", ['section' => $selectedsection[0]], null, 'id, module');
                 if (empty($modules)) {
                     return false;
                 }
 
                 $cmids = array_keys($modules);
-                list($insql, $inparams) = $DB->get_in_or_equal($cmids, SQL_PARAMS_NAMED);
+                [$insql, $inparams] = $DB->get_in_or_equal($cmids, SQL_PARAMS_NAMED);
 
                 $sql = 'cm.id ' . $insql;
             }
@@ -159,8 +159,10 @@ class course_sections_filter extends select_filter {
      * @throws \Exception
      * @return string
      */
-    public function create_form_element(filter_collection_interface $filtercollection,
-                                        $elementnameprefix = '') {
+    public function create_form_element(
+        filter_collection_interface $filtercollection,
+        $elementnameprefix = ''
+    ) {
         $filter = $filtercollection->get_filter('c_sections')->get_preferences();
         if (!empty($filter) && $filter['enabled']) {
             return $this->create_filter_element($filtercollection, $elementnameprefix);

@@ -32,7 +32,6 @@
  * Filters results to specific course completion status
  */
 class completion_filter extends select_filter {
-
     use filter_element;
 
     /**
@@ -63,7 +62,7 @@ class completion_filter extends select_filter {
     public function get_sql_and_params() {
         global $USER, $DB;
 
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
         $inparams = [];
         if ($sql) {
             $params['fueuserid'] = $USER->id;
@@ -88,11 +87,12 @@ class completion_filter extends select_filter {
                         WHERE mc.completionstate > 0 GROUP BY mc.userid, cm.course
                     ) mcm ON mcm.course = e.courseid AND mcm.userid = ue.userid
                 WHERE ue.userid = :fueuserid
-                ) ue WHERE '.$sql, $params
+                ) ue WHERE ' . $sql,
+                $params
             );
 
             $courses = array_column((array) $courses, 'courseid');
-            list($insql, $inparams) = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'f', true, true);
+            [$insql, $inparams] = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'f', true, true);
             $sql = ' c.id ' . $insql;
         }
         return [$sql, $params + $inparams];
@@ -106,8 +106,10 @@ class completion_filter extends select_filter {
      * @throws \Exception
      * @return string
      */
-    public function create_form_element(filter_collection_interface $filtercollection,
-                                        $elementnameprefix = '') {
+    public function create_form_element(
+        filter_collection_interface $filtercollection,
+        $elementnameprefix = ''
+    ) {
         $filter = $filtercollection->get_filter('c_status')->get_preferences();
         if (!empty($filter) && $filter['enabled']) {
             return $this->create_filter_element($filtercollection, $elementnameprefix);

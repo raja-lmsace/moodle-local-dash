@@ -37,8 +37,8 @@ require_once($CFG->libdir . '/grade/grade_item.php');
 require_once($CFG->libdir . '/grade/grade_object.php');
 require_once($CFG->libdir . '/grade/grade_grade.php');
 require_once($CFG->dirroot . '/grade/report/lib.php');
-require_once($CFG->dirroot.'/grade/report/grader/lib.php');
-require_once($CFG->dirroot.'/grade/lib.php');
+require_once($CFG->dirroot . '/grade/report/grader/lib.php');
+require_once($CFG->dirroot . '/grade/lib.php');
 
 /**
  * Activity grade action.
@@ -46,7 +46,6 @@ require_once($CFG->dirroot.'/grade/lib.php');
  * @package dashaddon_activity_completion
  */
 class activity_grade_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -69,10 +68,11 @@ class activity_grade_attribute extends abstract_field_attribute {
             return $gradebutton;
         }
 
-        if (has_capability('moodle/grade:edit', $context, $USER->id) ||
-            has_capability('dashaddon/activity_completion:editgrade', $usercontext, $USER->id)) {
-
-            list($course, $cm) = get_course_and_cm_from_cmid($cmid);
+        if (
+            has_capability('moodle/grade:edit', $context, $USER->id) ||
+            has_capability('dashaddon/activity_completion:editgrade', $usercontext, $USER->id)
+        ) {
+            [$course, $cm] = get_course_and_cm_from_cmid($cmid);
 
             // Set up completion object and check it is enabled.
             $completion = new \completion_info($course);
@@ -81,16 +81,18 @@ class activity_grade_attribute extends abstract_field_attribute {
             }
 
             if ($completion->is_tracked_user($userid)) {
-
                 if ($record->gt_id != null) {
-                    $gradebutton .= html_writer::link('javascript:void(0);', get_string('grade', 'dashaddon_activity_completion'),
-                    [   'class' => 'btn btn-secondary grade-activity-btn',
+                    $gradebutton .= html_writer::link(
+                        'javascript:void(0);',
+                        get_string('grade', 'dashaddon_activity_completion'),
+                        [   'class' => 'btn btn-secondary grade-activity-btn',
                         'data-userid' => $userid,
                         'data-cmid' => $cmid,
                         'data-contextid' => \context_system::instance()->id,
                         'data-currentgrade' => $record->gg_finalgrade ?? 0,
-                        'data-gradeitemid' => ($record->gt_id != null) ? $record->gt_id : 0 ,
-                    ]);
+                        'data-gradeitemid' => ($record->gt_id != null) ? $record->gt_id : 0,
+                        ]
+                    );
                 }
             }
             return $gradebutton;
@@ -165,9 +167,17 @@ class activity_grade_attribute extends abstract_field_attribute {
 
             $context->label = html_writer::label(
                 get_string('useractivitygrade', 'gradereport_grader', $gradelabel),
-                $attributes['id'], false, ['class' => 'accesshide']);
-            $context->select = html_writer::select($scaleopt, 'grade['.$userid.']['.$item->id.']',
-                $gradeval, [-1 => $nogradestr], $attributes);
+                $attributes['id'],
+                false,
+                ['class' => 'accesshide']
+            );
+            $context->select = html_writer::select(
+                $scaleopt,
+                'grade[' . $userid . '][' . $item->id . ']',
+                $gradeval,
+                [-1 => $nogradestr],
+                $attributes
+            );
         } else if ($item->gradetype != GRADE_TYPE_TEXT) {
             // Value type.
             $context->iseditable = true;
@@ -189,15 +199,18 @@ class activity_grade_attribute extends abstract_field_attribute {
             $gradelabel = $fullname . ' ' . $item->itemname;
 
             $context->id = 'grade_' . $userid . '_' . $item->id;
-            $context->name = 'grade[' . $userid . '][' . $item->id .']';
+            $context->name = 'grade[' . $userid . '][' . $item->id . ']';
             $context->value = $value;
             $context->label = get_string('useractivitygrade', 'gradereport_grader', $gradelabel);
             $context->title = $strgrade;
             $context->extraclasses = 'form-control';
         } else {
             if ($item->gradetype == GRADE_TYPE_TEXT && !empty($grade->feedback)) {
-                $context->text = html_writer::span(shorten_text(strip_tags($grade->feedback), 20), '',
-                    ['data-action' => 'feedback', 'role' => 'button', 'data-courseid' => $courseid]);
+                $context->text = html_writer::span(
+                    shorten_text(strip_tags($grade->feedback), 20),
+                    '',
+                    ['data-action' => 'feedback', 'role' => 'button', 'data-courseid' => $courseid]
+                );
             }
         }
 

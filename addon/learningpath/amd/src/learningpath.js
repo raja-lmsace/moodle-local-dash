@@ -392,6 +392,16 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
                     originalElement.classList.add('course-circle', 'course-zone', 'clickable-zone');
                     originalElement.classList.add('circle-course-' + course.info.id);
 
+                    var tag = originalElement.tagName.toLowerCase();
+                    
+                    if (tag === 'polygon') {
+                        originalElement.classList.add('polygon-zone');
+                    } else if (tag === 'ellipse') {
+                        originalElement.classList.add('ellipse-zone');
+                    } else if (tag === 'rect') {
+                        originalElement.classList.add('rect-zone');
+                    }
+
                     originalElement.setAttribute('data-courseid', course.info.id);
                     originalElement.setAttribute('data-zone', 'transformed'); // Mark as transformed
                     originalElement.setAttribute('data-zonetype', zoneConfig.zonetype);

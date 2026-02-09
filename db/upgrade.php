@@ -31,7 +31,7 @@ function xmldb_local_dash_upgrade($oldversion) {
     global $CFG, $DB;
     $dbman = $DB->get_manager();
 
-    require_once($CFG->dirroot.'/local/dash/lib.php');
+    require_once($CFG->dirroot . '/local/dash/lib.php');
 
     if ($oldversion < 2019112402) {
         // Define table dash_data_source to be created.
@@ -152,8 +152,11 @@ function xmldb_local_dash_upgrade($oldversion) {
         foreach ($DB->get_records('block_instances', ['blockname' => 'dash']) as $record) {
             $instance = block_instance('dash', $record);
             if (isset($instance->config->data_source_idnumber)) {
-                $instance->config->data_source_idnumber = str_replace('local_dash\\data_source', 'local_dash\\local\\block_dash',
-                    $instance->config->data_source_idnumber);
+                $instance->config->data_source_idnumber = str_replace(
+                    'local_dash\\data_source',
+                    'local_dash\\local\\block_dash',
+                    $instance->config->data_source_idnumber
+                );
                 $instance->instance_config_save($instance->config);
             }
         }

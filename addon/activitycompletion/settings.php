@@ -27,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 use dashaddon_activitycompletion\widget\activitycompletion_widget;
 
 if ($hassiteconfig) {
-
     $settings = [
         'activitynotcompletedcolor' => activitycompletion_widget::COLORNOTCOMPLETED,
         'activitycompletedcolor' => activitycompletion_widget::COLORCOMPLETED,

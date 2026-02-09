@@ -31,7 +31,6 @@ use stdClass;
  * Transforms data to program context.
  */
 class program_context_attribute extends abstract_field_attribute {
-
     /**
      * Convert the context id to the context name for the program.
      *
@@ -43,6 +42,5 @@ class program_context_attribute extends abstract_field_attribute {
 
         $context = \context::instance_by_id($record->epp_ctx);
         return $context->get_context_name(false);
-
     }
 }

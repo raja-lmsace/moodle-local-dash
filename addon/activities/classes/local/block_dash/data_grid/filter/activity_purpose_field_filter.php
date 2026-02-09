@@ -30,7 +30,6 @@ use block_dash\local\data_grid\filter\filter;
  * Modulename based filter option.
  */
 class activity_purpose_field_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -83,7 +82,7 @@ class activity_purpose_field_filter extends select_filter {
         $lists = dashaddon_activities_get_purpose_module($values);
         $coursemodules = [];
         if ($lists) {
-            list($moduleinsql, $moduleinparams) = $DB->get_in_or_equal($lists, SQL_PARAMS_NAMED);
+            [$moduleinsql, $moduleinparams] = $DB->get_in_or_equal($lists, SQL_PARAMS_NAMED);
             $coursemodules = $DB->get_records_sql_menu("
             SELECT cm.id AS key1, cm.id AS key2 FROM {course_modules} cm
             JOIN {modules} m ON m.id = cm.module
@@ -95,7 +94,7 @@ class activity_purpose_field_filter extends select_filter {
         if (dashaddon_activities_is_designer_pro_installed()) {
             $lists = dashaddon_activities_get_designer_purpose($values);
             if ($lists) {
-                list($moduleinsql, $moduleinparams) = $DB->get_in_or_equal($lists, SQL_PARAMS_NAMED);
+                [$moduleinsql, $moduleinparams] = $DB->get_in_or_equal($lists, SQL_PARAMS_NAMED);
                 $sql = "SELECT cm.id AS key1, cm.id AS key2 FROM {course} c
                         JOIN {course_modules} cm ON cm.course = c.id
                         JOIN {modules} m ON m.id = cm.module
@@ -105,7 +104,7 @@ class activity_purpose_field_filter extends select_filter {
                 $coursemodules = array_merge($coursemodules, $records);
             }
 
-            list($purposesinsql, $purposesinparams) = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED);
+            [$purposesinsql, $purposesinparams] = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED);
 
             $records = $DB->get_records_sql_menu("SELECT cm.id AS key1, cm.id AS key2 FROM {course} c
                         JOIN {course_modules} cm ON cm.course = c.id
@@ -115,7 +114,7 @@ class activity_purpose_field_filter extends select_filter {
              $coursemodules = array_merge($coursemodules, $records);
         }
         if ($coursemodules) {
-            list($filtersql, $filterparam) = $DB->get_in_or_equal($coursemodules, SQL_PARAMS_NAMED);
+            [$filtersql, $filterparam] = $DB->get_in_or_equal($coursemodules, SQL_PARAMS_NAMED);
             $sql = "cm.id $filtersql";
             return [$sql, $filterparam];
         } else {

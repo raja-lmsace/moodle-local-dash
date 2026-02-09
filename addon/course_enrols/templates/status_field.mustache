@@ -45,6 +45,7 @@
         "timestart": "1 January 2017",
         "timeend": "31 January 2018",
         "timeenrolled": "31 December 2016",
+        "datatoggle": "data-toggle",
         "enrolactions": [
             {
                 "url": "#",
@@ -65,7 +66,7 @@
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="course-enrolmenu-{{id}}" {{datatoggle}}="dropdown" aria-haspopup="true" aria-expanded="false">
         </button>
-        <div class="dropdown-menu course-enrol-actionmenu" aria-labelledby="course-enrolmenu-{{id}}">
+        <div class="dropdown-menu course-enrol-actionmenu dropdown-menu-end" aria-labelledby="course-enrolmenu-{{id}}">
             {{#hascapviewdetails}}
             <a data-action="showdetails" href="#" role="button" tabindex="0" class="menu-item">
                 {{{docicon}}}

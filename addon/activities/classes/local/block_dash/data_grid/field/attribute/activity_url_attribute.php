@@ -33,7 +33,6 @@ use moodle_url;
  * @package dashaddon_activities
  */
 class activity_url_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -69,7 +68,7 @@ class activity_url_attribute extends abstract_field_attribute {
      * @param string $customvalue
      * @return void
      */
-    public function set_transform_field($field, $customvalue=null) {
+    public function set_transform_field($field, $customvalue = null) {
         $this->set_option('mod', $field);
         $this->set_option('cmid', $field);
     }

@@ -31,7 +31,6 @@ use dashaddon_dashboard\model\dashboard;
  * Dashboard conditions.
  */
 class my_dashboards_condition extends condition {
-
     /**
      * Get values from filter based on user selection. All filters must return an array of values.
      * Override in child class to add more values.

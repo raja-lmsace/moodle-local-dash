@@ -76,7 +76,6 @@ class event_icon_attribute extends event_object_attribute {
                 case 'assigned':
                     $icon = ['local_dash', 'updated'];
                     break;
-
             }
 
             if ($icon) {

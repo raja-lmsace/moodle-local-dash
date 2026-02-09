@@ -35,7 +35,7 @@ function dashaddon_activities_is_timetable_installed() {
 
     if ($result == null) {
         if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
-            require_once($CFG->dirroot.'/admin/tool/timetable/classes/time_management.php');
+            require_once($CFG->dirroot . '/admin/tool/timetable/classes/time_management.php');
             $result = true;
         } else {
             $result = false;
@@ -134,7 +134,7 @@ function dashaddon_activities_customfield_conditions($filter) {
 
     $modulefields = $DB->get_records('local_metadata_field', ['contextlevel' => CONTEXT_MODULE]);
     foreach ($modulefields as $field) {
-        if (!in_array($field->datatype , ['menu', 'text'])) {
+        if (!in_array($field->datatype, ['menu', 'text'])) {
             continue;
         }
         $alias = $field->shortname;
@@ -173,7 +173,7 @@ function dashaddon_activities_get_designer_purpose($purposes) {
     $values = [];
     $modules = $DB->get_records('modules');
     foreach ($modules as $module) {
-        $modpurpose = get_config('local_designer', 'purpose_'. $module->name);
+        $modpurpose = get_config('local_designer', 'purpose_' . $module->name);
         if (in_array($modpurpose, $purposes)) {
             $values[] = $module->name;
         }

@@ -32,7 +32,6 @@ use block_dash\local\data_grid\filter\filter;
  * @package local_dash
  */
 class enrollment_nonself_condition extends enrollment_self_condition {
-
     /**
      * filter constructor.
      * @param string $name

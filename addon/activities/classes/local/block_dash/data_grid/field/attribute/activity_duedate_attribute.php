@@ -37,7 +37,6 @@ require_once($CFG->dirroot . "/local/dash/addon/activities/lib.php");
  * @package dashaddon_activities
  */
 class activity_duedate_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -52,8 +51,10 @@ class activity_duedate_attribute extends abstract_field_attribute {
         $cm = cm_info::create(get_coursemodule_from_id('', $record->cm_id));
         $duedate = "";
         // When the course complete the duedate attribute return empty string.
-        if (($record->cm_modcompletionstatus == COMPLETION_COMPLETE ||
-            $record->cm_modcompletionstatus == COMPLETION_COMPLETE_PASS)) {
+        if (
+            ($record->cm_modcompletionstatus == COMPLETION_COMPLETE ||
+            $record->cm_modcompletionstatus == COMPLETION_COMPLETE_PASS)
+        ) {
                 return $duedate;
         }
 
@@ -66,11 +67,12 @@ class activity_duedate_attribute extends abstract_field_attribute {
         }
         if (dashaddon_activities_is_timetable_installed()) {
             $duedate = dashaddon_activities_get_mod_user_duedate($cm, $record->u_id ?? $USER->id) ?
-                userdate(dashaddon_activities_get_mod_user_duedate($cm, $record->u_id ?? $USER->id),
-                get_string('strftimedatefullshort'))
+                userdate(
+                    dashaddon_activities_get_mod_user_duedate($cm, $record->u_id ?? $USER->id),
+                    get_string('strftimedatefullshort')
+                )
                 : $duedate;
         }
         return $duedate;
     }
 }
-

@@ -38,7 +38,6 @@ use local_dash\data_grid\filter\course_customfield_condition;
  * Course completion report widget class contains the layout information and generate the data for widget.
  */
 class completion_widget extends abstract_widget {
-
     /**
      * Color Hex code for inprogress users dataset.
      *
@@ -176,7 +175,7 @@ class completion_widget extends abstract_widget {
     private function generate_course_completion_report() {
         global $DB;
 
-        list($conditionsql, $params) = $this->generate_course_completion_filter();
+        [$conditionsql, $params] = $this->generate_course_completion_filter();
 
         $rolesql = "SELECT rc.id, rc.roleid FROM {role_capabilities} rc
             JOIN {capabilities} cap ON rc.capability = cap.name
@@ -184,7 +183,7 @@ class completion_widget extends abstract_widget {
             WHERE rc.permission = 1 AND rc.capability = :capability ";
         $roles = $DB->get_records_sql($rolesql, ['capability' => 'dashaddon/course_completions:reportuser']);
         $roles = array_column($roles, 'roleid');
-        list($roleinsql, $roleinparams) = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'rl');
+        [$roleinsql, $roleinparams] = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'rl');
 
         $courses = [];
 
@@ -209,7 +208,7 @@ class completion_widget extends abstract_widget {
             $courses[$record->courseid]['enrollments'][] = $record;
         }
 
-        array_walk($courses, function(&$course) {
+        array_walk($courses, function (&$course) {
             global $OUTPUT;
             $report = $this->generate_completion_stats($course['info']['id'], $course['enrollments']);
             $course['report'] = $report;
@@ -239,7 +238,7 @@ class completion_widget extends abstract_widget {
         // Filter the disabled enrollments.
         $context = \context_course::instance($courseid);
         $userslist = []; // Remove the user's multiple enrolment in one course.
-        $enrollments = array_filter($enrollments, function($enrol) use ($context, &$userslist) {
+        $enrollments = array_filter($enrollments, function ($enrol) use ($context, &$userslist) {
             $enrolled = is_enrolled($context, $enrol->userid, '', true);
             if ($enrolled && !in_array($enrol->userid, $userslist)) {
                 $userslist[] = $enrol->userid;
@@ -287,8 +286,8 @@ class completion_widget extends abstract_widget {
     public function generate_course_completion_filter() {
 
         $this->before_data();
-        list($sql, $params) = $this->get_filter_collection()->get_sql_and_params();
-        return $sql ? [" AND ".$sql[0], $params] : [];
+        [$sql, $params] = $this->get_filter_collection()->get_sql_and_params();
+        return $sql ? [" AND " . $sql[0], $params] : [];
     }
 
     /**

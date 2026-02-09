@@ -31,7 +31,6 @@ use block_dash\local\data_grid\filter\filter;
  * Activity name based filter option.
  */
 class activity_name_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -49,10 +48,10 @@ class activity_name_filter extends select_filter {
         $cmsqlend = ' END AS activityname';
 
         foreach ($records as $record) {
-            $cmnamesql .= " WHEN '$record' THEN (SELECT name FROM {". $record. "} WHERE id = cm.instance)";
+            $cmnamesql .= " WHEN '$record' THEN (SELECT name FROM {" . $record . "} WHERE id = cm.instance)";
         }
 
-        $sql = $cmsqlstart. $cmnamesql. $cmsqlend. " FROM {course_modules} cm
+        $sql = $cmsqlstart . $cmnamesql . $cmsqlend . " FROM {course_modules} cm
             JOIN {modules} m ON cm.module = m.id
             WHERE cm.deletioninprogress = 0 AND (cm.visible = 1)
         ";
@@ -83,10 +82,10 @@ class activity_name_filter extends select_filter {
         global $USER, $DB;
 
         $cmids = $this->get_values();
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
 
         if ($sql) {
-            list($insql, $inparams) = $DB->get_in_or_equal($cmids, SQL_PARAMS_NAMED, 'cm', true, true);
+            [$insql, $inparams] = $DB->get_in_or_equal($cmids, SQL_PARAMS_NAMED, 'cm', true, true);
             $sql = ' cm.id ' . $insql;
         }
         return [$sql, $inparams];

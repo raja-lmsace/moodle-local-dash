@@ -35,7 +35,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class completion_status_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -84,7 +83,8 @@ class completion_status_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -111,7 +111,7 @@ class completion_status_condition extends condition {
     public function get_sql_and_params() {
         global $USER, $DB;
 
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
 
         if ($sql) {
             $params['cueuserid'] = $USER->id;
@@ -127,15 +127,15 @@ class completion_status_condition extends condition {
                     LEFT JOIN {enrol} e ON ue.enrolid = e.id
                     LEFT JOIN {course_completions} cc ON cc.course = e.courseid AND ue.userid = cc.userid
                 WHERE ue.userid = :cueuserid
-                ) ue WHERE ".$sql, $params
+                ) ue WHERE " . $sql,
+                $params
             );
 
             $courses = array_column((array) $courses, 'courseid');
 
-            list($insql, $inparams) = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'cs', true, true);
+            [$insql, $inparams] = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'cs', true, true);
             $sql = ' c.id ' . $insql;
             $params = array_merge($params, $inparams);
-
         }
 
         return [$sql, $params];

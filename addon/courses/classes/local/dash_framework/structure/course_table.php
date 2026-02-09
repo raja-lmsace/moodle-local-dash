@@ -123,32 +123,54 @@ class course_table extends table {
                 new tags_attribute(['component' => 'core', 'itemtype' => 'course']),
             ]),
 
-            new field('total_activities', new lang_string('totalactivities', 'block_dash'), $this, 'cm100.totalactivities', [],
-            ['supports_sorting' => false], '', null,
+            new field(
+                'total_activities',
+                new lang_string('totalactivities', 'block_dash'),
+                $this,
+                'cm100.totalactivities',
+                [],
+                ['supports_sorting' => false],
+                '',
+                null,
                 new join_raw('SELECT cm.course, COUNT(*) AS totalactivities
                     FROM {course_modules} cm
                     WHERE cm.visible = 1
-                    GROUP BY cm.course', 'cm100', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
-                )
+                    GROUP BY cm.course', 'cm100', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN)
             ),
-            new field('users_completed', new lang_string('userscompleted', 'block_dash'), $this, 'ccp100_count.userscompleted', [],
-            ['supports_sorting' => false], '', null,
+            new field(
+                'users_completed',
+                new lang_string('userscompleted', 'block_dash'),
+                $this,
+                'ccp100_count.userscompleted',
+                [],
+                ['supports_sorting' => false],
+                '',
+                null,
                 new join_raw('SELECT ccp.course, COUNT(*) AS userscompleted
                     FROM {course_completions} ccp
                     WHERE ccp.timecompleted > 0
-                    GROUP BY ccp.course', 'ccp100_count', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
-                )
+                    GROUP BY ccp.course', 'ccp100_count', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN)
             ),
-            new field('users_not_completed', new lang_string('usersnotcompleted', 'block_dash'), $this,
-            'ccp200_count.usersnotcompleted', [], ['supports_sorting' => false], '', null,
+            new field(
+                'users_not_completed',
+                new lang_string('usersnotcompleted', 'block_dash'),
+                $this,
+                'ccp200_count.usersnotcompleted',
+                [],
+                ['supports_sorting' => false],
+                '',
+                null,
                 new join_raw('SELECT ccp.course, COUNT(*) AS usersnotcompleted
                     FROM {course_completions} ccp
                     WHERE ccp.timecompleted IS NULL
-                    GROUP BY ccp.course', 'ccp200_count', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN
-                )
+                    GROUP BY ccp.course', 'ccp200_count', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN)
             ),
 
-            new field('status', new lang_string('status', 'block_dash'), $this, "
+            new field(
+                'status',
+                new lang_string('status', 'block_dash'),
+                $this,
+                "
                 (
                     SELECT ue.status FROM (
                         SELECT
@@ -165,7 +187,9 @@ class course_table extends table {
                     ) ue WHERE ue.courseid = c.id
                 )",
                 [ new completion_status_attribute() ],
-                [], field_interface::VISIBILITY_VISIBLE, ''
+                [],
+                field_interface::VISIBILITY_VISIBLE,
+                ''
             ),
             new field('enrollment_options', new lang_string('enrollment_options', 'block_dash'), $this, 'c.id', [
                 new enrollment_options_attribute(),
@@ -203,6 +227,14 @@ class course_table extends table {
                     case 'select':
                         $attributes[] = new customfield_select_attribute(['field' => $field]);
                         break;
+                }
+
+                $manager = \core_plugin_manager::instance();
+                $plugin = $manager->get_plugin_info('customfield_multicategory');
+                if ($plugin && $plugin->get_status() !== \core_plugin_manager::PLUGIN_STATUS_MISSING) {
+                    if ($field->get('type') === 'multicategory') {
+                        $attributes[] = new \customfield_multicategory\multicategory_attribute();
+                    }
                 }
 
                 $fields[] = new field(

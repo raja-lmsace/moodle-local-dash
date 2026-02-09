@@ -95,8 +95,16 @@ function dashaddon_course_enrols_output_fragment_user_enrolment_form($args) {
  * @param array $conditionparams Additional condition params.
  * @return array list of courses and count of courses.
  */
-function dashaddon_enrolments_get_all_users_courses($userid, $onlyactive = false, $sort = null,
-    $status=null, $limitfrom=0, $limitnum=5, $condition='', $conditionparams=[]) {
+function dashaddon_enrolments_get_all_users_courses(
+    $userid,
+    $onlyactive = false,
+    $sort = null,
+    $status = null,
+    $limitfrom = 0,
+    $limitnum = 5,
+    $condition = '',
+    $conditionparams = []
+) {
     global $DB;
 
     // Guest account does not have any courses.
@@ -126,7 +134,7 @@ function dashaddon_enrolments_get_all_users_courses($userid, $onlyactive = false
     }
 
     $completion = '';
-    if ($status != null && $status != 'all' ) {
+    if ($status != null && $status != 'all') {
         $completion = " AND c.id IN (
             SELECT ue.courseid FROM (
                 SELECT
@@ -153,7 +161,7 @@ function dashaddon_enrolments_get_all_users_courses($userid, $onlyactive = false
         $params['cueuserid'] = $userid;
     }
 
-    $coursefields = 'c.' .join(',c.', $fields);
+    $coursefields = 'c.' . join(',c.', $fields);
     $ccselect = ', ' . context_helper::get_preload_record_columns_sql('ctx');
     $ccjoin = "LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)";
     $params['contextlevel'] = CONTEXT_COURSE;

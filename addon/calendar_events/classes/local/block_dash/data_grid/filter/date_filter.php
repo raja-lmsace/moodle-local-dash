@@ -32,7 +32,6 @@ use DateTime;
  * Filters results to specific calendar events date.
  */
 class date_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      *
@@ -69,21 +68,18 @@ class date_filter extends select_filter {
      */
     public function get_sql_and_params() {
 
-        list($sql, $types) = parent::get_sql_and_params();
+        [$sql, $types] = parent::get_sql_and_params();
 
         if (is_array($types)) {
-
             $sql = [];
             $params = [];
 
             $timezone = core_date::get_user_timezone_object();  // User timezone.
             foreach ($types as $key => $type) {
-
                 $param1 = 'cedate_starttime_' . $key;
                 $param2 = 'cedate_endtime_' . $key;
 
                 switch ($type) {
-
                     case "today":
                         $startoftoday = (new DateTime('today midnight', $timezone))->getTimestamp();
                         $endoftoday = (new DateTime('tomorrow midnight', $timezone))->getTimestamp();
@@ -114,11 +110,10 @@ class date_filter extends select_filter {
                         $params += [$param1 => $startofthismonth, $param2 => $endofthismonth];
                         $sql[] = "(ce.timestart >= :$param1 AND ce.timestart <= :$param2)";
                         break;
-
                 }
             }
 
-            return ['('.implode(' OR ', $sql).')', $params];
+            return ['(' . implode(' OR ', $sql) . ')', $params];
         }
         return false;
     }

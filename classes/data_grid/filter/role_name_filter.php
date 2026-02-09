@@ -30,7 +30,6 @@ use block_dash\local\data_grid\filter\select_filter;
  * Filters results to specific course completion status
  */
 class role_name_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      *
@@ -44,8 +43,11 @@ class role_name_filter extends select_filter {
             $contextid = $DB->get_field('role_assignments', 'contextid', ['id' => $id]);
             $context = \context::instance_by_id($contextid, IGNORE_MISSING);
             if ($context && $DB->record_exists('role_names', ['roleid' => $roleid, 'contextid' => $context->id])) {
-                $this->add_option($roleid, $DB->get_field('role_names', 'name',
-                    ['roleid' => $roleid, 'contextid' => $context->id]));
+                $this->add_option($roleid, $DB->get_field(
+                    'role_names',
+                    'name',
+                    ['roleid' => $roleid, 'contextid' => $context->id]
+                ));
             } else {
                 $this->add_option($roleid, role_get_name($role, $context));
             }

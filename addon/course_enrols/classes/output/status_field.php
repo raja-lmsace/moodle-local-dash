@@ -38,7 +38,6 @@ use user_enrolment_action;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class status_field implements renderable, templatable {
-
     /** Active user enrolment status constant. */
     const STATUS_ACTIVE = 0;
 
@@ -93,8 +92,16 @@ class status_field implements renderable, templatable {
      * @param user_enrolment_action[] $enrolactions Array of enrol action objects for the given enrolment method.
      * @param int|null $timeenrolled The timestamp when the user was enrolled.
      */
-    public function __construct($enrolinstancename, $coursename, $fullname, $status, $timestart = null, $timeend = null,
-                                $enrolactions = [], $timeenrolled = null) {
+    public function __construct(
+        $enrolinstancename,
+        $coursename,
+        $fullname,
+        $status,
+        $timestart = null,
+        $timeend = null,
+        $enrolactions = [],
+        $timeenrolled = null
+    ) {
         $this->enrolinstancename = $enrolinstancename;
         $this->coursename = $coursename;
         $this->fullname = $fullname;
@@ -115,6 +122,7 @@ class status_field implements renderable, templatable {
      * @return stdClass|array
      */
     public function export_for_template(renderer_base $output) {
+        global $CFG;
         $data = new stdClass();
         $data->enrolinstancename = $this->enrolinstancename;
         $data->coursename = $this->coursename;
@@ -149,6 +157,9 @@ class status_field implements renderable, templatable {
             }
             $data->enrolactions[] = $action;
         }
+
+        // Bootstrap 5 data attribute for dropdowns.
+        $data->datatoggle = $CFG->branch >= 500 ? 'data-bs-toggle' : 'data-toggle';
 
         return $data;
     }

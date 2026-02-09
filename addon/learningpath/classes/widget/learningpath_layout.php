@@ -31,7 +31,6 @@ use block_dash\local\data_source\form\preferences_form;
  * Layout section for the skill level visuals widget.
  */
 class learningpath_layout extends abstract_layout {
-
     /**
      * Tempalte mustache file name, the layout uses.
      *

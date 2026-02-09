@@ -30,7 +30,6 @@ use block_dash\local\data_grid\filter\select_filter;
  * Filters results to specific course completion status
  */
 class completion_status_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      *
@@ -55,7 +54,7 @@ class completion_status_filter extends select_filter {
      */
     public function get_sql_and_params() {
         global $USER, $DB;
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
         $inparams = [];
         if ($sql) {
             $params['fueuserid'] = $USER->id;
@@ -73,11 +72,12 @@ class completion_status_filter extends select_filter {
                     LEFT JOIN {enrol} e ON ue.enrolid = e.id
                     LEFT JOIN {course_completions} cc ON cc.course = e.courseid AND ue.userid = cc.userid
                 WHERE ue.userid = :fueuserid
-                ) ue WHERE ".$sql, $params
+                ) ue WHERE " . $sql,
+                $params
             );
 
             $courses = array_column((array) $courses, 'courseid');
-            list($insql, $inparams) = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'f', true, true);
+            [$insql, $inparams] = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'f', true, true);
             $sql = ' c.id ' . $insql;
         }
         return [$sql, $params + $inparams];

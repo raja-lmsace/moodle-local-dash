@@ -37,7 +37,6 @@ use html_writer;
  * Course sections widget class contains the layout information and generate the data for widget.
  */
 class sections_widget extends abstract_widget {
-
     /**
      * Check the datasource is widget.
      *
@@ -94,7 +93,7 @@ class sections_widget extends abstract_widget {
         global $DB;
 
         $params = ['siteid' => SITEID, 'visible' => 1];
-        list($conditionsql, $conditionparams) = $this->generate_course_sections_filter();
+        [$conditionsql, $conditionparams] = $this->generate_course_sections_filter();
 
         $sql = "SELECT * FROM {course} c WHERE c.id <> :siteid $conditionsql AND visible = :visible ORDER BY c.sortorder ASC";
         $courses = $DB->get_records_sql($sql, $params + $conditionparams);
@@ -106,7 +105,6 @@ class sections_widget extends abstract_widget {
         $contents = [];
 
         foreach ($courses as $course) {
-
             $courseelement = (class_exists('\core_course_list_element'))
             ? new \core_course_list_element($course) : new \course_in_list($course);
 
@@ -189,12 +187,18 @@ class sections_widget extends abstract_widget {
 
                 $options = (object) ['noclean' => true];
 
-                list($sectionvalues['summary'], $sectionvalues['summaryformat']) =
-                    external_format_text($section->summary, $section->summaryformat, $context->id,
-                        'course', 'section', $section->id, $options);
+                [$sectionvalues['summary'], $sectionvalues['summaryformat']] =
+                    external_format_text(
+                        $section->summary,
+                        $section->summaryformat,
+                        $context->id,
+                        'course',
+                        'section',
+                        $section->id,
+                        $options
+                    );
 
                 if ($course->format == 'designer') {
-
                     $records = $DB->get_records('course_format_options', ['courseid' => $course->id, 'format' => 'designer',
                         'sectionid' => $section->id], '', 'id,name,value');
 
@@ -219,11 +223,9 @@ class sections_widget extends abstract_widget {
                             $indexedrecords['sectionestimatetime'];
                         $sectionvalues['estimatedtime'] = html_writer::tag('p', $time, ['class' => 'estimatetime']);
                     }
-
                 }
 
                 if (!empty($modinfosections[$section->section])) {
-
                     foreach ($modinfosections[$section->section] as $cmid) {
                         $cm = $modinfo->cms[$cmid];
                         $cminfo = cm_info::create($cm);
@@ -270,15 +272,22 @@ class sections_widget extends abstract_widget {
                             // We want to use the external format. However from reading get_formatted_content(), $cm->content
                             // Format is always FORMAT_HTML.
                             $options = ['noclean' => true];
-                            list($module['description'], $descriptionformat) = external_format_text($cm->content,
-                                FORMAT_HTML, $modcontext->id, $cm->modname, 'intro', $cm->id, $options);
+                            [$module['description'], $descriptionformat] = external_format_text(
+                                $cm->content,
+                                FORMAT_HTML,
+                                $modcontext->id,
+                                $cm->modname,
+                                'intro',
+                                $cm->id,
+                                $options
+                            );
                         }
                         // Url of the module.
                         $url = $cm->url;
                         if ($url) {
                             $module['url'] = $url->out(false);
                         } else {
-                            $module['url'] = (new \moodle_url('/mod/'.$cm->modname.'/view.php', ['id' => $cm->id]))->out(false);
+                            $module['url'] = (new \moodle_url('/mod/' . $cm->modname . '/view.php', ['id' => $cm->id]))->out(false);
                         }
                         $canviewhidden = has_capability('moodle/course:viewhiddenactivities', $modcontext);
                         // User that can view hidden module should know about the visibility.
@@ -322,7 +331,6 @@ class sections_widget extends abstract_widget {
                     unset($coursecontents[$sectionnumber]);
                     continue;
                 }
-
             }
 
             // Reset array keys after filtering hidden sections.
@@ -358,8 +366,8 @@ class sections_widget extends abstract_widget {
     public function generate_course_sections_filter() {
 
         $this->before_data();
-        list($sql, $params) = $this->get_filter_collection()->get_sql_and_params();
-        return $sql ? [" AND ".$sql[0], $params] : [];
+        [$sql, $params] = $this->get_filter_collection()->get_sql_and_params();
+        return $sql ? [" AND " . $sql[0], $params] : [];
     }
 
     /**

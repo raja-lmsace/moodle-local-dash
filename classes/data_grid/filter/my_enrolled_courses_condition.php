@@ -35,7 +35,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class my_enrolled_courses_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -79,8 +78,10 @@ class my_enrolled_courses_condition extends condition {
                            WHERE ra.userid = :enrolleduserid";
 
         $params = ['enrolleduserid' => $userid];
-        if (isset($this->get_preferences()['roleids'])
-            && is_array($this->get_preferences()['roleids']) && count($this->get_preferences()['roleids']) > 0) {
+        if (
+            isset($this->get_preferences()['roleids'])
+            && is_array($this->get_preferences()['roleids']) && count($this->get_preferences()['roleids']) > 0
+        ) {
             [$rsql, $rparams] = $DB->get_in_or_equal($this->get_preferences()['roleids'], SQL_PARAMS_NAMED, 'roles');
             $sql .= " AND ra.roleid $rsql";
             $params = array_merge($params, $rparams);
@@ -99,7 +100,10 @@ class my_enrolled_courses_condition extends condition {
      * @param string $fieldnameformat
      */
     public function build_settings_form_fields(
-        moodleform $moodleform, MoodleQuickForm $mform, $fieldnameformat = 'filters[%s]'): void {
+        moodleform $moodleform,
+        MoodleQuickForm $mform,
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -113,8 +117,13 @@ class my_enrolled_courses_condition extends condition {
             }
         }
 
-        $select = $mform->addElement('select', $fieldname . '[roleids]',
-            get_string('withroles', 'block_dash'), $options, ['class' => 'select2-form']);
+        $select = $mform->addElement(
+            'select',
+            $fieldname . '[roleids]',
+            get_string('withroles', 'block_dash'),
+            $options,
+            ['class' => 'select2-form']
+        );
 
         $mform->hideIf($fieldname . '[roleids]', $fieldname . '[enabled]');
         $select->setMultiple(true);

@@ -29,7 +29,7 @@
  */
 function xmldb_dashaddon_activities_install() {
     global $CFG;
-    require_once($CFG->dirroot. "/local/dash/addon/activities/lib.php");
+    require_once($CFG->dirroot . "/local/dash/addon/activities/lib.php");
     if (empty(dashaddon_activities_extend_added_dependencies())) {
         set_config('enabled', 1, 'dashaddon_activities');
     }

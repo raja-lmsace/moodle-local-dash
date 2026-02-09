@@ -66,7 +66,7 @@ use local_dash\data_grid\filter\course_dates_filter;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/local/dash/lib.php');
+require_once($CFG->dirroot . '/local/dash/lib.php');
 
 /**
  * Completions data source.
@@ -149,20 +149,33 @@ class completions_data_source extends abstract_data_source {
 
         $compfiltercollection->add_filter(new course_field_filter('c_course', 'c.id'));
 
-        $filter = new date_filter('c_startdate', 'c.startdate', date_filter::DATE_FUNCTION_FLOOR,
-            get_string('startdate'));
+        $filter = new date_filter(
+            'c_startdate',
+            'c.startdate',
+            date_filter::DATE_FUNCTION_FLOOR,
+            get_string('startdate')
+        );
         $filter->set_operation(filter::OPERATION_GREATER_THAN_EQUAL);
         $compfiltercollection->add_filter($filter);
 
-        $filter = new date_filter('c_enddate', 'c.enddate', date_filter::DATE_FUNCTION_FLOOR,
-            get_string('enddate'));
+        $filter = new date_filter(
+            'c_enddate',
+            'c.enddate',
+            date_filter::DATE_FUNCTION_FLOOR,
+            get_string('enddate')
+        );
         $filter->set_operation(filter::OPERATION_GREATER_THAN_EQUAL);
         $compfiltercollection->add_filter($filter);
 
         $compfiltercollection->add_filter(new course_format_field_filter('c_format', 'c.format'));
 
-        $compfiltercollection->add_filter(new tags_field_filter('c_tags', 'c.id', 'core', 'course',
-            get_string('coursetags', 'tag')));
+        $compfiltercollection->add_filter(new tags_field_filter(
+            'c_tags',
+            'c.id',
+            'core',
+            'course',
+            get_string('coursetags', 'tag')
+        ));
 
         $compfiltercollection->add_filter(new relations_role_condition('parentrole', 'u.id'));
 
@@ -174,7 +187,6 @@ class completions_data_source extends abstract_data_source {
         if (class_exists('\core_course\customfield\course_handler')) {
             $handler = \core_course\customfield\course_handler::create();
             foreach ($handler->get_fields() as $field) {
-
                 $alias = 'c_f_' . strtolower($field->get('shortname'));
                 $select = $alias . '.value';
 
@@ -183,38 +195,55 @@ class completions_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->get_formatted_name());
                         break;
                     case 'date':
-                        $compfiltercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
-                            $field->get_formatted_name()));
+                        $compfiltercollection->add_filter(new date_filter(
+                            $alias,
+                            $select,
+                            date_filter::DATE_FUNCTION_FLOOR,
+                            $field->get_formatted_name()
+                        ));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $compfiltercollection->add_filter(new customfield_filter($alias, $select, $field,
-                            $field->get_formatted_name()));
+                        if (class_exists('\customfield_multicategory\condition_helper')
+                            && \customfield_multicategory\condition_helper::should_skip_default_filter($field->get('type'))) {
+                            break;
+                        }
+                        $compfiltercollection->add_filter(new customfield_filter(
+                            $alias,
+                            $select,
+                            $field,
+                            $field->get_formatted_name()
+                        ));
                         break;
                 }
             }
         } else if (block_dash_is_totara()) {
-
             foreach ($DB->get_records('course_info_field') as $field) {
-
                 $alias = 'c_f_' . strtolower($field->shortname);
                 $select = $alias . '.data';
 
                 switch ($field->datatype) {
-
                     case 'checkbox':
                         $definitions[] = new bool_filter($alias, $select, $field->fullname);
                         break;
                     case 'date':
-                        $compfiltercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
-                            $field->fullname));
+                        $compfiltercollection->add_filter(new date_filter(
+                            $alias,
+                            $select,
+                            date_filter::DATE_FUNCTION_FLOOR,
+                            $field->fullname
+                        ));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $compfiltercollection->add_filter(new customfield_filter($alias, $select, $field,
-                            $field->fullname));
+                        $compfiltercollection->add_filter(new customfield_filter(
+                            $alias,
+                            $select,
+                            $field,
+                            $field->fullname
+                        ));
                         break;
                 }
             }
@@ -226,13 +255,21 @@ class completions_data_source extends abstract_data_source {
 
         $compfiltercollection->add_filter(new enrollment_status_field_filter('enrolment_status', 'ue.status'));
 
-        $filter = new date_filter('ue_timestart', 'ue.timestart', date_filter::DATE_FUNCTION_FLOOR,
-            get_string('enrollmenttimestart', 'block_dash'));
+        $filter = new date_filter(
+            'ue_timestart',
+            'ue.timestart',
+            date_filter::DATE_FUNCTION_FLOOR,
+            get_string('enrollmenttimestart', 'block_dash')
+        );
         $filter->set_operation(filter::OPERATION_GREATER_THAN_EQUAL);
         $compfiltercollection->add_filter($filter);
 
-        $filter = new date_filter('ue_timeend', 'ue.timeend', date_filter::DATE_FUNCTION_FLOOR,
-            get_string('enrollmenttimeend', 'block_dash'));
+        $filter = new date_filter(
+            'ue_timeend',
+            'ue.timeend',
+            date_filter::DATE_FUNCTION_FLOOR,
+            get_string('enrollmenttimeend', 'block_dash')
+        );
         $filter->set_operation(filter::OPERATION_GREATER_THAN_EQUAL);
 
         $compfiltercollection->add_filter($filter);

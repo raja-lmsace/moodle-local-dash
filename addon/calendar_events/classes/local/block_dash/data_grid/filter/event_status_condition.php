@@ -36,7 +36,6 @@ use MoodleQuickForm;
  * Filters results to specific calendar event current available status like past/preset/future.
  */
 class event_status_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -66,7 +65,8 @@ class event_status_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
 
@@ -78,8 +78,11 @@ class event_status_condition extends condition {
             'future' => get_string('coursedate:future', 'block_dash'),
         ];
 
-        $select = $mform->addElement('select', $fieldname . '[eventstatus]',
-            get_string('eventstatus', 'block_dash'), $choices,
+        $select = $mform->addElement(
+            'select',
+            $fieldname . '[eventstatus]',
+            get_string('eventstatus', 'block_dash'),
+            $choices,
             ['class' => 'select2-form']
         );
         $mform->hideIf($fieldname . '[eventstatus]', $fieldname . '[enabled]');
@@ -106,12 +109,10 @@ class event_status_condition extends condition {
             $now = (new DateTime('now', $timezone))->getTimestamp();
 
             foreach ($dates as $key => $date) {
-
                 $param1 = 'cestac_start_' . $key;
                 $param2 = 'cestac_end_' . $key;
 
                 switch ($date) {
-
                     case 'past':
                         $params += [$param1 => $now];
                         $sql[] = "(ces.timeduration > 0 AND $endtimefield < :$param1)";
@@ -140,7 +141,5 @@ class event_status_condition extends condition {
 
             return [$insql, $params];
         }
-
     }
-
 }

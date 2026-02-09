@@ -28,7 +28,7 @@
  */
 function xmldb_dashaddon_activity_completion_install() {
     global $CFG;
-    require_once($CFG->dirroot. "/local/dash/addon/activity_completion/lib.php");
+    require_once($CFG->dirroot . "/local/dash/addon/activity_completion/lib.php");
     if (empty(dashaddon_activity_completion_extend_added_dependencies())) {
         set_config('enabled', 1, 'dashaddon_activity_completion');
     }

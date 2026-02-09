@@ -24,9 +24,9 @@
 
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
-use Behat\Gherkin\Node\TableNode as TableNode,
-Behat\Mink\Exception\DriverException as DriverException,
-Behat\Mink\Exception\ExpectationException as ExpectationException;
+use Behat\Gherkin\Node\TableNode,
+Behat\Mink\Exception\DriverException,
+Behat\Mink\Exception\ExpectationException;
 
 /**
  * Custom behat step definitions.
@@ -50,8 +50,12 @@ class behat_local_dash extends behat_base {
         ";
         $computedstyle = $this->evaluate_script($stylejs);
         if ($computedstyle != $value) {
-            throw new ExpectationException('The \''.$selector.'\' DOM element does not have the computed style \''.
-                    $style.'\'=\''.$value.'\', it has the computed style \''.$computedstyle.'\' instead.', $this->getSession());
+            throw new ExpectationException(
+                'The \'' . $selector . '\' DOM element does not have the computed style \'' .
+                $style . '\'=\'' . $value . '\', it has the computed style \'' .
+                $computedstyle . '\' instead.',
+                $this->getSession()
+            );
         }
     }
 
@@ -90,7 +94,6 @@ class behat_local_dash extends behat_base {
 
         $nodetext = ($CFG->branch >= "400") ? 'Settings' : 'Edit settings';
         $this->execute('behat_navigation::i_navigate_to_in_current_page_administration', [$nodetext]);
-
     }
 
     /**
@@ -104,11 +107,15 @@ class behat_local_dash extends behat_base {
         global $CFG;
 
         if ($CFG->branch >= 405) {
-            $this->execute('behat_general::i_click_on_in_the',
-                ['Submissions', 'link', '.secondary-navigation', 'css_element']);
+            $this->execute(
+                'behat_general::i_click_on_in_the',
+                ['Submissions', 'link', '.secondary-navigation', 'css_element']
+            );
         } else {
-            $this->execute('behat_general::i_click_on_in_the',
-                ['View all submissions', 'link', '.tertiary-navigation', 'css_element']);
+            $this->execute(
+                'behat_general::i_click_on_in_the',
+                ['View all submissions', 'link', '.tertiary-navigation', 'css_element']
+            );
         }
     }
 
@@ -121,5 +128,4 @@ class behat_local_dash extends behat_base {
         global $CFG;
         $this->evaluate_script("window.scrollTo(0, document.body.scrollHeight);");
     }
-
 }

@@ -36,7 +36,6 @@ use dashaddon_developer\model\custom_layout;
  * @package dashaddon_developer
  */
 class persistent_layout extends abstract_layout {
-
     /**
      * Layout.
      *
@@ -63,7 +62,6 @@ class persistent_layout extends abstract_layout {
         global $CFG;
 
         if ($mustachetemplate = $this->customlayout->get('mustache_template')) {
-
             make_localcache_directory('block_dash/templates');
 
             $path = "$CFG->localcachedir/block_dash/templates/" . $this->customlayout->get('id');

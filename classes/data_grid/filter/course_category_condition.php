@@ -35,14 +35,61 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class course_category_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
      * @return string
      */
     public function get_operation() {
+        // Use custom operation when multicategory plugin is available and we're in course context.
+        if ($this->is_course_context() && class_exists('\customfield_multicategory\condition_helper')) {
+            return self::OPERATION_CUSTOM;
+        }
         return self::OPERATION_IN_OR_EQUAL;
+    }
+
+    /**
+     * Check if this condition is being used in a course context (not categories).
+     *
+     * @return bool True if filtering courses, false if filtering categories.
+     */
+    protected function is_course_context(): bool {
+        $select = $this->get_select();
+        return strpos($select, 'cc.id') === false;
+    }
+
+    /**
+     * Return where SQL and params for placeholders.
+     *
+     * @return array
+     */
+    public function get_sql_and_params() {
+        global $DB;
+
+        $categoryids = $this->get_values();
+        if (empty($categoryids)) {
+            return ['', []];
+        }
+
+        $select = $this->get_select();
+        $name = $this->get_name();
+
+        // Get the IN clause for main category.
+        [$insql, $params] = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED, $name . '_cat');
+        $basesql = "$select $insql";
+
+        // Only extend with multicategory logic in course context.
+        if ($this->is_course_context() && class_exists('\customfield_multicategory\condition_helper')) {
+            $result = \customfield_multicategory\condition_helper::extend_category_sql(
+                $basesql,
+                $params,
+                $categoryids,
+                $name . '_mcat'
+            );
+            return [$result['sql'], $result['params']];
+        }
+
+        return [$basesql, $params];
     }
 
     /**
@@ -76,8 +123,10 @@ class course_category_condition extends condition {
                 foreach ($rootcategoryids as $categoryid) {
                     $categoryids[] = $categoryid;
 
-                    if (isset($this->get_preferences()['includesubcategories'])
-                        && $this->get_preferences()['includesubcategories']) {
+                    if (
+                        isset($this->get_preferences()['includesubcategories'])
+                        && $this->get_preferences()['includesubcategories']
+                    ) {
                         if (class_exists("\core_course_category")) {
                             if ($coursecat = \core_course_category::get($categoryid, IGNORE_MISSING)) {
                                 $categoryids = array_merge($categoryids, $coursecat->get_all_children_ids());
@@ -108,7 +157,8 @@ class course_category_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -120,7 +170,6 @@ class course_category_condition extends condition {
             if ($role = $DB->get_record('role', ['id' => $roleid])) {
                 $options[$roleid] = role_get_name($role);
             }
-
         }
 
         if (class_exists("\core_course_category")) {

@@ -34,7 +34,6 @@ use MoodleQuickForm;
  * Filters results to specific calendar events type (Site, course, category, group, user, other).
  */
 class event_context_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -64,7 +63,8 @@ class event_context_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
 
         // Always call parent.
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat);
@@ -80,8 +80,11 @@ class event_context_condition extends condition {
             'other' => get_string('event:typeother', 'block_dash'),
         ];
 
-        $select = $mform->addElement('select', $fieldname . '[eventcontext]',
-            get_string('eventcontext', 'block_dash'), $choices,
+        $select = $mform->addElement(
+            'select',
+            $fieldname . '[eventcontext]',
+            get_string('eventcontext', 'block_dash'),
+            $choices,
             ['class' => 'select2-form']
         );
         $mform->hideIf($fieldname . '[eventcontext]', $fieldname . '[enabled]');
@@ -106,7 +109,7 @@ class event_context_condition extends condition {
                 switch ($type) {
                     case "site":
                         $sql[] = "(ce.eventtype = :cec_site$key) ";
-                        $params += ['cec_site'.$key => 'site'];
+                        $params += ['cec_site' . $key => 'site'];
                         break;
                     case "category":
                         $sql[] = "(ce.categoryid > :cec_cate$key)";
@@ -114,15 +117,15 @@ class event_context_condition extends condition {
                         break;
                     case "group":
                         $sql[] = "(ce.groupid > :cec_group$key)";
-                        $params += ['cec_group'.$key => 0];
+                        $params += ['cec_group' . $key => 0];
                         break;
                     case "course":
                         $sql[] = "(ce.courseid > :cec_courseid$key AND ce.groupid <= 0)";
-                        $params += ['cec_courseid'.$key => SITEID];
+                        $params += ['cec_courseid' . $key => SITEID];
                         break;
                     case "user":
                         $sql[] = "(ce.eventtype = :cec_user$key) ";
-                        $params += ['cec_user'.$key => 'user'];
+                        $params += ['cec_user' . $key => 'user'];
                         break;
                     case "other":
                         $sql[] = "(
@@ -133,14 +136,12 @@ class event_context_condition extends condition {
                             AND ce.groupid = 0
                             AND NOT (ce.courseid > 1 AND (ce.modulename <> '' AND ce.instance > 0))
                         )";
-                        $params += ['cec_user_'.$key => 'user', 'cec_site_'.$key => 'site', "cec_course_$key" => 'course'];
+                        $params += ['cec_user_' . $key => 'user', 'cec_site_' . $key => 'site', "cec_course_$key" => 'course'];
                         break;
                 }
             }
 
-            return ['('.implode(' OR ', $sql).')', $params];
+            return ['(' . implode(' OR ', $sql) . ')', $params];
         }
-
     }
-
 }

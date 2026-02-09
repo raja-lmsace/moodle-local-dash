@@ -40,7 +40,7 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
 
         $builder = clone $this;
 
-        list($wheres, $whereparams) = $this->get_where_sql_and_params();
+        [$wheres, $whereparams] = $this->get_where_sql_and_params();
         // Copy the selects.
         $originalselects = $builder->selects;
         $joins = $builder->joins;
@@ -92,10 +92,8 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         }
 
         if ($isunique) {
-
             $builder->set_selects([
                 'count' => 'COUNT(' . $DB->sql_concat_join("'-'", ['cm.id', 'ue.userid']) . ')']);
-
         } else {
             $builder->set_selects(['count' => 'COUNT(DISTINCT ' . $this->tablealias . '.id)']);
         }
@@ -106,7 +104,6 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         $countcachekey = md5($sql . serialize($params));
 
         if (self::$lastcount !== null) {
-
             if (self::$lastcountcachekey == $countcachekey) {
                 return self::$lastcount;
             }
@@ -172,7 +169,7 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         global $DB;
 
         // There where clause conditions.
-        list($wheres, $whereparams) = $this->get_where_sql_and_params();
+        [$wheres, $whereparams] = $this->get_where_sql_and_params();
         $orderby = implode(' ', array_keys($this->orderby));
 
         // Copy the selects.
@@ -233,7 +230,7 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         }
 
         // ... Query 1: Get the cmid, userid for the requested page with order by.
-        list($sql, $params) = $this->get_sql_and_params();
+        [$sql, $params] = $this->get_sql_and_params();
         $results = $DB->get_records_sql($sql, $params, $this->get_limitfrom(), $this->get_limitnum());
 
         if (empty($results)) {
@@ -250,13 +247,11 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         $inparams = [];
         $i = 0;
         foreach ($results as $row) {
-
             if (isset($row->cm_id) && isset($row->ue_userid)) {
-                $conditions[] = '(cm.id = :sqcmid' .$i . ' AND u.id = :squserid' . $i . ')';
+                $conditions[] = '(cm.id = :sqcmid' . $i . ' AND u.id = :squserid' . $i . ')';
                 $inparams['sqcmid' . $i] = (int) $row->cm_id;
                 $inparams['squserid' . $i] = (int) $row->ue_userid;
                 $i++;
-
             }
         }
         if (!empty($conditions)) {
@@ -264,7 +259,7 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         }
 
         // ... Query 2: Get the full results for the requested page.
-        list($sql, $params) = $this->get_sql_and_params();
+        [$sql, $params] = $this->get_sql_and_params();
         $params = array_merge($params, $inparams);
         $results = $DB->get_records_sql($sql, $params, 0, $this->get_limitnum());
 

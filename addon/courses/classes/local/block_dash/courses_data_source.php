@@ -53,13 +53,12 @@ use local_dash\data_grid\filter\course_dates_filter;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/local/dash/lib.php');
+require_once($CFG->dirroot . '/local/dash/lib.php');
 
 /**
  * Courses data source.
  */
 class courses_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *
@@ -113,11 +112,9 @@ class courses_data_source extends abstract_data_source {
         $builder->rawcondition("c.format != 'site'");
 
         if (isset($coursepreferences['show_hidden_courses']) && !$coursepreferences['show_hidden_courses']['enabled']) {
-
             $hidden = new show_hidden_courses_condition('show_hidden_courses', 'c.id');
-            list($sql, $params) = $hidden->get_sql_and_params();
+            [$sql, $params] = $hidden->get_sql_and_params();
             $builder = $builder->where_raw($sql, $params);
-
         }
 
         return $builder;
@@ -133,20 +130,33 @@ class courses_data_source extends abstract_data_source {
 
         $coursefilter->add_filter(new category_field_filter('cc_id', 'cc.id', get_string('category')));
 
-        $filter = new date_filter('c_startdate', 'c.startdate', date_filter::DATE_FUNCTION_FLOOR,
-            get_string('startdate'));
+        $filter = new date_filter(
+            'c_startdate',
+            'c.startdate',
+            date_filter::DATE_FUNCTION_FLOOR,
+            get_string('startdate')
+        );
         $filter->set_operation(filter::OPERATION_GREATER_THAN_EQUAL);
         $coursefilter->add_filter($filter);
 
-        $filter = new date_filter('c_enddate', 'c.enddate', date_filter::DATE_FUNCTION_FLOOR,
-            get_string('enddate'));
+        $filter = new date_filter(
+            'c_enddate',
+            'c.enddate',
+            date_filter::DATE_FUNCTION_FLOOR,
+            get_string('enddate')
+        );
         $filter->set_operation(filter::OPERATION_GREATER_THAN_EQUAL);
         $coursefilter->add_filter($filter);
 
         $coursefilter->add_filter(new course_format_field_filter('c_format', 'c.format'));
 
-        $coursefilter->add_filter(new tags_field_filter('c_tags', 'c.id', 'core', 'course',
-            get_string('coursetags', 'tag')));
+        $coursefilter->add_filter(new tags_field_filter(
+            'c_tags',
+            'c.id',
+            'core',
+            'course',
+            get_string('coursetags', 'tag')
+        ));
 
         $coursefilter->add_filter(new completion_status_filter('c_status', 'ue.status', get_string('status')));
 
@@ -156,7 +166,6 @@ class courses_data_source extends abstract_data_source {
         if (class_exists('\core_course\customfield\course_handler')) {
             $coursehandler = \core_course\customfield\course_handler::create();
             foreach ($coursehandler->get_fields() as $field) {
-
                 $alias = 'c_f_' . strtolower($field->get('shortname'));
                 $select = $alias . '.value';
 
@@ -165,14 +174,26 @@ class courses_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->get_formatted_name());
                         break;
                     case 'date':
-                        $coursefilter->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
-                            $field->get_formatted_name()));
+                        $coursefilter->add_filter(new date_filter(
+                            $alias,
+                            $select,
+                            date_filter::DATE_FUNCTION_FLOOR,
+                            $field->get_formatted_name()
+                        ));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $coursefilter->add_filter(new customfield_filter($alias, $select, $field,
-                            $field->get_formatted_name()));
+                        if (class_exists('\customfield_multicategory\condition_helper')
+                            && \customfield_multicategory\condition_helper::should_skip_default_filter($field->get('type'))) {
+                            break;
+                        }
+                        $coursefilter->add_filter(new customfield_filter(
+                            $alias,
+                            $select,
+                            $field,
+                            $field->get_formatted_name()
+                        ));
                         break;
                 }
             }
@@ -180,7 +201,6 @@ class courses_data_source extends abstract_data_source {
             global $DB;
 
             foreach ($DB->get_records('course_info_field') as $field) {
-
                 $alias = 'c_f_' . strtolower($field->shortname);
                 $select = $alias . '.data';
 
@@ -189,14 +209,22 @@ class courses_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->fullname);
                         break;
                     case 'date':
-                        $coursefilter->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
-                            $field->fullname));
+                        $coursefilter->add_filter(new date_filter(
+                            $alias,
+                            $select,
+                            date_filter::DATE_FUNCTION_FLOOR,
+                            $field->fullname
+                        ));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $coursefilter->add_filter(new customfield_filter($alias, $select, $field,
-                            $field->fullname));
+                        $coursefilter->add_filter(new customfield_filter(
+                            $alias,
+                            $select,
+                            $field,
+                            $field->fullname
+                        ));
                         break;
                 }
             }

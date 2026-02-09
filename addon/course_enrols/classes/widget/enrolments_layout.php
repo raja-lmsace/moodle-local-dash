@@ -30,7 +30,6 @@ use block_dash\local\widget\abstract_layout;
  * Layout section for the enrolments widget.
  */
 class enrolments_layout extends abstract_layout {
-
     /**
      * Tempalte mustache file name, the layout uses.
      *

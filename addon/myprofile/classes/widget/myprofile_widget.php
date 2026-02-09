@@ -174,7 +174,7 @@ class myprofile_widget extends abstract_widget {
      *
      * @return array
      */
-    protected function add_kpi(string $name, $result, $attrs=[], $label=null) {
+    protected function add_kpi(string $name, $result, $attrs = [], $label = null) {
 
         return [
             'name' => $name,
@@ -191,7 +191,7 @@ class myprofile_widget extends abstract_widget {
     public function build_widget() {
         global $USER, $DB, $CFG;
 
-        $kpifields = array_map(function($i) {
+        $kpifields = array_map(function ($i) {
             return $this->get_preferences("kpi$i");
         }, range(1, self::KPIFIELDCOUNT));
 
@@ -211,9 +211,7 @@ class myprofile_widget extends abstract_widget {
 
         // Build the selected KPI queries.
         foreach ($kpifields as $id => $field) {
-
             switch ($field) {
-
                 case 'enrolledprogress':
                 case 'coursesinprogress':
                 case 'completedcourses':
@@ -231,16 +229,17 @@ class myprofile_widget extends abstract_widget {
 
                     // Find the completed coures count.
                     $transforms['completedcourses'] = fn($courses) => count(
-                        array_filter($courses, fn($course) => $course->completedtime != ''));
+                        array_filter($courses, fn($course) => $course->completedtime != '')
+                    );
 
                     // Transform the completed courses progress.
-                    $transforms['enrolledprogress'] = function($courses) use ($transforms) {
+                    $transforms['enrolledprogress'] = function ($courses) use ($transforms) {
                         return $transforms['completedcourses']($courses)
                             . \html_writer::tag('span', '/' . count($courses), ['class' => 'progress-divide']);
                     };
 
                     // Courses in progress - tranform data to string.
-                    $transforms['coursesinprogress'] = function($courses) use ($transforms) {
+                    $transforms['coursesinprogress'] = function ($courses) use ($transforms) {
                         return count($courses) - $transforms['completedcourses']($courses);
                     };
 
@@ -248,9 +247,9 @@ class myprofile_widget extends abstract_widget {
 
                 case 'currentcoursescount':
                     // Number of current courses - tranform data to string.
-                    $transforms['currentcoursescount'] = function($courses) {
+                    $transforms['currentcoursescount'] = function ($courses) {
 
-                        $activecourses = array_filter($courses, function($course) {
+                        $activecourses = array_filter($courses, function ($course) {
                             $startdate = $course->startdate;
                             $enddate = $course->enddate;
                             $now = time();
@@ -264,8 +263,8 @@ class myprofile_widget extends abstract_widget {
 
                 case 'futurecoursescount':
                     // Number of future courses - tranform data to string.
-                    $transforms['futurecoursescount'] = function($courses) {
-                        $futurecourses = array_filter($courses, function($course) {
+                    $transforms['futurecoursescount'] = function ($courses) {
+                        $futurecourses = array_filter($courses, function ($course) {
                             $startdate = $course->startdate;
                             $now = time();
                             return $startdate && $startdate > $now;
@@ -276,8 +275,8 @@ class myprofile_widget extends abstract_widget {
 
                 case 'pastcoursescount':
                     // Number of past courses - tranform data to string.
-                    $transforms['pastcoursescount'] = function($courses) {
-                        $pastcourses = array_filter($courses, function($course) {
+                    $transforms['pastcoursescount'] = function ($courses) {
+                        $pastcourses = array_filter($courses, function ($course) {
                             $enddate = $course->enddate;
                             $now = time();
                             return $enddate && $enddate < $now;
@@ -287,7 +286,6 @@ class myprofile_widget extends abstract_widget {
                     break;
 
                 case "loginstreak":
-
                     if ($cache->has(self::CACHELOGINSTREAK)) {
                         // Fetch the loginstreak.
                         $streak = $cache->get(self::CACHELOGINSTREAK);
@@ -331,8 +329,11 @@ class myprofile_widget extends abstract_widget {
 
                     $streakreached = $currentstreak >= $streakdays ? 'dash-streak-highlight' : '';
                     // Attach the login streak count to the kpi results.
-                    $result[$field] = $this->add_kpi($field, $currentstreak,
-                        ['customclass' => "$streakreached streak-$currentstreak"]);
+                    $result[$field] = $this->add_kpi(
+                        $field,
+                        $currentstreak,
+                        ['customclass' => "$streakreached streak-$currentstreak"]
+                    );
 
                     // Store the streaks count to cache, load from cache on next page loads.
                     $cache->set(self::CACHELOGINSTREAK, $currentstreak);
@@ -360,7 +361,7 @@ class myprofile_widget extends abstract_widget {
                 // Find the days since the last login of the user.
                 case 'sincelogindays':
                     // User last login data will fetched from the user table, simply find the difference in days.
-                    $transforms['sincelogindays'] = function($courses, $userdata) {
+                    $transforms['sincelogindays'] = function ($courses, $userdata) {
                         $time = new DateTime(date('y-m-d', $userdata->u_lastlogin));
                         $today = new DateTime();
                         return $userdata->u_lastlogin ? $time->diff($today)->days : 0;
@@ -392,8 +393,7 @@ class myprofile_widget extends abstract_widget {
                     $sql = new join_raw("
                         SELECT DISTINCT userid, count(*) AS completions FROM {course_completions}
                         WHERE timecompleted >= :cclastweek AND userid = :ccuserid
-                        GROUP BY userid", 'cc', 'userid', 'u.id', join::TYPE_LEFT_JOIN, $ccparams
-                    );
+                        GROUP BY userid", 'cc', 'userid', 'u.id', join::TYPE_LEFT_JOIN, $ccparams);
 
                     $query->join_raw($sql);
                     $query->select('cc.completions', 'completedcoursesinweek');
@@ -406,9 +406,15 @@ class myprofile_widget extends abstract_widget {
                     $cmcparams = ['cmcuserid' => $userid, 'cmclastweek' => $lastweek];
 
                     $sql = new join_raw(
-                            "SELECT DISTINCT userid, count(*) AS completedactivitiesinweek FROM {course_modules_completion}
+                        "SELECT DISTINCT userid, count(*) AS completedactivitiesinweek FROM {course_modules_completion}
                             WHERE timemodified >= :cmclastweek AND userid = :cmcuserid AND completionstate >= 1
-                            GROUP BY userid", 'cmc', 'userid', 'u.id', join::TYPE_LEFT_JOIN, $cmcparams);
+                            GROUP BY userid",
+                        'cmc',
+                        'userid',
+                        'u.id',
+                        join::TYPE_LEFT_JOIN,
+                        $cmcparams
+                    );
 
                     $query->join_raw($sql);
                     $query->select('cmc.completedactivitiesinweek', 'completedactivitiesinweek');
@@ -417,12 +423,17 @@ class myprofile_widget extends abstract_widget {
                     break;
 
                 case 'teammemberscount':
-                    $sql = new join_raw("SELECT ra.userid, count(*) as members
+                    $sql = new join_raw(
+                        "SELECT ra.userid, count(*) as members
                             FROM {role_assignments} ra, {context} c, {user} u
                             WHERE (ra.userid = :rauserid) AND ra.contextid = c.id AND c.instanceid = u.id
-                            AND c.contextlevel = :context_user GROUP BY ra.userid", 'ram', 'userid', 'u.id', join::TYPE_LEFT_JOIN,
-                            ['rauserid' => $userid, 'context_user' => CONTEXT_USER]
-                        );
+                            AND c.contextlevel = :context_user GROUP BY ra.userid",
+                        'ram',
+                        'userid',
+                        'u.id',
+                        join::TYPE_LEFT_JOIN,
+                        ['rauserid' => $userid, 'context_user' => CONTEXT_USER]
+                    );
 
                     $query->select('ram.members', 'teammembers');
                     $query->join_raw($sql);
@@ -430,13 +441,12 @@ class myprofile_widget extends abstract_widget {
                     break;
 
                 case 'earnedandtotalpoints':
-
                     if (!$this->is_plugin_installed('tool', 'skills')) {
                         break;
                     }
 
                     // Transforms the earned and total points for the skill to user readable format.
-                    $transforms['earnedandtotalpoints'] = function($courses, $userdata) use (&$transforms) {
+                    $transforms['earnedandtotalpoints'] = function ($courses, $userdata) use (&$transforms) {
                         global $DB;
 
                         $skillpoints = 0;
@@ -448,9 +458,9 @@ class myprofile_widget extends abstract_widget {
                         return $transforms['earnedskillpoints']($courses, $userdata)
                             . \html_writer::tag('span', '/' . $skillpoints, ['class' => 'progress-divide']);
                     };
+                    // Intentional fall-through to also set up earnedskillpoints transform.
 
                 case 'earnedskillpoints':
-
                     if (!$this->is_plugin_installed('tool', 'skills')) {
                         break;
                     }
@@ -458,8 +468,11 @@ class myprofile_widget extends abstract_widget {
                         $query->select('tsup.points', 'earnedskillpoints');
                         $query->join_raw(new join_raw(
                             'SELECT DISTINCT userid, SUM(points) AS points FROM {tool_skills_userpoints} GROUP BY userid',
-                            'tsup', "userid", 'u.id', join::TYPE_LEFT_JOIN)
-                        );
+                            'tsup',
+                            "userid",
+                            'u.id',
+                            join::TYPE_LEFT_JOIN
+                        ));
 
                         $transforms['earnedskillpoints'] = fn($courses, $userdata) => $userdata->earnedskillpoints ?: 0;
                     }
@@ -467,14 +480,14 @@ class myprofile_widget extends abstract_widget {
 
                 case "numberofoverdueactivities":
                 case 'numberofdueactivities':
-                    require_once($CFG->dirroot.'/local/dash/addon/myprofile/timemanagementlib.php');
+                    require_once($CFG->dirroot . '/local/dash/addon/myprofile/timemanagementlib.php');
                     $overdues = $dues = 0;
 
-                    $transforms[$field] = function($courses, $userdata) use (&$result, $field) {
+                    $transforms[$field] = function ($courses, $userdata) use (&$result, $field) {
                         $finaldues = 0;
                         $finaloverdues = 0;
                         foreach ($courses as $course) {
-                            list($dues, $overdues) = dashaddon_myprofile_get_user_dueactivities($course->id, $userdata->u_id);
+                            [$dues, $overdues] = dashaddon_myprofile_get_user_dueactivities($course->id, $userdata->u_id);
                             $finaldues += $dues;
                             $finaloverdues += $overdues;
                         }
@@ -487,8 +500,12 @@ class myprofile_widget extends abstract_widget {
 
                         if ($field == 'numberofdueactivities') {
                             // Number of due activities.
-                            $result['numberofdueactivities'] = $this->add_kpi($field, $finaldues, [],
-                            get_string('label:numberofdueactivities', 'block_dash'));
+                            $result['numberofdueactivities'] = $this->add_kpi(
+                                $field,
+                                $finaldues,
+                                [],
+                                get_string('label:numberofdueactivities', 'block_dash')
+                            );
                         }
                         return false;
                     };
@@ -540,7 +557,7 @@ class myprofile_widget extends abstract_widget {
             // Flip the kpi fields values to keys, and replace the values of keys with result.
             $result = array_replace(array_flip(array_filter($kpifields)), $result);
             // Remove unselected kpi from list. Due activities are added if overdue is selected.
-            $result = array_filter($result, function($key) use ($kpifields) {
+            $result = array_filter($result, function ($key) use ($kpifields) {
                 return in_array($key, array_values($kpifields));
             }, ARRAY_FILTER_USE_KEY);
         }
@@ -622,8 +639,8 @@ class myprofile_widget extends abstract_widget {
         $params['active']  = ENROL_USER_ACTIVE;
         $params['enabled'] = ENROL_INSTANCE_ENABLED;
 
-        $coursefields = 'c.' .join(',c.', $basefields);
-        $coursefields .= ($fields) ? ', '.implode(',', $fields) : '';
+        $coursefields = 'c.' . join(',c.', $basefields);
+        $coursefields .= ($fields) ? ', ' . implode(',', $fields) : '';
         $ccselect = ', ' . \context_helper::get_preload_record_columns_sql('ctx');
         $ccjoin = "LEFT JOIN {context} ctx ON (ctx.instanceid = c.id AND ctx.contextlevel = :contextlevel)";
         $params['contextlevel'] = CONTEXT_COURSE;
@@ -680,7 +697,7 @@ class myprofile_widget extends abstract_widget {
         }
 
         // Include game block lib file.
-        require_once($CFG->dirroot.'/blocks/game/lib.php');
+        require_once($CFG->dirroot . '/blocks/game/lib.php');
 
         // Fetch the user avatar image.
         $avatar = block_game_get_avatar_user($userid);
@@ -724,8 +741,14 @@ class myprofile_widget extends abstract_widget {
 
         $sitelevel = $PAGE->course->id == SITEID || $PAGE->context->contextlevel < CONTEXT_COURSE;
 
-        $onlineusers = new \block_online_users\fetcher($currentgroup, $now, $timetoshowusers, $PAGE->context,
-                $sitelevel, $PAGE->course->id);
+        $onlineusers = new \block_online_users\fetcher(
+            $currentgroup,
+            $now,
+            $timetoshowusers,
+            $PAGE->context,
+            $sitelevel,
+            $PAGE->course->id
+        );
 
         // Calculate minutes.
         $minutes = floor($timetoshowusers / 60);

@@ -37,7 +37,6 @@ use MoodleQuickForm;
  * @package dashaddon_activity_completion
  */
 class activity_completion_status_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -86,7 +85,8 @@ class activity_completion_status_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -112,7 +112,7 @@ class activity_completion_status_condition extends condition {
     public function get_sql_and_params() {
         global $DB;
 
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
 
         if ($sql) {
             $filterparams = $this->get_values();

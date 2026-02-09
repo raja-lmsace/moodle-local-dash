@@ -24,13 +24,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/enrol/locallib.php');
+require_once($CFG->dirroot . '/enrol/locallib.php');
 
 /**
  * This class provides a targeted tied together means of interfacing the enrolment tasks together with a course.
  */
 class dash_course_enrolments extends course_enrolment_manager {
-
     /**
      * Edits an enrolment
      *
@@ -41,13 +40,18 @@ class dash_course_enrolments extends course_enrolment_manager {
     public function edit_enrolment($userenrolment, $data) {
         // Only allow editing if the user has the appropriate capability.
         // Already checked in /user/index.php but checking again in case this function is called from elsewhere.
-        list($instance, $plugin) = $this->get_user_enrolment_components($userenrolment);
+        [$instance, $plugin] = $this->get_user_enrolment_components($userenrolment);
         if ($instance && $plugin && $plugin->allow_manage($instance)) {
             if (!isset($data->status)) {
                 $data->status = $userenrolment->status;
             }
-            $plugin->update_user_enrol($instance, $userenrolment->userid, $data->status,
-                $data->timestart, $data->timeend);
+            $plugin->update_user_enrol(
+                $instance,
+                $userenrolment->userid,
+                $data->status,
+                $data->timestart,
+                $data->timeend
+            );
             return true;
         }
         return false;
@@ -61,12 +65,11 @@ class dash_course_enrolments extends course_enrolment_manager {
      */
     public function unenrol_user($ue) {
         global $DB;
-        list ($instance, $plugin) = $this->get_user_enrolment_components($ue);
+         [$instance, $plugin] = $this->get_user_enrolment_components($ue);
         if ($instance && $plugin && $plugin->allow_unenrol_user($instance, $ue)) {
             $plugin->unenrol_user($instance, $ue->userid);
             return true;
         }
         return false;
     }
-
 }

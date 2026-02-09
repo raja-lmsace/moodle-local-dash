@@ -34,7 +34,6 @@ use moodle_url;
  * @package dashaddon_activity_completion
  */
 class activity_currentgrade_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -47,7 +46,7 @@ class activity_currentgrade_attribute extends abstract_field_attribute {
     public function transform_data($data, \stdClass $record) {
         global $DB;
         $gradeclass = ($data >= $record->cmg_gradepass) ? 'success' : 'danger';
-        $grade = html_writer::tag('p', format_float($data, 2), ['class' => "badge badge-".$gradeclass]);
+        $grade = html_writer::tag('p', format_float($data, 2), ['class' => "badge badge-" . $gradeclass]);
         return $grade;
     }
 }

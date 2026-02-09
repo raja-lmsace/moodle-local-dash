@@ -27,4 +27,3 @@ $string['pluginname'] = 'Data source: Programs';
 $string['programs'] = 'Programs';
 $string['tablealias_epp'] = 'Programs';
 $string['upgradeplugin'] = "This plugin requires installation of <a href='https://moodle.org/plugins/enrol_programs'> Programs </a> to enable.";
-

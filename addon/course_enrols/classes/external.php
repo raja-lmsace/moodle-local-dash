@@ -27,7 +27,7 @@ namespace dashaddon_course_enrols;
 defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/externallib.php");
-require_once($CFG->dirroot.'/local/dash/addon/course_enrols/locallib.php');
+require_once($CFG->dirroot . '/local/dash/addon/course_enrols/locallib.php');
 
 use external_api;
 use external_function_parameters;
@@ -39,7 +39,6 @@ use external_single_structure;
  * External methods helps to manage user course enrolment.
  */
 class external extends external_api {
-
     /**
      * Returns description of submit_user_enrolment_form parameters.
      *
@@ -183,7 +182,8 @@ class external extends external_api {
                             'key' => new external_value(PARAM_TEXT, 'The data that failed the validation'),
                             'message' => new external_value(PARAM_TEXT, 'The error message'),
                         ]
-                    ), 'List of validation errors'
+                    ),
+                    'List of validation errors'
                 ),
             ]
         );

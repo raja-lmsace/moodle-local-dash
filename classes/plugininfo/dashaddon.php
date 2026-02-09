@@ -29,7 +29,6 @@ use moodle_url;
  * Dashaddon is subplugin of local_dash.
  */
 class dashaddon extends \core\plugininfo\base {
-
     /**
      * Return URL used for management of plugins of this type.
      * @return moodle_url
@@ -135,5 +134,4 @@ class dashaddon extends \core\plugininfo\base {
         }
         return false;
     }
-
 }

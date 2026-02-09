@@ -43,7 +43,6 @@ use external_multiple_structure;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class external extends external_api {
-
     // Region get_database_schema_structure.
 
     /**
@@ -156,9 +155,12 @@ class external extends external_api {
                     [
                         'main' => new external_value(PARAM_ALPHANUMEXT, 'Main table'),
                         'joins' => new \external_multiple_structure(
-                            new external_value(PARAM_ALPHANUMEXT, 'Course id'), 'List of tables joined', VALUE_OPTIONAL
+                            new external_value(PARAM_ALPHANUMEXT, 'Course id'),
+                            'List of tables joined',
+                            VALUE_OPTIONAL
                         ),
-                    ], 'Tables defined'
+                    ],
+                    'Tables defined'
                 ),
                 'query' => new external_value(PARAM_ALPHANUMEXT, 'Main table', VALUE_DEFAULT, null),
             ]
@@ -193,7 +195,6 @@ class external extends external_api {
             // Tables.
             $i = 1;
             foreach ($tables as $table) {
-
                 $columns = $DB->get_columns($table);
                 $columns = array_keys($columns);
 
@@ -219,8 +220,9 @@ class external extends external_api {
                     'value' => new \external_value(PARAM_TEXT, 'Field selector', VALUE_OPTIONAL),
                     'label' => new \external_value(PARAM_TEXT, 'Field label', VALUE_OPTIONAL),
                 ]
-            ), '', VALUE_OPTIONAL
+            ),
+            '',
+            VALUE_OPTIONAL
         );
     }
-
 }

@@ -1,4 +1,26 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * Fragment output for zone configuration.
+ *
+ * @package    dashaddon_learningpath
+ * @copyright  2024
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace dashaddon_learningpath\output;
 
@@ -9,14 +31,10 @@ use dashaddon_learningpath\svg_parser;
 use context_block;
 use context_system;
 
-
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Fragment output for zone configuration.
  */
 class fragment {
-
     /**
      * Render zone configuration fragment.
      * @param array $args
@@ -29,17 +47,16 @@ class fragment {
         $context = context_block::instance($blockid);
         $paths = (array) json_decode($args['paths'], true);
         // Update the block config data.
-        if ($configdata = $DB->get_field('block_instances', 'configdata', array('id' => $blockid))) {
+        if ($configdata = $DB->get_field('block_instances', 'configdata', ['id' => $blockid])) {
             $config = unserialize_object(base64_decode($configdata));
             $config->preferences['positioning'] = 'zones';
-            if(isset($paths)) {
-                //$paths = $args['paths'];
+            if (isset($paths)) {
                 $config->preferences['desktoppath'] = $paths['desktoppath'] ?? $config->preferences['desktoppath'] ?? '0';
                 $config->preferences['tabletpath'] = $paths['tabletpath'] ?? $config->preferences['tabletpath'] ?? '0';
                 $config->preferences['mobilepath'] = $paths['mobilepath'] ?? $config->preferences['mobilepath'] ?? '0';
             }
             $configdata = base64_encode(serialize($config));
-            $DB->set_field('block_instances', 'configdata', $configdata, array('id' => $blockid));
+            $DB->set_field('block_instances', 'configdata', $configdata, ['id' => $blockid]);
         }
 
         // Check if form is being submitted.
@@ -49,7 +66,6 @@ class fragment {
 
         $blockid = $args['blockid'];
 
-
         // Get zone configuration data.
         $data = self::get_zone_config($blockid);
 
@@ -57,7 +73,7 @@ class fragment {
         $customdata = [
             'blockid' => $blockid,
             'svgs' => $data['svgs'],
-            'courses' => $data['courses']
+            'courses' => $data['courses'],
         ];
 
         // Create form.
@@ -86,7 +102,7 @@ class fragment {
             if (!$formdata) {
                 return json_encode([
                     'success' => false,
-                    'error' => 'No form data received'
+                    'error' => 'No form data received',
                 ]);
             }
 
@@ -95,8 +111,8 @@ class fragment {
 
             // Group zones by SVG type.
             $svgtypes = ['desktop', 'tablet', 'mobile'];
-            $saved_count = 0;
-            $total_zones = 0;
+            $savedcount = 0;
+            $totalzones = 0;
 
             foreach ($svgtypes as $svgtype) {
                 $zones = [];
@@ -105,88 +121,83 @@ class fragment {
                 foreach ($formdata as $key => $value) {
                     $pattern = "/^zone_{$svgtype}_(.+)_zoneid$/";
                     if (preg_match($pattern, $key, $matches)) {
-                        $zoneid_from_key = $matches[1]; // Extract the zone ID from the key.
-                        $prefix = "zone_{$svgtype}_{$zoneid_from_key}";
+                        $zoneidfromkey = $matches[1]; // Extract the zone ID from the key.
+                        $prefix = "zone_{$svgtype}_{$zoneidfromkey}";
                         // Get the actual zone ID from the form data.
-                        $actual_zoneid = $formdata[$key];
+                        $actualzoneid = $formdata[$key];
 
-
-                        $zone_pattern = "/^zone_([a-z]+)_([a-z]+)_(\d+)$/";
+                        $zonepattern = "/^zone_([a-z]+)_([a-z]+)_(\d+)$/";
                         $viewport = '';
                         $zonetype = '';
                         $zoneindex = 0;
 
-                        if (preg_match($zone_pattern, $prefix, $zone_matches)) {
-                            //print_r($zone_matches);
-                            $viewport = $zone_matches[1];   // e.g., "desktop", "tablet", "mobile"
-                            $zonetype = $zone_matches[2];   // e.g., "ellipse", "rect", "circle"
-                            $zoneindex = (int)$zone_matches[3];
+                        if (preg_match($zonepattern, $prefix, $zonematches)) {
+                            $viewport = $zonematches[1];   // Desktop, tablet, or mobile.
+                            $zonetype = $zonematches[2];   // Ellipse, rect, or circle.
+                            $zoneindex = (int)$zonematches[3];
                         }
 
                         // Get zone data.
-                        $zone_data = [
-                            'zoneid' => $actual_zoneid,
+                        $zonedata = [
+                            'zoneid' => $actualzoneid,
                             'viewport' => $viewport,
                             'type' => $zonetype,
                             'zoneindex' => $zoneindex,
                             'enabled' => false,
-                            'courseid' => null
+                            'courseid' => null,
                         ];
 
                         // Check if zone is enabled.
-                        $enabled_field = $prefix . '_enabled';
-                        if (isset($formdata[$enabled_field])) {
-                            if (is_array($formdata[$enabled_field])) {
-                                $zone_data['enabled'] = in_array("1", $formdata[$enabled_field]);
+                        $enabledfield = $prefix . '_enabled';
+                        if (isset($formdata[$enabledfield])) {
+                            if (is_array($formdata[$enabledfield])) {
+                                $zonedata['enabled'] = in_array("1", $formdata[$enabledfield]);
                             } else {
-                                $zone_data['enabled'] = !empty($formdata[$enabled_field]);
+                                $zonedata['enabled'] = !empty($formdata[$enabledfield]);
                             }
                         }
 
                         // Get course assignment.
-                        $courseid_field = $prefix . '_courseid';
-                        if (isset($formdata[$courseid_field])) {
-                            $courseid = $formdata[$courseid_field];
+                        $courseidfield = $prefix . '_courseid';
+                        if (isset($formdata[$courseidfield])) {
+                            $courseid = $formdata[$courseidfield];
                             if ($courseid !== "0" && !empty($courseid)) {
-                                $zone_data['courseid'] = (int)$courseid;
+                                $zonedata['courseid'] = (int)$courseid;
                             }
                         }
 
-                        $zones[] = $zone_data;
-                        $total_zones++;
+                        $zones[] = $zonedata;
+                        $totalzones++;
                     }
                 }
                 // Save zones for this SVG type.
                 if (!empty($zones)) {
                     $result = $zonemanager->save_zones($svgtype, $zones);
                     if ($result) {
-                        $saved_count++;
+                        $savedcount++;
                     }
                 }
             }
 
-
-            // Return success response
+            // Return success response.
             return json_encode([
                 'success' => true,
                 'message' => get_string('zones_saved_successfully', 'block_dash'),
                 'details' => [
-                    'svg_types_processed' => $saved_count,
-                    'total_zones' => $total_zones,
+                    'svg_types_processed' => $savedcount,
+                    'total_zones' => $totalzones,
                     'zones_by_type' => [
                         'desktop' => self::count_zones_by_type($formdata, 'desktop'),
                         'tablet' => self::count_zones_by_type($formdata, 'tablet'),
-                        'mobile' => self::count_zones_by_type($formdata, 'mobile')
-                    ]
-                ]
+                        'mobile' => self::count_zones_by_type($formdata, 'mobile'),
+                    ],
+                ],
             ]);
-
         } catch (\Exception $e) {
-
             // Return error response.
             return json_encode([
                 'success' => false,
-                'error' => 'Error saving zone configuration: ' . $e->getMessage()
+                'error' => 'Error saving zone configuration: ' . $e->getMessage(),
             ]);
         }
     }
@@ -228,7 +239,7 @@ class fragment {
 
         $result = [
             'svgs' => [],
-            'courses' => self::get_available_courses()
+            'courses' => self::get_available_courses(),
         ];
 
         $zonemanager = new \dashaddon_learningpath\zone_manager($blockid);
@@ -237,7 +248,7 @@ class fragment {
         $svgtypes = [
             'desktop' => $preferences['desktoppath'] ?? null,
             'tablet' => $preferences['tabletpath'] ?? null,
-            'mobile' => $preferences['mobilepath'] ?? null
+            'mobile' => $preferences['mobilepath'] ?? null,
         ];
 
         $svgcount = 0;
@@ -248,7 +259,7 @@ class fragment {
                 if (!empty($svgcontent)) {
                     $parsedzones = svg_parser::parse_zones($svgcontent->get_content(), $type);
                     $savedzones = $zonemanager->get_zones($type);
-                    $parsedzones = array_map(function($zone) use ($svgcount) {
+                    $parsedzones = array_map(function ($zone) use ($svgcount) {
                         $zone['svgindex'] = $svgcount;
                         return $zone;
                     }, $parsedzones);
@@ -311,7 +322,7 @@ class fragment {
             $result[] = [
                 'id' => $course->id,
                 'fullname' => format_string($course->fullname),
-                'selected' => false
+                'selected' => false,
             ];
         }
 
@@ -340,7 +351,7 @@ class fragment {
                 'zoneid' => $parsed['id'],
                 'zonetype' => $parsed['type'],
                 'zoneindex' => $parsed['zoneindex'],
-                'blockid' => $blockid
+                'blockid' => $blockid,
             ]);
 
             $result[] = [
@@ -350,11 +361,10 @@ class fragment {
                 'typename' => $parsed['typename'],
                 'enabled' => $existingzone ? (bool)$existingzone->enabled : false,
                 'courseid' => $existingzone ? (int)$existingzone->courseid : 0,
-                'position' => $parsed['position']
+                'position' => $parsed['position'],
             ];
         }
 
         return $result;
     }
-
 }

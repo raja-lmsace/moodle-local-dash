@@ -39,7 +39,6 @@ use local_dash\data_grid\filter\course_category_condition;
  * @package dashaddon_categories
  */
 class categories_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *

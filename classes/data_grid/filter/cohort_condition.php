@@ -90,7 +90,7 @@ class cohort_condition extends condition {
         $select = $this->get_select();
         $cohortids = $this->get_values();
         if ($cohortids) {
-            list($cohortsql, $cohortparams) = $DB->get_in_or_equal($cohortids, SQL_PARAMS_NAMED);
+            [$cohortsql, $cohortparams] = $DB->get_in_or_equal($cohortids, SQL_PARAMS_NAMED);
             $sql = "$select IN(SELECT cm.userid
                             FROM {cohort} ch
                             JOIN {cohort_members} cm ON cm.cohortid = ch.id
@@ -113,7 +113,8 @@ class cohort_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.

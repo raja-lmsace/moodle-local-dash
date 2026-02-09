@@ -31,7 +31,6 @@ use stdClass;
  * List the cohorts assigned to the programs
  */
 class event_icon_attribute extends image_attribute {
-
     /**
      * List the cohorts assigned to the programs
      *
@@ -44,6 +43,3 @@ class event_icon_attribute extends image_attribute {
         return parent::transform_data($data['customurl'], $record);
     }
 }
-
-
-

@@ -30,8 +30,6 @@ use block_dash\local\data_grid\filter\filter;
  * Users based filter option.
  */
 class user_filter extends select_filter {
-
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -39,7 +37,7 @@ class user_filter extends select_filter {
     public function init() {
         global $DB;
 
-        $data = $DB->get_records_sql_menu("SELECT DISTINCT id, firstname
+        $data = $DB->get_records_sql_menu("SELECT DISTINCT id, username
                                         FROM {user} WHERE deleted != 1 AND suspended != 1");
 
         $this->add_options($data);
@@ -59,5 +57,4 @@ class user_filter extends select_filter {
 
         return get_string('user');
     }
-
 }

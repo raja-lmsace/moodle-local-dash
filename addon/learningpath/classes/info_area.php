@@ -24,13 +24,10 @@
 
 namespace dashaddon_learningpath;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Info area class for learning path widget.
  */
 class info_area {
-
     /**
      * @var object Widget instance
      */
@@ -148,7 +145,7 @@ class info_area {
 
         // Display faculty - only show course-level roles.
         $courseroles = get_roles_for_contextlevels(CONTEXT_COURSE);
-        list($insql, $inparams) = $DB->get_in_or_equal(array_values($courseroles));
+        [$insql, $inparams] = $DB->get_in_or_equal(array_values($courseroles));
         $roles = $DB->get_records_sql("SELECT * FROM {role} WHERE id $insql", $inparams);
         $rolesoptions = role_fix_names($roles, null, ROLENAME_ALIAS, true);
         asort($rolesoptions);
@@ -233,7 +230,7 @@ class info_area {
             }
 
             // Get faculty members if enabled.
-            if ($data['displayfaculty'] ) {
+            if ($data['displayfaculty']) {
                 $roleids = $this->get_preference('displayfaculty');
 
                 if (!empty($roleids) && !is_array($roleids)) {
@@ -241,7 +238,7 @@ class info_area {
                 }
 
                 if (is_array($roleids)) {
-                    $roleids = array_filter($roleids, function($value) {
+                    $roleids = array_filter($roleids, function ($value) {
                         return is_numeric($value) && $value > 0;
                     });
                     $roleids = array_values($roleids);
@@ -314,8 +311,10 @@ class info_area {
                         $coursebadges = badges_get_badges(BADGE_TYPE_COURSE, $courseid);
                         foreach ($coursebadges as $badge) {
                             // Only count active or active-locked badges.
-                            if (!in_array($badge->id, $allbadgeids) &&
-                                ($badge->status == BADGE_STATUS_ACTIVE || $badge->status == BADGE_STATUS_ACTIVE_LOCKED)) {
+                            if (
+                                !in_array($badge->id, $allbadgeids) &&
+                                ($badge->status == BADGE_STATUS_ACTIVE || $badge->status == BADGE_STATUS_ACTIVE_LOCKED)
+                            ) {
                                 $allbadgeids[] = $badge->id;
                                 $totalbadges++;
                             }
@@ -370,7 +369,7 @@ class info_area {
 
             case 'period':
                 if (!empty($courseids)) {
-                    list($insql, $inparams) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'cid');
+                    [$insql, $inparams] = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'cid');
                     $params = array_merge(['userid' => $USER->id], $inparams);
 
                     // Get earliest enrolment start date and latest enrolment end date from user_enrolments.
@@ -482,8 +481,8 @@ class info_area {
             return [];
         }
 
-        list($courseinsql, $courseparams) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'cid');
-        list($roleinsql, $roleparams) = $DB->get_in_or_equal($roleids, SQL_PARAMS_NAMED, 'rid');
+        [$courseinsql, $courseparams] = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'cid');
+        [$roleinsql, $roleparams] = $DB->get_in_or_equal($roleids, SQL_PARAMS_NAMED, 'rid');
 
         $params = array_merge($courseparams, $roleparams);
         $params['contextlevel'] = CONTEXT_COURSE;
@@ -538,8 +537,10 @@ class info_area {
         foreach ($courseids as $courseid) {
             $coursebadges = badges_get_badges(BADGE_TYPE_COURSE, $courseid);
             foreach ($coursebadges as $badge) {
-                if (!isset($allbadges[$badge->id]) &&
-                    ($badge->status == BADGE_STATUS_ACTIVE || $badge->status == BADGE_STATUS_ACTIVE_LOCKED)) {
+                if (
+                    !isset($allbadges[$badge->id]) &&
+                    ($badge->status == BADGE_STATUS_ACTIVE || $badge->status == BADGE_STATUS_ACTIVE_LOCKED)
+                ) {
                     $allbadges[$badge->id] = $badge;
                 }
             }
@@ -619,10 +620,9 @@ class info_area {
         $coursesprogress = [];
 
         foreach ($courses as $course) {
-
-        $courseobj = get_course($course['info']['id']);
-        $courseprogress = \core_completion\progress::get_course_progress_percentage($courseobj);
-        $courseprogress = $courseprogress ? round($courseprogress) : 0;
+            $courseobj = get_course($course['info']['id']);
+            $courseprogress = \core_completion\progress::get_course_progress_percentage($courseobj);
+            $courseprogress = $courseprogress ? round($courseprogress) : 0;
 
             $courseprogress = [
                 'id' => $course['info']['id'],

@@ -46,7 +46,7 @@ class course_format_attribute extends abstract_field_attribute {
             if (get_string_manager()->string_exists('pluginname', 'format_' . $data)) {
                 $data = get_string('pluginname', 'format_' . $data);
             } else {
-                $data = 'format_'.$data;
+                $data = 'format_' . $data;
             }
         }
 

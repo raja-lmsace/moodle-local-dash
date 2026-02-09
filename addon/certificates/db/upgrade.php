@@ -30,7 +30,7 @@
 function xmldb_dashaddon_certificates_upgrade($oldversion) {
     global $CFG;
     if ($oldversion < 2024042500) {
-        require_once($CFG->dirroot. "/local/dash/addon/certificates/lib.php");
+        require_once($CFG->dirroot . "/local/dash/addon/certificates/lib.php");
         if (empty(dashaddon_certificates_extend_added_dependencies())) {
             set_config('enabled', 1, 'dashaddon_certificates');
         }

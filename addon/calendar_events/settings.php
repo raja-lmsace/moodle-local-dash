@@ -25,15 +25,19 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-
     $settings = null;
 
     $name = "local_dash/calendareventsimage";
     $title = get_string("calendareventsfallback", 'block_dash');
     $description = get_string("calendareventsfallback_desc", 'block_dash');
     $setting = new \admin_setting_configstoredfile(
-        $name, $title, $description, 'calendareventsimage', 0, ['maxfiles' => 1, 'accepted_types' => ['web_image']]);
+        $name,
+        $title,
+        $description,
+        'calendareventsimage',
+        0,
+        ['maxfiles' => 1, 'accepted_types' => ['web_image']]
+    );
 
     $page->add($setting);
-
 }

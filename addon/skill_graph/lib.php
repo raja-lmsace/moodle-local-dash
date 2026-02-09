@@ -68,7 +68,7 @@ function dashaddon_skill_graph_pluginfile($course, $cm, $context, $filearea, $ar
         if (!$args) {
             $filepath = '/';
         } else {
-            $filepath = '/'.implode('/', $args).'/';
+            $filepath = '/' . implode('/', $args) . '/';
         }
 
         // Retrieve the file from the Files API.

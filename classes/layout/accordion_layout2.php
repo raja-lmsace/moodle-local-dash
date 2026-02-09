@@ -35,7 +35,6 @@ use block_dash\local\layout\abstract_layout;
  * Boostrap accordian layout2 for course format.
  */
 class accordion_layout2 extends accordion_layout {
-
     /**
      * Get layout template filename.
      * @return string
@@ -103,39 +102,71 @@ class accordion_layout2 extends accordion_layout {
 
             $mform->addElement('html', '<hr>');
 
-            $mform->addElement('select', 'config_preferences[field1]',
-                get_string('accordionfield1', 'block_dash'), array_merge($noneoption, $options));
+            $mform->addElement(
+                'select',
+                'config_preferences[field1]',
+                get_string('accordionfield1', 'block_dash'),
+                array_merge($noneoption, $options)
+            );
             $mform->setType('config_preferences[field1]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[field1_icon]',
-                get_string('accordionfield1icon', 'block_dash'), $icons);
+            $mform->addElement(
+                'select',
+                'config_preferences[field1_icon]',
+                get_string('accordionfield1icon', 'block_dash'),
+                $icons
+            );
 
             $mform->addElement('html', '<hr>');
 
-            $mform->addElement('select', 'config_preferences[field2]',
-                get_string('accordionfield2', 'block_dash'), array_merge($noneoption, $options));
+            $mform->addElement(
+                'select',
+                'config_preferences[field2]',
+                get_string('accordionfield2', 'block_dash'),
+                array_merge($noneoption, $options)
+            );
             $mform->setType('config_preferences[field2]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[field2_icon]',
-                get_string('accordionfield2icon', 'block_dash'), $icons);
+            $mform->addElement(
+                'select',
+                'config_preferences[field2_icon]',
+                get_string('accordionfield2icon', 'block_dash'),
+                $icons
+            );
 
             $mform->addElement('html', '<hr>');
 
-            $mform->addElement('select', 'config_preferences[field3]',
-                get_string('accordionfield3', 'block_dash'), array_merge($noneoption, $options));
+            $mform->addElement(
+                'select',
+                'config_preferences[field3]',
+                get_string('accordionfield3', 'block_dash'),
+                array_merge($noneoption, $options)
+            );
             $mform->setType('config_preferences[field3]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[field3_icon]',
-                get_string('accordionfield3icon', 'block_dash'), $icons);
+            $mform->addElement(
+                'select',
+                'config_preferences[field3_icon]',
+                get_string('accordionfield3icon', 'block_dash'),
+                $icons
+            );
 
             $mform->addElement('html', '<hr>');
 
-            $mform->addElement('select', 'config_preferences[field4]',
-                get_string('accordionfield4', 'block_dash'), array_merge($noneoption, $options));
+            $mform->addElement(
+                'select',
+                'config_preferences[field4]',
+                get_string('accordionfield4', 'block_dash'),
+                array_merge($noneoption, $options)
+            );
             $mform->setType('config_preferences[field4]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[field4_icon]',
-                get_string('accordionfield4icon', 'block_dash'), $icons);
+            $mform->addElement(
+                'select',
+                'config_preferences[field4_icon]',
+                get_string('accordionfield4icon', 'block_dash'),
+                $icons
+            );
         }
 
         parent::build_preferences_form($form, $mform);

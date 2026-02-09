@@ -49,7 +49,6 @@ use moodle_url;
  * @package dashaddon_logstore
  */
 class site_logs_table extends table {
-
     /**
      * Build a new table.
      */

@@ -29,7 +29,7 @@
  */
 function xmldb_dashaddon_logstore_install() {
     global $CFG;
-    require_once($CFG->dirroot. "/local/dash/addon/logstore/lib.php");
+    require_once($CFG->dirroot . "/local/dash/addon/logstore/lib.php");
     if (empty(dashaddon_logstore_extend_added_dependencies())) {
         set_config('enabled', 1, 'dashaddon_logstore');
     }

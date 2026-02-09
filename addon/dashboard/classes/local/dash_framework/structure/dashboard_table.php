@@ -47,7 +47,6 @@ use moodle_url;
  * @package dashaddon_dashboard
  */
 class dashboard_table extends table {
-
     /**
      * Build a new table.
      */
@@ -92,8 +91,10 @@ class dashboard_table extends table {
                 new dashboard_dash_thumbnail_image_attribute(),
                 new image_attribute(),
                 new linked_data_attribute([
-                    'url' => new moodle_url('/local/dash/addon/dashboard/dashboard.php',
-                    ['id' => 'dd_id']),
+                    'url' => new moodle_url(
+                        '/local/dash/addon/dashboard/dashboard.php',
+                        ['id' => 'dd_id']
+                    ),
                 ]),
             ]),
             new field('dashthumbnailimgurl', new lang_string('dashthumbnailimgurl', 'block_dash'), $this, 'dd.id', [

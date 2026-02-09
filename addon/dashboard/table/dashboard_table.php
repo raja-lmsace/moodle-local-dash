@@ -93,7 +93,8 @@ class dashboard_table extends \table_sql {
         if (!$data->coredash) {
             return \html_writer::link(
                 new \moodle_url('/local/dash/addon/dashboard/dashboard.php', ['id' => $data->id]),
-                $data->name);
+                $data->name
+            );
         } else {
             return \html_writer::link(new \moodle_url('/my', ['id' => $data->id]), $data->name);
         }
@@ -166,22 +167,28 @@ class dashboard_table extends \table_sql {
 
         $actions += [
             [
-                'url' => new \moodle_url('/local/dash/addon/dashboard/dashboards.php',
-                    ['action' => 'duplicate', 'id' => $data->id]),
+                'url' => new \moodle_url(
+                    '/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'duplicate', 'id' => $data->id]
+                ),
                 'icon' => new \pix_icon('t/copy', \get_string('duplicate')),
                 'attributes' => ['class' => 'action-copy'],
                 'name' => 'copy',
             ],
             [
-                'url' => new \moodle_url('/local/dash/addon/dashboard/dashboards.php',
-                    ['action' => 'edit', 'id' => $data->id]),
+                'url' => new \moodle_url(
+                    '/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'edit', 'id' => $data->id]
+                ),
                 'icon' => new \pix_icon('t/edit', \get_string('edit')),
                 'attributes' => ['class' => 'action-edit'],
                 'name' => 'edit',
             ],
             [
-                'url' => new \moodle_url('/local/dash/addon/dashboard/dashboards.php',
-                    ['action' => 'delete', 'id' => $data->id]),
+                'url' => new \moodle_url(
+                    '/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'delete', 'id' => $data->id]
+                ),
                 'icon' => new \pix_icon('t/delete', \get_string('delete')),
                 'attributes' => ['class' => 'action-delete'],
                 'name' => 'delete',
@@ -211,7 +218,7 @@ class dashboard_table extends \table_sql {
     public function query_db($pagesize, $useinitialsbar = true) {
         global $DB;
 
-        list($wsql, $params) = $this->get_sql_where();
+        [$wsql, $params] = $this->get_sql_where();
 
         if ($this->contextid) {
             if (!empty($wsql)) {

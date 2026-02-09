@@ -1,5 +1,26 @@
 <?php
-// filepath: d:\xampp\htdocs\moodle\moodle-50\local\dash\addon\learningpath\classes\form\zone_config_form.php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * Zone configuration form.
+ *
+ * @package    dashaddon_learningpath
+ * @copyright  2024
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace dashaddon_learningpath\form;
 
@@ -15,7 +36,6 @@ require_once($CFG->libdir . '/formslib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class zone_config_form extends \moodleform {
-
     /**
      * Form definition.
      */
@@ -61,7 +81,8 @@ class zone_config_form extends \moodleform {
             $selected = $svg['first'] ? 'true' : 'false';
             $html .= '<li class="nav-item">';
             $html .= sprintf(
-                '<a class="nav-link %s" id="%s-tab" data-toggle="tab" href="#%s-content" role="tab" aria-controls="%s-content" aria-selected="%s">%s</a>',
+                '<a class="nav-link %s" id="%s-tab" data-toggle="tab" href="#%s-content" ' .
+                'role="tab" aria-controls="%s-content" aria-selected="%s">%s</a>',
                 $active,
                 $svg['svgtype'],
                 $svg['svgtype'],
@@ -113,17 +134,17 @@ class zone_config_form extends \moodleform {
 
         $mform->addElement('html', $html);
 
-        // Group zones by parent groups
+        // Group zones by parent groups.
         $groupedzones = $this->group_zones_by_parent($svg['zones']);
 
         // Add form elements for each zone.
         if (!empty($groupedzones)) {
             foreach ($groupedzones as $item) {
                 if ($item['isgroup']) {
-                    // This is a group with children
+                    // This is a group with children.
                     $this->add_group_zone($mform, $svgtype, $item, $courses);
                 } else {
-                    // This is a standalone zone
+                    // This is a standalone zone.
                     $this->add_zone_config($mform, $svgtype, $item['zone'], $courses, false);
                 }
             }
@@ -137,7 +158,7 @@ class zone_config_form extends \moodleform {
     }
 
     /**
-     * Group zones by parent groups
+     * Group zones by parent groups.
      *
      * @param array $zones All zones
      * @return array Grouped zones
@@ -145,36 +166,36 @@ class zone_config_form extends \moodleform {
     private function group_zones_by_parent($zones) {
         $result = [];
         $currentgroup = null;
-        //print_r($zones);
+
         foreach ($zones as $zone) {
             if ($zone['zonetype'] == 'g') {
-                // If there was a previous group, add it to results first
+                // If there was a previous group, add it to results first.
                 if ($currentgroup !== null) {
                     $result[] = $currentgroup;
                 }
 
-                // Start a new group
+                // Start a new group.
                 $currentgroup = [
                     'isgroup' => true,
                     'groupzone' => $zone,
-                    'children' => []
+                    'children' => [],
                 ];
             } else {
-                // Regular zone (not a group)
+                // Regular zone (not a group).
                 if ($currentgroup !== null) {
-                    // Add to current group as a child
+                    // Add to current group as a child.
                     $currentgroup['children'][] = $zone;
                 } else {
-                    // Standalone zone (not in a group)
+                    // Standalone zone (not in a group).
                     $result[] = [
                         'isgroup' => false,
-                        'zone' => $zone
+                        'zone' => $zone,
                     ];
                 }
             }
         }
 
-        // Add the last group if exists
+        // Add the last group if exists.
         if ($currentgroup !== null) {
             $result[] = $currentgroup;
         }
@@ -183,7 +204,7 @@ class zone_config_form extends \moodleform {
     }
 
     /**
-     * Add group zone with children
+     * Add group zone with children.
      *
      * @param object $mform Form object
      * @param string $svgtype SVG type

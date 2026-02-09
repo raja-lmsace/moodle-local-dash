@@ -32,7 +32,6 @@ use enrol_programs\output\catalogue\renderer as programrenderer;
  * @package   dashaddon_programs
  */
 class renderer extends programrenderer {
-
     /**
      * Fetch the content of the program.
      *

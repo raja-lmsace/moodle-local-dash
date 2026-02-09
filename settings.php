@@ -26,7 +26,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-
     $ADMIN->add('localplugins', new admin_category('localdashsettings', get_string('pluginname', 'local_dash')));
 
     $settings = null;
@@ -59,8 +58,8 @@ if ($hassiteconfig) {
     $setting = new admin_setting_configtext($name, $title, $description, '');
     $page->add($setting);
 
-    require_once($CFG->dirroot.'/local/dash/lib.php');
-    require_once($CFG->dirroot.'/local/dash/classes/admin_setting_configfontawesomeicon.php');
+    require_once($CFG->dirroot . '/local/dash/lib.php');
+    require_once($CFG->dirroot . '/local/dash/classes/admin_setting_configfontawesomeicon.php');
 
     $name = 'local_dash/courseshopurl';
     $title = get_string('courseshopurl', 'block_dash');
@@ -142,7 +141,7 @@ if ($hassiteconfig) {
                 // Get default value.
                 $default = get_config('local_dash', $identifier);
 
-                // Setup autocomplete options
+                // Setup autocomplete options.
                 $autocompleteoptions = [
                     'ajax' => 'local_dash/fontawesome_icon_selector',
                     'placeholder' => get_string('pickicon', 'block_dash'),
@@ -150,16 +149,16 @@ if ($hassiteconfig) {
                     'showsuggestions' => true,
                     'tags' => false,
                     'casesensitive' => false,
-                    // Value HTML callback for icon rendering
+                    // Value HTML callback for icon rendering.
                     'valuehtmlcallback' => function ($value = '') use ($iconmap) {
                         global $OUTPUT;
 
-                        // Handle empty value
+                        // Handle empty value.
                         if (empty($value) || !is_string($value)) {
                             return '';
                         }
 
-                        // Check if icon exists in map
+                        // Check if icon exists in map.
                         if (!isset($iconmap[$value])) {
                             return htmlspecialchars($value);
                         }
@@ -167,7 +166,7 @@ if ($hassiteconfig) {
                         $source = $iconmap[$value]['source'] ?? '';
                         $icon = null;
 
-                        // Build icon object based on source
+                        // Build icon object based on source.
                         switch ($source) {
                             case 'core':
                                 $icon = (object)[
@@ -209,10 +208,13 @@ if ($hassiteconfig) {
                                 return htmlspecialchars($value);
                         }
 
-                        // Render template if icon was built
+                        // Render template if icon was built.
                         if ($icon) {
                             try {
-                                return $OUTPUT->render_from_template('local_dash/form_autocomplete_fontawesome_icon', $icon);
+                                return $OUTPUT->render_from_template(
+                                    'local_dash/form_autocomplete_fontawesome_icon',
+                                    $icon
+                                );
                             } catch (\Exception $e) {
                                 debugging('Error rendering icon template: ' . $e->getMessage(), DEBUG_DEVELOPER);
                                 return htmlspecialchars($value);
@@ -223,7 +225,7 @@ if ($hassiteconfig) {
                     },
                 ];
 
-                // Create AJAX autocomplete setting
+                // Create AJAX autocomplete setting.
                 $setting = new \local_dash\admin_setting_ajax_autocomplete(
                     $name,
                     $title,
@@ -244,16 +246,20 @@ if ($hassiteconfig) {
     $ADMIN->add('localdashsettings', new admin_externalpage(
         'localdashmanagedashboards',
         get_string('managedashboards', 'block_dash'),
-        new moodle_url('/local/dash/addon/dashboard/dashboard_list.php')));
+        new moodle_url('/local/dash/addon/dashboard/dashboard_list.php')
+    ));
 
-    $ADMIN->add('localdashsettings', new admin_externalpage('managedashaddonplugins',
+    $ADMIN->add('localdashsettings', new admin_externalpage(
+        'managedashaddonplugins',
         get_string('managedashaddonplugins', 'block_dash'),
-        new moodle_url('/local/dash/manageaddon.php', ['subtype' => 'dashaddon'])));
+        new moodle_url('/local/dash/manageaddon.php', ['subtype' => 'dashaddon'])
+    ));
 
     $ADMIN->add('appearance', new admin_externalpage(
         'localdashmanagedashboards2',
         get_string('managedashboards', 'block_dash'),
-        new moodle_url('/local/dash/addon/dashboard/dashboard_list.php')));
+        new moodle_url('/local/dash/addon/dashboard/dashboard_list.php')
+    ));
 
 
     foreach (core_plugin_manager::instance()->get_plugins_of_type('dashaddon') as $plugin) {

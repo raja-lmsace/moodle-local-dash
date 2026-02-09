@@ -50,7 +50,6 @@ use local_dash\data_grid\filter\context_level_condition;
  * role assignments data source within the block_dash addon in Moodle.
  */
 class roleassignments_data_source extends abstract_data_source {
-
     /**
      * Constructor for the roleassignments_data_source class.
      * It then calls the parent constructor with the provided context.
@@ -82,8 +81,14 @@ class roleassignments_data_source extends abstract_data_source {
             ->join('user', 'u', 'id', 'ra.userid')
             ->join('role', 'r', 'id', 'ra.roleid')
             ->join('context', 'ctx', 'id', 'ra.contextid')
-            ->join('course', 'c', 'id', 'ctx.instanceid AND ctx.contextlevel = :coursecontextlevel',
-                join::TYPE_LEFT_JOIN, ['coursecontextlevel' => CONTEXT_COURSE]);
+            ->join(
+                'course',
+                'c',
+                'id',
+                'ctx.instanceid AND ctx.contextlevel = :coursecontextlevel',
+                join::TYPE_LEFT_JOIN,
+                ['coursecontextlevel' => CONTEXT_COURSE]
+            );
 
         $builder->where_raw('u.deleted = 0');
         return $builder;

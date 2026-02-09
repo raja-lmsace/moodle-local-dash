@@ -38,7 +38,6 @@ class hook_callbacks {
 
         global $PAGE, $DB;
         try {
-
             // First rule out conditions where a redirect should never happen.
             // Also skip is $CFG->kickstart_pro is false.
             if (AJAX_SCRIPT) {

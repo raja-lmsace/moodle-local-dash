@@ -32,7 +32,6 @@ use DateTime;
  * Filters results to specific calendar events days (Days of the week).
  */
 class day_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      */
@@ -72,7 +71,7 @@ class day_filter extends select_filter {
      */
     public function get_sql_and_params() {
 
-        list($sql, $types) = parent::get_sql_and_params();
+        [$sql, $types] = parent::get_sql_and_params();
 
         if (is_array($types)) {
             $sql = [];
@@ -81,7 +80,6 @@ class day_filter extends select_filter {
             // User timezone.
             $timezone = core_date::get_user_timezone_object();
             foreach ($types as $key => $type) {
-
                 $param1 = 'ceday_startday_' . $key;
                 $param2 = 'ceday_endday_' . $key;
 
@@ -144,7 +142,7 @@ class day_filter extends select_filter {
                 }
             }
 
-            return ['('.implode(' OR ', $sql).')', $params];
+            return ['(' . implode(' OR ', $sql) . ')', $params];
         }
         return false;
     }

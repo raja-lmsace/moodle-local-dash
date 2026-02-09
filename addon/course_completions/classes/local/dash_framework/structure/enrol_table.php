@@ -82,12 +82,18 @@ class enrol_table extends table {
             new field('status', new lang_string('enrollmentmethodstatus', 'block_dash'), $this, null, [
                 new enrol_status_attribute(),
             ]),
-            new field('enrolled_users', new lang_string('enrolledusers', 'enrol'), $this, 'ue100.enrolledusers', [],
-            ['supports_sorting' => false], '', null,
+            new field(
+                'enrolled_users',
+                new lang_string('enrolledusers', 'enrol'),
+                $this,
+                'ue100.enrolledusers',
+                [],
+                ['supports_sorting' => false],
+                '',
+                null,
                 new join_raw('SELECT ue.enrolid, COUNT(ue.id) AS enrolledusers
                     FROM {user_enrolments} ue
-                    GROUP BY ue.enrolid', 'ue100', 'enrolid', 'e.id', join_raw::TYPE_LEFT_JOIN
-                )
+                    GROUP BY ue.enrolid', 'ue100', 'enrolid', 'e.id', join_raw::TYPE_LEFT_JOIN)
             ),
         ];
 

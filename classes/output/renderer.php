@@ -37,7 +37,6 @@ use coding_exception;
  * @category  output
  */
 class renderer extends \core_renderer {
-
     /**
      * Renders a custom block region.
      *
@@ -77,7 +76,7 @@ class renderer extends \core_renderer {
         $classes = (array)$classes;
         $classes[] = 'block-region';
         $attributes = [
-            'id' => 'block-region-'.preg_replace('#[^a-zA-Z0-9_\-]+#', '-', $displayregion),
+            'id' => 'block-region-' . preg_replace('#[^a-zA-Z0-9_\-]+#', '-', $displayregion),
             'class' => join(' ', $classes),
             'data-blockregion' => $displayregion,
             'data-droptarget' => '1',

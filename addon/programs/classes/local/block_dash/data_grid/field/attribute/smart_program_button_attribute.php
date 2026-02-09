@@ -32,7 +32,6 @@ use block_dash\local\data_grid\field\attribute\abstract_field_attribute;
  * @package dashaddon_programs
  */
 class smart_program_button_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      *
@@ -60,9 +59,10 @@ class smart_program_button_attribute extends abstract_field_attribute {
 
         // Signup by self.
         $source = $DB->get_record('enrol_programs_sources', ['programid' => $program->id, 'type' => 'selfallocation']);
-        if ($source
-            && \enrol_programs\local\source\selfallocation::can_user_request($program, $source, (int)$USER->id, $failurereason)) {
-
+        if (
+            $source
+            && \enrol_programs\local\source\selfallocation::can_user_request($program, $source, (int)$USER->id, $failurereason)
+        ) {
             $classname = '\enrol_programs\local\source\selfallocation';
             $data = json_decode($source->datajson);
             $string = (isset($data->key) && $data->key != '')
@@ -81,18 +81,17 @@ class smart_program_button_attribute extends abstract_field_attribute {
 
         // Request for the approval for the program.
         $source = $DB->get_record('enrol_programs_sources', ['programid' => $program->id, 'type' => 'approval']);
-        if ($source
-            && \enrol_programs\local\source\approval::can_user_request($program, $source, (int)$USER->id, $failurereason)) {
-
+        if (
+            $source
+            && \enrol_programs\local\source\approval::can_user_request($program, $source, (int)$USER->id, $failurereason)
+        ) {
             $classname = '\enrol_programs\local\source\approval';
             $actions = $classname::get_catalogue_actions($program, $source);
             return $actions[0] ?? '';
-
         } else {
             return \html_writer::span(get_string('notavailable', 'block_dash'));
         }
 
         return '';
     }
-
 }

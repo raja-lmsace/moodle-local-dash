@@ -45,7 +45,6 @@ use moodle_url;
  * @package dashaddon_categories
  */
 class course_category_table extends table {
-
     /**
      * Build a new table.
      */
@@ -88,7 +87,7 @@ class course_category_table extends table {
             // Description.
             new field('description', new lang_string('summary'), $this, 'cc.description, cc.descriptionformat', [
                 new widget_attribute([
-                    'callback' => function($coursecat, $data) {
+                    'callback' => function ($coursecat, $data) {
                         if (!isset($coursecat->cc_descriptionformat)) {
                             $descriptionformat = FORMAT_MOODLE;
                         } else {
@@ -98,8 +97,14 @@ class course_category_table extends table {
                         $options = ['noclean' => true, 'overflowdiv' => true];
                         $context = \context_coursecat::instance($coursecat->cc_id);
                         $options['context'] = $context;
-                        $text = file_rewrite_pluginfile_urls($coursecat->description,
-                                'pluginfile.php', $context->id, 'coursecat', 'description', null);
+                        $text = file_rewrite_pluginfile_urls(
+                            $coursecat->description,
+                            'pluginfile.php',
+                            $context->id,
+                            'coursecat',
+                            'description',
+                            null
+                        );
                         return format_text($text, $descriptionformat, $options);
                     },
                 ]),

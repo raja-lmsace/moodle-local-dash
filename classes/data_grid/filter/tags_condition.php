@@ -33,7 +33,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class tags_condition extends condition {
-
     /**
      * Current component.
      *
@@ -99,7 +98,9 @@ class tags_condition extends condition {
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
-        MoodleQuickForm $mform, $fieldnameformat = 'filters[%s]'): void {
+        MoodleQuickForm $mform,
+        $fieldnameformat = 'filters[%s]'
+    ): void {
 
         global $OUTPUT;
 

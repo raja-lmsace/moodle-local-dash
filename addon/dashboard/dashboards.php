@@ -26,13 +26,13 @@ use dashaddon_dashboard\form\dashboard_form;
 use dashaddon_dashboard\model\dashboard;
 use dashaddon_dashboard\helper;
 
-require(__DIR__.'/../../../../config.php');
-require_once($CFG->libdir.'/formslib.php');
+require(__DIR__ . '/../../../../config.php');
+require_once($CFG->libdir . '/formslib.php');
 require_once("$CFG->libdir/adminlib.php");
 
 global $PAGE, $DB;
 
-$action = required_param('action', PARAM_TEXT);
+$action = optional_param('action', 'create', PARAM_TEXT);
 $contextid = optional_param('contextid', 0, PARAM_INT);
 
 $context = context_system::instance();
@@ -46,8 +46,10 @@ if ($contextid) {
 
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/dash/addon/dashboard/dashboards.php', $pageparams));
-$PAGE->navbar->add(get_string('managedashboards', 'block_dash'),
-new moodle_url('/local/dash/addon/dashboard/dashboard_list.php', $pageparams));
+$PAGE->navbar->add(
+    get_string('managedashboards', 'block_dash'),
+    new moodle_url('/local/dash/addon/dashboard/dashboard_list.php', $pageparams)
+);
 
 /** @var renderer $renderer */
 $renderer = $PAGE->get_renderer('block_dash');

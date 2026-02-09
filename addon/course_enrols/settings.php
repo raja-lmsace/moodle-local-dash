@@ -25,7 +25,6 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-
     $options = get_default_enrol_roles(\context_system::instance());
     $student = get_archetype_roles('student');
     $student = reset($student);
@@ -33,5 +32,4 @@ if ($hassiteconfig) {
     $title = get_string('course_enrol_role', 'block_dash');
     $setting = new admin_setting_configselect($name, $title, "", isset($student->id) ? $student->id : null, $options);
     $page->add($setting);
-
 }

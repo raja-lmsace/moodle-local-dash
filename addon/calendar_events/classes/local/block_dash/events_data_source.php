@@ -33,7 +33,6 @@ use local_dash\data_grid\filter\my_enrolled_courses_condition;
 use dashaddon_calendar_events\local\dash_framework\structure\events_table;
 use block_dash\local\dash_framework\query_builder\join;
 use block_dash\local\dash_framework\query_builder\where;
-
 use block_dash\local\data_grid\filter\my_groups_condition;
 use calendar_event;
 use dashaddon_calendar_events\local\block_dash\data_grid\filter\date_filter;
@@ -51,7 +50,6 @@ use local_dash\data_grid\field\attribute\color_attribute;
  * Calendar events data source template queries and filter conditions defined.
  */
 class events_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *
@@ -107,9 +105,11 @@ class events_data_source extends abstract_data_source {
         $hideevents = [];
         $actionevents = $DB->get_records('event', ['type' => CALENDAR_EVENT_TYPE_ACTION]);
         foreach ($actionevents as $event) {
-            if ($event->modulename && $event->instance > 0 && $event->courseid > 0
+            if (
+                $event->modulename && $event->instance > 0 && $event->courseid > 0
                 && $DB->record_exists('modules', ['name' => $event->modulename,
-                'visible' => 1])) {
+                'visible' => 1])
+            ) {
                 $calendarevent = new calendar_event($event);
                 $eventvisible = component_callback(
                     "mod_" . $event->modulename,
@@ -204,7 +204,6 @@ class events_data_source extends abstract_data_source {
     public function get_field(string $alias): ?field_interface {
         // Fields are keyed by name.
         if ($this->has_field($alias)) {
-
             $field = $this->get_available_fields()[$alias];
             if ($field->get_name() == 'color') {
                 $field->remove_attribute(new color_attribute());

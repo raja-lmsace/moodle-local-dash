@@ -31,7 +31,6 @@ use stdClass;
  * Format the program description with images
  */
 class program_description_attribute extends abstract_field_attribute {
-
     /**
      * Generate the program description.
      *
@@ -44,7 +43,13 @@ class program_description_attribute extends abstract_field_attribute {
         $context = \context::instance_by_id($record->epp_ctx);
 
         $description = file_rewrite_pluginfile_urls(
-            $data, 'pluginfile.php', $context->id, 'enrol_programs', 'description', $record->epp_id);
+            $data,
+            'pluginfile.php',
+            $context->id,
+            'enrol_programs',
+            'description',
+            $record->epp_id
+        );
         $description = format_text($description, $record->descriptionformat, ['context' => $context]);
 
         return $description;

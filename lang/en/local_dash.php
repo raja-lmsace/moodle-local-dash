@@ -22,26 +22,22 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['choose'] = 'Choose...';
+$string['courseshape'] = 'Select course shape';
+$string['courseshape_desc'] = 'Choose the default shape to use for the course on the learning path.';
+$string['customselectfield'] = 'Select course field for shape';
+$string['customselectfield_desc'] = 'Choose the custom course field that determines the course shape in the learning path.';
+$string['customvisualfield'] = 'Select course field for visual';
+$string['customvisualfield_desc'] = 'Choose which custom course field of type “Select” will determine the course’s icon on the learning path if “Visual” is selected.';
+$string['customvisualicon'] = 'Icon for option';
+$string['customvisualicon_desc'] = 'Upload an image/icon for this option.';
 $string['dash:managecoursecatedashboards'] = 'Manage course categorydata sources';
 $string['dash:managedashboards'] = 'Manage dashboards';
 $string['dash:managedatasources'] = 'Manage data sources';
-$string['pluginname'] = 'Dash Pro';
-$string['subplugintype_dashaddon'] = 'Dash Addon';
-$string['subplugintype_dashaddon_plural'] = 'Dash Addons';
-$string['choose'] = 'Choose...';
-$string['customselectfield'] = 'Select course field for shape';
-$string['customselectfield_desc'] = 'Choose the custom course field that determines the course shape in the learning path.';
-$string['courseshape'] = 'Select course shape';
-$string['courseshape_desc'] = 'Choose the default shape to use for the course on the learning path.';
-$string['customvisualfield'] = 'Select course field for visual';
-$string['customvisualfield_desc'] = 'Choose which custom course field of type “Select” will determine the course’s icon on the learning path if “Visual” is selected.';
 $string['iconfor'] = 'Icon for option: {$a}';
 $string['iconfor_desc'] = 'Select the icon to represent courses where this field’s value is "{$a}".';
-$string['customselectfield'] = 'Select course field for shape';
-$string['customselectfield_desc'] = 'Choose which custom course field of type “Select” will determine the course’s shape on the learning path if “Shape” is selected.';
-$string['choose'] = 'Choose...';
-$string['customvisualicon'] = 'Icon for option';
-$string['customvisualicon_desc'] = 'Upload an image/icon for this option.';
+$string['pluginname'] = 'Dash Pro';
 $string['shapemapping'] = 'Shape mapping';
 $string['shapemapping_desc'] = 'Select the shape to use for courses with this custom field value';
-
+$string['subplugintype_dashaddon'] = 'Dash Addon';
+$string['subplugintype_dashaddon_plural'] = 'Dash Addons';

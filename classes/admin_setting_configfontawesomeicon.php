@@ -26,24 +26,12 @@ namespace local_dash;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/lib/adminlib.php');
+require_once($CFG->dirroot . '/lib/adminlib.php');
 
 /**
  * Admin setting for FontAwesome icon picker using iconlib
  */
 class admin_setting_configfontawesomeicon extends \admin_setting {
-
-    /**
-     * Constructor
-     * @param string $name unique ascii name
-     * @param string $visiblename localised name
-     * @param string $description localised long description
-     * @param mixed $defaultsetting default icon
-     */
-    public function __construct($name, $visiblename, $description, $defaultsetting) {
-        parent::__construct($name, $visiblename, $description, $defaultsetting);
-    }
-
     /**
      * Return the setting
      *
@@ -69,7 +57,7 @@ class admin_setting_configfontawesomeicon extends \admin_setting {
      * @param string $query
      * @return string
      */
-    public function output_html($data, $query='') {
+    public function output_html($data, $query = '') {
         global $PAGE;
 
         $default = $this->get_defaultsetting();
@@ -129,7 +117,8 @@ class admin_setting_configfontawesomeicon extends \admin_setting {
             $html .= '</div>';
             $html .= '</div>';
         } else {
-            $html .= '<div class="mt-3 p-3 border rounded" id="' . $elementid . '_preview" style="display:none; background-color: #f8f9fa;"></div>';
+            $html .= '<div class="mt-3 p-3 border rounded" id="' . $elementid .
+                '_preview" style="display:none; background-color: #f8f9fa;"></div>';
         }
 
         $html .= '</div>';
@@ -162,7 +151,15 @@ class admin_setting_configfontawesomeicon extends \admin_setting {
             });
         ");
 
-        return format_admin_setting($this, $this->visiblename, $html, $this->description,
-            true, '', $default, $query);
+        return format_admin_setting(
+            $this,
+            $this->visiblename,
+            $html,
+            $this->description,
+            true,
+            '',
+            $default,
+            $query
+        );
     }
 }

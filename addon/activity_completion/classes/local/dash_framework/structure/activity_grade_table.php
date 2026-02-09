@@ -36,7 +36,6 @@ use lang_string;
  * Activities grade table structure definitions for activity completion datasource.
  */
 class activity_grade_table extends table {
-
     /**
      * Build a new table.
      */
@@ -62,14 +61,29 @@ class activity_grade_table extends table {
     public function get_fields(): array {
         global $DB;
         $fields = [
-            new field('grademax', new lang_string('grademax', 'dashaddon_activity_completion'), $this, 'gt.grademax',
-                [new activity_grademax_attribute()]),
+            new field(
+                'grademax',
+                new lang_string('grademax', 'dashaddon_activity_completion'),
+                $this,
+                'gt.grademax',
+                [new activity_grademax_attribute()]
+            ),
 
-            new field('gradepass', new lang_string('gradepass', 'dashaddon_activity_completion'), $this, 'gt.gradepass',
-                [new activity_gradepass_attribute()]),
+            new field(
+                'gradepass',
+                new lang_string('gradepass', 'dashaddon_activity_completion'),
+                $this,
+                'gt.gradepass',
+                [new activity_gradepass_attribute()]
+            ),
 
-            new field('currentgrade', new lang_string('currentgrade', 'dashaddon_activity_completion'), $this, 'gg.finalgrade',
-                 [new activity_currentgrade_attribute()]),
+            new field(
+                'currentgrade',
+                new lang_string('currentgrade', 'dashaddon_activity_completion'),
+                $this,
+                'gg.finalgrade',
+                [new activity_currentgrade_attribute()]
+            ),
 
         ];
         return $fields;

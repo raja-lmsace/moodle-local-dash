@@ -32,7 +32,6 @@ namespace dashaddon_course_completions;
  * @group widgets_test
  */
 final class completions_test extends \advanced_testcase {
-
     /**
      * Test course 1
      *
@@ -77,9 +76,9 @@ final class completions_test extends \advanced_testcase {
         $this->setAdminUser();
         global $USER;
         $this->user = $USER;
-        $this->course1 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
-        $this->course2 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
-        $this->course3 = $this->getDataGenerator()->create_course( ['enablecompletion' => 1] );
+        $this->course1 = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
+        $this->course2 = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
+        $this->course3 = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
         foreach (range(1, 5) as $user) {
             $this->users[$user] = self::getDataGenerator()->create_user();
         }
@@ -154,7 +153,7 @@ final class completions_test extends \advanced_testcase {
      */
     public function test_coursecompletions(): void {
         global $CFG;
-        require_once($CFG->dirroot.'/completion/criteria/completion_criteria_activity.php');
+        require_once($CFG->dirroot . '/completion/criteria/completion_criteria_activity.php');
 
         $user = self::getDataGenerator()->create_and_enrol($this->course1, 'student');
         $user2 = self::getDataGenerator()->create_and_enrol($this->course1, 'student');
@@ -166,14 +165,26 @@ final class completions_test extends \advanced_testcase {
 
         $this->setUser($user);
 
-        $assign = $this->getDataGenerator()->create_module('assign', ['course' => $this->course1->id],
-            ['completion' => 1]);
-        $data = $this->getDataGenerator()->create_module('data', ['course' => $this->course1->id],
-            ['completion' => 1]);
-        $this->getDataGenerator()->create_module('page', ['course' => $this->course1->id],
-            ['completion' => 1]);
-        $this->getDataGenerator()->create_module('page', ['course' => $this->course1->id],
-            ['completion' => 1]);
+        $assign = $this->getDataGenerator()->create_module(
+            'assign',
+            ['course' => $this->course1->id],
+            ['completion' => 1]
+        );
+        $data = $this->getDataGenerator()->create_module(
+            'data',
+            ['course' => $this->course1->id],
+            ['completion' => 1]
+        );
+        $this->getDataGenerator()->create_module(
+            'page',
+            ['course' => $this->course1->id],
+            ['completion' => 1]
+        );
+        $this->getDataGenerator()->create_module(
+            'page',
+            ['course' => $this->course1->id],
+            ['completion' => 1]
+        );
 
         // Mark two of them as completed for a user.
         $cmassign = get_coursemodule_from_id('assign', $assign->cmid);
@@ -223,6 +234,5 @@ final class completions_test extends \advanced_testcase {
         $this->assertEquals(1, $report['notyetstarted']);
         $this->assertEquals(1, $report['completed']);
         $this->assertEquals(50, $report['completionpercentage']);
-
     }
 }

@@ -53,7 +53,6 @@ use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_pat
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_duedate_attribute;
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_background_attribute;
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_purpose_attribute;
-
 use dashaddon_activities\local\block_dash\data_grid\field\attribute\activity_url_attribute;
 
 defined('MOODLE_INTERNAL') || die();
@@ -100,7 +99,7 @@ class activities_table extends table {
         foreach ($records as $key => $record) {
             $activitynameselect[] = "{$record}.name";
             $activitymodifiydate[] = "{$record}.timemodified";
-            $activitynamejoin .= " LEFT JOIN {". $record. "} {$record} ON {$record}.id = cm.instance AND m.name = '{$record}' ";
+            $activitynamejoin .= " LEFT JOIN {" . $record . "} {$record} ON {$record}.id = cm.instance AND m.name = '{$record}' ";
         }
 
         $activitynamesql = 'mds.activityname';
@@ -110,9 +109,15 @@ class activities_table extends table {
             new field('id', new lang_string('activity'), $this, 'cm.id', [
                 new identifier_attribute(),
             ]),
-            new field('name', new lang_string('activity_name', 'dashaddon_activities'), $this,
+            new field(
+                'name',
+                new lang_string('activity_name', 'dashaddon_activities'),
+                $this,
                 $activitynamesql,
-            [], field_interface::VISIBILITY_VISIBLE, ''),
+                [],
+                field_interface::VISIBILITY_VISIBLE,
+                ''
+            ),
             new field('link', new lang_string('activitylink', 'dashaddon_activities'), $this, 'cm.id', [
                 new activity_link_attribute(),
             ]),
@@ -134,11 +139,16 @@ class activities_table extends table {
             ]),
             new field('modulepurpose', new lang_string('modulepurpose', 'dashaddon_activities'), $this, 'cm.id', [
                 new activity_purpose_attribute(),
-            ],  ['supports_sorting' => false]),
-            new field('modcompletionstatus', new lang_string('modcompletionstatus', 'dashaddon_activities'), $this,
-                'cmc.completionstate', [
+            ], ['supports_sorting' => false]),
+            new field(
+                'modcompletionstatus',
+                new lang_string('modcompletionstatus', 'dashaddon_activities'),
+                $this,
+                'cmc.completionstate',
+                [
                 new activity_completion_status_attribute(),
-            ]),
+                ]
+            ),
             new field('modcompletiondate', new lang_string('completiondate', 'dashaddon_activities'), $this, 'cmc.timemodified', [
                 new activity_completion_date_attribute(),
             ]),
@@ -153,7 +163,7 @@ class activities_table extends table {
             ]),
             new field('modulepath', new lang_string('path'), $this, 'cm.id', [
                 new activity_path_attribute(),
-            ],  ['supports_sorting' => false]),
+            ], ['supports_sorting' => false]),
             new field('createdat', new lang_string('createddate', 'block_dash'), $this, 'cm.added', [
                 new date_attribute(),
             ]),
@@ -177,10 +187,15 @@ class activities_table extends table {
                 new activity_background_attribute(),
             ]);
 
-            $fields[] = new field('modulebgimagelink', new lang_string('modulebgimagelink', 'dashaddon_activities'), $this,
-            'cm.id', [
+            $fields[] = new field(
+                'modulebgimagelink',
+                new lang_string('modulebgimagelink', 'dashaddon_activities'),
+                $this,
+                'cm.id',
+                [
                 new activity_background_attribute(), new image_attribute(), new activity_link_attribute(),
-            ]);
+                ]
+            );
         }
 
         if (dashaddon_activities_is_local_metadata_installed()) {

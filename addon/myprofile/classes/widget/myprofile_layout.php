@@ -34,7 +34,6 @@ use block_dash\local\data_grid\data\data_collection_interface;
  * Layout section for the contacts widget.
  */
 class myprofile_layout extends abstract_layout {
-
     /**
      * Tempalte mustache file name, the layout uses.
      *
@@ -126,15 +125,24 @@ class myprofile_layout extends abstract_layout {
         global $CFG;
 
         if ($form->get_tab() == preferences_form::TAB_FIELDS) {
-
             // None option.
             $noneoption = [null => get_string('none', 'block_dash')];
 
-            $mform->addElement('advcheckbox', 'config_preferences[profileimage]',
-                get_string('field:profileimage', 'block_dash'), '', [0, 1]);
+            $mform->addElement(
+                'advcheckbox',
+                'config_preferences[profileimage]',
+                get_string('field:profileimage', 'block_dash'),
+                '',
+                [0, 1]
+            );
 
-            $mform->addElement('advcheckbox', 'config_preferences[fullname]',
-                get_string('field:fullname', 'block_dash'), '', [0, 1]);
+            $mform->addElement(
+                'advcheckbox',
+                'config_preferences[fullname]',
+                get_string('field:fullname', 'block_dash'),
+                '',
+                [0, 1]
+            );
 
             // Normal grid iteam.
             $userprofilefields = [];
@@ -148,27 +156,42 @@ class myprofile_layout extends abstract_layout {
             $kpiattributes = $this->get_kpi_fields();
 
             // Additional user information 1.
-            $mform->addElement('select', 'config_preferences[userinfo1]', get_string('field:profileuserinfo', 'block_dash', 1),
-                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields)));
+            $mform->addElement(
+                'select',
+                'config_preferences[userinfo1]',
+                get_string('field:profileuserinfo', 'block_dash', 1),
+                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields))
+            );
             $mform->setType('config_preferences[userinfo1]', PARAM_TEXT);
 
             // Additional user information 2.
-            $mform->addElement('select', 'config_preferences[userinfo2]', get_string('field:profileuserinfo', 'block_dash', 2),
-                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields)));
+            $mform->addElement(
+                'select',
+                'config_preferences[userinfo2]',
+                get_string('field:profileuserinfo', 'block_dash', 2),
+                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields))
+            );
             $mform->setType('config_preferences[userinfo2]', PARAM_TEXT);
 
             // Additional user information 3.
-            $mform->addElement('select', 'config_preferences[userinfo3]', get_string('field:profileuserinfo', 'block_dash', 3),
-                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields)));
+            $mform->addElement(
+                'select',
+                'config_preferences[userinfo3]',
+                get_string('field:profileuserinfo', 'block_dash', 3),
+                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields))
+            );
             $mform->setType('config_preferences[userinfo3]', PARAM_TEXT);
 
             foreach (range(1, myprofile_widget::KPIFIELDCOUNT) as $n) {
                 // Key progress indicator.
-                $mform->addElement('select', "config_preferences[kpi$n]", get_string('field:kpi', 'block_dash', $n),
-                    array_merge($noneoption, $kpiattributes));
+                $mform->addElement(
+                    'select',
+                    "config_preferences[kpi$n]",
+                    get_string('field:kpi', 'block_dash', $n),
+                    array_merge($noneoption, $kpiattributes)
+                );
                 $mform->setType("config_preferences[kpi$n]", PARAM_TEXT);
             }
-
         }
     }
 

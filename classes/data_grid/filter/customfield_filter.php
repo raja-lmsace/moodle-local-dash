@@ -30,7 +30,6 @@ use block_dash\local\data_grid\filter\select_filter;
  * Course custom fields based filter to filter the records.
  */
 class customfield_filter extends select_filter {
-
     /**
      * @var string Record ID of custom profile field.
      */
@@ -86,7 +85,6 @@ class customfield_filter extends select_filter {
                     $this->add_option($key, $option);
                 }
             }
-
         } else if (class_exists('\core_course\customfield\course_handler')) {
             $params['fieldid'] = $this->field->get('id');
 
@@ -106,7 +104,6 @@ class customfield_filter extends select_filter {
                         $this->add_option($key, format_string($selectoptions[$option]));
                     }
                 }
-
             } else {
                 foreach ($options as $key => $option) {
                     $this->add_option($key, format_string($option));

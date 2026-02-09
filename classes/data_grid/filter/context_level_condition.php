@@ -31,7 +31,6 @@ use MoodleQuickForm;
  * Parent role condition.
  */
 class context_level_condition extends condition {
-
     /**
      * Get values from filter based on user selection. All filters must return an array of values.
      *
@@ -75,7 +74,8 @@ class context_level_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -91,7 +91,9 @@ class context_level_condition extends condition {
             CONTEXT_BLOCK => get_string('blockcontext', 'block_dash'),
         ];
 
-        $select = $mform->addElement('select', $fieldname . '[contextlevels]',
+        $select = $mform->addElement(
+            'select',
+            $fieldname . '[contextlevels]',
             get_string('contextlevel', 'block_dash'),
             $choices,
             ['class' => 'select2-form']

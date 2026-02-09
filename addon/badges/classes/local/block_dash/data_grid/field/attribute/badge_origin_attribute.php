@@ -31,7 +31,6 @@ use stdClass;
  * Transforms data to badge type.
  */
 class badge_origin_attribute extends abstract_field_attribute {
-
     /**
      * Convert the badge type value to human readable content.
      *

@@ -35,7 +35,13 @@ if ($hassiteconfig) {
         $title = get_string($port, 'block_dash');
         $description = get_string($port . '_desc', 'block_dash');
         $setting = new \admin_setting_configstoredfile(
-            $name, $title, $description, $port, 0, ['maxfiles' => -1, 'accepted_types' => ['.svg']]);
+            $name,
+            $title,
+            $description,
+            $port,
+            0,
+            ['maxfiles' => -1, 'accepted_types' => ['.svg']]
+        );
         $page->add($setting);
     }
 
@@ -115,7 +121,7 @@ if ($hassiteconfig) {
     // Display faculty setting.
     global $DB;
     $courseroles = get_roles_for_contextlevels(CONTEXT_COURSE);
-    list($insql, $inparams) = $DB->get_in_or_equal(array_values($courseroles));
+    [$insql, $inparams] = $DB->get_in_or_equal(array_values($courseroles));
     $roles = $DB->get_records_sql("SELECT * FROM {role} WHERE id $insql", $inparams);
     $rolesoptions = role_fix_names($roles, null, ROLENAME_ALIAS, true);
 
@@ -132,7 +138,7 @@ if ($hassiteconfig) {
     $default = 0;
     $page->add(new admin_setting_configcheckbox($name, $title, $description, $default));
 
-    // default colour status
+    // Default colour status.
     $unavailablecolor = new \admin_setting_configcolourpicker(
         'dashaddon_learningpath/unavailablecirclecolor',
         get_string('unavailablecirclecolor', 'block_dash'),
@@ -153,7 +159,7 @@ if ($hassiteconfig) {
         'dashaddon_learningpath/notstartedcirclecolor',
         get_string('notstartedcirclecolor', 'block_dash'),
         get_string('notstartedcirclecolor_desc', 'block_dash'),
-        '#00008b' // default dark blue
+        '#00008b' // Default dark blue.
     );
     $page->add($notstartedcolor);
 

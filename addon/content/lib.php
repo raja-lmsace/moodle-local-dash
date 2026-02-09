@@ -36,8 +36,10 @@
  */
 function dashaddon_content_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
 
-    if ($context->contextlevel == CONTEXT_BLOCK
-        && (stripos($filearea, 'content') !== false || stripos($filearea, 'backgroundimage') !== false)) {
+    if (
+        $context->contextlevel == CONTEXT_BLOCK
+        && (stripos($filearea, 'content') !== false || stripos($filearea, 'backgroundimage') !== false)
+    ) {
         // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
         $itemid = array_shift($args);
         // Use the itemid to retrieve any relevant data records and perform any security checks to see if the
@@ -47,7 +49,7 @@ function dashaddon_content_pluginfile($course, $cm, $context, $filearea, $args, 
         if (!$args) {
             $filepath = '/';
         } else {
-            $filepath = '/'.implode('/', $args).'/';
+            $filepath = '/' . implode('/', $args) . '/';
         }
 
         // Retrieve the file from the Files API.

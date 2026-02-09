@@ -35,7 +35,6 @@ use cm_info;
  * @package dashaddon_dashboard
  */
 class dashboard_dash_background_image_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -47,7 +46,7 @@ class dashboard_dash_background_image_attribute extends abstract_field_attribute
      */
     public function transform_data($data, \stdClass $record) {
         global $CFG;
-        require_once($CFG->dirroot. "/local/dash/addon/dashboard/lib.php");
+        require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
         return dashaddon_dashboard_get_dashboard_background($data);
     }
 }

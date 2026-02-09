@@ -40,7 +40,6 @@ use tool_certificate\reportbuilder\local\formatters\certificate as formatter;
  * Certificates table structure definitions for programs datasource.
  */
 class certificates_table extends table {
-
     /**
      * Build a new table.
      */
@@ -110,7 +109,7 @@ class certificates_table extends table {
                 // Coursecertificate module doesn't provide option to download the certificate.
                 // Create a certificate as link.
                 new widget_attribute([
-                    'callback' => function($record, $data) {
+                    'callback' => function ($record, $data) {
                         $url = \tool_certificate\template::instance($record->tct_templateid)->get_issue_file_url($record);
                         $murl = new moodle_url($url);
                         $murl->param('forcedownload', true);

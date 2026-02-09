@@ -39,7 +39,6 @@ use dashaddon_dashboard\local\dash_framework\structure\dashboard_table;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class dashboard_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *

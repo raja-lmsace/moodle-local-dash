@@ -28,13 +28,12 @@ use core\persistent;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/local/dash/lib.php');
-require_once($CFG->dirroot. "/local/dash/addon/dashboard/lib.php");
+require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
 
 /**
  * Dashboard class.
  */
 class dashboard extends persistent {
-
     /**
      * Dashboard modal db tablename.
      */
@@ -181,8 +180,10 @@ class dashboard extends persistent {
         $dbman = $DB->get_manager();
 
         if (!$create) {
-            if (!$dbman->table_exists('dashaddon_dashboard_dash') ||
-                !$DB->record_exists('dashaddon_dashboard_dash', ['redirecttodashboard' => true, 'permission' => 'public'])) {
+            if (
+                !$dbman->table_exists('dashaddon_dashboard_dash') ||
+                !$DB->record_exists('dashaddon_dashboard_dash', ['redirecttodashboard' => true, 'permission' => 'public'])
+            ) {
                 return false;
             }
         }
@@ -275,7 +276,7 @@ class dashboard extends persistent {
                     }
                 }
 
-                list($insql, $inparam) = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'role');
+                [$insql, $inparam] = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'role');
 
                 $contextsql = ($this->get('rolecontext') == SYSTEMCONTEXT) ? ' AND contextid=:systemcontext ' : '';
 
@@ -321,7 +322,7 @@ class dashboard extends persistent {
         $positionmap = array_flip(array_keys($blocksoptions));
 
         // Sort $includeblocks based on positions in $blocksoptions.
-        usort($inculdeblocks, function($a, $b) use ($positionmap) {
+        usort($inculdeblocks, function ($a, $b) use ($positionmap) {
             return ($positionmap[$a] ?? PHP_INT_MAX) - ($positionmap[$b] ?? PHP_INT_MAX);
         });
         $blocknamelist = [];
@@ -340,10 +341,10 @@ class dashboard extends persistent {
                 $itemdata->id = $i;
                 $itemdata->title = $blocktitle;
                 $itemdata->sortorder = $i;
-                $itemdata->url = $PAGE->url->out(false) . "#inst". $blockid;
+                $itemdata->url = $PAGE->url->out(false) . "#inst" . $blockid;
                 $node['itemdata'] = $itemdata;
-                $node['url'] = $PAGE->url->out(false) . "#inst". $blockid;
-                $node['key'] = 'block-'. $i;
+                $node['url'] = $PAGE->url->out(false) . "#inst" . $blockid;
+                $node['key'] = 'block-' . $i;
                 $node['text'] = $blocktitle;
                 if ($i < 6) {
                     $node['forceintomoremenu'] = false;
@@ -355,7 +356,7 @@ class dashboard extends persistent {
             }
         }
         $moremenu = new \core\navigation\output\more_menu((object) $nodes, 'navbar-nav', false);
-        $template['moremenubar'] = $moremenu->export_for_template( $PAGE->get_renderer('core'));
+        $template['moremenubar'] = $moremenu->export_for_template($PAGE->get_renderer('core'));
         $template['dashboardname'] = $this->get('name');
         $template['blocknamelist'] = $blocknamelist;
         $template['extraclasses'] = count($inculdeblocks) < 6 ? 'nav-menu' : '';
@@ -373,7 +374,7 @@ class dashboard extends persistent {
             $showbuttonclass = 'show-sticky-button';
         }
         $template['showctaclass'] = $showbuttonclass;
-        list($ctatext, $ctaurl) = $this->process_call_action();
+        [$ctatext, $ctaurl] = $this->process_call_action();
         $template['ctatext'] = $ctatext;
         $template['ctaurl'] = $ctaurl;
         $template['hidebuttontitle'] = !$this->get('displaydashboardtitle') && !$this->get('displaycta');
@@ -404,8 +405,11 @@ class dashboard extends persistent {
         } else if ($ctalink == 'shopurl') {
             $text = get_string('strshopurl', 'block_dash');
             $shopurlfield = get_config('local_dash', 'courseshopurl');
-            $url = $DB->get_field('customfield_data', 'value',
-                ['instanceid' => $this->get('courseid'), 'fieldid' => $shopurlfield]);
+            $url = $DB->get_field(
+                'customfield_data',
+                'value',
+                ['instanceid' => $this->get('courseid'), 'fieldid' => $shopurlfield]
+            );
             $url = empty($url) ? new \moodle_url('/course/view.php', ['id' => $this->get('courseid')]) : $url;
         } else if ($ctalink == 'custom') {
             $text = !empty($this->get('ctacustomurltext')) ? $this->
@@ -443,7 +447,8 @@ class dashboard extends persistent {
         $upd = new \stdClass();
         $upd->id = $dashboard->id;
         foreach ($filemanagers as $field) {
-            file_save_draft_area_files($dashboard->{$field},
+            file_save_draft_area_files(
+                $dashboard->{$field},
                 \context_system::instance()->id,
                 'dashaddon_dashboard',
                 $field,
@@ -498,9 +503,15 @@ class dashboard extends persistent {
         $record = $DB->get_record(static::TABLE, ['id' => $this->get('id')], '*', MUST_EXIST);
         $filemanagers = ['dashthumbnailimage', 'dashbgimage'];
         foreach ($filemanagers as $field) {
-            $draftideditor = file_get_submitted_draft_itemid($field.'_filemanager');
-            file_prepare_draft_area($draftideditor, \context_system::instance()->id, 'dashaddon_dashboard',
-                $field, $record->id, self::get_filemanager_options());
+            $draftideditor = file_get_submitted_draft_itemid($field . '_filemanager');
+            file_prepare_draft_area(
+                $draftideditor,
+                \context_system::instance()->id,
+                'dashaddon_dashboard',
+                $field,
+                $record->id,
+                self::get_filemanager_options()
+            );
             $this->raw_set($field, $draftideditor);
         }
     }
@@ -671,7 +682,7 @@ class dashboard extends persistent {
             // Copy all block positions for this block (there might be multiple contexts).
             $blockpositions = $DB->get_records('block_positions', ['blockinstanceid' => $block->id]);
             foreach ($blockpositions as $existbp) {
-                $bp = new \stdClass;
+                $bp = new \stdClass();
                 $bp->blockinstanceid = $newblockid;
                 $bp->contextid = $context->id;
                 $bp->pagetype = 'dashaddon-dashboard-' . $newdashboard->get('shortname');
@@ -687,8 +698,12 @@ class dashboard extends persistent {
             }
         }
         // Update the included blocks for the new dashboard.
-        $DB->set_field('dashaddon_dashboard_dash', 'includedblocks',
-            json_encode($onpagenavigationblocks), ['id' => $newdashboard->get('id')]);
+        $DB->set_field(
+            'dashaddon_dashboard_dash',
+            'includedblocks',
+            json_encode($onpagenavigationblocks),
+            ['id' => $newdashboard->get('id')]
+        );
 
         return $newdashboard;
     }

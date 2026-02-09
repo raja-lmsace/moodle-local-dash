@@ -55,7 +55,7 @@ function dashaddon_dashboard_pluginfile($course, $cm, $context, $filearea, $args
         if (!$args) {
             $filepath = '/';
         } else {
-            $filepath = '/'.implode('/', $args).'/';
+            $filepath = '/' . implode('/', $args) . '/';
         }
 
         // Retrieve the file from the Files API.
@@ -82,7 +82,12 @@ function dashaddon_dashboard_pluginfile($course, $cm, $context, $filearea, $args
 function dashaddon_dashboard_get_dashboard_background($dashboardid) {
     $fs = get_file_storage();
     $files = $fs->get_area_files(
-        \context_system::instance()->id, 'dashaddon_dashboard', 'dashbgimage', $dashboardid, '', false
+        \context_system::instance()->id,
+        'dashaddon_dashboard',
+        'dashbgimage',
+        $dashboardid,
+        '',
+        false
     );
 
     if (!empty($files)) {
@@ -90,8 +95,13 @@ function dashaddon_dashboard_get_dashboard_background($dashboardid) {
         $file = reset($files);
 
         $url = \moodle_url::make_pluginfile_url(
-            $file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
-            $file->get_filename(), false
+            $file->get_contextid(),
+            $file->get_component(),
+            $file->get_filearea(),
+            $file->get_itemid(),
+            $file->get_filepath(),
+            $file->get_filename(),
+            false
         );
         return $url;
     }
@@ -108,7 +118,7 @@ function dashaddon_dashboard_create_core_dashboard() {
         return;
     }
 
-    $dashboard = new stdclass;
+    $dashboard = new stdclass();
     $dashboard->shortname = 'coredashboard';
     $dashboard->contextid = context_system::instance()->id;
     $dashboard->timecreated = time();
@@ -131,7 +141,7 @@ function dashaddon_dashboard_create_core_dashboard() {
  */
 function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $coursecontext) {
     global $PAGE, $USER, $DB;
-    if ($PAGE->context instanceof \context_course ) {
+    if ($PAGE->context instanceof \context_course) {
         $context = $PAGE->context;
         if ($records = $DB->get_records('dashaddon_dashboard_dash', ['contextid' => $context->id, 'secondarynav' => 1])) {
             foreach ($records as $id => $record) {
@@ -141,13 +151,14 @@ function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $cou
                     $node = navigation_node::create(
                         $record->name,
                         $url,
-                        navigation_node::TYPE_SETTING, '',
-                        $record->shortname, new pix_icon('i/dashboard', '')
+                        navigation_node::TYPE_SETTING,
+                        '',
+                        $record->shortname,
+                        new pix_icon('i/dashboard', '')
                     );
                     $node->add_class('dash-course-dashboard');
                     $coursenode->add_node($node);
                     $nodes[] = $record->shortname;
-
                 }
             }
 
@@ -172,7 +183,6 @@ function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $cou
             }
         }
     }
-
 }
 
 /**

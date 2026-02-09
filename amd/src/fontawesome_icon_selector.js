@@ -22,8 +22,8 @@
  */
 
 import Ajax from 'core/ajax';
-import {render as renderTemplate} from 'core/templates';
-import {getString, getStrings} from 'core/str';
+import { render as renderTemplate } from 'core/templates';
+import { getString, getStrings } from 'core/str';
 
 /**
  * Load the list of FontAwesome icons matching the query and render the selector labels for them.
@@ -52,10 +52,10 @@ export async function transport(selector, query, callback, failure) {
         } else {
             // First, get all the strings we need using getStrings.
             const sourceStrings = await getStrings([
-                {key: 'sourcecore', component: 'block_dash'},
-                {key: 'sourcefasolid', component: 'block_dash'},
-                {key: 'sourcefabrand', component: 'block_dash'},
-                {key: 'sourcefablank', component: 'block_dash'}
+                { key: 'sourcecore', component: 'block_dash' },
+                { key: 'sourcefasolid', component: 'block_dash' },
+                { key: 'sourcefabrand', component: 'block_dash' },
+                { key: 'sourcefablank', component: 'block_dash' }
             ]);
 
             // Then, format the icons based on their source.
@@ -131,6 +131,6 @@ export function processResults(selector, results) {
         return results;
 
     } else {
-        return results.map(result => ({value: result.value, label: result.label}));
+        return results.map(result => ({ value: result.value, label: result.label }));
     }
 }

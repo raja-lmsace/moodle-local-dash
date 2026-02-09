@@ -1,13 +1,33 @@
 <?php
-namespace dashaddon_learningpath;
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * Zone manager for handling zone configurations.
+ *
+ * @package    dashaddon_learningpath
+ * @copyright  2024
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace dashaddon_learningpath;
 
 /**
  * Zone manager for handling zone configurations.
  */
 class zone_manager {
-
     /** @var int Block instance ID */
     private $blockid;
 
@@ -28,7 +48,7 @@ class zone_manager {
         global $DB;
         return $DB->get_records('dashaddon_learningpath_zones', [
             'blockid' => $this->blockid,
-            'svgtype' => $svgtype
+            'svgtype' => $svgtype,
         ], 'timecreated ASC');
     }
 
@@ -45,22 +65,22 @@ class zone_manager {
             // Delete existing zones for this block and SVG type.
             $DB->delete_records('dashaddon_learningpath_zones', [
                 'blockid' => $this->blockid,
-                'svgtype' => $svgtype
+                'svgtype' => $svgtype,
             ]);
             // Insert new zone configurations.
-            foreach ($zones as $zone) {
-                $record = new \stdClass();
-                $record->blockid = $this->blockid;
-                $record->svgtype = $svgtype;
-                $record->zoneid = $zone['zoneid'];
-                $record->zonetype = $zone['type'];
-                $record->zoneindex = $zone['zoneindex'];
-                $record->enabled = $zone['enabled'] ? 1 : 0;
-                $record->courseid = $zone['courseid'];
-                $record->timecreated = time();
-                $record->timemodified = time();
-                $DB->insert_record('dashaddon_learningpath_zones', $record);
-            }
+        foreach ($zones as $zone) {
+            $record = new \stdClass();
+            $record->blockid = $this->blockid;
+            $record->svgtype = $svgtype;
+            $record->zoneid = $zone['zoneid'];
+            $record->zonetype = $zone['type'];
+            $record->zoneindex = $zone['zoneindex'];
+            $record->enabled = $zone['enabled'] ? 1 : 0;
+            $record->courseid = $zone['courseid'];
+            $record->timecreated = time();
+            $record->timemodified = time();
+            $DB->insert_record('dashaddon_learningpath_zones', $record);
+        }
     }
 
     /**
@@ -75,7 +95,7 @@ class zone_manager {
         $DB->set_field('dashaddon_learningpath_zones', 'enabled', $enabled ? 1 : 0, [
             'blockid' => $this->blockid,
             'svgtype' => $svgtype,
-            'zoneid' => $zoneid
+            'zoneid' => $zoneid,
         ]);
     }
 
@@ -91,7 +111,7 @@ class zone_manager {
         $DB->set_field('dashaddon_learningpath_zones', 'courseid', $courseid, [
             'blockid' => $this->blockid,
             'svgtype' => $svgtype,
-            'zoneid' => $zoneid
+            'zoneid' => $zoneid,
         ]);
     }
 
@@ -120,7 +140,8 @@ class zone_manager {
         global $DB;
 
         // Get enabled zones without manual course assignments.
-        $zones = $DB->get_records_select('dashaddon_learningpath_zones',
+        $zones = $DB->get_records_select(
+            'dashaddon_learningpath_zones',
             'blockid = ? AND svgtype = ? AND enabled = 1 AND courseid IS NULL',
             [$this->blockid, $svgtype],
             'sortorder ASC'

@@ -29,7 +29,7 @@
  */
 function xmldb_dashaddon_programs_install() {
     global $CFG;
-    require_once($CFG->dirroot. "/local/dash/addon/programs/lib.php");
+    require_once($CFG->dirroot . "/local/dash/addon/programs/lib.php");
     if (empty(dashaddon_programs_extend_added_dependencies())) {
         set_config('enabled', 1, 'dashaddon_programs');
     }

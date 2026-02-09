@@ -69,7 +69,7 @@ function dashaddon_learningpath_pluginfile($course, $cm, $context, $filearea, $a
         if (!$args) {
             $filepath = '/';
         } else {
-            $filepath = '/'.implode('/', $args).'/';
+            $filepath = '/' . implode('/', $args) . '/';
         }
 
         // Retrieve the file from the Files API.
@@ -169,7 +169,7 @@ function dashaddon_learningpath_get_assignment_override($courseid, $userid) {
 
     $usergroups = groups_get_user_groups($courseid, $userid);
     if (!empty($usergroups[0])) {
-        list($insql, $inparams) = $DB->get_in_or_equal($usergroups[0], SQL_PARAMS_NAMED);
+        [$insql, $inparams] = $DB->get_in_or_equal($usergroups[0], SQL_PARAMS_NAMED);
 
         $override = $DB->get_record_sql(
             "SELECT * FROM {tool_timetable_course_overrides}
@@ -191,7 +191,7 @@ function dashaddon_learningpath_get_assignment_override($courseid, $userid) {
         $enrolids = array_column($userenrolments, 'enrolid');
 
         if (!empty($enrolids)) {
-            list($insql, $inparams) = $DB->get_in_or_equal($enrolids, SQL_PARAMS_NAMED);
+            [$insql, $inparams] = $DB->get_in_or_equal($enrolids, SQL_PARAMS_NAMED);
 
             $override = $DB->get_record_sql(
                 "SELECT * FROM {tool_timetable_course_overrides}
@@ -232,7 +232,7 @@ function dashaddon_learningpath_get_user_enrolments($courseid, $userid) {
     $enrolments = $DB->get_records_sql($sql, [
         'courseid' => $courseid,
         'userid' => $userid,
-        'active' => ENROL_USER_ACTIVE
+        'active' => ENROL_USER_ACTIVE,
     ]);
 
     return $enrolments ? array_values($enrolments) : [];
@@ -290,11 +290,11 @@ function dashaddon_learningpath_format_assignment_data($override) {
     if (isset($override->priority)) {
         $assignment['priority'] = $override->priority;
         switch ($override->priority) {
-            case 0:
+            case 1:
                 $assignment['priorityname'] = get_string('assignment_priority_low', 'block_dash');
                 $assignment['priorityclass'] = 'priority-low';
                 break;
-            case 2:
+            case 3:
                 $assignment['priorityname'] = get_string('assignment_priority_high', 'block_dash');
                 $assignment['priorityclass'] = 'priority-high';
                 break;
@@ -329,12 +329,12 @@ function dashaddon_learningpath_format_assignment_data($override) {
  *
  * @return array course completion report.
  */
-function  dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
+function dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
     global $DB, $PAGE, $CFG, $USER;
     require_once($CFG->dirroot . '/enrol/locallib.php');
     require_once($CFG->libdir . '/gradelib.php');
-    require_once $CFG->dirroot.'/grade/lib.php';
-    require_once $CFG->dirroot.'/grade/querylib.php';
+    require_once($CFG->dirroot . '/grade/lib.php');
+    require_once($CFG->dirroot . '/grade/querylib.php');
     // Filter the disabled enrollments.
     $context = \context_course::instance($courseid);
     $course = get_course($courseid);
@@ -343,12 +343,14 @@ function  dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
     $completion = new completion_info($course);
     $report['notstarted'] = ($courseprogress == 0) ? true : false;
     if ($DB->record_exists('course_completion_crit_compl', ['course' => $courseid, 'userid' => $userid])) {
-        $report['inprogress'] =  true;
-
+        $report['inprogress'] = true;
     } else {
         $report['inprogress'] = ($courseprogress > 0) ? true : false;
     }
-    $report['completed'] = ($completion->is_course_complete($userid) || $courseprogress == 100) ? true : false;
+    $report['completed'] = ($completion->is_course_complete($userid)) ? true : false;
+    if (!$DB->record_exists('course_completion_criteria', ['course' => $courseid]) && $courseprogress == 100) {
+        $report['completed'] = true;
+    }
     $report['progress'] = $courseprogress;
     $report['available'] = false;
 
@@ -387,15 +389,35 @@ function  dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
         }
     }
 
-    if (!$report['completed'] && $record = $DB->get_record('course_completion_criteria', ['course' => $courseid,
-        'criteriatype' => COMPLETION_CRITERIA_TYPE_GRADE])) {
-            if ($record && dashaddon_learningpath_is_possible_failed($course, $userid) && !$DB->record_exists('course_completion_crit_compl', ['userid' => $userid, 'criteriaid' => $record->id, 'course' => $courseid])) {
-                $report['failed'] = true;
-            }
+    if (
+        !$report['completed'] && $record = $DB->get_record(
+            'course_completion_criteria',
+            [
+                'course' => $courseid,
+                'criteriatype' => COMPLETION_CRITERIA_TYPE_GRADE,
+            ]
+        )
+    ) {
+        if (
+            $record && dashaddon_learningpath_is_possible_failed($course, $userid) &&
+            !$DB->record_exists(
+                'course_completion_crit_compl',
+                ['userid' => $userid, 'criteriaid' => $record->id, 'course' => $courseid]
+            )
+        ) {
+            $report['failed'] = true;
+        }
     }
     return $report;
 }
 
+/**
+ * Check if course is possibly failed for user.
+ *
+ * @param object $course Course object
+ * @param int $userid User ID
+ * @return bool True if possibly failed
+ */
 function dashaddon_learningpath_is_possible_failed($course, $userid) {
     global $DB;
     $coursegradeitems = $DB->get_records('grade_items', ['courseid' => $course->id, 'itemtype' => 'mod']);
@@ -406,7 +428,6 @@ function dashaddon_learningpath_is_possible_failed($course, $userid) {
         }
     }
     return true;
-
 }
 
 /**
@@ -420,16 +441,14 @@ function dashaddon_learningpath_courseimage($courseid) {
     global $DB, $CFG, $OUTPUT, $PAGE;
 
     require_once("$CFG->dirroot/course/lib.php");
-    require_once($CFG->dirroot. "/blocks/dash/lib.php");
+    require_once($CFG->dirroot . "/blocks/dash/lib.php");
 
     if ($course = $DB->get_record('course', ['id' => $courseid])) {
-
         $context = context_course::instance($courseid);
         $exporter = new course_summary_exporter($course, ['context' => $context]);
         $list = $exporter->export($PAGE->get_renderer('core'));
         $nocoursesurl = $OUTPUT->image_url('courses', 'block_recentlyaccessedcourses')->out(false);
         return ($list->courseimage) ? $list->courseimage : $nocoursesurl;
-
     }
 
     return false;
@@ -445,10 +464,15 @@ function dashaddon_learningpath_courseimage($courseid) {
 function dashaddon_learningpath_get_all_learning_paths($filearea) {
     global $CFG;
     $results = [ 0 => get_string('none') ];
-    require_once($CFG->libdir.'/filelib.php');
+    require_once($CFG->libdir . '/filelib.php');
     $fs = get_file_storage();
     $learingpaths = $fs->get_area_files(
-        \context_system::instance()->id, 'dashaddon_learningpath', $filearea, 0, '', false
+        \context_system::instance()->id,
+        'dashaddon_learningpath',
+        $filearea,
+        0,
+        '',
+        false
     );
 
     foreach ($learingpaths as $path) {
@@ -458,21 +482,28 @@ function dashaddon_learningpath_get_all_learning_paths($filearea) {
     return $results;
 }
 
-
+/**
+ * Get filename path for learning path file.
+ *
+ * @param string $filearea File area
+ * @param string $filename Filename
+ * @return string File path or empty string
+ */
 function dashaddon_learningpath_get_filename_path($filearea, $filename) {
     global $CFG;
-    require_once($CFG->libdir.'/filelib.php');
+    require_once($CFG->libdir . '/filelib.php');
     $fs = get_file_storage();
     $file = $fs->get_file(
-        \context_system::instance()->id, 'dashaddon_learningpath', $filearea, 0, '/', $filename
+        \context_system::instance()->id,
+        'dashaddon_learningpath',
+        $filearea,
+        0,
+        '/',
+        $filename
     );
 
     if ($file) {
         return $file;
-        /* return moodle_url::make_pluginfile_url(
-            $file->get_contextid(), $file->get_component(), $file->get_filearea(),
-            $file->get_itemid(), $file->get_filepath(), $file->get_filename()
-        ); */
     }
 
     return null;
@@ -481,8 +512,6 @@ function dashaddon_learningpath_get_filename_path($filearea, $filename) {
 
 /**
  * Serve fragment content.
- * @param string $fragment
- * @param int $contextid
  * @param array $args
  * @return string
  */

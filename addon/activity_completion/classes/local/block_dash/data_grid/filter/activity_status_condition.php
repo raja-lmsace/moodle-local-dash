@@ -37,7 +37,6 @@ use MoodleQuickForm;
  * @package dashaddon_activity_completion
  */
 class activity_status_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -86,7 +85,8 @@ class activity_status_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -116,7 +116,7 @@ class activity_status_condition extends condition {
     public function get_sql_and_params() {
         global $USER, $DB;
 
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
 
         if (is_array($params)) {
             $conditionsql = [];
@@ -126,19 +126,19 @@ class activity_status_condition extends condition {
                         $conditionsql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
                                 UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) > :now_$key + 86000) AND
                                 cmc.completionstate = 0";
-                        $params += ['now_'.$key => time()];
+                        $params += ['now_' . $key => time()];
                         break;
                     case 'due':
                         $conditionsql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
                                 UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) <= :now_$key + 86000) AND
                                 cmc.completionstate = 0 ";
-                        $params += ['now_'.$key => time(), 'now1_'.$key => time()];
+                        $params += ['now_' . $key => time(), 'now1_' . $key => time()];
                         break;
                     case 'overdue':
                         $conditionsql[] = "(UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) IS NOT NULL AND
                                 UNIX_TIMESTAMP(STR_TO_DATE(tm.duedatecustom, '%Y/%m/%d')) <= :now_$key) AND
                                 cmc.completionstate = 0 ";
-                        $params += ['now_'.$key => time()];
+                        $params += ['now_' . $key => time()];
                         break;
                     case 'complete':
                         $conditionsql[] = "(cmc.completionstate <> 0 AND (cmc.timemodified <=
@@ -150,7 +150,7 @@ class activity_status_condition extends condition {
                         break;
                 }
             }
-            return ['('.implode(' OR ', $conditionsql).')', $params];
+            return ['(' . implode(' OR ', $conditionsql) . ')', $params];
         }
         return false;
     }

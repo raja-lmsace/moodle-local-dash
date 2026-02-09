@@ -30,7 +30,6 @@ use block_dash\local\data_grid\filter\select_filter;
  * Filters results to specific course completion status
  */
 class context_name_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      *

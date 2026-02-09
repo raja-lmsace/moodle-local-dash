@@ -37,7 +37,6 @@ use dashaddon_programs\local\dash_framework\structure\programs_table;
  * Enrol programs data source template queries and filter defined.
  */
 class programs_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *
@@ -71,21 +70,19 @@ class programs_data_source extends abstract_data_source {
 
             ->join_raw(new join_raw("SELECT pc.programid, $concat as cohortid
                 FROM {enrol_programs_cohorts} pc
-                GROUP BY pc.programid", 'pclist', 'programid', 'epp.id', join::TYPE_LEFT_JOIN, [])
-            )
+                GROUP BY pc.programid", 'pclist', 'programid', 'epp.id', join::TYPE_LEFT_JOIN, []))
             ->from('enrol_programs_programs', 'epp');
 
         // Config the program is not restricted to the cohort users.
         $cohortsql = 'pclist.cohortid IS NULL';
 
         if ($cohortids) {
-            list($insql, $inparams) = $DB->get_in_or_equal($cohortids, SQL_PARAMS_NAMED, 'ch');
+            [$insql, $inparams] = $DB->get_in_or_equal($cohortids, SQL_PARAMS_NAMED, 'ch');
             $builder->join_raw(
                 new join_raw("SELECT pc.programid, $concat as cohortid
                     FROM {enrol_programs_cohorts} pc
                     WHERE pc.cohortid $insql
-                    GROUP BY pc.programid", 'pcuser', 'programid', 'epp.id', join::TYPE_LEFT_JOIN, $inparams
-                )
+                    GROUP BY pc.programid", 'pcuser', 'programid', 'epp.id', join::TYPE_LEFT_JOIN, $inparams)
             );
             $builder->select("pcuser.cohortid", "pcusercohort");
             // If cohort is configured then user should assigned in any of the cohorts.
@@ -106,8 +103,13 @@ class programs_data_source extends abstract_data_source {
 
         $filtercollection = new filter_collection(get_class($this), $this->get_context());
 
-        $filtercollection->add_filter(new tags_program_filter('epp_tags', 'epp.id', 'enrol_programs', 'programs',
-            get_string('tags', 'tag')));
+        $filtercollection->add_filter(new tags_program_filter(
+            'epp_tags',
+            'epp.id',
+            'enrol_programs',
+            'programs',
+            get_string('tags', 'tag')
+        ));
 
         return $filtercollection;
     }

@@ -29,8 +29,6 @@ use block_dash\local\data_grid\filter\select_filter;
  * Users based filter option.
  */
 class user_fullname_filter extends select_filter {
-
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -60,5 +58,4 @@ class user_fullname_filter extends select_filter {
 
         return get_string('user');
     }
-
 }

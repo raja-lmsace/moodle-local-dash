@@ -39,7 +39,6 @@ use local_dash\data_grid\field\attribute\context\context_parent_attribute;
  * It extends the base table class to provide specific functionality for handling role context data.
  */
 class role_context_table extends table {
-
     /**
      * Build a new table.
      */
@@ -65,8 +64,13 @@ class role_context_table extends table {
         return [
             new field('contextname', new lang_string('contextname', 'block_dash'), $this, 'ctx.id', [new context_name_attribute()]),
             new field('contexturl', new lang_string('contexturl', 'block_dash'), $this, 'ctx.id', [new context_url_attribute()]),
-            new field('contextlevel', new lang_string('contextlevel', 'block_dash'), $this, 'ctx.id',
-                [new context_level_attribute()]),
+            new field(
+                'contextlevel',
+                new lang_string('contextlevel', 'block_dash'),
+                $this,
+                'ctx.id',
+                [new context_level_attribute()]
+            ),
             new field('parent', new lang_string('parent', 'block_dash'), $this, 'ctx.id', [new context_parent_attribute()]),
         ];
     }

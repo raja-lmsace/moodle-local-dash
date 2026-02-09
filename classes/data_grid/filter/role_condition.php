@@ -31,7 +31,6 @@ use MoodleQuickForm;
  * Parent role condition.
  */
 class role_condition extends condition {
-
     /**
      * Get values from filter based on user selection. All filters must return an array of values.
      *
@@ -75,7 +74,8 @@ class role_condition extends condition {
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -84,7 +84,9 @@ class role_condition extends condition {
 
         $roles = $DB->get_records_sql_menu('SELECT id, shortname FROM {role}', ['format' => 'site']);
 
-        $select = $mform->addElement('select', $fieldname . '[roleids]',
+        $select = $mform->addElement(
+            'select',
+            $fieldname . '[roleids]',
             get_string('strrole', 'block_dash'),
             $roles,
             ['class' => 'select2-form']

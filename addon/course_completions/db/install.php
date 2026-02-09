@@ -28,7 +28,7 @@
  */
 function xmldb_dashaddon_course_completions_install() {
     global $CFG;
-    require_once($CFG->dirroot. "/local/dash/addon/course_completions/lib.php");
+    require_once($CFG->dirroot . "/local/dash/addon/course_completions/lib.php");
     if (empty(dashaddon_course_completions_extend_added_dependencies())) {
         set_config('enabled', 1, 'dashaddon_course_completions');
     }

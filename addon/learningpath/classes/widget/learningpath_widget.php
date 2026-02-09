@@ -45,7 +45,6 @@ use MoodleQuickForm;
  * Learning path widget.
  */
 class learningpath_widget extends abstract_widget {
-
     /**
      * Check the datasource is widget.
      *
@@ -146,10 +145,10 @@ class learningpath_widget extends abstract_widget {
      */
     public function get_all_learning_paths($filearea): array {
         global $CFG;
-        require_once($CFG->libdir.'/filelib.php');
+        require_once($CFG->libdir . '/filelib.php');
         $fs = get_file_storage();
 
-        //System files.
+        // System files.
         $results = [0 => get_string('none')];
 
         $systemfiles = $fs->get_area_files(
@@ -163,16 +162,23 @@ class learningpath_widget extends abstract_widget {
 
         foreach ($systemfiles as $file) {
             if (!$file->is_directory()) {
-               $filename = $file->get_filename();
-               $results[$filename] = ucwords(explode('.', $filename)[0]);
+                $filename = $file->get_filename();
+                $results[$filename] = ucwords(explode('.', $filename)[0]);
             }
         }
 
         // Block files.
         $blockinstance = $this->get_block_instance();
-        if ($blockinstance) {          
-            $itemid = $blockinstance->config->orgparentblkcontextid ?? $blockinstance->context->id;            
-            $blockfiles = $fs->get_area_files(\context_system::instance()->id, 'dashaddon_learningpath', 'blk_' . $filearea, $itemid, '', false);
+        if ($blockinstance) {
+            $itemid = $blockinstance->config->orgparentblkcontextid ?? $blockinstance->context->id;
+            $blockfiles = $fs->get_area_files(
+                \context_system::instance()->id,
+                'dashaddon_learningpath',
+                'blk_' . $filearea,
+                $itemid,
+                '',
+                false
+            );
 
             foreach ($blockfiles as $file) {
                 if (!$file->is_directory()) {
@@ -184,7 +190,7 @@ class learningpath_widget extends abstract_widget {
 
         return $results;
     }
- 
+
     /**
      * Get SVG file content for the given filename and filearea.
      *
@@ -194,7 +200,7 @@ class learningpath_widget extends abstract_widget {
      * @param string $filename
      * @param string $filearea
      * @return string SVG content or empty string if not found.
-   */
+     */
     public function get_learningpath_svg(string $filename, string $filearea): string {
         $fs = get_file_storage();
 
@@ -232,7 +238,6 @@ class learningpath_widget extends abstract_widget {
 
         static $jsincluded = false;
 
-
         // Current userid.
         $userid = $this->get_current_userid();
         $isgrid = true;
@@ -250,7 +255,7 @@ class learningpath_widget extends abstract_widget {
         $this->data['isgrid'] = $isgrid;
         $this->data['pagecontextid'] = $PAGE->context->id;
 
-        list($courses, $completedcourses, $nextcourse) = $this->get_possible_completion_courses();
+        [$courses, $completedcourses, $nextcourse] = $this->get_possible_completion_courses();
 
         if (!isset($courses) || empty($courses)) {
             return false;
@@ -293,7 +298,6 @@ class learningpath_widget extends abstract_widget {
         $dataset['startelement'] = $this->get_preferences('startelement');
         $dataset['finishelement'] = $this->get_preferences('finishelement');
         $dataset['infoarea'] = $this->get_preferences('infoarea');
-        //$dataset['detailsarea'] = $this->get_preferences('detailsarea');
         $dataset['positioning'] = $this->get_preferences('positioning');
         $dataset['totalcourses'] = count($courses);
         $dataset['completedcourses'] = $completedcourses;
@@ -301,10 +305,9 @@ class learningpath_widget extends abstract_widget {
         $dataset['defaultshape'] = $this->get_preferences('courseshape') ?:
             get_config('dashaddon_learningpath', 'defaultcourseshape') ?: 'circle';
 
-        // Add coursevisual to dataset for JavaScript
+        // Add coursevisual to dataset for JavaScript.
         $visual = $this->get_preferences('coursevisual') ?: get_config('dashaddon_learningpath', 'defaultcoursevisual');
         if ($dotimg) {
-
             $visual = null;
         }
         $dataset['coursevisual'] = $visual;
@@ -312,83 +315,88 @@ class learningpath_widget extends abstract_widget {
 
         // Load zone configurations if positioning is set to zones.
         if ($dataset['positioning'] === 'zones') {
-
             $blockid = $this->get_block_instance()->instance->id;
-            $zoneconfigs = $DB->get_records('dashaddon_learningpath_zones',
+            $zoneconfigs = $DB->get_records(
+                'dashaddon_learningpath_zones',
                 ['blockid' => $blockid],
             );
 
-            // Group zone configurations by viewport
-            $zoneconfigs_by_viewport = [
+            // Group zone configurations by viewport.
+            $zoneconfigsbyviewport = [
                 'desktop' => [],
                 'tablet' => [],
-                'mobile' => []
+                'mobile' => [],
             ];
 
             foreach ($zoneconfigs as $zone) {
-                // Extract viewport from zoneid using regex
-                $viewport_pattern = "/^zone_([a-z]+)_/";
-                $viewport = 'desktop'; // Default fallback
+                // Extract viewport from zoneid using regex.
+                $viewportpattern = "/^zone_([a-z]+)_/";
+                $viewport = 'desktop'; // Default fallback.
 
-                if (preg_match($viewport_pattern, $zone->zoneid, $matches)) {
-                    $detected_viewport = $matches[1];
-                    // Validate that it's a known viewport
-                    if (in_array($detected_viewport, ['desktop', 'tablet', 'mobile'])) {
-                        $viewport = $detected_viewport;
+                if (preg_match($viewportpattern, $zone->zoneid, $matches)) {
+                    $detectedviewport = $matches[1];
+                    // Validate that it's a known viewport.
+                    if (in_array($detectedviewport, ['desktop', 'tablet', 'mobile'])) {
+                        $viewport = $detectedviewport;
                     }
                 }
 
-                // Add zone to the appropriate viewport array
-                $zoneconfigs_by_viewport[$viewport][] = $zone;
+                // Add zone to the appropriate viewport array.
+                $zoneconfigsbyviewport[$viewport][] = $zone;
             }
 
-
-            // Process each viewport's zones
+            // Process each viewport's zones.
             $dataset['zoneconfigs'] = [];
-            foreach ($zoneconfigs_by_viewport as $viewport => $zones) {
+            foreach ($zoneconfigsbyviewport as $viewport => $zones) {
                 if (!empty($zones)) {
-                    // Convert to array for easier indexing
+                    // Convert to array for easier indexing.
                     $zoneconfigsarray = array_values($zones);
 
-                    // Process zones for this viewport
-                    $dataset['zoneconfigs'][$viewport] = array_values(array_map(function($zone, $index) use ($zoneconfigsarray, $viewport) {
-                        $prevcourseid = 0;
-                        $nextcourseid = 0;
+                    // Process zones for this viewport.
+                    $dataset['zoneconfigs'][$viewport] = array_values(
+                        array_map(
+                            function ($zone, $index) use ($zoneconfigsarray, $viewport) {
+                                $prevcourseid = 0;
+                                $nextcourseid = 0;
 
-                        // Get previous course ID
-                        if ($index > 0) {
-                            $prevcourseid = (int)$zoneconfigsarray[$index - 1]->courseid;
-                        }
+                                // Get previous course ID.
+                                if ($index > 0) {
+                                    $prevcourseid = (int)$zoneconfigsarray[$index - 1]->courseid;
+                                }
 
-                        // Get next course ID
-                        if ($index < count($zoneconfigsarray) - 1) {
-                            $nextcourseid = (int)$zoneconfigsarray[$index + 1]->courseid;
-                        }
+                                // Get next course ID.
+                                if ($index < count($zoneconfigsarray) - 1) {
+                                    $nextcourseid = (int)$zoneconfigsarray[$index + 1]->courseid;
+                                }
 
-                        return [
-                            'id' => $zone->id,
-                            'blockid' => $zone->blockid,
-                            'zoneid' => $zone->zoneid,
-                            'zonetype' => $zone->zonetype,
-                            'zoneindex' => (int)$zone->zoneindex,
-                            'courseid' => (int)$zone->courseid,
-                            'enabled' => (int)$zone->enabled,
-                            'viewport' => $viewport, // Add viewport information
-                            'prevcourse' => $prevcourseid,
-                            'nextcourse' => $nextcourseid,
-                        ];
-                    }, $zoneconfigsarray, array_keys($zoneconfigsarray)));
+                                return [
+                                    'id' => $zone->id,
+                                    'blockid' => $zone->blockid,
+                                    'zoneid' => $zone->zoneid,
+                                    'zonetype' => $zone->zonetype,
+                                    'zoneindex' => (int)$zone->zoneindex,
+                                    'courseid' => (int)$zone->courseid,
+                                    'enabled' => (int)$zone->enabled,
+                                    'viewport' => $viewport, // Add viewport information.
+                                    'prevcourse' => $prevcourseid,
+                                    'nextcourse' => $nextcourseid,
+                                ];
+                            },
+                            $zoneconfigsarray,
+                            array_keys($zoneconfigsarray)
+                        )
+                    );
                 } else {
-                    // Empty array for viewports with no zones
+                    // Empty array for viewports with no zones.
                     $dataset['zoneconfigs'][$viewport] = [];
                 }
             }
         } else {
-            // For path-based positioning, set empty arrays for all viewports
+            // For path-based positioning, set empty arrays for all viewports.
             $dataset['zoneconfigs'] = [
                 'desktop' => [],
                 'tablet' => [],
-                'mobile' => []
+                'mobile' => [],
             ];
         }
 
@@ -405,8 +413,7 @@ class learningpath_widget extends abstract_widget {
 
         $this->data['zoneposition'] = $this->get_preferences('positioning') == 'zones' ? true : false;
 
-       // $this->data['detailsarea'] = $this->get_preferences('detailsarea');
-       $this->data['infoarea'] = $this->get_preferences('infoarea');
+        $this->data['infoarea'] = $this->get_preferences('infoarea');
         $this->data['blockid'] = $this->get_block_instance()->instance->id;
 
         // Info area: Top.
@@ -417,7 +424,7 @@ class learningpath_widget extends abstract_widget {
         $this->data['showinfosidebar'] = ($this->get_preferences('infoarea') &&
             $this->get_preferences('infoareaposition') == 'sidebar') ? true : false;
 
-        // Build info area data using info_area class
+        // Build info area data using info_area class.
         $this->data['showkpi'] = $this->get_preferences('infoarea');
         $infoarea = new \dashaddon_learningpath\info_area($this);
         $infodata = $infoarea->build_data($courses, $completedcourses, count($courses), array_keys($courses));
@@ -469,12 +476,24 @@ class learningpath_widget extends abstract_widget {
         return $this->data;
     }
 
+    /**
+     * Get completed courses count for a given course.
+     *
+     * @param int $courseid The course ID.
+     * @return int The count of completed courses.
+     */
     public function get_completed_courses_count($courseid) {
-        list($courses, $completedcourses) = $this->get_possible_completion_courses();
+        [$courses, $completedcourses] = $this->get_possible_completion_courses();
         return $completedcourses;
     }
 
 
+    /**
+     * Get the icon class for a course.
+     *
+     * @param int $courseid The course ID.
+     * @return string The icon class.
+     */
     public function get_course_iconclass($courseid) {
         $coursevisual = $this->get_preferences('coursevisual');
 
@@ -487,7 +506,6 @@ class learningpath_widget extends abstract_widget {
         if (empty($visualfieldid) || $visualfieldid == 0) {
             return null;
         }
-
 
         // Get custom field value for this course.
         if (!class_exists('\core_course\customfield\course_handler')) {
@@ -648,8 +666,8 @@ class learningpath_widget extends abstract_widget {
      */
     public function generate_learningpath_filter() {
         $this->before_data();
-        list($sql, $params) = $this->get_filter_collection()->get_sql_and_params();
-        return $sql ? [" AND ".$sql[0], $params] : [];
+        [$sql, $params] = $this->get_filter_collection()->get_sql_and_params();
+        return $sql ? [" AND " . $sql[0], $params] : [];
     }
 
     /**
@@ -666,8 +684,13 @@ class learningpath_widget extends abstract_widget {
 
         $filtercollection->add_filter(new current_category_condition('current_category', 'c.category'));
 
-        $filtercollection->add_filter(new tags_condition('course_tags', 'c.id', 'core', 'course',
-            get_string('coursetags', 'block_dash')));
+        $filtercollection->add_filter(new tags_condition(
+            'course_tags',
+            'c.id',
+            'core',
+            'course',
+            get_string('coursetags', 'block_dash')
+        ));
 
         $filtercollection->add_filter(new course_prerequisites_condition('course_prerequisites', 'c.id'));
 
@@ -677,8 +700,11 @@ class learningpath_widget extends abstract_widget {
         $manager = \core_plugin_manager::instance();
         $plugin = $manager->get_plugin_info('tool_timetable');
         if ($plugin && $plugin->get_status() !== \core_plugin_manager::PLUGIN_STATUS_MISSING) {
-            $filtercollection->add_filter(new assignment_tags_condition('assignment_tags', 'c.id',
-                get_string('assignmenttags', 'block_dash')));
+            $filtercollection->add_filter(new assignment_tags_condition(
+                'assignment_tags',
+                'c.id',
+                get_string('assignmenttags', 'block_dash')
+            ));
         }
 
         local_dash_customfield_conditions($filtercollection);
@@ -693,7 +719,7 @@ class learningpath_widget extends abstract_widget {
     public function get_possible_completion_courses() {
         global $DB, $USER;
 
-        list($conditionsql, $params) = $this->generate_learningpath_filter();
+        [$conditionsql, $params] = $this->generate_learningpath_filter();
         $orderfield = "c.id";
         $orderby = "ASC";
         $preferorderfield = $this->get_preferences('orderby');
@@ -773,7 +799,7 @@ class learningpath_widget extends abstract_widget {
         $updatenextstartcourse = false;
         $coursesinfo = array_values($courses);
         $i = 0;
-        array_walk($courses, function(&$course) use (&$completedcourses, &$updatenextstartcourse, &$i, $coursesinfo) {
+        array_walk($courses, function (&$course) use (&$completedcourses, &$updatenextstartcourse, &$i, $coursesinfo) {
             global $OUTPUT;
             $report = dashaddon_learningpath_generate_completion_stats($course['info']['id'], $this->get_current_userid());
             $course['report'] = $report;
@@ -797,7 +823,7 @@ class learningpath_widget extends abstract_widget {
                 $completionstatus = 'completed';
             } else if (!empty($report['inprogress'])) {
                 $completionstatus = 'inprogress';
-            }  else {
+            } else {
                 $completionstatus = 'notstarted';
             }
 
@@ -838,7 +864,7 @@ class learningpath_widget extends abstract_widget {
             $i++;
         });
 
-        // courseorder number.
+        // Course order number.
         $order = 1;
         foreach ($courses as $key => $course) {
             $courses[$key]['coursenumber'] = $order++;
@@ -852,6 +878,12 @@ class learningpath_widget extends abstract_widget {
         return [$courses, $completedcourses, $nextcourse];
     }
 
+    /**
+     * Get the course icon based on the icon class.
+     *
+     * @param string $iconclass The icon class.
+     * @return string The rendered icon.
+     */
     public function get_course_icon($iconclass) {
         global $OUTPUT;
             $icon = explode(':', $iconclass);
@@ -891,7 +923,6 @@ class learningpath_widget extends abstract_widget {
         }
 
         if ($form->get_tab() == preferences_form::TAB_FIELDS) {
-
             $mform->addElement('html', '<hr>');
 
             // Build info area form fields using info_area class.
@@ -900,47 +931,70 @@ class learningpath_widget extends abstract_widget {
 
             $mform->addElement('html', '<hr>');
 
-            // Add positioning field
+            // Add positioning field.
             $positioningoptions = [
                 'path' => get_string('positioning_path', 'block_dash'),
                 'zones' => get_string('positioning_zones', 'block_dash'),
             ];
 
-            $mform->addElement('select', 'config_preferences[positioning]',
+            $mform->addElement(
+                'select',
+                'config_preferences[positioning]',
                 get_string('field:positioning', 'block_dash'),
-                $positioningoptions);
+                $positioningoptions
+            );
             $mform->setType('config_preferences[positioning]', PARAM_TEXT);
             $mform->setDefault('config_preferences[positioning]', 'path');
             $mform->addHelpButton('config_preferences[positioning]', 'field:positioning', 'block_dash');
 
             // Configure zones button (only shown when zones is selected).
-            $configurezonesbtn = \html_writer::tag('button',
+            $configurezonesbtn = \html_writer::tag(
+                'button',
                 get_string('configure_zones', 'block_dash'),
                 [
                     'type' => 'button',
                     'class' => 'btn btn-secondary',
                     'data-action' => 'configure-zones',
-                    'data-blockid' => $this->get_block_instance()->instance->id
+                    'data-blockid' => $this->get_block_instance()->instance->id,
                 ]
             );
             $zoneuniqueid = uniqid("zone-click-action");
 
-            $mform->addElement('static', 'configure_zones_wrapper', '',
-            \html_writer::tag('div', $configurezonesbtn, ['id' => $zoneuniqueid]));
+            $mform->addElement(
+                'static',
+                'configure_zones_wrapper',
+                '',
+                \html_writer::tag('div', $configurezonesbtn, ['id' => $zoneuniqueid])
+            );
 
-            // Hide configure zones button when positioning is not set to zones
+            // Hide configure zones button when positioning is not set to zones.
             $mform->hideIf('configure_zones_wrapper', 'config_preferences[positioning]', 'neq', 'zones');
 
             $desktoppaths = $this->get_all_learning_paths('desktop_learningpath');
-            $mform->addElement('select', 'config_preferences[desktoppath]', get_string('field:learningpathdesktop', 'block_dash'), $desktoppaths);
+            $mform->addElement(
+                'select',
+                'config_preferences[desktoppath]',
+                get_string('field:learningpathdesktop', 'block_dash'),
+                $desktoppaths
+            );
             $mform->setType('config_preferences[desktoppath]', PARAM_TEXT);
 
             $tabletpaths = $this->get_all_learning_paths('tablet_learningpath');
-            $mform->addElement('select', 'config_preferences[tabletpath]', get_string('field:learningpathtablet', 'block_dash'), $tabletpaths);
+            $mform->addElement(
+                'select',
+                'config_preferences[tabletpath]',
+                get_string('field:learningpathtablet', 'block_dash'),
+                $tabletpaths
+            );
             $mform->setType('config_preferences[tabletpath]', PARAM_TEXT);
 
             $mobilepaths = $this->get_all_learning_paths('mobile_learningpath');
-            $mform->addElement('select', 'config_preferences[mobilepath]', get_string('field:learningpathmobile', 'block_dash'), $mobilepaths);
+            $mform->addElement(
+                'select',
+                'config_preferences[mobilepath]',
+                get_string('field:learningpathmobile', 'block_dash'),
+                $mobilepaths
+            );
             $mform->setType('config_preferences[mobilepath]', PARAM_TEXT);
 
             $courseimgsizes = [
@@ -953,8 +1007,12 @@ class learningpath_widget extends abstract_widget {
             ];
 
             // Course image size.
-            $mform->addElement('select', 'config_preferences[courseimgsize]', get_string('field:courseimgsize', 'block_dash'),
-                $courseimgsizes);
+            $mform->addElement(
+                'select',
+                'config_preferences[courseimgsize]',
+                get_string('field:courseimgsize', 'block_dash'),
+                $courseimgsizes
+            );
             $mform->setType('config_preferences[courseimgsize]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[courseimgsize]', 'field:courseimgsize', 'block_dash');
             $mform->setDefault('config_preferences[courseimgsize]', get_config('block_dash', 'defaultcourseimgsize'));
@@ -966,26 +1024,23 @@ class learningpath_widget extends abstract_widget {
             // Get the field name if customselectfield is configured.
             if ($globalfieldid && $globalfieldid != 0 && class_exists('\core_course\customfield\course_handler')) {
                 $handler = \core_course\customfield\course_handler::create();
-                try {
-                    $fields = $handler->get_fields();
-                    foreach ($fields as $field) {
-                        if ($field->get('id') == $globalfieldid) {
-                            $globalfieldname = $field->get('name');
-                            $configdata = $field->get('configdata');
-                            if (!empty($configdata)) {
-                                $config = is_array($configdata) ? $configdata : json_decode($configdata, true);
-                                if (isset($config['options'])) {
-                                    $options = explode("\n", trim($config['options']));
-                                    $fieldoptionsmap[$globalfieldid] = [
-                                        'name' => $field->get('name'),
-                                        'options' => array_values(array_filter(array_map('trim', $options)))
-                                    ];
-                                }
+                $fields = $handler->get_fields();
+                foreach ($fields as $field) {
+                    if ($field->get('id') == $globalfieldid) {
+                        $globalfieldname = $field->get('name');
+                        $configdata = $field->get('configdata');
+                        if (!empty($configdata)) {
+                            $config = is_array($configdata) ? $configdata : json_decode($configdata, true);
+                            if (isset($config['options'])) {
+                                $options = explode("\n", trim($config['options']));
+                                $fieldoptionsmap[$globalfieldid] = [
+                                    'name' => $field->get('name'),
+                                    'options' => array_values(array_filter(array_map('trim', $options))),
+                                ];
                             }
-                            break;
                         }
+                        break;
                     }
-                } catch (\Exception $e) {
                 }
             }
 
@@ -1003,53 +1058,17 @@ class learningpath_widget extends abstract_widget {
 
             $shapes['svgshape'] = get_string('shape:svgshape', 'block_dash');
 
-            $mform->addElement('select', 'config_preferences[courseshape]',
-                get_string('field:courseshape', 'block_dash'), $shapes);
+            $mform->addElement(
+                'select',
+                'config_preferences[courseshape]',
+                get_string('field:courseshape', 'block_dash'),
+                $shapes
+            );
             $mform->setType('config_preferences[courseshape]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[courseshape]', 'field:courseshape', 'block_dash');
             $defaultshape = get_config('dashaddon_learningpath', 'defaultcourseshape');
             $mform->setDefault('config_preferences[courseshape]', $defaultshape);
             $mform->hideIf('config_preferences[courseshape]', 'config_preferences[courseimgsize]', 'eq', 'dot');
-            //$mform->hideIf('config_preferences[courseshape]', 'config_preferences[positioning]', 'eq', 'zones');
-
-           /*  if (!empty($globalfieldid) && isset($fieldoptionsmap[$globalfieldid])) {
-                $fieldinfo = $fieldoptionsmap[$globalfieldid];
-
-                $shapeoptions = [
-                    'circle'   => get_string('shape:circle', 'block_dash'),
-                    'triangle' => get_string('shape:triangle', 'block_dash'),
-                    'hexagon'  => get_string('shape:hexagon', 'block_dash'),
-                    'diamond'  => get_string('shape:diamond', 'block_dash'),
-                    'star'     => get_string('shape:star', 'block_dash'),
-                ];
-
-                foreach ($fieldinfo['options'] as $index => $optionvalue) {
-                    if (empty($optionvalue)) {
-                        continue;
-                    }
-
-                    $displayindex = $index + 1;
-                    $optionkey = 'shapemap_' . $globalfieldid . '_' . $displayindex;
-
-                    // Get global setting as default value.
-                    $globaldefault = get_config('local_dash', $optionkey);
-                    if (empty($globaldefault)) {
-                        $globaldefault = 'circle';
-                    }
-
-                    $mform->addElement('select', 'config_preferences[' . $optionkey . ']',
-                        '<strong>' . format_string($optionvalue) . '</strong> →',
-                        $shapeoptions);
-                    $mform->setType('config_preferences[' . $optionkey . ']', PARAM_TEXT);
-                    $mform->setDefault('config_preferences[' . $optionkey . ']', $globaldefault);
-                    $mform->hideIf('config_preferences[' . $optionkey . ']', 'config_preferences[courseshape]', 'neq', 'custom');
-                    $mform->hideIf('config_preferences[' . $optionkey . ']', 'config_preferences[courseimgsize]', 'eq', 'dot');
-
-                    $mform->addElement('hidden', 'config_preferences[shapeopt_' . $globalfieldid . '_' . $displayindex . ']', $optionvalue);
-                    $mform->setType('config_preferences[shapeopt_' . $globalfieldid . '_' . $displayindex . ']', PARAM_TEXT);
-                }
-            }
- */
 
             $globalfieldid = get_config('local_dash', 'customvisualfield');
             $globalfieldname = '';
@@ -1078,21 +1097,35 @@ class learningpath_widget extends abstract_widget {
             }
 
             // Visual dropdown.
-            $mform->addElement('select', 'config_preferences[coursevisual]',
-                get_string('field:coursevisual', 'block_dash'), $visualoptions);
+            $mform->addElement(
+                'select',
+                'config_preferences[coursevisual]',
+                get_string('field:coursevisual', 'block_dash'),
+                $visualoptions
+            );
             $mform->setType('config_preferences[coursevisual]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[coursevisual]', 'field:coursevisual', 'block_dash');
             $defaultvisual = get_config('dashaddon_learningpath', 'defaultcoursevisual');
             $mform->setDefault('config_preferences[coursevisual]', $defaultvisual);
             $mform->hideIf('config_preferences[coursevisual]', 'config_preferences[courseimgsize]', 'eq', 'dot');
 
-            $mform->addElement('advcheckbox', 'config_preferences[startelement]',
-                get_string('field:startelement', 'block_dash'), '', [0, 1]);
+            $mform->addElement(
+                'advcheckbox',
+                'config_preferences[startelement]',
+                get_string('field:startelement', 'block_dash'),
+                '',
+                [0, 1]
+            );
             $mform->addHelpButton('config_preferences[startelement]', 'field:startelement', 'block_dash');
             $mform->hideIf('config_preferences[startelement]', 'config_preferences[positioning]', 'eq', 'zones');
 
-            $mform->addElement('advcheckbox', 'config_preferences[finishelement]',
-                get_string('field:finishelement', 'block_dash'), '', [0, 1]);
+            $mform->addElement(
+                'advcheckbox',
+                'config_preferences[finishelement]',
+                get_string('field:finishelement', 'block_dash'),
+                '',
+                [0, 1]
+            );
             $mform->addHelpButton('config_preferences[finishelement]', 'field:finishelement', 'block_dash');
             $mform->hideIf('config_preferences[finishelement]', 'config_preferences[positioning]', 'eq', 'zones');
 
@@ -1106,14 +1139,20 @@ class learningpath_widget extends abstract_widget {
             ];
 
             // Order by.
-            $mform->addElement('select', 'config_preferences[orderby]', get_string('field:orderby', 'block_dash'),
-            $orderbyoptions);
+            $mform->addElement(
+                'select',
+                'config_preferences[orderby]',
+                get_string('field:orderby', 'block_dash'),
+                $orderbyoptions
+            );
             $mform->addHelpButton('config_preferences[orderby]', 'field:orderby', 'block_dash');
             $mform->setType('config_preferences[orderby]', PARAM_TEXT);
             $mform->hideIf('config_preferences[orderby]', 'config_preferences[positioning]', 'eq', 'zones');
 
-            $mform->addElement('text', 'config_preferences[customorder]', get_string('field:customorder',
-                'block_dash'));
+            $mform->addElement('text', 'config_preferences[customorder]', get_string(
+                'field:customorder',
+                'block_dash'
+            ));
             $mform->addHelpButton('config_preferences[customorder]', 'field:customorder', 'block_dash');
             $mform->hideIf('config_preferences[customorder]', 'config_preferences[orderby]', 'neq', 'custom');
             $mform->setType('config_preferences[customorder]', PARAM_TEXT);
@@ -1125,8 +1164,12 @@ class learningpath_widget extends abstract_widget {
             ];
 
             // Order direction.
-            $mform->addElement('select', 'config_preferences[orderdirection]', get_string('field:orderdirection', 'block_dash'),
-            $orderbyoptions);
+            $mform->addElement(
+                'select',
+                'config_preferences[orderdirection]',
+                get_string('field:orderdirection', 'block_dash'),
+                $orderbyoptions
+            );
             $mform->addHelpButton('config_preferences[orderdirection]', 'field:orderdirection', 'block_dash');
             $mform->setType('config_preferences[orderdirection]', PARAM_TEXT);
             $mform->hideIf('config_preferences[orderdirection]', 'config_preferences[positioning]', 'eq', 'zones');
@@ -1199,10 +1242,16 @@ class learningpath_widget extends abstract_widget {
             $mform->setType('config_preferences[failedcirclecolor]', PARAM_RAW);
             $mform->addHelpButton('config_preferences[failedcirclecolor]', 'failedcirclecolor', 'block_dash');
 
-            $PAGE->requires->js_call_amd('dashaddon_learningpath/zoneConfig', 'init', ['zoneuniqueid' => $zoneuniqueid,
-                'blockid' => $this->get_block_instance()->instance->id, 'contextid' => $this->get_context()->id]);
+            $PAGE->requires->js_call_amd(
+                'dashaddon_learningpath/zoneConfig',
+                'init',
+                [
+                    'zoneuniqueid' => $zoneuniqueid,
+                    'blockid' => $this->get_block_instance()->instance->id,
+                    'contextid' => $this->get_context()->id,
+                ]
+            );
         }
-
     }
 
     /**
@@ -1214,6 +1263,14 @@ class learningpath_widget extends abstract_widget {
         return true;
     }
 
+    /**
+     * Extend the configuration form for learning paths.
+     *
+     * @param \MoodleQuickForm $mform The form object.
+     * @param object $source The data source.
+     * @param object $instance The block instance.
+     * @return void
+     */
     public static function extend_config_form($mform, $source, $instance) {
          // Resource.
         $mform->addElement('header', 'resourcesheader', get_string('resourcesheading', 'block_dash'));
@@ -1222,18 +1279,18 @@ class learningpath_widget extends abstract_widget {
             'tablet_learningpath' => get_string('tablet_learningpath', 'block_dash'),
             'mobile_learningpath' => get_string('mobile_learningpath', 'block_dash'),
         ];
-        $filemanageroptions = [ 
-            'accepted_types' => ['.svg'], 
-            'maxfiles' => -1, 
-            'maxbytes' => 0, 
-            'subdirs' => 0, 
+        $filemanageroptions = [
+            'accepted_types' => ['.svg'],
+            'maxfiles' => -1,
+            'maxbytes' => 0,
+            'subdirs' => 0,
             'return_types' => FILE_INTERNAL,
         ];
 
-        foreach ($ports as $fieldname => $title) {            
+        foreach ($ports as $fieldname => $title) {
             $mform->addElement('filemanager', 'config_' . $fieldname, $title, null, $filemanageroptions);
-            $mform->setType('config_' . $fieldname, PARAM_RAW); 
-            $mform->addHelpButton('config_' . $fieldname, $fieldname, 'block_dash'); 
+            $mform->setType('config_' . $fieldname, PARAM_RAW);
+            $mform->addHelpButton('config_' . $fieldname, $fieldname, 'block_dash');
         }
     }
 
@@ -1268,5 +1325,4 @@ class learningpath_widget extends abstract_widget {
 
         return true;
     }
-
 }

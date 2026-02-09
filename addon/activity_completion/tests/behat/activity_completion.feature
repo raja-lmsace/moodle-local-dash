@@ -42,7 +42,7 @@ Feature: Add activity completion datasource in dash block
       | Assignment 5 | student1  | Assignment 5 grading - scale |
       | Assignment 6 | student1  | Assignment 6 grading - point |
     And the following "block_dash > dash blocks default" exist:
-      | type       | name                  | title               | Fields                                                                                                                                                                                                                    | filters      |
+      | type       | name                  | title               | fields                                                                                                                                                                                                                    | filters      |
       | datasource | activity_completion   | Activity completion | Module icon, Activity Name (linked), Fullname linked, Completion override by, Completion override date, Start date, Due date, Grade max, Grade to pass, Current grade, Activity button, Toggle completion, Grade activity | Course, User |
     #---Student login---#
     And I log in as "student1"
@@ -58,13 +58,16 @@ Feature: Add activity completion datasource in dash block
     And I follow "Dashboard"
     And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
     And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Student')]" "xpath_element"
+    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
     #---Check toggle completion enabled in completed activity---#
     And I should see "Grade-scale" in the "Grade-scale" "table_row"
     #---Override activity---#
-    And I should see "Assignment 2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(2)" "css_element"
-    And "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[3]//a[contains(text(), 'Student 1')]" "xpath_element" should exist
-    And I click on ".activity-completion-override" "css_element" in the "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[12]" "xpath_element"
+    And the following should exist in the "dash-table" table:
+    | Activity Name (linked) | Fullname linked |
+    | Assignment 2           | Student 1       |
+    # And I should see "Assignment 2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(2)" "css_element"
+    # And "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[3]//a[contains(text(), 'Student 1')]" "xpath_element" should exist
+    And I click on ".activity-completion-override" "css_element" in the "//table[contains(@class, 'dash-table')]//tbody//tr[contains(., 'Assignment 2') and contains(., 'Student 1')]" "xpath_element"
     And I press "Save changes"
     #---Teacher log out---#
     And I log out
@@ -83,7 +86,7 @@ Feature: Add activity completion datasource in dash block
     And I log in as "teacher1"
     And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
     And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Student')]" "xpath_element"
+    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
     #---Override activity---#
     And I click on ".activity-completion-override" "css_element" in the "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[12]" "xpath_element"
     And I press "Save changes"
@@ -94,15 +97,15 @@ Feature: Add activity completion datasource in dash block
 
   Scenario: Check the activity grade fields
     #---Teacher login---#
-    And I log in as "teacher1"
+    Given I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I click on "Assignment 3" "link"
     And I click on assignment submissions link
     And I click on "#action-menu-1" "css_element" in the "Student 1" "table_row"
-    And I choose "Grade" in the open action menu
+    Then I choose "Grade" in the open action menu
     And I set the field "Grade out of 100" to "70"
     And I press "Save changes"
-    And I click on "Course: Course 1" "link"
+    When I click on "Course: Course 1" "link"
     And I click on "Assignment 4" "link"
     And I click on assignment submissions link
     And I click on "#action-menu-1" "css_element" in the "Student 1" "table_row"
@@ -112,20 +115,19 @@ Feature: Add activity completion datasource in dash block
     #---Teacher log out---#
     And I log out
     #---Student login---#
-    And I log in as "student1"
+    Then I log in as "student1"
     And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
     And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Student')]" "xpath_element"
-    And I should see "Grade max" in the ".dash-table thead tr:nth-child(1) th:nth-child(8)" "css_element"
-    And I should see "100" in the ".dash-table tbody tr:nth-child(4) td:nth-child(8)" "css_element"
-    And I should see "Grade to pass" in the ".dash-table thead tr:nth-child(1) th:nth-child(9)" "css_element"
-    And I should see "50" in the ".dash-table tbody tr:nth-child(4) td:nth-child(9)" "css_element"
-    And I should see "Current grade" in the ".dash-table thead tr:nth-child(1) th:nth-child(10)" "css_element"
-    And I should see "70" in the ".dash-table tbody tr:nth-child(3) td:nth-child(10)" "css_element"
-    And I should see "30" in the ".dash-table tbody tr:nth-child(4) td:nth-child(10)" "css_element"
+    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
+    And the following should exist in the "dash-table" table:
+    | Activity Name (linked) | Grade max | Grade to pass | Current grade |
+    | Assignment 4           | 100       | 50            | 30            |
+    | Assignment 3           | 100       |               | 70            |
     #---View the pass and fail grades color difference in the activity completion table---#
-    And ".badge-success" "css_element" should exist in the ".dash-table tbody tr:nth-child(3) td:nth-child(10) p" "css_element"
-    And ".badge-danger" "css_element" should exist in the ".dash-table tbody tr:nth-child(4) td:nth-child(10) p" "css_element"
+    # And ".badge-success" "css_element" should exist in the ".dash-table tbody tr:nth-child(3) td:nth-child(10) p" "css_element"
+    # And ".badge-danger" "css_element" should exist in the ".dash-table tbody tr:nth-child(4) td:nth-child(10) p" "css_element"
+    And ".badge-success" "css_element" should exist in the "Assignment 3" "table_row"
+    And ".badge-danger" "css_element" should exist in the "Assignment 4" "table_row"
 
   Scenario: Grade type
     #---Admin login---#
@@ -146,11 +148,12 @@ Feature: Add activity completion datasource in dash block
     And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
     #---Set grade scale in dashboard activity completion table---#
     And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Student')]" "xpath_element"
+    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
     And I click on "Grade" "link" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
     And I set the field "Grade" to "2"
     And I press "Save changes"
     #---Set grade point in dashboard activity completion table---#
+    And I wait "5" seconds
     And I click on "Grade" "link" in the ".dash-table tbody tr:nth-child(6) td:nth-child(13)" "css_element"
     And I set the field "Grade" to "60"
     And I press "Save changes"
@@ -197,7 +200,7 @@ Feature: Add activity completion datasource in dash block
     And I follow "Parent"
     And I set the field "addselect" to "parent 1 (student1@example.com)"
     And I click on "Add" "button" in the "#page-content" "css_element"
-   And I am on the "block_dash > Default Dashboard" page
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I wait until the page is ready
     And I open the "Activity completion" block preference
@@ -242,7 +245,7 @@ Feature: Add activity completion datasource in dash block
     And I log in as "student1"
     And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
     And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Student')]" "xpath_element"
+    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
     And I should see "Student 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(3)" "css_element"
     And I should see "Current grade" in the ".dash-table thead tr:nth-child(1) th:nth-child(10)" "css_element"
     And I should see "80" in the ".dash-table tbody tr:nth-child(5) td:nth-child(10)" "css_element"
@@ -254,7 +257,7 @@ Feature: Add activity completion datasource in dash block
   Scenario: Activity completion filters for user course activity
     #---Admin login---#
     And I log in as "admin"
-   And I am on the "block_dash > Default Dashboard" page
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I wait until the page is ready
     And I open the "Activity completion" block preference
@@ -276,7 +279,7 @@ Feature: Add activity completion datasource in dash block
     And I should see "Course 1" in the "Activity completion" "block"
     #---User filter---#
     And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Student')]" "xpath_element"
+    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
     And I should see "Assignment 1" in the ".dash-table tbody tr:first-child td:nth-child(2)" "css_element"
     #---Activity filter---#
     And I click on "select[name='cm_id'] + span .selection" "css_element"

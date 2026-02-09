@@ -48,7 +48,6 @@ use local_dash\data_grid\field\attribute\tags_attribute;
  * Enrol programs table structure definitions for programs datasource.
  */
 class programs_table extends table {
-
     /**
      * Build a new table.
      */
@@ -110,10 +109,15 @@ class programs_table extends table {
                 new tags_attribute(['component' => 'enrol_programs', 'itemtype' => 'program']),
             ]),
 
-            new field('description', new lang_string('description', 'block_dash'), $this,
-                'epp.descriptionformat, epp.description', [
+            new field(
+                'description',
+                new lang_string('description', 'block_dash'),
+                $this,
+                'epp.descriptionformat, epp.description',
+                [
                     new program_description_attribute(),
-            ]),
+                ]
+            ),
 
             new field('archived', new lang_string('archived', 'enrol_programs'), $this, 'epp.archived', [
                 new bool_attribute(),
@@ -166,7 +170,7 @@ class programs_table extends table {
 
             new field('smart_program_button', new lang_string('smart_coursebutton', 'block_dash'), $this, [
                 'select' => '(SELECT id FROM {enrol_programs_allocations}
-                    WHERE programid = epp.id AND userid = ' . $USER->id .')',
+                    WHERE programid = epp.id AND userid = ' . $USER->id . ')',
             ], [
                 new smart_program_button_attribute(),
             ]),

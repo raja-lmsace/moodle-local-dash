@@ -26,7 +26,7 @@ namespace dashaddon_activity_completion;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/externallib.php');
+require_once($CFG->libdir . '/externallib.php');
 
 use grade_plugin_return;
 use grade_report_grader;
@@ -37,21 +37,20 @@ use external_value;
 require_once($CFG->libdir . '/grade/grade_item.php');
 require_once($CFG->libdir . '/grade/grade_object.php');
 require_once($CFG->dirroot . '/grade/report/lib.php');
-require_once($CFG->dirroot.'/grade/report/grader/lib.php');
-require_once($CFG->dirroot.'/grade/lib.php');
+require_once($CFG->dirroot . '/grade/report/grader/lib.php');
+require_once($CFG->dirroot . '/grade/lib.php');
 
 /**
  * Define external class.
  */
 class external extends \external_api {
-
     /**
      * Parameters defintion to grade activity.
      *
      * @return array list of option parameters.
      */
     public static function grade_activity_parameters() {
-        return new external_function_parameters (
+        return new external_function_parameters(
             [
                 'userid' => new external_value(PARAM_INT, 'User id'),
                 'formdata' => new external_value(PARAM_RAW, 'The data from the grade activity'),
@@ -76,8 +75,10 @@ class external extends \external_api {
 
         require_once($CFG->libdir . '/completionlib.php');
 
-        $vaildparams = self::validate_parameters(self::grade_activity_parameters(),
-            ['userid' => $userid, 'formdata' => $formdata, 'cmid' => $cmid, 'gradeitemid' => $gradeitemid]);
+        $vaildparams = self::validate_parameters(
+            self::grade_activity_parameters(),
+            ['userid' => $userid, 'formdata' => $formdata, 'cmid' => $cmid, 'gradeitemid' => $gradeitemid]
+        );
         parse_str($vaildparams['formdata'], $gradedata);
 
         $cmid = $vaildparams['cmid'];
@@ -85,7 +86,7 @@ class external extends \external_api {
 
         $message = '';
         $status = false;
-        list($course, $cm) = get_course_and_cm_from_cmid($cmid);
+        [$course, $cm] = get_course_and_cm_from_cmid($cmid);
 
         $coursecontext = \context_course::instance($course->id);
         $gpr = new grade_plugin_return(['type' => 'report', 'plugin' => 'grader', 'courseid' => $course->id]);
@@ -122,7 +123,6 @@ class external extends \external_api {
             'message' => $message,
             'status' => $status,
         ];
-
     }
 
     /**

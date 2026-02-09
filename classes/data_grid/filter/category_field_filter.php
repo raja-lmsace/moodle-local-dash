@@ -41,4 +41,50 @@ class category_field_filter extends select_filter {
 
         parent::init();
     }
+
+    /**
+     * Get filter SQL operation.
+     *
+     * @return string
+     */
+    public function get_operation() {
+        // Use custom operation when multicategory plugin is available.
+        if (class_exists('\customfield_multicategory\condition_helper')) {
+            return self::OPERATION_CUSTOM;
+        }
+        return self::OPERATION_IN_OR_EQUAL;
+    }
+
+    /**
+     * Return where SQL and params for placeholders.
+     *
+     * @return array
+     */
+    public function get_sql_and_params() {
+        global $DB;
+
+        $values = $this->get_values();
+        if (empty($values)) {
+            return ['', []];
+        }
+
+        $select = $this->get_select();
+        $name = $this->get_name();
+
+        // Get the IN clause for main category.
+        [$insql, $params] = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED, $name . '_fcat');
+        $basesql = "$select $insql";
+
+        if (class_exists('\customfield_multicategory\condition_helper')) {
+            $result = \customfield_multicategory\condition_helper::extend_category_sql(
+                $basesql,
+                $params,
+                $values,
+                $name . '_mfcat'
+            );
+            return [$result['sql'], $result['params']];
+        }
+
+        return [$basesql, $params];
+    }
 }

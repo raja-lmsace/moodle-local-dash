@@ -34,8 +34,6 @@ use stdClass;
  * @package local_dash
  */
 class color_attribute extends abstract_field_attribute {
-
-
     /**
      * Transfrom the data to css class by adding the value to the prefix.
      *
@@ -57,7 +55,7 @@ class color_attribute extends abstract_field_attribute {
         $result .= $data;
 
         if ($this->get_option('badgemode')) {
-            $result = " " . html_writer::tag('span', $result, ['class' => 'badge dash-color-badge-mode '.$result]);
+            $result = " " . html_writer::tag('span', $result, ['class' => 'badge dash-color-badge-mode ' . $result]);
         }
 
         return $result;

@@ -1,69 +1,37 @@
 <?php
-namespace dashaddon_learningpath;
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * SVG parser for extracting zones.
+ *
+ * @package    dashaddon_learningpath
+ * @copyright  2024
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace dashaddon_learningpath;
 
 /**
  * SVG parser for extracting zones.
  */
 class svg_parser {
-
-    /**
-     * Parse SVG content and extract zones.
-     * @param string $svgcontent SVG content
-     * @return array Array of zones
-     */
-   /*  public static function parse_zones($svgcontent) {
-        $zones = [];
-        $supportedelements = self::get_supported_elements();
-
-        if (empty($svgcontent)) {
-            return $zones;
-        }
-
-        // Load SVG into DOMDocument for better parsing.
-        $dom = new \DOMDocument();
-        libxml_use_internal_errors(true);
-        $dom->loadXML($svgcontent);
-        libxml_clear_errors();
-
-        // Counter for each element type to ensure consistent IDs
-        $elementcounters = [];
-
-        foreach ($supportedelements as $elementtype) {
-
-            // Initialize counter for this element type
-            if (!isset($elementcounters[$elementtype])) {
-                $elementcounters[$elementtype] = 0;
-            }
-
-            $elements = $dom->getElementsByTagName($elementtype);
-
-            foreach ($elements as $element) {
-                $id = $element->getAttribute('id');
-                if (empty($id)) {
-                    $elementcounters[$elementtype]++;
-                    $id = 'zone_' . $elementtype . '_' . $elementcounters[$elementtype];
-                    $element->setAttribute('id', $id);
-                }
-
-                $zones[] = [
-                    'id' => $id,
-                    'type' => $elementtype,
-                    'typename' => self::get_type_display_name($elementtype),
-                    'attributes' => self::get_element_attributes($element),
-                    'position' => self::calculate_center_position($element, $elementtype)
-                ];
-            }
-        }
-
-        return $zones;
-    } */
-
-
     /**
      * Parse SVG content and extract zones in order.
      * @param string $svgcontent SVG content
+     * @param string $type SVG type
      * @return array Array of zones in the order they appear in SVG
      */
     public static function parse_zones($svgcontent, $type) {
@@ -80,35 +48,35 @@ class svg_parser {
         $dom->loadXML($svgcontent);
         libxml_clear_errors();
 
-        // Get the SVG root element
-        $svgElement = $dom->documentElement;
+        // Get the SVG root element.
+        $svgelement = $dom->documentElement;
 
-        // Counter for each element type
+        // Counter for each element type.
         $typecounters = [];
 
-        // Initialize counters for all supported types
+        // Initialize counters for all supported types.
         foreach ($supportedelements as $elementtype) {
             $typecounters[$elementtype] = 0;
         }
 
-        // Traverse all child nodes in document order
-        $allnodes = self::get_all_nodes_in_order($svgElement);
+        // Traverse all child nodes in document order.
+        $allnodes = self::get_all_nodes_in_order($svgelement);
 
         foreach ($allnodes as $element) {
-            // Check if this element is a supported zone type
+            // Check if this element is a supported zone type.
             $elementtype = strtolower($element->nodeName);
 
             if (!in_array($elementtype, $supportedelements)) {
                 continue;
             }
 
-            // Get the index for this element type
+            // Get the index for this element type.
             $zoneindex = $typecounters[$elementtype];
 
             // Generate zone ID.
             $zoneid = 'zone_' . $type . '_' . $elementtype . '_' . $zoneindex;
 
-            // Get existing ID or use generated one
+            // Get existing ID or use generated one.
             $existingid = $element->getAttribute('id');
             if (!empty($existingid)) {
                 $zoneid = $existingid;
@@ -120,10 +88,10 @@ class svg_parser {
                 'zoneindex' => $zoneindex,
                 'typename' => self::get_type_display_name($elementtype),
                 'attributes' => self::get_element_attributes($element),
-                'position' => self::calculate_center_position($element, $elementtype)
+                'position' => self::calculate_center_position($element, $elementtype),
             ];
 
-            // Increment counter for this type
+            // Increment counter for this type.
             $typecounters[$elementtype]++;
         }
 
@@ -139,12 +107,12 @@ class svg_parser {
     private static function get_all_nodes_in_order($element) {
         $nodes = [];
 
-        // Add current element if it's an element node
+        // Add current element if it's an element node.
         if ($element->nodeType === XML_ELEMENT_NODE) {
             $nodes[] = $element;
         }
 
-        // Traverse children
+        // Traverse children.
         if ($element->hasChildNodes()) {
             foreach ($element->childNodes as $child) {
                 if ($child->nodeType === XML_ELEMENT_NODE) {
@@ -231,7 +199,7 @@ class svg_parser {
                 $position = self::calculate_polygon_center($points);
                 break;
             case 'g':
-                // For groups, try to find a representative position
+                // For groups, try to find a representative position.
                 $bbox = self::calculate_group_bbox($element);
                 $position['x'] = $bbox['x'] + ($bbox['width'] / 2);
                 $position['y'] = $bbox['y'] + ($bbox['height'] / 2);
@@ -262,7 +230,7 @@ class svg_parser {
 
         return [
             'x' => $count > 0 ? $x / $count : 0,
-            'y' => $count > 0 ? $y / $count : 0
+            'y' => $count > 0 ? $y / $count : 0,
         ];
     }
 
@@ -272,13 +240,13 @@ class svg_parser {
      * @return array
      */
     private static function calculate_group_bbox($element) {
-        // Simplified bbox calculation - in real implementation,
-        // you'd need to traverse all child elements
+        // Simplified bbox calculation - in real implementation.
+        // You'd need to traverse all child elements.
         return [
             'x' => 0,
             'y' => 0,
             'width' => 100,
-            'height' => 100
+            'height' => 100,
         ];
     }
 
@@ -300,8 +268,10 @@ class svg_parser {
 
             foreach ($elements as $element) {
                 $element->setAttribute('data-zone-type', $elementtype);
-                $element->setAttribute('class',
-                    trim($element->getAttribute('class') . ' learningpath-zone'));
+                $element->setAttribute(
+                    'class',
+                    trim($element->getAttribute('class') . ' learningpath-zone')
+                );
             }
         }
 
