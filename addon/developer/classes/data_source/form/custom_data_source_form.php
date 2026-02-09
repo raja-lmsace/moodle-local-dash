@@ -479,7 +479,7 @@ class custom_data_source_form extends persistent_form {
      *
      * @param stdClass|array $defaultvalues object or array of default values
      */
-    function set_data($defaultvalues) {
+    public function set_data($defaultvalues) {
         if (is_object($defaultvalues)) {
             $defaultvalues = (array) $defaultvalues;
         }
@@ -539,7 +539,7 @@ class custom_data_source_form extends persistent_form {
         $addstring = null,
         $addbuttoninside = false,
         $deletebuttonname = ''
-        ) {
+    ) {
         if ($addstring === null) {
             $addstring = get_string('addfields', 'form', $addfieldsno);
         } else {
@@ -604,14 +604,14 @@ class custom_data_source_form extends persistent_form {
         for ($i = 0; $i < $repeats; $i++) {
             foreach ($options as $elementname => $elementoptions) {
                 $pos = strpos($elementname, '[');
-                if ($pos !== FALSE) {
+                if ($pos !== false) {
                     $realelementname = substr($elementname, 0, $pos) . "[$i]";
                     $realelementname .= substr($elementname, $pos);
                 } else {
                     $realelementname = $elementname . "[$i]";
                 }
-                foreach ($elementoptions as  $option => $params) {
-                    switch ($option){
+                foreach ($elementoptions as $option => $params) {
+                    switch ($option) {
                         case 'default':
                             $mform->setDefault($realelementname, str_replace('{no}', $i + 1, $params));
                             break;
