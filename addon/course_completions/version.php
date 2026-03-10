@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die('No direct access');
 
 $plugin->component = 'dashaddon_course_completions';
-$plugin->version = 2024042502;
+$plugin->version = 2024042501;
 $plugin->requires  = 2017051509;
 $plugin->maturity  = MATURITY_ALPHA;
 $plugin->release = '1.0';

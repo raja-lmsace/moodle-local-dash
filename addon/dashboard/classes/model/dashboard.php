@@ -176,26 +176,8 @@ class dashboard extends persistent {
      * @return bool Returns `false` if the cache is not recreated, otherwise no return value.
      */
     public function clear_hook_cache($create = false) {
-        global $DB;
-        $dbman = $DB->get_manager();
-
-        if (!$create) {
-            if (
-                !$dbman->table_exists('dashaddon_dashboard_dash') ||
-                !$DB->record_exists('dashaddon_dashboard_dash', ['redirecttodashboard' => true, 'permission' => 'public'])
-            ) {
-                return false;
-            }
-        }
-        $cache = \cache::make('core', 'hookcallbacks');
-        // Remove the event callbacks and recreate.
-        $cache->delete('callbacks');
-
-        // Build the callbacks again.
-        $hookmanager = \core\hook\manager::get_instance();
-        $allhooks = $hookmanager->get_all_callbacks();
-
-        $cache->set('callbacks', $allhooks);
+        $hookmanager = new \dashaddon_dashboard\local\hooks\helper();
+        return $hookmanager->clear_hook_cache($create);
     }
 
     /**

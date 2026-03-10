@@ -335,19 +335,23 @@ function dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
     require_once($CFG->libdir . '/gradelib.php');
     require_once($CFG->dirroot . '/grade/lib.php');
     require_once($CFG->dirroot . '/grade/querylib.php');
-    // Filter the disabled enrollments.
+
     $context = \context_course::instance($courseid);
     $course = get_course($courseid);
+
     $courseprogress = \core_completion\progress::get_course_progress_percentage($course);
     $courseprogress = $courseprogress ? round($courseprogress) : 0;
+
     $completion = new completion_info($course);
-    $report['notstarted'] = ($courseprogress == 0) ? true : false;
+
+    $report = [];
+    $report['notstarted'] = ($courseprogress == 0);
     if ($DB->record_exists('course_completion_crit_compl', ['course' => $courseid, 'userid' => $userid])) {
         $report['inprogress'] = true;
     } else {
-        $report['inprogress'] = ($courseprogress > 0) ? true : false;
+        $report['inprogress'] = ($courseprogress > 0);
     }
-    $report['completed'] = ($completion->is_course_complete($userid)) ? true : false;
+    $report['completed'] = $completion->is_course_complete($userid);
     if (!$DB->record_exists('course_completion_criteria', ['course' => $courseid]) && $courseprogress == 100) {
         $report['completed'] = true;
     }
@@ -356,21 +360,38 @@ function dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
 
     $now = time();
 
+    // Availability logic: only relevant if not completed and not in progress.
     if (!$report['completed'] && !$report['inprogress']) {
         $enrolled = is_enrolled($context, $userid);
 
         if (!$enrolled) {
             $instances = enrol_get_instances($course->id, true);
-            $hasselfenrol = false;
+            $canselfenrol = false;
+            $guestaccess = false;
 
+            // Self enrol plugin (may be null if not installed).
+            $selfplugin = enrol_get_plugin('self');
+            
             foreach ($instances as $instance) {
-                if ($instance->enrol == 'self' && $instance->status == ENROL_INSTANCE_ENABLED) {
-                    $hasselfenrol = true;
-                    break;
+                // Self enrolment: use can_self_enrol() to respect dates, limits, keys, etc.
+                if ($instance->enrol === 'self' && $selfplugin) {
+                    $result = $selfplugin->can_self_enrol($instance); // No $userid here.
+            
+                    // Only treat it as available if it *really* returns boolean true.
+                    if ($result === true) {
+                        $canselfenrol = true;
+                    }
+                }
+            
+                // Guest access: enabled guest enrol instance.
+                if ($instance->enrol === 'guest' && $instance->status == ENROL_INSTANCE_ENABLED) {
+                    $guestaccess = true;
                 }
             }
 
-            if ($hasselfenrol) {
+            // Your rule:
+            // "available" if user can self enrol NOW or guest access is enabled, but is NOT enrolled.
+            if ($canselfenrol || $guestaccess) {
                 $report['available'] = true;
             } else {
                 $report['unavailable'] = true;
@@ -378,6 +399,7 @@ function dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
         }
     }
 
+    // Existing checks for suspended / time-limited enrolments.
     $manager = new \course_enrolment_manager($PAGE, $course);
     $userenrolments = $manager->get_user_enrolments($USER->id);
     foreach ($userenrolments as $ue) {
@@ -389,6 +411,7 @@ function dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
         }
     }
 
+    // Possible "failed" detection.
     if (
         !$report['completed'] && $record = $DB->get_record(
             'course_completion_criteria',
@@ -408,6 +431,7 @@ function dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
             $report['failed'] = true;
         }
     }
+
     return $report;
 }
 

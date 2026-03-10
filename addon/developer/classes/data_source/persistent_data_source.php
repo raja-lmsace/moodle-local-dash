@@ -109,8 +109,12 @@ class persistent_data_source extends abstract_data_source {
                 }
 
                 $alias = $joinalias[$key]; // Table alias.
-                $builder->join($join, $alias, '', '');
-                $builder->join_condition($alias, $joinon[$key]);
+                $joinval = $joinon[$key];
+                // Update the current user placeholder in the join condition and get the parameters to bind in the query.
+                $extraparam = $this->update_current_user_query($joinval);
+
+                $builder->join($join, $alias, '', '', join::TYPE_INNER_JOIN, $extraparam);
+                $builder->join_condition($alias, $joinval);
             }
         }
 
@@ -179,10 +183,14 @@ class persistent_data_source extends abstract_data_source {
      * @param string $value
      * @return string|int
      */
-    public function update_current_user($value) {
+    public function update_current_user($value)  {
         global $USER;
 
         if (str_contains($value, '[LOGINUSER')) {
+
+            // [LOGINUSER]
+            // [LOGINUSER:id]
+            // [LOGINUSER:username]
             preg_match('/\[LOGINUSER(?::(\w+))?\]/i', $value, $matches);
             $field = $matches[1] ?? 'id';
 
@@ -206,6 +214,7 @@ class persistent_data_source extends abstract_data_source {
         global $USER;
         static $paramindex = 0;
 
+        // Match [LOGINUSER] or [LOGINUSER:field]
         preg_match_all('/\[LOGINUSER(?::(\w+))?\]/i', $value, $matches, PREG_SET_ORDER);
 
         if (empty($matches)) {
@@ -219,8 +228,8 @@ class persistent_data_source extends abstract_data_source {
 
             $paramname = "usr{$field}{$paramindex}";
 
-            // Replace only the first occurrence each time.
-            $value = preg_replace('/\[LOGINUSER(?::(\w+))?\]/i', ':' . $paramname, $value, 1);
+            // Replace only the first occurrence each time
+            $value = preg_replace('/\[LOGINUSER(?::(\w+))?\]/i', ':'.$paramname, $value, 1);
 
             if (property_exists($USER, $field)) {
                 $params[$paramname] = $USER->{$field};

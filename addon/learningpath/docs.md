@@ -4,8 +4,7 @@
 
 The Learning Path Widget is a Dash block addon that enables educators to create visual, interactive learning paths in Moodle. Unlike standard course lists, this widget displays courses along customizable SVG paths, providing students with a clear visual representation of their progression through a learning sequence.
 
-The widget addresses the limitation in standard Moodle where courses cannot be combined into visual learning paths, a feature available in platforms like Moodle Workplace or Totara. While plugins like mod_subcourse or Designer Pro's prerequisites feature offer some pathway functionality, they lack the visual, interactive experience that modern learners expect.
-
+The widget addresses the limitation in standard Moodle where courses cannot be combined into visual learning paths, a feature available in platforms like Moodle Workplace or Totara.
 ## Key Features
 
 The Learning Path Widget provides:
@@ -25,11 +24,6 @@ The Learning Path Widget provides:
 3. Follow the installation prompts to complete the setup
 4. The widget will be available in the Dash block widget list
 
-**Requirements:**
-- Moodle 3.3 or higher
-- PHP 7.2 or higher
-- Dash (local_dash) plugin version 2021022300 or higher
-
 **Optional Plugins:**
 - tool_timetable - Enables assignment scheduling and status tracking features
 
@@ -41,6 +35,8 @@ The Learning Path Widget provides:
 
 The Info Area displays summary information about the learning path, including progress metrics, KPIs, and additional course details.
 
+<img width="549" height="509" alt="Infoarea-block-options" src="https://github.com/user-attachments/assets/7e658c6a-41f8-461b-9239-bf662ee02b36" />
+
 **Info Area Position** - This setting becomes available when Info Area is enabled. Choose between:
 
 - **Top** (default) - The info area appears as a horizontal bar above the learning path, similar to the current implementation
@@ -49,10 +45,17 @@ The Info Area displays summary information about the learning path, including pr
 When Position is set to **Sidebar**, additional configuration options become available:
 
 **KPI Settings** - Select up to 4 Key Performance Indicators from 5 available metrics:
-- **Info area KPI 1** - First KPI slot (optional)
-- **Info area KPI 2** - Second KPI slot (optional)
-- **Info area KPI 3** - Third KPI slot (optional)
-- **Info area KPI 4** - Fourth KPI slot (optional)
+
+   - **Courses** - Displays completed courses versus total courses in "X / Y" format (e.g., "3 / 10"). This metric provides students with a clear understanding of how much of the learning path they have completed and how much remains.
+   
+   - **Courses (%)** - Shows overall completion as a percentage (e.g., "30%"). This displays completed courses out of total courses as a percentage. This format is particularly effective for motivating students as they can see incremental progress even within partially completed courses.
+   
+   - **Badges** - Displays earned badges versus possible badges in "X / Y" format (e.g., "2 / 5"). This shows earned badges out of possible badges that can be collected in the courses contained in the learning path. This includes both course badges directly associated with learning path courses and site badges whose criteria reference these courses. Badge tracking adds gamification elements to encourage completion.
+   
+   - **Period** - Shows the enrollment period as a date range (e.g., "Jan 1 - Dec 31, 2025"). This displays the earliest enrollment start date of a course in the learning path until the latest enrollment end date of a course in the learning path. This helps students understand the expected timeline for completing the path.
+   
+   - **Status** - Indicates whether the user has completed all courses that have a due date in the past. Displays "On Track" if all past-due courses are completed, or "Not on Track" if any courses with past due dates remain incomplete. This requires the tool_timetable plugin to be installed and configured. This metric helps identify students who may need intervention or support.
+
 
 **Display Path Index** - When enabled, displays an expandable progress bar for each course in the path, color-coded by status (default: disabled)
 
@@ -61,6 +64,15 @@ When Position is set to **Sidebar**, additional configuration options become ava
 **Display Badges** - When enabled, displays badges that can be earned in the learning path courses. Unearned badges appear grayed out (default: disabled)
 
 The Info Area provides students with at-a-glance understanding of their progress and helps them identify what courses remain in their learning journey. The Sidebar position offers richer information display with KPIs, course lists, faculty, and badges.
+
+**Top**
+
+<img width="824" height="224" alt="top-info-area" src="https://github.com/user-attachments/assets/64b966ec-5b34-470a-9434-70998f88d809" />
+
+**Sidebar**
+
+<img width="1919" height="1464" alt="infoarea-coursecompletion-collapsed (1)" src="https://github.com/user-attachments/assets/03c78d33-15dc-490a-89a2-fd1a2c9e6bcc" />
+
 
 #### 2. **Course Size**
 
@@ -83,6 +95,9 @@ When enabled, this adds a "Start" marker at the beginning of the learning path, 
 #### 4. **Finish Element**
 
 When enabled, this adds a "Finish" marker at the end of the learning path, providing students with a clear goal and sense of completion.
+
+<img width="777" height="253" alt="info-settings" src="https://github.com/user-attachments/assets/ba7702cc-8d5d-4030-8f6a-2b8987a70436" />
+
 
 ### Layout and Positioning
 
@@ -151,13 +166,8 @@ The zone configuration window displays:
 - Rolling over a zone in the SVG highlights it in the list
 - The SVG displays all courses that are currently positioned, making it easy to visualize the learning path
 
-**Zone Assignment Behavior:**
+<img width="756" height="652" alt="zone_settings" src="https://github.com/user-attachments/assets/b6df30ce-553e-43ce-8f7b-c82084cd318e" />
 
-Zones where a course is manually assigned will not be used for automatic positioning. The manually assigned course will not appear in any other zone or on the path, ensuring each course appears exactly once.
-
-Enabled zones without manual course assignments are filled automatically in sequential order - the first course goes to the first enabled zone, the second course to the second enabled zone, and so on.
-
-This dual approach allows you to create highly customized learning paths where some courses are precisely positioned (such as capstone or milestone courses) while others flow naturally into remaining zones.
 
 ### Course Selection and Ordering
 
@@ -219,6 +229,8 @@ When enabled, displays courses that list the current course (the course page whe
 
 Available when the tool_timetable plugin is installed. This filter allows you to include courses based on assignment tags defined in the Timetable tool, enabling integration with scheduled learning programs.
 
+<img width="779" height="951" alt="conditions" src="https://github.com/user-attachments/assets/b8e47758-ae25-4e4b-85ac-e7d2a92de6de" />
+
 ### Visual Customization
 
 #### 1. **Course Shape**
@@ -243,6 +255,11 @@ The custom field option enables you to automatically assign different shapes to 
 - Exam → Diamond
 - Library → Star
 
+**Example: triangle-shape**
+
+<img width="914" height="739" alt="triangle-shape" src="https://github.com/user-attachments/assets/9afc950e-7a5f-47b6-933e-3b756fd4cb87" />
+
+
 #### 2. **Course Visual**
 
 This setting determines what appears inside each course shape. The Visual setting is only available when Course Size is set to anything other than Dot.
@@ -255,6 +272,9 @@ Available visual options:
 - **Determined by [custom field name]** - The course uses the icon associated with the custom course field on top of the background color determined by the status. This option appears when a custom course field is configured in global settings for icon mapping
 
 The Number option is particularly effective for linear learning paths where sequence is critical. Course Image provides immediate visual recognition of courses students are already familiar with. The custom field option allows you to display subject-specific or category-specific icons (such as Font Awesome icons) for each course.
+
+<img width="1920" height="1080" alt="course-visual" src="https://github.com/user-attachments/assets/25ca4b44-3652-4bda-936b-c527130006d4" />
+
 
 #### 3. **Status Colors**
 
@@ -270,67 +290,6 @@ Available status colors:
 - **Failed** - The user is enrolled, completed the course, but did not achieve the required course grade (suggested: red)
 
 Color selections should consider accessibility guidelines and ensure sufficient contrast for all users. Global color settings can be configured at Site administration → Plugins → Dash Pro, making these colors available for other widgets and data sources as well.
-
-## Info Area Features
-
-### Key Performance Indicators (KPIs)
-
-The widget supports five types of KPIs that can be displayed in any combination up to four slots:
-
-#### 1. **Courses**
-
-Displays completed courses versus total courses in "X / Y" format (e.g., "3 / 10"). This metric provides students with a clear understanding of how much of the learning path they have completed and how much remains.
-
-#### 2. **Courses (%)**
-
-Shows overall completion as a percentage (e.g., "30%"). This displays completed courses out of total courses as a percentage. This format is particularly effective for motivating students as they can see incremental progress even within partially completed courses.
-
-#### 3. **Badges**
-
-Displays earned badges versus possible badges in "X / Y" format (e.g., "2 / 5"). This shows earned badges out of possible badges that can be collected in the courses contained in the learning path. This includes both course badges directly associated with learning path courses and site badges whose criteria reference these courses. Badge tracking adds gamification elements to encourage completion.
-
-#### 4. **Period**
-
-Shows the enrollment period as a date range (e.g., "Jan 1 - Dec 31, 2025"). This displays the earliest enrollment start date of a course in the learning path until the latest enrollment end date of a course in the learning path. This helps students understand the expected timeline for completing the path.
-
-#### 5. **Status**
-
-Indicates whether the user has completed all courses that have a due date in the past. Displays "On Track" if all past-due courses are completed, or "Not on Track" if any courses with past due dates remain incomplete. This requires the tool_timetable plugin to be installed and configured. This metric helps identify students who may need intervention or support.
-
-### Sidebar-Specific Features
-
-When Info Area Position is set to Sidebar, additional display options become available:
-
-#### 1. **Display Path Index**
-
-When enabled, shows a complete list of all courses in the learning path with detailed progress information for each:
-
-- Course name (clickable link to the course)
-- Current completion percentage
-- Status indicator (completed, in progress, etc.)
-- Visual progress bar
-
-The path index gives students a detailed view of their progress without requiring them to click individual course elements.
-
-#### 2. **Display Faculty**
-
-When enabled, shows instructors and teachers from the learning path courses. You can select which roles to display (e.g., Teacher, Non-editing teacher, Course creator). For each faculty member, the widget displays:
-
-- Profile picture
-- Full name
-- Link to their profile page
-
-This feature is particularly valuable in guided learning programs where students benefit from knowing their instructors across multiple courses. The widget automatically aggregates and deduplicates faculty across all learning path courses.
-
-#### 3. **Display Badges**
-
-When enabled, displays all badges associated with the learning path courses, including:
-
-- Badge image
-- Badge name and description
-- Earned/not earned status with visual distinction
-
-This provides students with clear goals beyond course completion and reinforces the value of completing the entire learning path.
 
 ## Course Status Indicators
 
@@ -392,12 +351,17 @@ Similar to shapes, icons can be assigned based on custom field values:
 
 This creates immediate visual recognition of course subject areas without requiring course images, and provides a consistent icon scheme across your learning paths.
 
+<img width="826" height="826" alt="course-icon" src="https://github.com/user-attachments/assets/1971d63a-2497-4ddf-8da0-c9fc3eace81f" />
+
+
 ### Course Details Area
 
 Clicking any course element on the path displays detailed course information. The display method depends on the Info Area Position setting:
 
 **When Info Area Position is "Top" or disabled:**
 A modal window opens displaying course details.
+
+<img width="1905" height="947" alt="Details-area-modal" src="https://github.com/user-attachments/assets/05663108-e416-48ee-a57f-3c10da78c990" />
 
 **When Info Area Position is "Sidebar":**
 Course details appear in the available space within the details area section, allowing students to view course information while still seeing the learning path.
@@ -430,17 +394,7 @@ The details area includes a context-appropriate action button:
 
 This detailed view allows students to review course information and take immediate action without leaving the learning path interface.
 
-### Responsive Behavior
-
-The widget adapts to different screen sizes:
-
-**Desktop (1024px and above)** - Displays the full learning path with all features enabled, sidebar info area (if configured), and large course elements for easy identification.
-
-**Tablet (768px to 1023px)** - Uses tablet-optimized SVG path with adjusted spacing and medium-sized course elements for touch interaction.
-
-**Mobile (below 768px)** - Switches to mobile SVG path or grid layout, displays info area at the top (recommended), uses smaller course elements, and ensures all interactions are touch-friendly.
-
-Uploading SVG paths optimized for each viewport ensures the best possible experience across all devices.
+<img width="1912" height="1408" alt="Details-area" src="https://github.com/user-attachments/assets/9756236d-b546-48eb-b928-88a296da8fb6" />
 
 ## Global Settings
 
@@ -470,11 +424,17 @@ Navigate to: Site administration → Plugins → Local plugins → Dash addon: L
 
 These defaults are applied when creating new Learning Path widgets but can be overridden at the widget level.
 
+<img width="1208" height="723" alt="Infoarea-global-settings" src="https://github.com/user-attachments/assets/b327dfd7-8319-41e6-b697-da9f398b33a0" />
+
+
 #### Resource Management
 
 **Global SVG Paths** - Upload SVG files that are available to all Learning Path widgets across the site. These provide a starting point that individual widgets can override with their own SVG files.
 
 **Supported Zone Elements** - Configure which SVG element types are recognized as zones when using zone-based positioning. The default supported elements are `<circle>`, `<rect>`, and `<polygon>`. Administrators can add `<ellipse>` and `<g>` (group) elements to the supported list based on their SVG design requirements. This setting accepts a comma-separated list of element type names.
+
+<img width="1852" height="1494" alt="svg-global-settings" src="https://github.com/user-attachments/assets/4b67d5a7-852e-46d6-ab7b-ee3d76d211dd" />
+
 
 ### Dash Pro Global Settings
 
@@ -488,9 +448,15 @@ These settings are shared across multiple widgets and data sources to ensure vis
 
 **Shape Mapping** - Map each option of the selected custom field to a specific shape (Circle, Triangle, Hexagon, Diamond, Star). This mapping determines which shape appears for courses with each custom field value.
 
+<img width="1291" height="553" alt="shape-custom-field" src="https://github.com/user-attachments/assets/3e571bc0-3524-44c5-bbe5-ae29a0ab2548" />
+
+
 **Select course field for visual** - Choose which custom course field is used to determine course icons when the "Determined by [field name]" option is selected. This should be a custom field of type "Dropdown menu" containing subject areas or course categories.
 
 **Icon Mapping** - Map each option of the selected custom field to a specific icon using the icon picker. Icons are specified in Font Awesome notation and appear inside course shapes.
+
+<img width="1146" height="643" alt="visual-custom-field" src="https://github.com/user-attachments/assets/e84eb34e-0b08-4c4e-b96d-43c8508230eb" />
+
 
 #### Status Colors
 
@@ -504,6 +470,9 @@ Configure default colors for all six course statuses. These colors are used acro
 - **Failed Color** - For courses that did not meet grade requirements
 
 Widget-level color settings will override these global defaults.
+
+<img width="1233" height="1231" alt="color-status" src="https://github.com/user-attachments/assets/1311cb84-e943-4353-84ad-ee4e04e34aea" />
+
 
 ### Block-Specific Resources
 
@@ -530,56 +499,7 @@ When configuring SVG paths in the widget preferences, you can choose from:
 
 This flexibility ensures that educators and course coordinators can customize learning paths to match their specific needs while administrators maintain a library of standard templates.
 
-## Troubleshooting
-
-### Courses Not Displaying
-
-If no courses appear in the learning path:
-
-- Verify courses exist in the selected category filters
-- Check that courses are not hidden from students
-- Review filter combinations which may be too restrictive
-- Confirm the user has appropriate enrollment or access
-- Ensure the Limit setting is not set too low
-
-### SVG Path Issues
-
-If the SVG path does not display correctly:
-
-- Confirm an SVG file is uploaded in either global or block settings
-- Verify the SVG file format is valid using an SVG validator
-- Try re-uploading the SVG file
-- Clear Moodle caches (Site administration → Development → Purge all caches)
-- Check the browser console for JavaScript errors
-
-### Incorrect Completion Status
-
-If course completion status appears incorrect:
-
-- Enable course completion in the course settings
-- Configure completion criteria for the course
-- Verify the user's enrollment status and dates
-- Check for enrollment date restrictions
-- For grade-based completion, recalculate course grades
-
-### Color Settings Not Applying
-
-If status colors don't match your configuration:
-
-- Clear all Moodle caches
-- Perform a hard browser refresh (Ctrl+Shift+R or Cmd+Shift+R)
-- Verify color values are valid hexadecimal codes
-- Check that settings were saved successfully
-
-### Mobile Display Problems
-
-If the learning path doesn't display correctly on mobile devices:
-
-- Upload a mobile-specific SVG path optimized for small screens
-- Test using browser developer tools responsive mode
-- Consider reducing course image size for mobile viewports
-- Verify the mobile SVG file is not corrupted
-- Use grid layout as a fallback if SVG rendering fails
+<img width="972" height="904" alt="course-path-resources" src="https://github.com/user-attachments/assets/88e632b2-c713-4dd8-89d7-73f93b75d785" />
 
 ## Version Information
 

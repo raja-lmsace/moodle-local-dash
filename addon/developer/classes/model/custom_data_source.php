@@ -148,8 +148,7 @@ class custom_data_source extends persistent {
             if (is_null($value)) {
                 continue;
             }
-            $data->$property = in_array($property, ['fieldattribute', 'attributevalue']) ?
-                $this->revise_fieldattr($value) : json_decode($value);
+            $data->$property =  in_array($property, ['fieldattribute', 'attributevalue']) ? $this->revise_fieldattr($value) : json_decode($value);
         }
     }
 
@@ -162,7 +161,7 @@ class custom_data_source extends persistent {
     public function revise_fieldattr($value) {
 
         $value = json_decode($value) ?: [];
-        array_walk($value, function (&$item) {
+        array_walk($value, function(&$item) {
             if (!is_array($item)) {
                 $item = [$item];
             }

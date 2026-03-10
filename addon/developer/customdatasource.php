@@ -83,7 +83,6 @@ switch ($action) {
         $PAGE->navbar->add(get_string('editcustomdatasource', 'block_dash'));
 
         $id = required_param('id', PARAM_INT);
-
         $url = clone $PAGE->url;
         $url->params(['id' => $id]);
         $PAGE->set_url($url);

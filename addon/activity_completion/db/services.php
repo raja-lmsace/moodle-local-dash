@@ -28,7 +28,6 @@ $functions = [
     'dashaddon_activity_completion_grade_activity' => [
         'classname' => 'dashaddon_activity_completion\external',
         'methodname' => 'grade_activity',
-        'classpath' => '',
         'description' => 'Grade the activity in modal',
         'type' => 'write',
         'ajax' => true,

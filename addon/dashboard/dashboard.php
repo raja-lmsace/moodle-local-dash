@@ -75,7 +75,16 @@ $PAGE->blocks->add_region($regionname);
 $PAGE->blocks->set_default_region($regionname);
 $PAGE->set_pagelayout('mydashboard');
 
-require_login();
+$permission = $dashboard->get('permission');
+
+if ($permission !== 'public') {
+    require_login();
+
+    if (!$dashboard->has_access($USER)) {
+        throw new moodle_exception('notauthorized', 'block_dash');
+    }
+}
+
 $PAGE->set_title($dashboard->get('name'));
 $PAGE->set_heading($dashboard->get('name'));
 

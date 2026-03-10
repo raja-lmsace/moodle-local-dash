@@ -169,15 +169,14 @@ function local_dash_extend_settings_navigation($settingsnav, $context) {
             }
         }
     }
-
+    
     $hidecategory = get_config('local_dash', 'hidecoursecategory');
-    if ($hidecategory && !is_siteadmin()) {
+    if ($hidecategory && !is_siteadmin() && !has_capability('moodle/category:manage', context_system::instance())) {
         $redirecturl = new moodle_url('/my');
         $url = get_config('local_dash', 'courseredirecturl');
         $redirecturl = ($url != '') ? $url : $redirecturl;
-
         if ($PAGE->bodyid == 'page-course-index-category') {
-            if ($url != '' && strpos($url, $CFG->wwwroot) != true) {
+            if ($url != '' && strpos($url, $CFG->wwwroot) !== false) {
                 $redirecturl = new moodle_url($url);
             }
             redirect($redirecturl);

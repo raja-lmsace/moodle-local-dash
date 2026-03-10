@@ -46,7 +46,6 @@ class course_image_url_attribute extends abstract_field_attribute {
 
         require_once("$CFG->dirroot/course/lib.php");
         require_once("$CFG->dirroot/blocks/dash/lib.php");
-
         if ($course = $DB->get_record('course', ['id' => $data])) {
             if (block_dash_is_totara()) {
                 $image = course_get_image($course->id)->out();
