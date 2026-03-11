@@ -27,6 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 $functions = [
     'dashaddon_developer_get_database_schema_structure' => [
         'classname'     => 'dashaddon_developer\external',
+        'classpath'     => '',
         'methodname'    => 'get_database_schema_structure',
         'description'   => 'Get database schema structure info, tables and fields.',
         'type'          => 'read',
@@ -35,6 +36,7 @@ $functions = [
     ],
     'dashaddon_developer_get_field_edit_row' => [
         'classname'     => 'dashaddon_developer\external',
+        'classpath'     => '',
         'methodname'    => 'get_field_edit_row',
         'description'   => 'Get HTML for new field edit row.',
         'type'          => 'read',
@@ -43,6 +45,7 @@ $functions = [
     ],
     'dashaddon_developer_get_fields_list' => [
         'classname'     => 'dashaddon_developer\external',
+        'classpath'     => '',
         'methodname'    => 'get_fields_list',
         'description'   => 'Get HTML for new field edit row.',
         'type'          => 'read',

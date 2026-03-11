@@ -17,9 +17,9 @@
 /**
  * Activity completion external functions.
  *
- * @package     dashaddon_activity_completion
- * @copyright   2023 bdecent gmbh <https://bdecent.de>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activity_completion
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activity_completion;
@@ -43,7 +43,8 @@ require_once($CFG->dirroot . '/grade/lib.php');
 /**
  * Define external class.
  */
-class external extends \external_api {
+class external extends \external_api
+{
     /**
      * Parameters defintion to grade activity.
      *
@@ -63,17 +64,17 @@ class external extends \external_api {
     /**
      * grade the activity.
      *
-     * @param int $userid user id
-     * @param array $formdata get a grade data
-     * @param int $cmid Course module id
-     * @param int $gradeitemid Grade item id
+     * @param int   $userid      user id
+     * @param array $formdata    get a grade data
+     * @param int   $cmid        Course module id
+     * @param int   $gradeitemid Grade item id
      *
      * @return array $message
      */
     public static function grade_activity($userid, $formdata, $cmid, $gradeitemid) {
         global $CFG;
 
-        require_once($CFG->libdir . '/completionlib.php');
+        include_once($CFG->libdir . '/completionlib.php');
 
         $vaildparams = self::validate_parameters(
             self::grade_activity_parameters(),

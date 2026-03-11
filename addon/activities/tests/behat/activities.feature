@@ -49,10 +49,29 @@ Feature: Add activities widget in dash block
       | Tag of Choice      | 1           |
       | Tag of Page        | 1           |
       | Tag of Assignment  | 1           |
-    And the following "block_dash > dash blocks default" exist:
-      | type       | name       | title      | fields | disablefields                   | filters                                                              |
-      | datasource | activities | Activities | all    | c_idnumber, cc_idnumber         | Category, Course, Module Name, Activities tags, Type, Module purpose |
     And I log in as "admin"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    And I add the "Dash" block
+    And I click on "Activities" "radio"
+    And I configure the "New Dash" block
+    And I set the following fields to these values:
+      | Block title  | Activities |
+      | Region       | content    |
+    And I press "Save changes"
+    Then I open the "Activities" block preference
+    Then I click on "Fields" "link"
+    And I click on "Select all" "button"
+    Then I click on "Filters" "link"
+    Then I set the following fields to these values:
+        | Category        | 1 |
+        | Course          | 1 |
+        | Module Name     | 1 |
+        | Activities tags | 1 |
+        | Type            | 1 |
+        | Module purpose  | 1 |
+    And I press "Save changes"
+    And I click on "Reset Dashboard for all users" "button"
     Then I am on the "Test choice 1" "choice activity" page
     And I follow "Settings"
     And I expand all fieldsets
@@ -73,7 +92,7 @@ Feature: Add activities widget in dash block
     And I press "Save and display"
     And I log out
 
-  Scenario: Activities datasource list
+  Scenario: activities datasource list
     Given I log in as "student1"
     And ".dash-block-content .dash-table" "css_element" should exist
     And I should see "Test choice 1" in the "Activities" "block"
@@ -82,32 +101,71 @@ Feature: Add activities widget in dash block
     And I should see "Test assignment 1" in the "Activities" "block"
     And I should see "Test assignment 2" in the "Activities" "block"
 
-  Scenario: Check the activities datasource fields
+  Scenario: check the activities datasource fields
     Given I log in as "student1"
     And ".dash-block-content .dash-table" "css_element" should exist
-    And I wait "20" seconds
-    And the following should exist in the "dash-table" table:
-    | Activity name     | Description                | ID number | Type     | Module Name | Module purpose  | Due date            |
-    | Test choice 1     | Test choice 01 description | choice1   | Activity | Choice      | Communication   | ##+2day##%d/%m/%y## |
-    | Test choice 2     | Test choice 02 description | choice2   | Activity | Choice      | Communication   |                     |
-    | Test page 1       | Test page 01 description   | page      | Resource | Page        | Content         | ##+5day##%d/%m/%y## |
-    | Test assignment 1 | Test assign 01 description | assign1   | Activity | Assignment  | Assessment      |                     |
-    Then I click on "//a[contains(text(), 'Test choice 1')]" "xpath" in the "Test choice 1" "table_row"
-    And I should see "Test choice 1"
+    And I should see "Test choice 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    And I should see "Test choice 2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(2)" "css_element"
+    And I should see "Test page 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(2)" "css_element"
+    And I should see "Test assignment 1" in the ".dash-table tbody tr:nth-child(8) td:nth-child(2)" "css_element"
+    # Description
+    And I should see "Test choice 01 description" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    And I should see "Test choice 02 description" in the ".dash-table tbody tr:nth-child(2) td:nth-child(6)" "css_element"
+    And I should see "Test page 01 description" in the ".dash-table tbody tr:nth-child(5) td:nth-child(6)" "css_element"
+    # Id number
+    And I should see "choice1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
+    And I should see "choice2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(7)" "css_element"
+    And I should see "page" in the ".dash-table tbody tr:nth-child(5) td:nth-child(7)" "css_element"
+    And I should see "assign1" in the ".dash-table tbody tr:nth-child(8) td:nth-child(7)" "css_element"
+    # Type
+    And I should see "Activity" in the ".dash-table tbody tr:nth-child(1) td:nth-child(9)" "css_element"
+    And I should see "Resource" in the ".dash-table tbody tr:nth-child(5) td:nth-child(9)" "css_element"
+    And I should see "Activity" in the ".dash-table tbody tr:nth-child(8) td:nth-child(9)" "css_element"
+    # Module Name
+    And I should see "Choice" in the ".dash-table tbody tr:nth-child(1) td:nth-child(10)" "css_element"
+    And I should see "Page" in the ".dash-table tbody tr:nth-child(5) td:nth-child(10)" "css_element"
+    And I should see "Assignment" in the ".dash-table tbody tr:nth-child(8) td:nth-child(10)" "css_element"
+    # Module Image.
+    Then "//table[contains(@class, 'dash-table')]//tr[1]//td[1]//img[contains(@src, 'image.php') and contains(@src, '/boost/choice')]" "xpath_element" should exist
+    Then "//table[contains(@class, 'dash-table')]//tr[5]//td[1]//img[contains(@src, 'image.php') and contains(@src, '/boost/page')]" "xpath_element" should exist
+    Then "//table[contains(@class, 'dash-table')]//tr[8]//td[1]//img[contains(@src, 'image.php') and contains(@src, '/boost/assign')]" "xpath_element" should exist
+    # Purpose.
+    And I should see "Communication" in the ".dash-table tbody tr:nth-child(1) td:nth-child(11)" "css_element"
+    And I should see "Content" in the ".dash-table tbody tr:nth-child(5) td:nth-child(11)" "css_element"
+    And I should see "Assessment" in the ".dash-table tbody tr:nth-child(8) td:nth-child(11)" "css_element"
+    # Completion status.
+    And I should see "Not completed" in the ".dash-table tbody tr:nth-child(1) td:nth-child(12)" "css_element"
+    And I should see "Not completed" in the ".dash-table tbody tr:nth-child(5) td:nth-child(12)" "css_element"
+    And I should see "" in the ".dash-table tbody tr:nth-child(8) td:nth-child(12)" "css_element"
+    # Completion due date.
+    And I should see "##+2day##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(14)" "css_element"
+    And I should see "##+5day##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(5) td:nth-child(14)" "css_element"
+    Then I click on ".dash-table tbody tr:nth-child(1) td:nth-child(5) a" "css_element"
+    Then I should see "Test choice 1"
     And I press "Mark as done"
     Then I follow "Dashboard"
-    # Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(5) a" "css_element"
-    Then I click on "//a[contains(text(), 'Test page 1')]" "xpath" in the "Test page 1" "table_row"
-    And I should see "Test page 1"
-    # Then I wait "10" seconds
+    Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(5) a" "css_element"
+    Then I should see "Test page 1"
+    Then I wait "10" seconds
     And I press "Mark as done"
     Then I follow "Dashboard"
     # check the activity completion or not.
-    And the following should exist in the "dash-table" table:
-    | Activity name     | Completion status | Completion date     |
-    | Test choice 1     | Completed         | ##today##%d/%m/%y## |
-    | Test page 1       | Completed         | ##today##%d/%m/%y## |
-    And I should see "Category 01 / Course 2 / General" in the "Test choice 1" "table_row"
+    And I should see "Completed" in the ".dash-table tbody tr:nth-child(1) td:nth-child(12)" "css_element"
+    And I should see "Completed" in the ".dash-table tbody tr:nth-child(5) td:nth-child(12)" "css_element"
+    # Completion date.
+    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(13)" "css_element"
+    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
+    # Module section.
+    Then I should see "General" in the ".dash-table tbody tr:nth-child(1) td:nth-child(4)" "css_element"
+    # # Module section link.
+    # Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(15) a" "css_element"
+    # Then I should see "Topic 1"
+    # Then I follow "Dashboard"
+    # Then I click on ".dash-table tbody tr:nth-child(8) td:nth-child(15) a" "css_element"
+    # Then I should see "Topic 2"
+    # Then I follow "Dashboard"
+    # Module path
+    Then I should see "Category 01 / Course 2 / General" in the ".dash-table tbody tr:nth-child(1) td:nth-child(16)" "css_element"
 
   Scenario: check the activities datasource filters
     Given I log in as "student1"
@@ -219,11 +277,11 @@ Feature: Add activities widget in dash block
     Then I log out
     # Set tag as Tag of choice
     And I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     Then I open the "Activities" block preference
     Then I click on "Conditions" "link"
-    And I set the field "Activities tags" to "1"
+    And I click on "Activities tags" "checkbox"
     And I set the field "Tags" to "Tag of Choice"
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
@@ -235,7 +293,7 @@ Feature: Add activities widget in dash block
     Then I log out
     #Set tag as Tag of Assignment
     Then I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     Then I open the "Activities" block preference
     Then I click on "Conditions" "link"
@@ -250,7 +308,7 @@ Feature: Add activities widget in dash block
     Then I log out
     # Set tag as Tag of choice, Tag of Page
     Then I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     Then I open the "Activities" block preference
     Then I click on "Conditions" "link"

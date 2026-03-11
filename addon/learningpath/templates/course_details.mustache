@@ -57,58 +57,6 @@
             <div class="summary-block card-text">
                 <p>{{{summary}}}</p>
             </div>
-
-            {{#hasassignment}}
-            <div class="assignment-info-block">
-                <h6 class="assignment-info-title">{{#str}}assignmentinformation, block_dash{{/str}}</h6>
-                <div class="assignment-info-grid">
-                    {{#assignment.startdate}}
-                    <div class="assignment-info-item">
-                        <span class="assignment-info-label">{{#str}}assignment_startdate, block_dash{{/str}}:</span>
-                        <span class="assignment-info-value">{{assignment.startdate}}</span>
-                    </div>
-                    {{/assignment.startdate}}
-
-                    {{#assignment.duedate}}
-                    <div class="assignment-info-item">
-                        <span class="assignment-info-label">{{#str}}assignment_duedate, block_dash{{/str}}:</span>
-                        <span class="assignment-info-value assignment-due">{{assignment.duedate}}</span>
-                    </div>
-                    {{/assignment.duedate}}
-
-                    {{#assignment.enddate}}
-                    <div class="assignment-info-item">
-                        <span class="assignment-info-label">{{#str}}assignment_enddate, block_dash{{/str}}:</span>
-                        <span class="assignment-info-value">{{assignment.enddate}}</span>
-                    </div>
-                    {{/assignment.enddate}}
-
-                    {{#assignment.typename}}
-                    <div class="assignment-info-item">
-                        <span class="assignment-info-label">{{#str}}assignment_type, block_dash{{/str}}:</span>
-                        <span class="assignment-info-value assignment-type-{{assignment.type}}">{{assignment.typename}}</span>
-                    </div>
-                    {{/assignment.typename}}
-
-                    {{#assignment.priorityname}}
-                    <div class="assignment-info-item">
-                        <span class="assignment-info-label">{{#str}}assignment_priority, block_dash{{/str}}:</span>
-                        <span class="assignment-info-value assignment-priority {{assignment.priorityclass}}">{{assignment.priorityname}}</span>
-                    </div>
-                    {{/assignment.priorityname}}
-
-                    <div class="assignment-info-item assignment-tags-item">
-                        <span class="assignment-info-label">{{#str}}assignment_tags, block_dash{{/str}}:</span>
-                        <div class="assignment-tag-list">
-                        {{#assignment.tags}}
-                            <span class="assignment-info-value assignment-tags">{{name}}</span>
-                        {{/assignment.tags}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/hasassignment}}
-
             <div class="btn-block">
             {{^notstarted}}
                 <a href="{{courseurl}}" class="btn btn-primary">{{^completed}}{{#str}} resumecourse, block_dash{{/str}}{{/completed}} {{#completed}}{{#str}} completedcourse, block_dash{{/str}}{{/completed}}</a>

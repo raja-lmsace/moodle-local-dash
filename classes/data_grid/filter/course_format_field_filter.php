@@ -16,9 +16,10 @@
 
 /**
  * Filter option to filter the list records based on the course format.
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -27,7 +28,8 @@ use block_dash\local\data_grid\filter\select_filter;
 /**
  * Filter option to filter the list records based on the course format.
  */
-class course_format_field_filter extends select_filter {
+class course_format_field_filter extends select_filter
+{
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -35,7 +37,7 @@ class course_format_field_filter extends select_filter {
     public function init() {
         global $CFG;
 
-        require_once("$CFG->dirroot/course/lib.php");
+        include_once("$CFG->dirroot/course/lib.php");
 
         if ($formats = get_sorted_course_formats(true)) {
             foreach ($formats as $format) {

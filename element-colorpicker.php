@@ -17,9 +17,9 @@
 /**
  * Dash - Form element for color picker
  *
- * @package    local_dash
- * @copyright  2023 bdecent GmbH <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2023 bdecent GmbH <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -35,7 +35,8 @@ require_once($CFG->dirroot . '/lib/form/text.php');
  * @copyright 2023 bdecent GmbH <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class moodlequickform_local_dash_colorpicker extends MoodleQuickForm_text implements templatable {
+class moodlequickform_local_dash_colorpicker extends MoodleQuickForm_text implements templatable
+{
     use templatable_form_element {
         export_for_template as export_for_template_base;
     }
@@ -43,9 +44,9 @@ class moodlequickform_local_dash_colorpicker extends MoodleQuickForm_text implem
     /**
      * Constructor.
      *
-     * @param string $elementname (optional) Name of the text field.
+     * @param string $elementname  (optional) Name of the text field.
      * @param string $elementlabel (optional) Text field label.
-     * @param string $attributes (optional) Either a typical HTML attribute string or an associative array.
+     * @param string $attributes   (optional) Either a typical HTML attribute string or an associative array.
      */
     public function __construct($elementname = null, $elementlabel = null, $attributes = null) {
         parent::__construct($elementname, $elementlabel, $attributes);
@@ -62,7 +63,7 @@ class moodlequickform_local_dash_colorpicker extends MoodleQuickForm_text implem
     /**
      * Export for template.
      *
-     * @param renderer_base $output
+     * @param  renderer_base $output
      * @return array|stdClass
      */
     public function export_for_template(renderer_base $output) {
@@ -80,7 +81,8 @@ class moodlequickform_local_dash_colorpicker extends MoodleQuickForm_text implem
         $id = $this->getAttribute('id');
 
         // Add JS to append the color picker div before the element and initiate the color picker utility method.
-        $PAGE->requires->js_amd_inline("
+        $PAGE->requires->js_amd_inline(
+            "
             var element = document.getElementById('$id');
             var pickerDiv = document.createElement('div');
             pickerDiv.classList.add('admin_colourpicker', 'clearfix');
@@ -89,7 +91,8 @@ class moodlequickform_local_dash_colorpicker extends MoodleQuickForm_text implem
             element.parentNode.style.flexDirection = 'column';
             // Init color picker utility.
             M.util.init_colour_picker(Y, '$id');
-        ");
+        "
+        );
 
         return $context;
     }

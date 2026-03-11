@@ -41,9 +41,6 @@ Feature: Add activity completion datasource in dash block
       | Assignment 4 | student1  | Insects are hexapod invertebrates of the class Insecta. |
       | Assignment 5 | student1  | Assignment 5 grading - scale |
       | Assignment 6 | student1  | Assignment 6 grading - point |
-    And the following "block_dash > dash blocks default" exist:
-      | type       | name                  | title               | fields                                                                                                                                                                                                                    | filters      |
-      | datasource | activity_completion   | Activity completion | Module icon, Activity Name (linked), Fullname linked, Completion override by, Completion override date, Start date, Due date, Grade max, Grade to pass, Current grade, Activity button, Toggle completion, Grade activity | Course, User |
     #---Student login---#
     And I log in as "student1"
     And I am on "Course 1" course homepage
@@ -51,23 +48,50 @@ Feature: Add activity completion datasource in dash block
     And I toggle the manual completion state of "Assignment 2"
     And the manual completion button of "Assignment 2" is displayed as "Done"
     And I log out
+    #---Admin loggedin---#
+    And I log in as "admin"
+    And I turn dash block editing mode on
+    And I create dash "Activity Completion" datasource
+    And I configure the "New Dash" block
+    And I set the following fields to these values:
+      | Block title  | Activity completion |
+      | Region       | content             |
+    And I press "Save changes"
+    And I should see "Activity completion"
+    And I open the "Activity completion" block preference
+    #---Set the fields and filters---#
+    Then I click on "Fields" "link"
+    And I set the field "Activities: Module icon" to "1"
+    And I set the field "Activities: Activity Name (linked)" to "1"
+    And I set the field "Users: Fullname linked" to "1"
+    And I set the field "Activity Completion: Completion override by" to "1"
+    And I set the field "Activity Completion: Completion override date" to "1"
+    And I set the field "Activity Completion: Start date" to "1"
+    And I set the field "Activity Completion: Due date" to "1"
+    And I set the field "Activity grade: Grade max" to "1"
+    And I set the field "Activity grade: Grade to pass" to "1"
+    And I set the field "Activity grade: Current grade" to "1"
+    And I set the field "Action: Activity button" to "1"
+    And I set the field "Action: Toggle completion" to "1"
+    And I set the field "Action: Grade activity" to "1"
+    And I click on "Filters" "link"
+    And I set the field "Course" to "1"
+    And I set the field "User" to "1"
+    And I press "Save changes"
+    And I press "Reset Dashboard for all users"
+    #---Admin log out---#
+    And I log out
 
   Scenario: Override activity completion and check as student
     #---Teacher login---#
     And I log in as "teacher1"
-    And I follow "Dashboard"
-    And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
-    And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
     #---Check toggle completion enabled in completed activity---#
-    And I should see "Grade-scale" in the "Grade-scale" "table_row"
+    And "[data-state=0]" "css_element" should exist in the ".dash-table tbody tr:nth-child(2) td:nth-child(15)" "css_element"
     #---Override activity---#
-    And the following should exist in the "dash-table" table:
-    | Activity Name (linked) | Fullname linked |
-    | Assignment 2           | Student 1       |
-    # And I should see "Assignment 2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(2)" "css_element"
-    # And "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[3]//a[contains(text(), 'Student 1')]" "xpath_element" should exist
-    And I click on ".activity-completion-override" "css_element" in the "//table[contains(@class, 'dash-table')]//tbody//tr[contains(., 'Assignment 2') and contains(., 'Student 1')]" "xpath_element"
+    And I should see "Assignment 2" in the ".dash-table tbody tr:nth-child(2) td:nth-child(3)" "css_element"
+    And "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[6]//a[contains(text(), 'Student 1')]" "xpath_element" should exist
+    And I click on ".activity-completion-override" "css_element" in the "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[15]" "xpath_element"
     And I press "Save changes"
     #---Teacher log out---#
     And I log out
@@ -84,28 +108,26 @@ Feature: Add activity completion datasource in dash block
   Scenario: Override activity completion and check override username
     #---Teacher login---#
     And I log in as "teacher1"
-    And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
-    And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
     #---Override activity---#
-    And I click on ".activity-completion-override" "css_element" in the "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[12]" "xpath_element"
+    And I click on ".activity-completion-override" "css_element" in the "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[15]" "xpath_element"
     And I press "Save changes"
     #---check override teacher name---#
-    And "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[4]//a[contains(text(), 'teacher 1')]" "xpath_element" should exist
+    And "//table[contains(@class, 'dash-table')]//tbody//tr[2]//td[7]//a[contains(text(), 'teacher 1')]" "xpath_element" should exist
     #---Teacher log out---#
     And I log out
 
   Scenario: Check the activity grade fields
     #---Teacher login---#
-    Given I log in as "teacher1"
+    And I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I click on "Assignment 3" "link"
     And I click on assignment submissions link
     And I click on "#action-menu-1" "css_element" in the "Student 1" "table_row"
-    Then I choose "Grade" in the open action menu
+    And I choose "Grade" in the open action menu
     And I set the field "Grade out of 100" to "70"
     And I press "Save changes"
-    When I click on "Course: Course 1" "link"
+    And I click on "Course: Course 1" "link"
     And I click on "Assignment 4" "link"
     And I click on assignment submissions link
     And I click on "#action-menu-1" "css_element" in the "Student 1" "table_row"
@@ -115,19 +137,18 @@ Feature: Add activity completion datasource in dash block
     #---Teacher log out---#
     And I log out
     #---Student login---#
-    Then I log in as "student1"
-    And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
-    And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
-    And the following should exist in the "dash-table" table:
-    | Activity Name (linked) | Grade max | Grade to pass | Current grade |
-    | Assignment 4           | 100       | 50            | 30            |
-    | Assignment 3           | 100       |               | 70            |
+    And I log in as "student1"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "Grade max" in the ".dash-table thead tr:nth-child(1) th:nth-child(11)" "css_element"
+    And I should see "100" in the ".dash-table tbody tr:nth-child(4) td:nth-child(11)" "css_element"
+    And I should see "Grade to pass" in the ".dash-table thead tr:nth-child(1) th:nth-child(12)" "css_element"
+    And I should see "50" in the ".dash-table tbody tr:nth-child(4) td:nth-child(12)" "css_element"
+    And I should see "Current grade" in the ".dash-table thead tr:nth-child(1) th:nth-child(13)" "css_element"
+    And I should see "70" in the ".dash-table tbody tr:nth-child(3) td:nth-child(13)" "css_element"
+    And I should see "30" in the ".dash-table tbody tr:nth-child(4) td:nth-child(13)" "css_element"
     #---View the pass and fail grades color difference in the activity completion table---#
-    # And ".badge-success" "css_element" should exist in the ".dash-table tbody tr:nth-child(3) td:nth-child(10) p" "css_element"
-    # And ".badge-danger" "css_element" should exist in the ".dash-table tbody tr:nth-child(4) td:nth-child(10) p" "css_element"
-    And ".badge-success" "css_element" should exist in the "Assignment 3" "table_row"
-    And ".badge-danger" "css_element" should exist in the "Assignment 4" "table_row"
+    And ".badge-success" "css_element" should exist in the ".dash-table tbody tr:nth-child(3) td:nth-child(13) p" "css_element"
+    And ".badge-danger" "css_element" should exist in the ".dash-table tbody tr:nth-child(4) td:nth-child(13) p" "css_element"
 
   Scenario: Grade type
     #---Admin login---#
@@ -145,16 +166,13 @@ Feature: Add activity completion datasource in dash block
     And I set the field "grade[modgrade_point]" to "90"
     And I press "Save and display"
     And I follow "Dashboard"
-    And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
     #---Set grade scale in dashboard activity completion table---#
-    And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
-    And I click on "Grade" "link" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
+    And I click on "Grade" "link" in the ".dash-table tbody tr:nth-child(5) td:nth-child(16)" "css_element"
     And I set the field "Grade" to "2"
     And I press "Save changes"
     #---Set grade point in dashboard activity completion table---#
-    And I wait "5" seconds
-    And I click on "Grade" "link" in the ".dash-table tbody tr:nth-child(6) td:nth-child(13)" "css_element"
+    And I click on "Grade" "link" in the ".dash-table tbody tr:nth-child(6) td:nth-child(16)" "css_element"
     And I set the field "Grade" to "60"
     And I press "Save changes"
     #---Admin log out---#
@@ -167,7 +185,7 @@ Feature: Add activity completion datasource in dash block
     And I click on "Grade-point" "link" in the "courseindex-content" "region"
     And I should see "60.00"
 
-  Scenario: Parent role grading child activity
+  Scenario: Parent roll grading child activity
     Given the following "users" exist:
       | username | firstname | lastname | email                |
       | parent   | parent    | 1        | student1@example.com |
@@ -200,72 +218,49 @@ Feature: Add activity completion datasource in dash block
     And I follow "Parent"
     And I set the field "addselect" to "parent 1 (student1@example.com)"
     And I click on "Add" "button" in the "#page-content" "css_element"
-    And I am on the "block_dash > Default Dashboard" page
-    And I turn dash block editing mode on
-    And I wait until the page is ready
-    And I open the "Activity completion" block preference
-    #---Set the parent condition---#
-    And I click on "Conditions" "link"
-    And I set the field "config_preferences[filters][parentrole][enabled]" to "1"
-    And I set the field "config_preferences[filters][parentrole][roleids][]" to "Parent"
-    And I press "Save changes"
-    And I press "Reset Dashboard for all users"
     #---Admin log out---#
     And I log out
-
     #---Parent login---#
     And I log in as "parent"
-    And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
-    And I should see "Grade-scale" in the ".dash-table tbody tr:nth-child(5) td:nth-child(2)" "css_element"
-    And I should see "Student 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(3)" "css_element"
-    And I should see "Grade" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
-    And I click on "Grade" "link" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "Grade-scale" in the ".dash-table tbody tr:nth-child(5) td:nth-child(3)" "css_element"
+    And I should see "Student 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(6)" "css_element"
+    And I should see "Grade" in the ".dash-table tbody tr:nth-child(5) td:nth-child(16)" "css_element"
+    And I click on "Grade" "link" in the ".dash-table tbody tr:nth-child(5) td:nth-child(16)" "css_element"
     And I set the field "Grade" to "80"
     And I press "Save changes"
-    And I should see "Student 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(3)" "css_element"
-    And I should see "Current grade" in the ".dash-table thead tr:nth-child(1) th:nth-child(10)" "css_element"
-    And I should see "80" in the ".dash-table tbody tr:nth-child(5) td:nth-child(10)" "css_element"
+    And I should see "Student 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(6)" "css_element"
+    And I should see "Current grade" in the ".dash-table thead tr:nth-child(1) th:nth-child(13)" "css_element"
+    And I should see "80" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
     #---Parent log out---#
-    And I log out
-
-    And I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
-    And I turn dash block editing mode on
-    And I wait until the page is ready
-    And I open the "Activity completion" block preference
-    #---Set the parent condition---#
-    And I click on "Conditions" "link"
-    And I set the field "config_preferences[filters][parentrole][enabled]" to "0"
-    And I press "Save changes"
-    And I press "Reset Dashboard for all users"
-    #---Admin log out---#
     And I log out
 
     #---Student login---#
     And I log in as "student1"
-    And I should see "Activity completion" in the ".block_dash h3.card-title" "css_element"
-    And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
-    And I should see "Student 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(3)" "css_element"
-    And I should see "Current grade" in the ".dash-table thead tr:nth-child(1) th:nth-child(10)" "css_element"
-    And I should see "80" in the ".dash-table tbody tr:nth-child(5) td:nth-child(10)" "css_element"
+    And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "Student 1" in the ".dash-table tbody tr:nth-child(5) td:nth-child(6)" "css_element"
+    And I should see "Current grade" in the ".dash-table thead tr:nth-child(1) th:nth-child(13)" "css_element"
+    And I should see "80" in the ".dash-table tbody tr:nth-child(5) td:nth-child(13)" "css_element"
 
     And I am on "Course 1" course homepage
     And I am on the "Grade-scale" "assign activity" page
     And I should see "Grade" in the ".feedbacktable .generaltable tbody tr th" "css_element"
+    And I wait "5" seconds
 
   Scenario: Activity completion filters for user course activity
     #---Admin login---#
     And I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
-    And I wait until the page is ready
     And I open the "Activity completion" block preference
     #---Set the fields and filters---#
     And I click on "Filters" "link"
     And I set the field "User" to "1"
     And I set the field "Course" to "1"
     And I set the field "Activity" to "1"
+    And I click on "Fields" "link"
+    And I set the field "Users: First name" to "0"
+    And I set the field "Users: Fullname linked" to "1"
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
     #---Admin log out---#
@@ -279,7 +274,7 @@ Feature: Add activity completion datasource in dash block
     And I should see "Course 1" in the "Activity completion" "block"
     #---User filter---#
     And I click on "select[name='u_id'] + span .selection" "css_element"
-    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'student1')]" "xpath_element"
+    And I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Student')]" "xpath_element"
     And I should see "Assignment 1" in the ".dash-table tbody tr:first-child td:nth-child(2)" "css_element"
     #---Activity filter---#
     And I click on "select[name='cm_id'] + span .selection" "css_element"

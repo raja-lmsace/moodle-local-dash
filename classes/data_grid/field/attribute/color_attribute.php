@@ -17,9 +17,9 @@
 /**
  * Transforms data into bootstrap badge color class name.
  *
- * @package    local_dash
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\field\attribute;
@@ -33,13 +33,14 @@ use stdClass;
  *
  * @package local_dash
  */
-class color_attribute extends abstract_field_attribute {
+class color_attribute extends abstract_field_attribute
+{
     /**
      * Transfrom the data to css class by adding the value to the prefix.
      *
      * For badge mode convert this as booststrap badge and add this value + prefix as class name and conttent of the badge.
      *
-     * @param string $data
+     * @param string   $data
      * @param stdClass $record
      *
      * @return string

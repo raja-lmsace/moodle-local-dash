@@ -16,9 +16,10 @@
 
 /**
  * Limit dashboards to non-public (logged in dashboards only).
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -31,9 +32,11 @@ use block_dash\local\data_grid\filter\filter;
  *
  * @package local_dash
  */
-class enrollment_nonself_condition extends enrollment_self_condition {
+class enrollment_nonself_condition extends enrollment_self_condition
+{
     /**
      * filter constructor.
+     *
      * @param string $name
      * @param string $select
      * @param string $label
@@ -46,6 +49,7 @@ class enrollment_nonself_condition extends enrollment_self_condition {
 
     /**
      * Get the enrolment field filter label.
+     *
      * @return string
      */
     public function get_label() {

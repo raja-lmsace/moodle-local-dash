@@ -1,4 +1,4 @@
-# Dash
+# Dash 
 This is the local companion plugin for the additional features (addons) in Dash Plus, Dash Pro and Dash Premium.
 
 ## Addons
@@ -27,16 +27,19 @@ _Includes Plus addons_
 ### Dash Premium
 _Includes Pro addons_
 - activity_completion
+- activitycompletion
 - developer
 - learningpath
 - roleassignments
 
 ## Addons from other plugins
-Additional data sources and widgets can be implemented by other plugins. These will automatically be available if the Dash Block is installed. Datas ources are restricted though to the table layout if the local plugin is not installed.
+Additional data sources and widgets can be implemented by other plugins. These will automatically be available if the Dash Block is installed. Data sources are restricted though to the table layout if the local plugin is not installed.
 
-### Video Time Pro
-- Sessions
+### Video Time Basic
 - Statistics
+
+### Video Time Pro/Premium
+- Sessions
 
 ### Magic Pro
 - Campaigns
@@ -44,3 +47,6 @@ Additional data sources and widgets can be implemented by other plugins. These w
 ### Skills Premium
 - Level visuals
 - Progress
+
+### Time Table
+- Assignments

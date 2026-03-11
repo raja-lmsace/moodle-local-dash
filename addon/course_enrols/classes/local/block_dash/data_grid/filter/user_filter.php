@@ -17,9 +17,9 @@
 /**
  * Filters results to specific mentess user.
  *
- * @package    dashaddon_course_enrols
- * @copyright  2022 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_enrols
+ * @copyright 2022 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_enrols\local\block_dash\data_grid\filter;
@@ -30,12 +30,12 @@ use block_dash\local\data_grid\filter\filter_collection_interface;
 /**
  * Filters results to specific mentess user.
  */
-class user_filter extends select_filter {
+class user_filter extends select_filter
+{
     use filter_element;
 
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
-     *
      */
     public function init() {
         global $DB;
@@ -63,8 +63,8 @@ class user_filter extends select_filter {
     /**
      * Override this method and call it after creating a form element.
      *
-     * @param filter_collection_interface $filtercollection
-     * @param string $elementnameprefix
+     * @param  filter_collection_interface $filtercollection
+     * @param  string                      $elementnameprefix
      * @throws \Exception
      * @return string
      */

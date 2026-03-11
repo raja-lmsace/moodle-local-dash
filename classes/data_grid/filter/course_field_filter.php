@@ -16,9 +16,10 @@
 
 /**
  * Course based filter select box.
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -28,7 +29,8 @@ use block_dash\local\data_grid\filter\select_filter;
 /**
  * Course based filter select box.
  */
-class course_field_filter extends select_filter {
+class course_field_filter extends select_filter
+{
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -36,16 +38,22 @@ class course_field_filter extends select_filter {
     public function init() {
         global $DB;
 
-        $this->add_options($DB->get_records_sql_menu("SELECT DISTINCT id, fullname
+        $this->add_options(
+            $DB->get_records_sql_menu(
+                "SELECT DISTINCT id, fullname
                                                       FROM {course}
                                                       WHERE format != :format AND visible = 1
-                                                      ORDER BY fullname", ['format' => 'site']));
+                                                      ORDER BY fullname",
+                ['format' => 'site']
+            )
+        );
 
         parent::init();
     }
 
     /**
      * Get filter config label.
+     *
      * @return string
      */
     public function get_label() {

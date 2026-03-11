@@ -16,9 +16,10 @@
 
 /**
  * Parent role condition.
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -30,7 +31,8 @@ use MoodleQuickForm;
 /**
  * Parent role condition.
  */
-class context_level_condition extends condition {
+class context_level_condition extends condition
+{
     /**
      * Get values from filter based on user selection. All filters must return an array of values.
      *
@@ -54,6 +56,7 @@ class context_level_condition extends condition {
 
     /**
      * Get condition label.
+     *
      * @return string
      */
     public function get_label() {
@@ -67,9 +70,9 @@ class context_level_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,

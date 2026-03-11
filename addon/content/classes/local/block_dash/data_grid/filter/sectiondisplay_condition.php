@@ -17,9 +17,9 @@
 /**
  * Filters results to specific sections.
  *
- * @package    dashaddon_content
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_content
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_content\local\block_dash\data_grid\filter;
@@ -37,7 +37,8 @@ use dashaddon_content\local\block_dash\content_customtype;
  *
  * @package dashaddon_content
  */
-class sectiondisplay_condition extends condition {
+class sectiondisplay_condition extends condition
+{
     /**
      * Get filter SQL operation.
      *
@@ -105,9 +106,9 @@ class sectiondisplay_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,

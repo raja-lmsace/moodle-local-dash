@@ -17,10 +17,10 @@
 /**
  * Behat Course sections steps definitions.
  *
- * @package    dashaddon_course_sections
- * @category   test
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_sections
+ * @category  test
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(__DIR__ . '/../../../../../../lib/behat/behat_base.php');
@@ -32,19 +32,20 @@ Behat\Mink\Exception\ExpectationException;
 /**
  * Course sections steps definitions.
  *
- * @package    dashaddon_course_sections
- * @category   test
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_sections
+ * @category  test
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class behat_dashaddon_course_sections extends behat_base {
+class behat_dashaddon_course_sections extends behat_base
+{
     /**
      * Check that the focus mode enable.
      *
-     * @Given /^I check style css"(?P<color>(?:[^"]|\\")*)" "(?P<selector>(?:[^"]|\\")*)" "(?P<type>(?:[^"]|\\")*)"$/
-     * @param string $value
-     * @param string $selector
-     * @param string $type
+     * @Given  /^I check style css"(?P<color>(?:[^"]|\\")*)" "(?P<selector>(?:[^"]|\\")*)" "(?P<type>(?:[^"]|\\")*)"$/
+     * @param  string $value
+     * @param  string $selector
+     * @param  string $type
      * @throws ExpectationException
      */
     public function i_check_style_css($value, $selector, $type): void {

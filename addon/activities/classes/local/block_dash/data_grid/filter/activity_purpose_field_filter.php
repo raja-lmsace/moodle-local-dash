@@ -16,9 +16,10 @@
 
 /**
  * Module type based filter option.
- * @package    dashaddon_activities
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_activities
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash\data_grid\filter;
@@ -29,7 +30,8 @@ use block_dash\local\data_grid\filter\filter;
 /**
  * Modulename based filter option.
  */
-class activity_purpose_field_filter extends select_filter {
+class activity_purpose_field_filter extends select_filter
+{
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -50,8 +52,10 @@ class activity_purpose_field_filter extends select_filter {
         $designerpurposes = [];
 
         if (dashaddon_activities_is_designer_pro_installed()) {
-            $values = $DB->get_records_sql_menu("SELECT DISTINCT id, name
-                FROM {local_designer_purposes} WHERE custom = 1");
+            $values = $DB->get_records_sql_menu(
+                "SELECT DISTINCT id, name
+                FROM {local_designer_purposes} WHERE custom = 1"
+            );
 
             $designerpurposes = array_combine(array_values($values), array_values($values));
         }
@@ -63,6 +67,7 @@ class activity_purpose_field_filter extends select_filter {
 
     /**
      * Get the enrolment status filter label.
+     *
      * @return string
      */
     public function get_label() {
@@ -83,12 +88,15 @@ class activity_purpose_field_filter extends select_filter {
         $coursemodules = [];
         if ($lists) {
             [$moduleinsql, $moduleinparams] = $DB->get_in_or_equal($lists, SQL_PARAMS_NAMED);
-            $coursemodules = $DB->get_records_sql_menu("
+            $coursemodules = $DB->get_records_sql_menu(
+                "
             SELECT cm.id AS key1, cm.id AS key2 FROM {course_modules} cm
             JOIN {modules} m ON m.id = cm.module
             JOIN {course} c ON c.id = cm.course
             WHERE c.format != 'designer' AND m.name $moduleinsql
-            ", $moduleinparams);
+            ",
+                $moduleinparams
+            );
         }
 
         if (dashaddon_activities_is_designer_pro_installed()) {
@@ -106,11 +114,14 @@ class activity_purpose_field_filter extends select_filter {
 
             [$purposesinsql, $purposesinparams] = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED);
 
-            $records = $DB->get_records_sql_menu("SELECT cm.id AS key1, cm.id AS key2 FROM {course} c
+            $records = $DB->get_records_sql_menu(
+                "SELECT cm.id AS key1, cm.id AS key2 FROM {course} c
                         JOIN {course_modules} cm ON cm.course = c.id
                         JOIN {modules} m ON m.id = cm.module
                         JOIN {format_designer_options} fdo ON fdo.cmid = cm.id
-                        WHERE c.format = 'designer' AND fdo.name = 'purpose' AND fdo.value $purposesinsql", $purposesinparams);
+                        WHERE c.format = 'designer' AND fdo.name = 'purpose' AND fdo.value $purposesinsql",
+                $purposesinparams
+            );
              $coursemodules = array_merge($coursemodules, $records);
         }
         if ($coursemodules) {

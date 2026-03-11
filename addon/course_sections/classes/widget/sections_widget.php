@@ -17,9 +17,9 @@
 /**
  * Enrolments widget class contains the layout information and generate the data for widget.
  *
- * @package    dashaddon_course_sections
- * @copyright  2022 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_sections
+ * @copyright 2022 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_sections\widget;
@@ -36,7 +36,8 @@ use html_writer;
 /**
  * Course sections widget class contains the layout information and generate the data for widget.
  */
-class sections_widget extends abstract_widget {
+class sections_widget extends abstract_widget
+{
     /**
      * Check the datasource is widget.
      *
@@ -123,22 +124,22 @@ class sections_widget extends abstract_widget {
     /**
      * Get course section contents.
      *
-     * @param stdClass $course
+     * @param  stdClass $course
      * @return array
      */
     public function get_course_section_contents($course) {
         global $CFG, $DB, $USER, $PAGE;
         // Include library files.
-        require_once($CFG->dirroot . "/course/lib.php");
-        require_once($CFG->libdir . '/completionlib.php');
-        require_once($CFG->libdir . '/externallib.php');
+        include_once($CFG->dirroot . "/course/lib.php");
+        include_once($CFG->libdir . '/completionlib.php');
+        include_once($CFG->libdir . '/externallib.php');
         // Retrieve the course.
         $course = $DB->get_record('course', ['id' => $course->id], '*', MUST_EXIST);
 
         if ($course->id != SITEID) {
             // Check course format exist.
             if (file_exists($CFG->dirroot . '/course/format/' . $course->format . '/lib.php')) {
-                require_once($CFG->dirroot . '/course/format/' . $course->format . '/lib.php');
+                include_once($CFG->dirroot . '/course/format/' . $course->format . '/lib.php');
             }
         }
 
@@ -177,8 +178,6 @@ class sections_widget extends abstract_widget {
                     'notgeneral' => $section->section != 0 ? 1 : 0,
                     'expanded' => (!$hassections && $section->section == 0) ? 1 : 0,
                     'collapsible' => ($hassections || $section->section != 0),
-                    'datatoggle' => $CFG->branch >= 500 ? 'data-bs-toggle' : 'data-toggle',
-                    'datatarget' => $CFG->branch >= 500 ? 'data-bs-target' : 'data-target',
                 ];
 
                 if (!empty($section->availableinfo)) {
@@ -199,8 +198,13 @@ class sections_widget extends abstract_widget {
                     );
 
                 if ($course->format == 'designer') {
-                    $records = $DB->get_records('course_format_options', ['courseid' => $course->id, 'format' => 'designer',
-                        'sectionid' => $section->id], '', 'id,name,value');
+                    $records = $DB->get_records(
+                        'course_format_options',
+                        ['courseid' => $course->id, 'format' => 'designer',
+                        'sectionid' => $section->id],
+                        '',
+                        'id,name,value'
+                    );
 
                     foreach ($records as $record) {
                         $indexedrecords[$record->name] = $record->value;
@@ -342,8 +346,8 @@ class sections_widget extends abstract_widget {
     /**
      * Preference form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {

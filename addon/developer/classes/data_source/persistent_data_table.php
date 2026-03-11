@@ -17,9 +17,9 @@
 /**
  * Class persistent_data_table.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_developer\data_source;
@@ -40,7 +40,8 @@ use moodle_exception;
  *
  * @package dashaddon_developer
  */
-class persistent_data_table extends table {
+class persistent_data_table extends table
+{
     /**
      * Persistend modal to fetch the configured data of the datasoure tables and fields.
      *
@@ -85,7 +86,7 @@ class persistent_data_table extends table {
     /**
      * Set the title for the field.
      *
-     * @param string $title
+     * @param  string $title
      * @return void
      */
     public function set_title(string $title) {
@@ -94,14 +95,21 @@ class persistent_data_table extends table {
 
     /**
      * Define the fields available in the reports for this table data source.
+     *
      * @return field_interface[]
      */
     public function get_fields(): array {
 
         $fields = [
-            new field('id', new lang_string('developerfieldid', 'block_dash'), $this, null, [
+            new field(
+                'id',
+                new lang_string('developerfieldid', 'block_dash'),
+                $this,
+                null,
+                [
                 new identifier_attribute(),
-            ]),
+                ]
+            ),
         ];
 
         // Field repeats.
@@ -109,11 +117,6 @@ class persistent_data_table extends table {
         $selectfields = json_decode($this->modal->get('selectfield'));
         $fieldattributes = json_decode($this->modal->get('fieldattribute'));
         $customvalue = json_decode($this->modal->get('attributevalue'));
-
-        // Make sure the field attributes and custom values are in array format, if not convert them into array for the loop.
-        array_walk($customvalue, function (&$item) {
-            $item = is_array($item) ? $item : [$item];
-        });
 
         // Find the main table.
         $maintable = $this->modal->get('maintable');
@@ -161,40 +164,15 @@ class persistent_data_table extends table {
                 $fieldname = str_replace(DASHADDON_DEVELOPER_MAIN_ALIAS . '_', '', $fieldname);
 
                 // Create attribute to transform data.
-                $fieldattribute = [];
                 if ($fieldattributes[$i]) {
-
-                    if (!is_array($fieldattributes[$i])) {
-                        $fieldattributes[$i] = [$fieldattributes[$i]];
+                    $attribute = new $fieldattributes[$i]();
+                    if ($attribute->is_needs_construct_data()) {
+                        $attribute->set_transform_field(DASHADDON_DEVELOPER_MAIN_ALIAS . '_' . $fieldname, $customvalue[$i]);
+                        $attribute->set_placeholders($placeholders);
                     }
-
-                    $availableattributes = $fieldattributes[$i];
-                    $availableattributes = array_filter($availableattributes, fn($v) => !empty($v) && $v != false);
-
-                    // Apply the field attributes to the field.
-                    foreach ($availableattributes as $k => $attributeclass) {
-                        if (empty($attributeclass)) {
-                            continue;
-                        }
-                        if (!class_exists($attributeclass)) {
-                            throw new \moodle_exception('invalidfieldattribute', 'block_dash', '', $attributeclass);
-                        }
-
-                        $attribute = new $attributeclass();
-
-                        // Some attributes need the custom value to construct the data,
-                        // For example, the linked data attribute needs the url to construct the link,
-                        // So we need to set the custom value to the attribute before transform the data.
-                        if ($attribute->is_needs_construct_data() && !empty($customvalue[$i][$k])) {
-                            $attribute->set_transform_field(DASHADDON_DEVELOPER_MAIN_ALIAS . '_' . $fieldname, $customvalue[$i][$k]);
-                            $attribute->set_placeholders($placeholders);
-                        } else if ($attribute->supports_direct_field()) {
-                            // Attributes uses the direct field name to construct the data without receiving the data to transform,
-                            // So we can set the field name directly to the attribute.
-                            $attribute->set_transform_field(DASHADDON_DEVELOPER_MAIN_ALIAS . '_' . $fieldname);
-                        }
-                        $fieldattribute[] = $attribute;
-                    }
+                    $fieldattribute = [$attribute];
+                } else {
+                    $fieldattribute = [];
                 }
 
                 $realtable = array_flip($tablesalias);
@@ -207,7 +185,7 @@ class persistent_data_table extends table {
                     new lang_string('developerfield', 'block_dash', $realfield),
                     $this,
                     $sfield,
-                    $fieldattribute ?? []
+                    $fieldattribute
                 );
 
                 $fields[] = $field;

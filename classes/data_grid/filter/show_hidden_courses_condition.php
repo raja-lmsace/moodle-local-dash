@@ -17,9 +17,9 @@
 /**
  * Filters results to remove the hidden courses from the users.
  *
- * @package    local_dash
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -34,7 +34,8 @@ use MoodleQuickForm;
  *
  * @package local_dash
  */
-class show_hidden_courses_condition extends condition {
+class show_hidden_courses_condition extends condition
+{
     /**
      * Get filter SQL operation.
      *

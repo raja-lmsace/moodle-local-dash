@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course completion status.
  *
- * @package    local_dash
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -37,10 +37,10 @@ use MoodleQuickForm;
  *
  * @package local_dash
  */
-class course_dates_filter extends select_filter {
+class course_dates_filter extends select_filter
+{
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
-     *
      */
     public function init() {
         global $DB;
@@ -94,7 +94,6 @@ class course_dates_filter extends select_filter {
                         break;
                 }
             }
-
             return ['(' . implode(' OR ', $sql) . ')', $params];
         }
         return false;

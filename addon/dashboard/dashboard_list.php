@@ -16,14 +16,15 @@
 
 /**
  * Displays preconfigured dashboards.
- * @package    dashaddon_dashboard
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_dashboard
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use dashaddon_dashboard\table\dashboard_table;
 
-require(__DIR__ . '/../../../../config.php');
+require(__DIR__  . '/../../../../config.php');
 require_once("$CFG->libdir/adminlib.php");
 require_once($CFG->dirroot . "/local/dash/addon/dashboard/table/dashboard_table.php");
 
@@ -40,11 +41,18 @@ $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/dash/addon/dashboard/dashboard_list.php'));
 $PAGE->set_title(get_string('managedashboards', 'block_dash'));
 $PAGE->set_heading(get_string('managedashboards', 'block_dash'));
-$PAGE->set_button($OUTPUT->single_button(
-    new moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => 'create',
-    'contextid' => $contextid]),
-    get_string('createdashboard', 'block_dash')
-));
+$PAGE->set_button(
+    $OUTPUT->single_button(
+        new moodle_url(
+            '/local/dash/addon/dashboard/dashboards.php',
+            [
+            'action' => 'create',
+            'contextid' => $contextid,
+            ]
+        ),
+        get_string('createdashboard', 'block_dash')
+    )
+);
 $PAGE->navbar->add(get_string('managedashboards', 'block_dash'));
 
 require_login();

@@ -16,9 +16,10 @@
 
 /**
  * Users based filter option.
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -28,7 +29,8 @@ use block_dash\local\data_grid\filter\select_filter;
 /**
  * Users based filter option.
  */
-class user_fullname_filter extends select_filter {
+class user_fullname_filter extends select_filter
+{
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.

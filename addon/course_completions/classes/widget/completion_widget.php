@@ -17,9 +17,9 @@
 /**
  * Course completion widget class which contains the layout information and generate the data for widget.
  *
- * @package    dashaddon_course_completions
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_completions
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_completions\widget;
@@ -37,7 +37,8 @@ use local_dash\data_grid\filter\course_customfield_condition;
 /**
  * Course completion report widget class contains the layout information and generate the data for widget.
  */
-class completion_widget extends abstract_widget {
+class completion_widget extends abstract_widget
+{
     /**
      * Color Hex code for inprogress users dataset.
      *
@@ -157,10 +158,13 @@ class completion_widget extends abstract_widget {
         ];
 
         // Can't able to use the global variables for multiple instance.
-        $PAGE->requires->data_for_js('dashCourseCompletionData', [
+        $PAGE->requires->data_for_js(
+            'dashCourseCompletionData',
+            [
             'colors' => $completiondata['colors'],
             'datalabels' => $strings,
-        ]);
+            ]
+        );
 
         $this->data = (!empty($courses)) ? $completiondata : [];
 
@@ -208,19 +212,23 @@ class completion_widget extends abstract_widget {
             $courses[$record->courseid]['enrollments'][] = $record;
         }
 
-        array_walk($courses, function (&$course) {
-            global $OUTPUT;
-            $report = $this->generate_completion_stats($course['info']['id'], $course['enrollments']);
-            $course['report'] = $report;
-            $course['completionpercentage'] = isset($report['completionpercentage']) ? (int) $report['completionpercentage'] : 0;
-            $course['dataset'] = [
+        array_walk(
+            $courses,
+            function (&$course) {
+                global $OUTPUT;
+                $report = $this->generate_completion_stats($course['info']['id'], $course['enrollments']);
+                $course['report'] = $report;
+                $course['completionpercentage'] = isset($report['completionpercentage']) ?
+                    (int) $report['completionpercentage'] : 0;
+                $course['dataset'] = [
                 $report['completed'],
                 $report['inprogress'],
                 $report['notyetstarted'],
-            ];
-            // Make the enrollments empty to prevent the data limit reach issue for JS.
-            $course['enrollments'] = [];
-        });
+                ];
+                // Make the enrollments empty to prevent the data limit reach issue for JS.
+                $course['enrollments'] = [];
+            }
+        );
 
         return $courses;
     }
@@ -228,8 +236,8 @@ class completion_widget extends abstract_widget {
     /**
      * Generate the course completion report and convert the data to chart dataset.
      *
-     * @param int $courseid Course id
-     * @param array $enrollments Enrollments in the course.
+     * @param  int   $courseid    Course id
+     * @param  array $enrollments Enrollments in the course.
      * @return array course completion report.
      */
     private function generate_completion_stats($courseid, $enrollments) {
@@ -238,14 +246,17 @@ class completion_widget extends abstract_widget {
         // Filter the disabled enrollments.
         $context = \context_course::instance($courseid);
         $userslist = []; // Remove the user's multiple enrolment in one course.
-        $enrollments = array_filter($enrollments, function ($enrol) use ($context, &$userslist) {
-            $enrolled = is_enrolled($context, $enrol->userid, '', true);
-            if ($enrolled && !in_array($enrol->userid, $userslist)) {
-                $userslist[] = $enrol->userid;
-                return true;
+        $enrollments = array_filter(
+            $enrollments,
+            function ($enrol) use ($context, &$userslist) {
+                $enrolled = is_enrolled($context, $enrol->userid, '', true);
+                if ($enrolled && !in_array($enrol->userid, $userslist)) {
+                    $userslist[] = $enrol->userid;
+                    return true;
+                }
+                return false;
             }
-            return false;
-        });
+        );
 
         // List of active enrollments.
         $report['enrolled'] = count($enrollments);
@@ -262,8 +273,8 @@ class completion_widget extends abstract_widget {
     /**
      * Preference form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {

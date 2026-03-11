@@ -17,9 +17,9 @@
 /**
  * Class user_enrolments_table.
  *
- * @package    dashaddon_course_completions
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_completions
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_completions\local\dash_framework\structure;
@@ -51,7 +51,8 @@ use moodle_url;
  *
  * @package dashaddon_course_completions
  */
-class user_enrolments_table extends table {
+class user_enrolments_table extends table
+{
     /**
      * Build a new table.
      */
@@ -70,28 +71,65 @@ class user_enrolments_table extends table {
 
     /**
      * Define the fields available in the reports for this table data source.
+     *
      * @return field_interface[]
      */
     public function get_fields(): array {
         return [
-            new field('id', new lang_string('enrollment', 'block_dash'), $this, null, [
+            new field(
+                'id',
+                new lang_string('enrollment', 'block_dash'),
+                $this,
+                null,
+                [
                 new identifier_attribute(),
-            ]),
-            new field('timestart', new lang_string('enrollmenttimestart', 'block_dash'), $this, null, [
+                ]
+            ),
+            new field(
+                'timestart',
+                new lang_string('enrollmenttimestart', 'block_dash'),
+                $this,
+                null,
+                [
                 new date_attribute(),
-            ]),
-            new field('timeend', new lang_string('enrollmenttimeend', 'block_dash'), $this, null, [
+                ]
+            ),
+            new field(
+                'timeend',
+                new lang_string('enrollmenttimeend', 'block_dash'),
+                $this,
+                null,
+                [
                 new date_attribute(),
-            ]),
-            new field('daysuntilstart', new lang_string('daysuntilstart', 'block_dash'), $this, 'ue.timestart', [
+                ]
+            ),
+            new field(
+                'daysuntilstart',
+                new lang_string('daysuntilstart', 'block_dash'),
+                $this,
+                'ue.timestart',
+                [
                 new days_until_start_attribute(),
-            ]),
-            new field('daysuntilend', new lang_string('daysuntilend', 'block_dash'), $this, 'ue.timeend', [
+                ]
+            ),
+            new field(
+                'daysuntilend',
+                new lang_string('daysuntilend', 'block_dash'),
+                $this,
+                'ue.timeend',
+                [
                 new days_until_end_attribute(),
-            ]),
-            new field('status', new lang_string('status', 'block_dash'), $this, null, [
+                ]
+            ),
+            new field(
+                'status',
+                new lang_string('status', 'block_dash'),
+                $this,
+                null,
+                [
                 new enrol_status_attribute(),
-            ]),
+                ]
+            ),
         ];
     }
 }

@@ -17,9 +17,9 @@
 /**
  * Class categories_data_source.
  *
- * @package    dashaddon_categories
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_categories
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_categories\local\block_dash;
@@ -38,7 +38,8 @@ use local_dash\data_grid\filter\course_category_condition;
  *
  * @package dashaddon_categories
  */
-class categories_data_source extends abstract_data_source {
+class categories_data_source extends abstract_data_source
+{
     /**
      * Constructor.
      *
@@ -94,7 +95,7 @@ class categories_data_source extends abstract_data_source {
     /**
      * Set the default preferences of the Badge datasource, force the set the default settings.
      *
-     * @param array $data
+     * @param  array $data
      * @return array
      */
     public function set_default_preferences(&$data) {

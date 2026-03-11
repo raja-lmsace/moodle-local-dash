@@ -17,9 +17,9 @@
 /**
  * Filters results to specific activity completion status.
  *
- * @package    dashaddon_activity_completion
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activity_completion
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activity_completion\local\block_dash\data_grid\filter;
@@ -36,7 +36,8 @@ use MoodleQuickForm;
  *
  * @package dashaddon_activity_completion
  */
-class activity_completion_status_condition extends condition {
+class activity_completion_status_condition extends condition
+{
     /**
      * Get filter SQL operation.
      *
@@ -78,9 +79,9 @@ class activity_completion_status_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,

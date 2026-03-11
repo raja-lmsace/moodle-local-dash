@@ -17,9 +17,9 @@
 /**
  * Activity based filter option.
  *
- * @package    dashaddon_activity_completion
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activity_completion
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activity_completion\local\block_dash\data_grid\filter;
@@ -30,7 +30,8 @@ use block_dash\local\data_grid\filter\filter;
 /**
  * Activity name based filter option.
  */
-class activity_name_filter extends select_filter {
+class activity_name_filter extends select_filter
+{
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -66,6 +67,7 @@ class activity_name_filter extends select_filter {
 
     /**
      * Get the activity filter label.
+     *
      * @return string
      */
     public function get_label() {

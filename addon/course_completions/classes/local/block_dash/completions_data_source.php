@@ -16,9 +16,10 @@
 
 /**
  * Completions data source.
- * @package    dashaddon_course_completions
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_course_completions
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_completions\local\block_dash;
@@ -71,7 +72,8 @@ require_once($CFG->dirroot . '/local/dash/lib.php');
 /**
  * Completions data source.
  */
-class completions_data_source extends abstract_data_source {
+class completions_data_source extends abstract_data_source
+{
     /**
      * Constructor.
      *
@@ -90,16 +92,16 @@ class completions_data_source extends abstract_data_source {
 
     /**
      * Return query template for retrieving user info.
+     *
      * @return string
      */
     public function get_query_template(): builder {
+
         $builder = new builder();
         $builder
             ->select('ccp.id', 'ccp_id')
             ->from('course_completions', 'ccp')
             ->join('user', 'u', 'id', 'ccp.userid')
-            ->join('groups_members', 'gm', 'userid', 'u.id', join::TYPE_LEFT_JOIN)
-            ->join('groups', 'g', 'id', 'gm.groupid', join::TYPE_LEFT_JOIN)
             ->join('course', 'c', 'id', 'ccp.course')
             ->join('course_categories', 'cc', 'id', 'c.category')
             ->join('enrol', 'e', 'courseid', 'c.id')
@@ -138,6 +140,7 @@ class completions_data_source extends abstract_data_source {
 
     /**
      * Build and return filter collection
+     *
      * @return filter_collection_interface
      */
     public function build_filter_collection() {
@@ -169,13 +172,15 @@ class completions_data_source extends abstract_data_source {
 
         $compfiltercollection->add_filter(new course_format_field_filter('c_format', 'c.format'));
 
-        $compfiltercollection->add_filter(new tags_field_filter(
-            'c_tags',
-            'c.id',
-            'core',
-            'course',
-            get_string('coursetags', 'tag')
-        ));
+        $compfiltercollection->add_filter(
+            new tags_field_filter(
+                'c_tags',
+                'c.id',
+                'core',
+                'course',
+                get_string('coursetags', 'tag')
+            )
+        );
 
         $compfiltercollection->add_filter(new relations_role_condition('parentrole', 'u.id'));
 
@@ -195,22 +200,26 @@ class completions_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->get_formatted_name());
                         break;
                     case 'date':
-                        $compfiltercollection->add_filter(new date_filter(
-                            $alias,
-                            $select,
-                            date_filter::DATE_FUNCTION_FLOOR,
-                            $field->get_formatted_name()
-                        ));
+                        $compfiltercollection->add_filter(
+                            new date_filter(
+                                $alias,
+                                $select,
+                                date_filter::DATE_FUNCTION_FLOOR,
+                                $field->get_formatted_name()
+                            )
+                        );
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $compfiltercollection->add_filter(new customfield_filter(
-                            $alias,
-                            $select,
-                            $field,
-                            $field->get_formatted_name()
-                        ));
+                        $compfiltercollection->add_filter(
+                            new customfield_filter(
+                                $alias,
+                                $select,
+                                $field,
+                                $field->get_formatted_name()
+                            )
+                        );
                         break;
                 }
             }
@@ -224,22 +233,26 @@ class completions_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->fullname);
                         break;
                     case 'date':
-                        $compfiltercollection->add_filter(new date_filter(
-                            $alias,
-                            $select,
-                            date_filter::DATE_FUNCTION_FLOOR,
-                            $field->fullname
-                        ));
+                        $compfiltercollection->add_filter(
+                            new date_filter(
+                                $alias,
+                                $select,
+                                date_filter::DATE_FUNCTION_FLOOR,
+                                $field->fullname
+                            )
+                        );
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $compfiltercollection->add_filter(new customfield_filter(
-                            $alias,
-                            $select,
-                            $field,
-                            $field->fullname
-                        ));
+                        $compfiltercollection->add_filter(
+                            new customfield_filter(
+                                $alias,
+                                $select,
+                                $field,
+                                $field->fullname
+                            )
+                        );
                         break;
                 }
             }
@@ -274,7 +287,7 @@ class completions_data_source extends abstract_data_source {
 
         $compfiltercollection->add_filter(new current_course_condition('c_current_course', 'c.id'));
 
-        $compfiltercollection->add_filter(new my_groups_condition('my_groups', 'gm300.groupid'));
+        $compfiltercollection->add_filter(new my_groups_condition('my_groups', 'gm300.id'));
 
         $compfiltercollection->add_filter(new enrollment_self_condition('self_enrollments', 'e.enrol'));
 
@@ -308,7 +321,7 @@ class completions_data_source extends abstract_data_source {
     /**
      * Set the default preferences of the course completion datasource, force the set the default settings.
      *
-     * @param array $data
+     * @param  array $data
      * @return array
      */
     public function set_default_preferences(&$data) {

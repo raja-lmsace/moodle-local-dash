@@ -17,9 +17,9 @@
 /**
  * Filters results to specific calendar event current available status like past/preset/future.
  *
- * @package    dashaddon_calendar_events
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_calendar_events
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_calendar_events\local\block_dash\data_grid\filter;
@@ -35,7 +35,8 @@ use MoodleQuickForm;
 /**
  * Filters results to specific calendar event current available status like past/preset/future.
  */
-class event_status_condition extends condition {
+class event_status_condition extends condition
+{
     /**
      * Get filter SQL operation.
      *
@@ -58,9 +59,9 @@ class event_status_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,

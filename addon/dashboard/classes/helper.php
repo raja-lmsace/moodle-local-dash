@@ -17,9 +17,9 @@
 /**
  * Define dashboard helper.
  *
- * @package    dashaddon_dashboard
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_dashboard
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_dashboard;
@@ -29,9 +29,11 @@ use context_system;
 /**
  * Class dashboard helper.
  */
-class helper {
+class helper
+{
     /**
      * Postupdate the filemanager files.
+     *
      * @param object $dashboard
      */
     public static function postupdate_filemanager_files($dashboard) {
@@ -40,7 +42,7 @@ class helper {
     /**
      * Get the list of blocks on the current page
      *
-     * @param string $shortname The shortname of the page
+     * @param  string $shortname The shortname of the page
      * @return array Array of block options
      */
     public static function get_dashaddondash_pageblocks($shortname) {
@@ -71,6 +73,7 @@ class helper {
 
     /**
      * Loads the prepare filemanager files.
+     *
      * @param object $dashboard
      */
     public static function prepare_filemanger_files($dashboard) {

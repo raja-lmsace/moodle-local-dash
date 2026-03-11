@@ -17,9 +17,9 @@
 /**
  * Smart course button.
  *
- * @package    local_dash
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\field\attribute;
@@ -34,71 +34,67 @@ use moodle_url;
  *
  * @package local_dash
  */
-class smart_course_button_attribute extends abstract_field_attribute {
+class smart_course_button_attribute extends abstract_field_attribute
+{
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param \int $data
-     * @param \stdClass $record Entire row
+     * @param  \int      $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
     public function transform_data($data, \stdClass $record) {
-    global $DB, $USER;
-    if (!$data) {
+        global $DB, $USER;
+
+        if (!$data) {
+            return '';
+        }
+
+        $coursecontext = \context_course::instance($data);
+
+        $enrolled = is_enrolled($coursecontext, $USER, false, false);
+        $isactiveenrolment = is_enrolled($coursecontext, $USER, false, true);
+        $canselfenrol = $this->can_selfenrol($data);
+        // Get shop url.
+        $shopurl = $this->get_shopurl($data);
+        if ($isactiveenrolment || $this->is_guestaccess($data)) {
+            $url = new \moodle_url('/course/view.php', ['id' => $data]);
+            return \html_writer::link(
+                $url,
+                get_string('viewcourse', 'block_dash'),
+                ['class' => 'btn btn-primary',
+                'label' => get_string('viewcourse', 'block_dash'), 'aria-label' => get_string('smart_coursebutton', 'block_dash')]
+            );
+        } else if ($shopurl && !$enrolled && !$canselfenrol) {
+            // Buy now.
+            return html_writer::link(
+                $shopurl,
+                get_string('buynow', 'block_dash'),
+                ['class' => 'btn btn-primary',
+                'label' => get_string('buynow', 'block_dash'), 'aria-label' => get_string('smart_coursebutton', 'block_dash')]
+            );
+        } else if (!$enrolled && $canselfenrol) {
+            // Enrol Now.
+            $url = new \moodle_url('/enrol/index.php', ['id' => $data]);
+            return html_writer::link(
+                $url,
+                get_string('enrolnow', 'block_dash'),
+                ['class' => 'btn btn-primary',
+                'label' => get_string('enrolnow', 'block_dash'), 'aria-label' => get_string('smart_coursebutton', 'block_dash')]
+            );
+        } else if (!$isactiveenrolment || !$canselfenrol) {
+            // Not available.
+            return \html_writer::span(get_string('notavailable', 'block_dash'));
+        }
         return '';
-    }
-    $coursecontext = \context_course::instance($data);
-    $enrolled = is_enrolled($coursecontext, $USER, false, false);
-    $isactiveenrolment = is_enrolled($coursecontext, $USER, false, true);
-    $canselfenrol = $this->can_selfenrol($data);
-    
-    // Check if user is site admin or has category manage capability.
-    $canmanagecategory = is_siteadmin() || has_capability('moodle/category:manage', \context_system::instance());
-    
-    // Get shop url.
-    $shopurl = $this->get_shopurl($data);
-    
-    if ($isactiveenrolment || $this->is_guestaccess($data) || $canmanagecategory) {
-        $url = new \moodle_url('/course/view.php', ['id' => $data]);
-        return \html_writer::link(
-            $url,
-            get_string('viewcourse', 'block_dash'),
-            ['class' => 'btn btn-primary',
-            'label' => get_string('viewcourse', 'block_dash'), 
-            'aria-label' => get_string('smart_coursebutton', 'block_dash')]
-        );
-    } else if ($shopurl && !$enrolled && !$canselfenrol) {
-        // Buy now.
-        return html_writer::link(
-            $shopurl,
-            get_string('buynow', 'block_dash'),
-            ['class' => 'btn btn-primary',
-            'label' => get_string('buynow', 'block_dash'), 
-            'aria-label' => get_string('smart_coursebutton', 'block_dash')]
-        );
-    } else if (!$enrolled && $canselfenrol) {
-        // Enrol Now.
-        $url = new \moodle_url('/enrol/index.php', ['id' => $data]);
-        return html_writer::link(
-            $url,
-            get_string('enrolnow', 'block_dash'),
-            ['class' => 'btn btn-primary',
-            'label' => get_string('enrolnow', 'block_dash'), 
-            'aria-label' => get_string('smart_coursebutton', 'block_dash')]
-        );
-    } else if (!$isactiveenrolment || !$canselfenrol) {
-        // Not available.
-        return \html_writer::span(get_string('notavailable', 'block_dash'));
-    }
-    return '';
     }
 
     /**
      * Fetch the configured shop url from the course customfield. cusotmfield will mentioned in the general settings.
      *
-     * @param int $courseid
+     * @param  int $courseid
      * @return bool
      */
     public function get_shopurl($courseid) {
@@ -127,7 +123,7 @@ class smart_course_button_attribute extends abstract_field_attribute {
     /**
      * Check the course has guest access enabled.
      *
-     * @param int $courseid
+     * @param  int $courseid
      * @return bool
      */
     public function is_guestaccess($courseid) {
@@ -143,7 +139,7 @@ class smart_course_button_attribute extends abstract_field_attribute {
     /**
      * Verify the course has enabled enrollment method to enrol by self.
      *
-     * @param int $courseid
+     * @param  int $courseid
      * @return bool
      */
     public function can_selfenrol($courseid) {

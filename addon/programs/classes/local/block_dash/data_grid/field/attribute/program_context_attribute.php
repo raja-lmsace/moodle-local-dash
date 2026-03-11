@@ -17,9 +17,9 @@
 /**
  * Transforms data to program context.
  *
- * @package    dashaddon_programs
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_programs
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_programs\local\block_dash\data_grid\field\attribute;
@@ -30,12 +30,13 @@ use stdClass;
 /**
  * Transforms data to program context.
  */
-class program_context_attribute extends abstract_field_attribute {
+class program_context_attribute extends abstract_field_attribute
+{
     /**
      * Convert the context id to the context name for the program.
      *
-     * @param int $data
-     * @param stdClass $record
+     * @param  int      $data
+     * @param  stdClass $record
      * @return string
      */
     public function transform_data($data, stdClass $record) {

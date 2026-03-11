@@ -60,7 +60,7 @@ Once added, a "New Dash" block will appear. Access the "Preferences" option on t
 12. <b>Content</b>: This field refers to the table of contents displayed on the program page under the "Content" heading. It provides an overview of the topics, modules, or lessons included in the program, allowing learners to understand the structure and content covered.
 
     <b>Program Image - General setting</b>
-
+  
     The Default image will be available from the **Site administration > Plugin > Local plugins > Dash > General Setting**. In Dash General settings, upload the image on the "Enrol Program image"
 
 ![Dash-general-setting-image](https://github.com/bdecentgmbh/moodle-local_dash/assets/44221518/08d8b913-d4ae-4f51-a33d-acf6bb2e91ac)

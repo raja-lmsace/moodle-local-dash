@@ -16,9 +16,10 @@
 
 /**
  * Displays preconfigured dashboards.
- * @package    dashaddon_dashboard
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_dashboard
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use block_dash\output\renderer;
@@ -32,7 +33,7 @@ require_once("$CFG->libdir/adminlib.php");
 
 global $PAGE, $DB;
 
-$action = optional_param('action', 'create', PARAM_TEXT);
+$action = required_param('action', PARAM_TEXT);
 $contextid = optional_param('contextid', 0, PARAM_INT);
 
 $context = context_system::instance();
@@ -51,7 +52,6 @@ $PAGE->navbar->add(
     new moodle_url('/local/dash/addon/dashboard/dashboard_list.php', $pageparams)
 );
 
-/** @var renderer $renderer */
 $renderer = $PAGE->get_renderer('block_dash');
 
 require_login();

@@ -17,9 +17,9 @@
 /**
  * A widget layout contains information on how to display data.
  *
- * @package    dashaddon_skill_graph
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_skill_graph
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_skill_graph\widget;
@@ -29,7 +29,8 @@ use block_dash\local\widget\abstract_layout;
 /**
  * Layout section for the SkillGraph widget.
  */
-class competency_layout extends abstract_layout {
+class competency_layout extends abstract_layout
+{
     /**
      * Tempalte mustache file name, the layout uses.
      *

@@ -74,7 +74,7 @@ Feature: Add activity completion widget conditions in dash block
 
   Scenario: Activity completion widget progress
     Given I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I add the "Dash" block
     And I click on "#id_config_data_source_idnumber_dashaddon_activitycompletionwidgetactivitycompletion_widget" "css_element"
@@ -119,7 +119,7 @@ Feature: Add activity completion widget conditions in dash block
 
   Scenario: Activity completion widget courses condition check
     Given I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I add the "Dash" block
     And I click on "#id_config_data_source_idnumber_dashaddon_activitycompletionwidgetactivitycompletion_widget" "css_element"
@@ -303,7 +303,7 @@ Feature: Add activity completion widget conditions in dash block
     And I set the field "addselect" to "parent 1 (student1@example.com)"
     And I click on "Add" "button" in the "#page-content" "css_element"
     #---Condition setting---#
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     #---Set User i manage in conditions---#
     And I add the "Dash" block
@@ -327,7 +327,7 @@ Feature: Add activity completion widget conditions in dash block
     And I should see "100%" in the "Assignment 1" "table_row"
     And I should see "50%" in the "Assignment 5" "table_row"
     And I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I open the "Activity completion" block preference
     And I click on "Conditions" "link"

@@ -17,9 +17,9 @@
 /**
  * External methods helps to manage user course enrolment
  *
- * @package     dashaddon_course_enrols
- * @copyright   2022 bdecent gmbh <https://bdecent.de>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_enrols
+ * @copyright 2022 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_enrols;
@@ -38,22 +38,25 @@ use external_single_structure;
 /**
  * External methods helps to manage user course enrolment.
  */
-class external extends external_api {
+class external extends external_api
+{
     /**
      * Returns description of submit_user_enrolment_form parameters.
      *
      * @return external_function_parameters.
      */
     public static function submit_user_enrolment_form_parameters() {
-        return new external_function_parameters([
+        return new external_function_parameters(
+            [
             'formdata' => new external_value(PARAM_RAW, 'The data from the event form'),
-        ]);
+            ]
+        );
     }
 
     /**
      * External function that handles the user enrolment form submission.
      *
-     * @param string $formdata The user enrolment form data in s URI encoded param string
+     * @param  string $formdata The user enrolment form data in s URI encoded param string
      * @return array An array consisting of the processing result and error flag, if available
      */
     public static function submit_user_enrolment_form($formdata) {
@@ -72,7 +75,7 @@ class external extends external_api {
         $context = \context_course::instance($course->id);
         $PAGE->set_context($context);
 
-        require_once("$CFG->dirroot/enrol/editenrolment_form.php");
+        include_once("$CFG->dirroot/enrol/editenrolment_form.php");
         $customformdata = [
             'ue' => $userenrolment,
             'modal' => true,
@@ -84,7 +87,7 @@ class external extends external_api {
             if (!empty($validateddata->duration) && $validateddata->timeend == 0) {
                 $validateddata->timeend = $validateddata->timestart + $validateddata->duration;
             }
-            require_once($CFG->dirroot . '/enrol/locallib.php');
+            include_once($CFG->dirroot . '/enrol/locallib.php');
             $manager = new \dash_course_enrolments($PAGE, $course);
             $result = $manager->edit_enrolment($userenrolment, $validateddata);
 
@@ -100,10 +103,12 @@ class external extends external_api {
      * @return external_description
      */
     public static function submit_user_enrolment_form_returns() {
-        return new external_single_structure([
+        return new external_single_structure(
+            [
             'result' => new external_value(PARAM_BOOL, 'True if the user\'s enrolment was successfully updated'),
             'validationerror' => new external_value(PARAM_BOOL, 'Indicates invalid form data', VALUE_DEFAULT, false),
-        ]);
+            ]
+        );
     }
 
     /**
@@ -122,15 +127,18 @@ class external extends external_api {
     /**
      * External function that unenrols a given user enrolment.
      *
-     * @param int $ueid The user enrolment ID.
+     * @param  int $ueid The user enrolment ID.
      * @return array An array consisting of the processing result, errors.
      */
     public static function unenrol_user_enrolment($ueid) {
         global $CFG, $DB, $PAGE;
 
-        $params = self::validate_parameters(self::unenrol_user_enrolment_parameters(), [
+        $params = self::validate_parameters(
+            self::unenrol_user_enrolment_parameters(),
+            [
             'ueid' => $ueid,
-        ]);
+            ]
+        );
 
         $result = false;
         $errors = [];
@@ -149,7 +157,7 @@ class external extends external_api {
 
         // If the userenrolment exists, unenrol the user.
         if (!isset($validationerrors)) {
-            require_once($CFG->dirroot . '/enrol/locallib.php');
+            include_once($CFG->dirroot . '/enrol/locallib.php');
             $manager = new \dash_course_enrolments($PAGE, $course);
             $result = $manager->unenrol_user($userenrolment);
         } else {
@@ -196,15 +204,17 @@ class external extends external_api {
      * @return external_function_parameters.
      */
     public static function enrol_courses_parameters() {
-        return new external_function_parameters([
+        return new external_function_parameters(
+            [
             'formdata' => new external_value(PARAM_RAW, 'The data from the event form'),
-        ]);
+            ]
+        );
     }
 
     /**
      * External function that handles the user enrolment form submission.
      *
-     * @param string $formdata The user enrolment form data in s URI encoded param string
+     * @param  string $formdata The user enrolment form data in s URI encoded param string
      * @return array An array consisting of the processing result and error flag, if available
      */
     public static function enrol_courses($formdata) {
@@ -240,9 +250,11 @@ class external extends external_api {
      * @return external_description
      */
     public static function enrol_courses_returns() {
-        return new external_single_structure([
+        return new external_single_structure(
+            [
             'result' => new external_value(PARAM_BOOL, 'True if the user\'s enrolment was successfully updated'),
             'validationerror' => new external_value(PARAM_BOOL, 'Indicates invalid form data', VALUE_DEFAULT, false),
-        ]);
+            ]
+        );
     }
 }

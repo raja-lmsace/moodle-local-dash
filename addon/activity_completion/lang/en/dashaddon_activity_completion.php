@@ -17,9 +17,9 @@
 /**
  * Strings for component 'dashaddon_activity_completion', language 'en'
  *
- * @package    dashaddon_activity_completion
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activity_completion
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['activity'] = 'Activity';
@@ -34,7 +34,6 @@ $string['completionoverridedate'] = "Completion override date";
 $string['completionstate'] = 'Are you sure you want to override the current completion state of this activity for this user?';
 $string['currentgrade'] = "Current grade";
 $string['datasource:activity_completion_data_source'] = 'Activity Completion';
-$string['datasource:activity_completion_data_source_help'] = 'List of user activity completion details.';
 $string['due'] = 'Due';
 $string['grade'] = 'Grade';
 $string['grademax'] = "Grade max";
@@ -49,5 +48,4 @@ $string['tablealias_cm'] = "Activity Completion";
 $string['tablealias_cma'] = 'Action';
 $string['tablealias_cmc'] = "Activity Completion";
 $string['tablealias_cmg'] = 'Activity grade';
-$string['upgradeplugin'] = 'This plugin requires installation of <b> {$a} </b> to enable.';
 $string['viewactivity'] = "View activity";

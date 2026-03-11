@@ -17,9 +17,9 @@
 /**
  * A widget layout contains information on how to display data.
  *
- * @package    dashaddon_activitycompletion
- * @copyright  2025 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activitycompletion
+ * @copyright 2025 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activitycompletion\widget;
@@ -29,7 +29,8 @@ use block_dash\local\widget\abstract_layout;
 /**
  * Layout section for the activity completion widget.
  */
-class activitycompletion_layout extends abstract_layout {
+class activitycompletion_layout extends abstract_layout
+{
     /**
      * Tempalte mustache file name, the layout uses.
      *

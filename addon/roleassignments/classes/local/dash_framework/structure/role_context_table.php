@@ -16,9 +16,10 @@
 
 /**
  * Logstore data source.
- * @package    dashaddon_roleassignments
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_roleassignments
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_roleassignments\local\dash_framework\structure;
@@ -38,7 +39,8 @@ use local_dash\data_grid\field\attribute\context\context_parent_attribute;
  * This class represents a table structure for role context assignments within the Moodle dashboard framework.
  * It extends the base table class to provide specific functionality for handling role context data.
  */
-class role_context_table extends table {
+class role_context_table extends table
+{
     /**
      * Build a new table.
      */

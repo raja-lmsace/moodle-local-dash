@@ -17,9 +17,9 @@
 /**
  * Filters results to specific activity completion course sections and groups.
  *
- * @package    dashaddon_activitycompletion
- * @copyright  2025 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activitycompletion
+ * @copyright 2025 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activitycompletion\local\block_dash\data_grid\filter;
@@ -29,13 +29,14 @@ use block_dash\local\data_grid\filter\filter_collection_interface;
 /**
  * Filter element.
  */
-trait filter_element {
+trait filter_element
+{
     /**
      * Override this method and call it after creating a form element.
      *
-     * @param filter_collection_interface $filtercollection
-     * @param string $elementnameprefix
-     * @param boolean $sort
+     * @param  filter_collection_interface $filtercollection
+     * @param  string                      $elementnameprefix
+     * @param  boolean                     $sort
      * @throws \Exception
      * @return string
      */
@@ -63,10 +64,13 @@ trait filter_element {
 
         $name = $elementnameprefix . $this->get_name();
 
-        return $OUTPUT->render_from_template('dashaddon_activitycompletion/filter_select', [
+        return $OUTPUT->render_from_template(
+            'dashaddon_activitycompletion/filter_select',
+            [
             'name' => $name,
             'options' => $newoptions,
             'multiple' => true,
-        ]);
+            ]
+        );
     }
 }

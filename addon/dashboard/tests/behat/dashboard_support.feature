@@ -107,7 +107,6 @@ Feature: Add a dashboard data source support in dash block
       | Block title  | Courses  |
       | Region       | category |
     And I press "Save changes"
-    And I wait until the page is ready
     And I open the "Courses" block preference
     #---Enable current course role---#
     And I click on "Conditions" "link"
@@ -139,7 +138,6 @@ Feature: Add a dashboard data source support in dash block
       | Block title  | Courses |
       | Region       | course  |
     And I press "Save changes"
-    And I wait until the page is ready
     And I open the "Courses" block preference
     #---Enable current course role---#
     And I click on "Conditions" "link"

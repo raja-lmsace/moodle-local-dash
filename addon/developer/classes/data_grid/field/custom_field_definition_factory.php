@@ -17,9 +17,9 @@
 /**
  * Responsible for building field definitions and retrieving them as needed.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_developer\data_grid\field;
@@ -32,12 +32,13 @@ use block_dash\local\data_grid\field\field_definition_interface;
  *
  * @package dashaddon_developer
  */
-class custom_field_definition_factory implements field_definition_factory_interface {
+class custom_field_definition_factory implements field_definition_factory_interface
+{
     /**
      * Build and return a field definition based on unique identifier.
      *
-     * @param string $name
-     * @param array $info
+     * @param  string $name
+     * @param  array  $info
      * @return field_definition_interface
      */
     public static function build_field_definition($name, array $info) {

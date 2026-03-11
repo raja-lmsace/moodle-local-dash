@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course categories.
  *
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -34,7 +34,8 @@ use MoodleQuickForm;
  *
  * @package local_dash
  */
-class course_category_condition extends condition {
+class course_category_condition extends condition
+{
     /**
      * Get filter SQL operation.
      *
@@ -85,7 +86,7 @@ class course_category_condition extends condition {
                             }
                         } else {
                             // Moodle 3.5 compatibility.
-                            require_once("$CFG->dirroot/lib/coursecatlib.php");
+                            include_once("$CFG->dirroot/lib/coursecatlib.php");
                             if ($coursecat = \coursecat::get($categoryid, IGNORE_MISSING)) {
                                 foreach ($coursecat->get_children() as $category) {
                                     $categoryids[] = $category->id;
@@ -102,9 +103,9 @@ class course_category_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
@@ -128,7 +129,7 @@ class course_category_condition extends condition {
             $categories = \core_course_category::make_categories_list('moodle/course:create');
         } else {
             // Moodle 3.5 compatibility.
-            require_once("$CFG->dirroot/lib/coursecatlib.php");
+            include_once("$CFG->dirroot/lib/coursecatlib.php");
             $categories = \coursecat::make_categories_list('moodle/course:create');
         }
 

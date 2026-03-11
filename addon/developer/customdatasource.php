@@ -17,9 +17,9 @@
 /**
  * Manage custom datasources.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use block_dash\output\renderer;
@@ -39,7 +39,6 @@ $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/dash/addon/developer/customdatasource.php', ['action' => $action]));
 $PAGE->navbar->add(get_string('managedatasources', 'block_dash'), new moodle_url('/local/dash/datasources.php'));
 
-/** @var renderer $renderer */
 $renderer = $PAGE->get_renderer('block_dash');
 
 require_login();
@@ -51,21 +50,26 @@ switch ($action) {
         $PAGE->set_heading(get_string('createcustomdatasource', 'block_dash'));
         $PAGE->navbar->add(get_string('createcustomdatasource', 'block_dash'));
 
-        $form = new custom_data_source_form($PAGE->url, [
+        $form = new custom_data_source_form(
+            $PAGE->url,
+            [
             'persistent' => null,
             'userid' => $USER->id,
-        ]);
+            ]
+        );
 
 
         if (($data = $form->get_data()) && !$form->no_submit_button_pressed()) {
             $customdatasource = new custom_data_source(0, $data);
             $customdatasource->create();
 
-            \core\notification::success(get_string(
-                'customdatasourcecreated',
-                'block_dash',
-                $customdatasource->to_record()
-            ));
+            \core\notification::success(
+                get_string(
+                    'customdatasourcecreated',
+                    'block_dash',
+                    $customdatasource->to_record()
+                )
+            );
             redirect(new moodle_url('/local/dash/datasources.php'));
         } else if ($form->is_cancelled()) {
             redirect(new moodle_url('/local/dash/datasources.php'));
@@ -89,9 +93,12 @@ switch ($action) {
 
         $customdatasource = new custom_data_source($id);
 
-        $form = new custom_data_source_form($PAGE->url, [
+        $form = new custom_data_source_form(
+            $PAGE->url,
+            [
             'persistent' => $customdatasource,
-        ]);
+            ]
+        );
 
         if ($data = $form->get_data()) {
             // Update the repeat counts.
@@ -103,11 +110,13 @@ switch ($action) {
             $customdatasource->from_record($data);
             $customdatasource->update();
 
-            \core\notification::success(get_string(
-                'customdatasourceedited',
-                'block_dash',
-                $customdatasource->to_record()
-            ));
+            \core\notification::success(
+                get_string(
+                    'customdatasourceedited',
+                    'block_dash',
+                    $customdatasource->to_record()
+                )
+            );
             redirect(new moodle_url('/local/dash/datasources.php'));
         } else if ($form->is_cancelled()) {
             redirect(new moodle_url('/local/dash/datasources.php'));
@@ -132,11 +141,13 @@ switch ($action) {
 
         if ($confirm = optional_param('confirm', 0, PARAM_BOOL)) {
             $customdatasource->delete();
-            \core\notification::success(get_string(
-                'customdatasourcedeleted',
-                'block_dash',
-                $customdatasource->to_record()
-            ));
+            \core\notification::success(
+                get_string(
+                    'customdatasourcedeleted',
+                    'block_dash',
+                    $customdatasource->to_record()
+                )
+            );
             redirect(new moodle_url('/local/dash/datasources.php'));
         }
 

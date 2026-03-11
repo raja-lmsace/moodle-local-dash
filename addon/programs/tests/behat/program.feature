@@ -43,19 +43,14 @@ Feature: Dash program to show the list of course data source
     And the following "cohort members" exist:
         | user     | cohort |
         | student1 | CH1    |
-    Then I log in as "admin"
-    And I keep block drawer closed
+    And I log in as "admin"
     And I am on "Course 1" course homepage
     And I navigate to "Course completion" in current page administration
     And I expand all fieldsets
     And I set the field "Test page1" to "1"
     And I press "Save changes"
     And I navigate to "Programs > Program management" in site administration
-    # Should be removed when the openlms plugin supports Moodle 5.0
-    And I add dropdown menu in program action
-    And I click on "Programs actions" "link"
-    And I click on "Add program" "link"
-    And I wait "5" seconds
+    And I click on "Add program" "button"
     And "Add program" "dialogue" should be visible
     And I set the following fields to these values:
         | Program name   | Demo program |
@@ -112,29 +107,26 @@ Feature: Dash program to show the list of course data source
     And I should see "Active; Sign up key is required; Users 0/3; Sign ups are allowed" in the "Self allocation:" definition list item
     And I click on "Program management" "link" in the ".breadcrumb" "css_element"
     And I should see "Demo program" in the "Demo text" "table_row"
-    And the following "block_dash > dash blocks default" exist:
-      | type       | name     | title          | fields | filters  |
-      | datasource | programs | Enrol Programs | all    | epp_tags |
-    # And I am on the "block_dash > Default Dashboard" page
-    # And I turn dash block editing mode on
-    # And I add the "Dash" block
-    # And I click on "Enrol Programs" "radio"
-    # And I configure the "New Dash" block
-    # And I set the field "Block title" to "Enrol Programs"
-    # And I press "Save changes"
-    # And I click on "#action-menu-toggle-0" "css_element"
-    # And I click on "Preferences" "link" in the "Enrol Programs" "block"
-    # Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
-    # And I click on "Select all" "button"
-    # And I press "Save changes"
-    # And I click on "Reset Dashboard for all users" "button"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    And I add the "Dash" block
+    And I click on "Enrol Programs" "radio"
+    And I configure the "New Dash" block
+    And I set the field "Block title" to "Enrol Programs"
+    And I press "Save changes"
+    And I click on "#action-menu-toggle-0" "css_element"
+    And I click on "Preferences" "link" in the "Enrol Programs" "block"
+    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
+    And I click on "Select all" "button"
+    And I press "Save changes"
+    And I click on "Reset Dashboard for all users" "button"
     And I log out
 
   @javascript
   Scenario: Visually display the program content & visiblity
     Given I log in as "student1"
     And I follow "Dashboard"
-    # And I should see "Enrol Programs" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "Enrol Programs" in the ".block_dash-local-layout-grid_layout" "css_element"
     And I should see "Demo program" in the "Demo program" "table_row"
     And I click on "View programs" "button"
     And I should see "Program catalogue" in the ".h2" "css_element"
@@ -148,17 +140,14 @@ Feature: Dash program to show the list of course data source
     And I log out
     And I log in as "student2"
     And I follow "Dashboard"
-    # And I should see "Enrol Programs" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "Enrol Programs" in the ".block_dash-local-layout-grid_layout" "css_element"
     And "Demo program" "link" should not exist
 
   @javascript
   Scenario: Visually display the program with tags
     Given I log in as "admin"
     And I navigate to "Programs > Program management" in site administration
-    # Should be removed when the openlms plugin supports Moodle 5.0
-    And I add dropdown menu in program action
-    And I click on "Programs actions" "link"
-    And I click on "Add program" "link"
+    And I click on "Add program" "button"
     And "Add program" "dialogue" should be visible
     And I set the following fields to these values:
         | Program name   | Basic program |
@@ -214,17 +203,25 @@ Feature: Dash program to show the list of course data source
     And I should see "Active; Sign up key is required; Users 0/3; Sign ups are allowed" in the "Self allocation:" definition list item
     And I click on "Program management" "link" in the ".breadcrumb" "css_element"
     And I should see "Basic program" in the "Basic content" "table_row"
-    # And I am on the "block_dash > Default Dashboard" page
-    # And I turn dash block editing mode on
-    # And I open the "Activity completion" block preference
-    # And I click on "Filters" "link" in the "Edit preferences" "dialogue"
-    # And I set the following fields to these values:
-    #     | id_config_preferences_filters_epp_tags_enabled    | 1   |
-    # And I press "Save changes"
-    # And I click on "Reset Dashboard for all users" "button"
+    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I turn dash block editing mode on
+    And I add the "Dash" block
+    And I click on "Enrol Programs" "radio"
+    And I configure the "New Dash" block
+    And I set the field "Block title" to "Enrol Programs"
+    And I press "Save changes"
+    And I click on "#action-menu-toggle-0" "css_element"
+    And I click on "Preferences" "link" in the "Enrol Programs" "block"
+    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
+    And I click on "Select all" "button"
+    And I click on "Filters" "link" in the "Edit preferences" "dialogue"
+    And I set the following fields to these values:
+        | id_config_preferences_filters_epp_tags_enabled    | 1   |
+    And I press "Save changes"
+    And I click on "Reset Dashboard for all users" "button"
     And I log out
     And I log in as "student1"
-    # And I should see "Enrol Programs" in the ".block_dash-local-layout-grid_layout" "css_element"
+    And I should see "Enrol Programs" in the ".block_dash-local-layout-grid_layout" "css_element"
     And I should see "Demo program" in the "Demo program" "table_row"
     And I should see "Basic program" in the "Basic program" "table_row"
     And I click on ".dash-container .select2-search__field" "css_element"

@@ -33,12 +33,13 @@ use dashaddon_developer\model\custom_data_source as custom_data_source_model;
  *
  * @package dashaddon_developer
  */
-class persistent_data_source_factory implements data_source_factory_interface {
+class persistent_data_source_factory implements data_source_factory_interface
+{
     /**
      * Build the data source.
      *
-     * @param string $identifier
-     * @param \context $context
+     * @param  string   $identifier
+     * @param  \context $context
      * @return data_source_interface
      */
     public static function build_data_source($identifier, \context $context) {

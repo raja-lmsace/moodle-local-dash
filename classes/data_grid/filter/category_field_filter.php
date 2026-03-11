@@ -16,9 +16,10 @@
 
 /**
  * Category name based filter option.
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -28,7 +29,8 @@ use block_dash\local\data_grid\filter\select_filter;
 /**
  * Category name based filter option.
  */
-class category_field_filter extends select_filter {
+class category_field_filter extends select_filter
+{
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -36,8 +38,12 @@ class category_field_filter extends select_filter {
     public function init() {
         global $DB;
 
-        $this->add_options($DB->get_records_sql_menu("SELECT DISTINCT id, name
-                                                      FROM {course_categories} WHERE visible = 1"));
+        $this->add_options(
+            $DB->get_records_sql_menu(
+                "SELECT DISTINCT id, name
+                                                      FROM {course_categories} WHERE visible = 1"
+            )
+        );
 
         parent::init();
     }

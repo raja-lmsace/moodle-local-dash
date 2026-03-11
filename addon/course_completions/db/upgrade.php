@@ -17,20 +17,21 @@
 /**
  * DB authentication plugin upgrade code
  *
- * @package    dashaddon_course_completions
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_completions
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * Function to upgrade dashaddon_course_completions.
- * @param int $oldversion the version we are upgrading from
+ *
+ * @param  int $oldversion the version we are upgrading from
  * @return bool result
  */
 function xmldb_dashaddon_course_completions_upgrade($oldversion) {
     global $CFG;
     if ($oldversion < 2024042500) {
-        require_once($CFG->dirroot . "/local/dash/addon/course_completions/lib.php");
+        include_once($CFG->dirroot . "/local/dash/addon/course_completions/lib.php");
         if (empty(dashaddon_course_completions_extend_added_dependencies())) {
             set_config('enabled', 1, 'dashaddon_course_completions');
         }

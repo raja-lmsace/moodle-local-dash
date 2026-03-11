@@ -33,12 +33,12 @@ use block_dash\local\data_grid\field\attribute\abstract_field_attribute;
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/lib/formslib.php');
-require_once 'HTML/QuickForm.php';
 
 /**
  * Custom data source creation persistent form.
  */
-class custom_data_source_form extends persistent_form {
+class custom_data_source_form extends persistent_form
+{
     /**
      * Presistent form handler of submited data.
      *
@@ -80,13 +80,6 @@ class custom_data_source_form extends persistent_form {
      * @var string
      */
     public static $tablealiasprefix = 'jt';
-
-    /**
-     * List of field attributes.
-     *
-     * @var array
-     */
-    public $fieldattributes = [];
 
     /**
      * Form definition. Abstract method - always override!
@@ -242,8 +235,6 @@ class custom_data_source_form extends persistent_form {
             }
         }
 
-        $this->fieldattributes = $attributes;
-
         // Conditions list.
         $conditions = [
             where::OPERATOR_EQUAL => get_string('operatorequal', 'block_dash'),
@@ -255,7 +246,7 @@ class custom_data_source_form extends persistent_form {
             where::OPERATOR_LIKE => get_string('operatorlike', 'block_dash'),
             where::OPERATOR_NOT_LIKE => get_string('operatornotlike', 'block_dash'),
             where::OPERATOR_IN => get_string('operatorin', 'block_dash'),
-            // ...where::OPERATOR_IN_QUERY => get_string('operatorinquery', 'block_dash'), // Need additional parameters.
+            where::OPERATOR_IN_QUERY => get_string('operatorinquery', 'block_dash'),
             where::OPERATOR_NOT_IN => get_string('operatornotin', 'block_dash'),
         ];
 
@@ -282,26 +273,17 @@ class custom_data_source_form extends persistent_form {
         $options = ['ajax' => 'dashaddon_developer/fields-selector']; // Fields ajax request.
 
         $header = '<h5 class="tablefields">' . get_string('fieldstatichdr', 'block_dash') . '</h5>';
-
-        $fieldattrs = array();
-        $fieldattrs[] =& $mform->createElement('select', 'fieldattribute', get_string('fieldtransformdata', 'block_dash'), $attributes);
-        $fieldattrs[] =& $mform->createElement('submit', 'addattributebtn', '+');
-
-        $attrvalues = array();
-        $attrvalues[] =& $mform->createElement(
-            'text',
-            'attributevalue',
-            get_string('fieldcustomdata', 'block_dash'),
-            ['size' => '50', 'placeholder' => 'course/view.php?id={PLACEHOLDER}']
-        );
-
         $fields = [
             $mform->createElement('html', '<div class="select-fields-group">'),
             $mform->createElement('static', 'fieldstatichdr', $header),
             $mform->createElement('autocomplete', 'selectfield', get_string('field', 'block_dash'), $tablefields, $options),
-            $mform->createElement('group', 'fieldattributegrp', get_string('fieldtransformdata', 'block_dash'), $fieldattrs, null, false),
-            $mform->createElement('group', 'attributevaluegrp', get_string('fieldcustomdata', 'block_dash'), $attrvalues, null, false),
-
+            $mform->createElement('select', 'fieldattribute', get_string('fieldtransformdata', 'block_dash'), $attributes),
+            $mform->createElement(
+                'text',
+                'attributevalue',
+                get_string('fieldcustomdata', 'block_dash'),
+                ['size' => '50', 'placeholder' => 'course/view.php?id={PLACEHOLDER}']
+            ),
             $mform->createElement('submit', 'deletefield', get_string('deletefield', 'block_dash'), ['class' => 'd-none'], false),
             $mform->createElement(
                 'button',
@@ -341,8 +323,6 @@ class custom_data_source_form extends persistent_form {
             false,
             'deletefield'
         );
-
-        $mform->registerNoSubmitButton('addattributebtn');
 
         // Condition sections start.
         $mform->addElement('header', 'conditionsection', get_string('conditionsection', 'block_dash'));
@@ -420,7 +400,8 @@ class custom_data_source_form extends persistent_form {
         // Action buttons.
         $this->add_action_buttons();
 
-        $PAGE->requires->js_amd_inline('
+        $PAGE->requires->js_amd_inline(
+            '
             document.querySelectorAll(\'[data-type="dashaddon_dev_deletebtn"]\').forEach((el) => {
                 console.log(el);
                 el.onclick = (e) => e.target.closest(".fitem").previousSibling.querySelector(\'input[type="submit"]\').click();
@@ -446,279 +427,8 @@ class custom_data_source_form extends persistent_form {
                 });
 
             })
-        ');
-    }
-
-
-    /**
-     * Load in existing data as form defaults. Usually new entry defaults are stored directly in
-     * form definition (new entry form); this function is used to load in data where values
-     * already exist and data is being edited (edit entry form).
-     *
-     * note: $slashed param removed
-     *
-     * @param stdClass|array $default_values object or array of default values
-     */
-    function set_data($defaultvalues) {
-
-        if (is_object($defaultvalues)) {
-            $defaultvalues = (array) $defaultvalues;
-        }
-
-        if ($attrs = optional_param_array('addattributebtn', false, PARAM_ALPHANUMEXT)) {
-
-            $fieldattributes = $this->_form->getSubmitValue('fieldattribute');
-
-            $key = array_key_last($attrs);
-
-            if (isset($fieldattributes[$key]) && is_array($fieldattributes[$key])) {
-                $fieldattributes[$key][] = 0;
-                $this->_form->_submitValues['fieldattribute'][$key][] = 0;
-            } else {
-                $fieldattributes[$key] = [0];
-                $this->_form->_submitValues['fieldattribute'][$key] = [0];
-            }
-
-            $defaultvalues['fieldattribute'] = $fieldattributes;
-        }
-        $this->_form->setDefaults($defaultvalues);
-    }
-
-    /**
-     * Method to add a repeating group of elements to a form.
-     *
-     * Modified version of the original method in moodleform to make the field attribute and field values in array format for the loop in field definition.
-     *
-     * @param array $elementobjs Array of elements or groups of elements that are to be repeated
-     * @param int $repeats no of times to repeat elements initially
-     * @param array $options a nested array. The first array key is the element name.
-     *    the second array key is the type of option to set, and depend on that option,
-     *    the value takes different forms.
-     *         'default'    - default value to set. Can include '{no}' which is replaced by the repeat number.
-     *         'type'       - PARAM_* type.
-     *         'helpbutton' - array containing the helpbutton params.
-     *         'disabledif' - array containing the disabledIf() arguments after the element name.
-     *         'rule'       - array containing the addRule arguments after the element name.
-     *         'expanded'   - whether this section of the form should be expanded by default. (Name be a header element.)
-     *         'advanced'   - whether this element is hidden by 'Show more ...'.
-     * @param string $repeathiddenname name for hidden element storing no of repeats in this form
-     * @param string $addfieldsname name for button to add more fields
-     * @param int $addfieldsno how many fields to add at a time
-     * @param string $addstring name of button, {no} is replaced by no of blanks that will be added.
-     * @param bool $addbuttoninside if true, don't call closeHeaderBefore($addfieldsname). Default false.
-     * @param string $deletebuttonname if specified, treats the no-submit button with this name as a "delete element" button
-     *         in each of the elements
-     * @return int no of repeats of element in this page
-     */
-    public function repeat_elements($elementobjs, $repeats, $options, $repeathiddenname,
-                                    $addfieldsname, $addfieldsno = 5, $addstring = null, $addbuttoninside = false,
-                                    $deletebuttonname = '') {
-        if ($addstring === null) {
-            $addstring = get_string('addfields', 'form', $addfieldsno);
-        } else {
-            $addstring = str_ireplace('{no}', $addfieldsno, $addstring);
-        }
-        $repeats = $this->optional_param($repeathiddenname, $repeats, PARAM_INT);
-        $addfields = $this->optional_param($addfieldsname, '', PARAM_TEXT);
-        $oldrepeats = $repeats;
-        if (!empty($addfields)){
-            $repeats += $addfieldsno;
-        }
-        $mform =& $this->_form;
-        $mform->registerNoSubmitButton($addfieldsname);
-        $mform->addElement('hidden', $repeathiddenname, $repeats);
-        $mform->setType($repeathiddenname, PARAM_INT);
-        //value not to be overridden by submitted value
-        $mform->setConstants(array($repeathiddenname=>$repeats));
-        $namecloned = array();
-        $no = 1;
-        for ($i = 0; $i < $repeats; $i++) {
-            if ($deletebuttonname) {
-                $mform->registerNoSubmitButton($deletebuttonname . "[$i]");
-                $isdeleted = $this->optional_param($deletebuttonname . "[$i]", false, PARAM_RAW) ||
-                    $this->optional_param($deletebuttonname . "-hidden[$i]", false, PARAM_RAW);
-                if ($isdeleted) {
-                    $mform->addElement('hidden', $deletebuttonname . "-hidden[$i]", 1);
-                    $mform->setType($deletebuttonname . "-hidden[$i]", PARAM_INT);
-                    continue;
-                }
-            }
-
-            foreach ($elementobjs as $elementobj){
-                $elementclone = fullclone($elementobj);
-                $this->repeat_elements_fix_clone($i, $elementclone, $namecloned);
-
-                if ($elementclone instanceof \HTML_QuickForm_group && !$elementclone->_appendName) {
-                    foreach ($elementclone->getElements() as $el) {
-                        $this->repeat_elements_fix_clone($i, $el, $namecloned);
-                    }
-
-                    // FIX- DASH. Create field attributes for cloned elements. -- No other changes in this function.
-                    $this->create_field_attributes($elementclone, $i);
-
-                    $elementclone->setLabel(str_replace('{no}', $no, $elementclone->getLabel()));
-                } else if ($elementobj instanceof \HTML_QuickForm_submit && $elementobj->getName() == $deletebuttonname) {
-                    // Mark the "Delete" button as no-submit.
-                    $onclick = $elementclone->getAttribute('onclick');
-                    $skip = 'skipClientValidation = true;';
-                    $onclick = ($onclick !== null) ? $skip . ' ' . $onclick : $skip;
-                    $elementclone->updateAttributes(['data-skip-validation' => 1, 'data-no-submit' => 1, 'onclick' => $onclick]);
-                }
-
-                // Mark newly created elements, so they know not to look for any submitted data.
-                if ($i >= $oldrepeats) {
-                    $mform->note_new_repeat($elementclone->getName());
-                }
-
-                $mform->addElement($elementclone);
-                $no++;
-            }
-        }
-        for ($i=0; $i<$repeats; $i++) {
-            foreach ($options as $elementname => $elementoptions){
-                $pos=strpos($elementname, '[');
-                if ($pos!==FALSE){
-                    $realelementname = substr($elementname, 0, $pos)."[$i]";
-                    $realelementname .= substr($elementname, $pos);
-                }else {
-                    $realelementname = $elementname."[$i]";
-                }
-                foreach ($elementoptions as  $option => $params){
-
-                    switch ($option){
-                        case 'default' :
-                            $mform->setDefault($realelementname, str_replace('{no}', $i + 1, $params));
-                            break;
-                        case 'helpbutton' :
-                            $params = array_merge(array($realelementname), $params);
-                            call_user_func_array(array(&$mform, 'addHelpButton'), $params);
-                            break;
-                        case 'disabledif' :
-                        case 'hideif' :
-                            $pos = strpos($params[0], '[');
-                            $ending = '';
-                            if ($pos !== false) {
-                                $ending = substr($params[0], $pos);
-                                $params[0] = substr($params[0], 0, $pos);
-                            }
-                            foreach ($namecloned as $num => $name){
-                                if ($params[0] == $name){
-                                    $params[0] = $params[0] . "[$i]" . $ending;
-                                    break;
-                                }
-                            }
-                            $params = array_merge(array($realelementname), $params);
-                            $function = ($option === 'disabledif') ? 'disabledIf' : 'hideIf';
-                            call_user_func_array(array(&$mform, $function), $params);
-                            break;
-                        case 'rule' :
-                            if (is_string($params)){
-                                $params = array(null, $params, null, 'client');
-                            }
-                            $params = array_merge(array($realelementname), $params);
-                            call_user_func_array(array(&$mform, 'addRule'), $params);
-                            break;
-
-                        case 'type':
-                            $mform->setType($realelementname, $params);
-                            break;
-
-                        case 'expanded':
-                            $mform->setExpanded($realelementname, $params);
-                            break;
-
-                        case 'advanced' :
-                            $mform->setAdvanced($realelementname, $params);
-                            break;
-                    }
-                }
-            }
-        }
-        $mform->addElement('submit', $addfieldsname, $addstring, [], false);
-
-        if (!$addbuttoninside) {
-            $mform->closeHeaderBefore($addfieldsname);
-        }
-
-        return $repeats;
-    }
-
-    /**
-     * Create field attribute and value elements for the cloned field based on the counts of exising attributes in the submitted data.
-     *
-     * When user clicks the add attribute button,
-     * it creates a new select element for the field attributes and a new text element for the attribute value, and it appends to the field group.
-     * But when the form is submitted, we need to recreate those elements based on the submitted data to make sure the form validation works
-     * and the submitted data is mapped correctly to the persistent.
-     *
-     * @param mixed $element
-     * @param int $index
-     *
-     * @return void
-     *
-     */
-    public function create_field_attributes($element, $index) {
-
-        // Verify the element is field attribute or attribute value group. otherwise, return directly.
-        if (!($element instanceof \HTML_QuickForm_group)
-            || (str_contains($element->getName(), 'fieldattributegrp') === false
-            && str_contains($element->getName(), 'attributevaluegrp') === false)
-        ) {
-            return;
-        }
-
-        // Get the submitted values for the field attributes, the structure is like fieldattribute[fieldindex][attributecount],
-        // So we need to loop through the attribute count to create the elements.
-        $attrslist = $this->_form->_submitValues['fieldattribute'] ?? $this->_form->_defaultValues['fieldattribute'];
-
-        foreach ($element->getElements() as $childelement) {
-            $name = $childelement->getName();
-
-            // Element is field attribute then update the name with index.
-            if (!empty($name) && str_contains($name, 'fieldattribute')) {
-                $childelement->setName($name . "[0]"); // The first attribute element.
-
-                // Multiple attribute are available.
-                if (is_array($attrslist) && !empty($attrslist[$index]) && count($attrslist[$index]) > 0) {
-
-                    // Create new select element for each attribute and append to the field group.
-                    foreach ($attrslist[$index] as $i => $attrvalue) {
-                        if ($i == 0) { // We already have the first element created in the form definition, so skip it.
-                            continue;
-                        }
-
-                        // Create new select element for the field attribute.
-                        $newattribute = $this->_form->createElement('select', $name . "[$i]", '', $this->fieldattributes);
-                        // Append the new element to the field group.
-                        $last = array_pop($element->_elements);
-                        $element->_elements[] = $newattribute;
-                        $element->_elements[] = $last;
-                    }
-                }
-            }
-
-            // Element is attribute value then update the name with index.
-            if (!empty($name) && str_contains($name, 'attributevalue')) {
-                $childelement->setName($name . "[0]"); // The first attribute value element.
-
-                // Multiple attribute are available.
-                if (is_array($attrslist) && !empty($attrslist[$index]) && count($attrslist[$index]) > 0) {
-                    foreach ($attrslist[$index] as $i => $attrvalue) {
-                        if ($i == 0) { // We already have the first element created in the form definition, so skip it.
-                            continue;
-                        }
-
-                        $newattribute = $this->_form->createElement('text', $name . "[$i]", get_string('fieldcustomdata', 'block_dash'),
-                            ['size' => '50', 'placeholder' => 'course/view.php?id={PLACEHOLDER}']);
-                        $element->_elements[] = $newattribute;
-                    }
-                }
-            }
-        }
-
-        // Update the elements of the group with the new created elements.
-        // Without this elements are not updated correctly. and the data will not export during the form submission.
-        $element->setElements($element->_elements);
+        '
+        );
     }
 
     /**
@@ -765,7 +475,7 @@ class custom_data_source_form extends persistent_form {
     /**
      * Get the alias for the join.
      *
-     * @param bool $join
+     * @param  bool $join
      * @return void
      */
     public static function get_alias($join = true) {
@@ -793,12 +503,9 @@ class custom_data_source_form extends persistent_form {
             'block_dash\local\data_grid\field\attribute\identifier_attribute',
             'block_dash\local\data_grid\field\attribute\image_attribute',
             'block_dash\local\data_grid\field\attribute\link_attribute',
-            'block_dash\local\data_grid\field\attribute\linked_data_attribute',
             'block_dash\local\data_grid\field\attribute\moodle_url_attribute',
             'block_dash\local\data_grid\field\attribute\percent_attribute',
             'block_dash\local\data_grid\field\attribute\time_attribute',
-            'block_dash\local\data_grid\field\attribute\user_image_url_attribute',
-            'local_dash\data_grid\field\attribute\course_image_url_attribute',
             'local_dash\data_grid\field\attribute\timeago_attribute',
         ];
     }

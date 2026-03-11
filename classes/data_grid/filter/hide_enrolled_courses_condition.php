@@ -17,9 +17,9 @@
 /**
  * Filters results to enrolled courses, optionally with specific role(s).
  *
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -34,7 +34,8 @@ use MoodleQuickForm;
  *
  * @package local_dash
  */
-class hide_enrolled_courses_condition extends my_enrolled_courses_condition {
+class hide_enrolled_courses_condition extends my_enrolled_courses_condition
+{
     /**
      * Get filter SQL operation.
      *
@@ -74,7 +75,8 @@ class hide_enrolled_courses_condition extends my_enrolled_courses_condition {
         $params = ['roauserid' => $USER->id];
         if (
             isset($this->get_preferences()['roleids'])
-            && is_array($this->get_preferences()['roleids']) && count($this->get_preferences()['roleids']) > 0
+            && is_array($this->get_preferences()['roleids'])
+            && count($this->get_preferences()['roleids']) > 0
         ) {
             [$rsql, $rparams] = $DB->get_in_or_equal($this->get_preferences()['roleids'], SQL_PARAMS_NAMED, 'rls');
             $sql .= " AND roa.roleid $rsql";

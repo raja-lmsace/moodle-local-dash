@@ -17,9 +17,9 @@
 /**
  * Represents a user created data source.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_developer\model;
@@ -34,7 +34,8 @@ use dashaddon_developer\data_grid\field\custom_sql_field_definition;
  *
  * @package dashaddon_developer
  */
-class custom_data_source extends persistent {
+class custom_data_source extends persistent
+{
     /**
      * Source table for the developer addon.
      */
@@ -136,7 +137,7 @@ class custom_data_source extends persistent {
     /**
      * Update properties format
      *
-     * @param mixed $data
+     * @param  mixed $data
      * @return void
      */
     public function update_properties_format(&$data) {
@@ -148,28 +149,8 @@ class custom_data_source extends persistent {
             if (is_null($value)) {
                 continue;
             }
-            $data->$property =  in_array($property, ['fieldattribute', 'attributevalue']) ? $this->revise_fieldattr($value) : json_decode($value);
+            $data->$property = json_decode($value);
         }
-    }
-
-    /**
-     * Make the field attribute and attribute value in array format for the loop in field definition.
-     *
-     * @param string $value
-     * @return array
-     */
-    public function revise_fieldattr($value) {
-
-        $value = json_decode($value) ?: [];
-        array_walk($value, function(&$item) {
-            if (!is_array($item)) {
-                $item = [$item];
-            }
-
-            $item = array_filter($item);
-        });
-
-        return $value;
     }
 
     /**
@@ -213,7 +194,7 @@ class custom_data_source extends persistent {
     /**
      * Validate the idnumber
      *
-     * @param int $value The value.
+     * @param  int $value The value.
      * @return true|\lang_string
      * @throws \coding_exception
      */
@@ -265,25 +246,25 @@ class custom_data_source extends persistent {
     /**
      * Update the placeholders tables with its alias.
      *
-     * @param string $field
+     * @param  string $field
      * @return string
      */
     public function update_field_alias($field) {
 
         $tablesalias = $this->get_table_alias();
 
-        $expfieldtable = explode('.', $field);
+        $fieldtable = explode('.', $field);
         // This field doesn't contains any table as alias, this is raise the ambious error.
-        if (!isset($expfieldtable[1])) {
+        if (!isset($fieldtable[1])) {
             return;
         }
 
         // Name of the field used in the DB table strucutes. without any alias.
-        $fieldtable = $expfieldtable[0]; // First element is the table.
+        $fieldtable = reset($fieldtable); // First element is the table.
 
         if (isset($tablesalias[$fieldtable])) {
             // Replace the table name with its alias.
-            $field = $tablesalias[$fieldtable] . '.' . $expfieldtable[1];
+            $field = str_replace($fieldtable, $tablesalias[$fieldtable], $field);
         }
 
         return $field;

@@ -69,7 +69,7 @@ Feature: Add activity completion widget filters in dash block
 
   Scenario: Activity completion widget my group filter check
     Given I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I add the "Dash" block
     And I click on "#id_config_data_source_idnumber_dashaddon_activitycompletionwidgetactivitycompletion_widget" "css_element"
@@ -97,7 +97,7 @@ Feature: Add activity completion widget filters in dash block
 
   Scenario: Activity completion widget course sections filter check
     Given I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I add the "Dash" block
     And I click on "#id_config_data_source_idnumber_dashaddon_activitycompletionwidgetactivitycompletion_widget" "css_element"

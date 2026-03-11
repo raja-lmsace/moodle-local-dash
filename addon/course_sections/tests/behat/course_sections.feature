@@ -142,8 +142,9 @@ Feature: Dash program to course sections
     And I press "Save changes"
     And I log out
     And I log in as "student1"
-    And I am on "Course 1" course homepage
-    And I navigate to "Dash-dashboard" in current page administration
+
+    And I am on "Course 1" course homepage with editing mode on
+    And I click on "Dash-dashboard" "link"
     Then I should see "course sections"
     Then I should see "Course 1"
     And I should see "Course 3"
@@ -162,7 +163,7 @@ Feature: Dash program to course sections
 
   Scenario: Expand general section
     Given I log in as "admin"
-    And I am on the "block_dash > Default Dashboard" page
+    And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
     And I add the "Dash" block
     And I click on "Course Sections" "radio"
@@ -195,7 +196,6 @@ Feature: Dash program to course sections
     And I turn dash block editing mode on
     And I click on "Manage dashboards" "button"
     And I click on "Dash-dashboard" "link"
-    And I wait until the page is ready
     And I open the "course sections" block preference
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][c_course][enabled]" to "1"
@@ -207,7 +207,7 @@ Feature: Dash program to course sections
 
     And I log in as "student1"
     And I am on "Course 1" course homepage
-    And I navigate to "Dash-dashboard" in current page administration
+    And I click on "Dash-dashboard" "link"
     And I should see "Course 2"
     And I should not see "Course 1"
     And I log out
@@ -216,7 +216,6 @@ Feature: Dash program to course sections
     And I turn dash block editing mode on
     And I click on "Manage dashboards" "button"
     And I click on "Dash-dashboard" "link"
-    And I wait until the page is ready
     And I open the "course sections" block preference
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][c_course][enabled]" to "0"
@@ -228,6 +227,6 @@ Feature: Dash program to course sections
 
     And I log in as "student1"
     And I am on "Course 1" course homepage
-    And I navigate to "Dash-dashboard" in current page administration
+    And I click on "Dash-dashboard" "link"
     And I should see "Course 1"
     And I should not see "Course 2"

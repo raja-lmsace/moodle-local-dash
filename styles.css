@@ -71,7 +71,6 @@
 }
 .dash-block-content .timeline > li > .timeline-panel {
     width: 46%;
-    min-height: 70px;
     float: left;
     border: 1px solid #d4d4d4;
     border-radius: 2px;
@@ -235,9 +234,6 @@
 .block_dash .dash-container .dash-block-content .card .badge {
     white-space: pre-wrap;
 }
-.block_dash .dash-container .dash-block-content .card .badge + .card-body {
-    margin-top: 20px;
-}
 .block_dash .dash-container .dash-block-content .card a {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -245,7 +241,6 @@
 .block_dash .dash-container .dash-block-content .card img {
     height: 100%;
     object-fit: cover;
-    border-radius: 7px;
 }
 .block_dash .dash-container .dash-block-content .card .card-body p img {
     margin-bottom: 10px;
@@ -260,7 +255,6 @@
     margin-top: 5px;
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.floating-block.fit-content > .card-block {
-    width: 100%;
     margin-bottom: 0;
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.fit-content
@@ -488,7 +482,6 @@
 .block_dash .card-body .card-text .dash-block-content nav > .pagination,
 .block_dash .card-body .card-text .dash-block-content .pagination-summary {
     margin-top: 20px;
-    flex-wrap: wrap;
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.one-column-block {
     margin: 0;
@@ -504,11 +497,11 @@
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.fit-content.expand-block:not(.expand-card) {
     display: flex;
 }
-/* .block_dash .dash-container .dash-block-content
+.block_dash .dash-container .dash-block-content
 .card-layout-row.card-layout-default.floating-block.fit-content:not(.floating-card) {
     justify-content: left;
     display: flex;
-} */
+}
 .block_dash .dash-container .dash-block-content
 .card-layout-row.card-layout-default.floating-block.fit-content:not(.floating-card) .card.details-area-block:hover {
     margin-bottom: 0;
@@ -534,7 +527,6 @@
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.fit-content.expand-card .card-block,
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.fit-content.floating-card .card-block {
     max-width: none;
-    width: 100%;
     margin-bottom: 0;
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.fit-content
@@ -564,7 +556,6 @@
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default > .card-block,
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout_masonry > .card-block {
-    width: 100%;
     border-radius: 7px;
     padding: 0 5px;
     margin-bottom: 10px;
@@ -573,7 +564,6 @@
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.expand-block.fit-content > .card-block {
     max-width: none;
-    width: 100%;
 }
 .block_dash .dash-container .dash-block-content
 .card-layout-row.card-layout-default > .card-block.expand-card:not(.col-sm-12) .card.card-background,
@@ -757,9 +747,9 @@ form fieldset .fitem.fitem_f .felement {
 }
 .block_dash .dash-block-content .card_layout_slider .slick-arrow {
     color: #fff;
-    border: 1px solid var(--primary, var(--bs-primary));
+    border: 1px solid var(--primary);
     border-radius: 5px;
-    background: var(--primary, var(--bs-primary));
+    background: var(--primary);
     padding: 4px 12px;
     display: flex;
     align-items: center;
@@ -944,10 +934,8 @@ form fieldset .fitem.fitem_f .felement {
 .block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-right {
     width: 100%;
 }
-.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card
-.card-footer-left img:not(.icon-responsive),
-.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card
-.card-footer-right img:not(.icon-responsive) {
+.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-left img,
+.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-right img {
     max-width: 200px;
 }
 .block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-right img {
