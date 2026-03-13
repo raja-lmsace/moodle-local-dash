@@ -6,9 +6,15 @@ Feature: Add course enrol widget in dash block
   Background:
     Given the following "categories" exist:
       | name       | category | idnumber |
-      | Category 1 | 0        | CAT1     |
+      | Category A | 0        | CAT1     |
       | Category 2 | 0        | CAT2     |
       | Category 3 | CAT2     | CAT3     |
+    Given the following "custom field categories" exist:
+      | name  | component   | area   | itemid |
+      | Other | core_course | course | 0      |
+    And the following "custom fields" exist:
+      | name                  | category | type          | shortname  |
+      | Associated categories | Other    | multicategory | categories |
     And the following "courses" exist:
       | fullname | shortname | category | enablecompletion | numsections |
       | Course 1 | C1        | 0        | 1                | 3           |
@@ -157,3 +163,28 @@ Feature: Add course enrol widget in dash block
     Then I click on "Unenrol" "link" in the ".courses-list .card:nth-child(1) .edit-option-block" "css_element"
     And I click on "Save changes" "button" in the "Unenrol" "dialogue"
     And I should not see "Course 1" in the "New Dash" "block"
+
+  Scenario: Course enrolments widget respects mutlicatgory field
+    Given I log in as "admin"
+    And I am on "Course 3" course homepage
+    And I navigate to "Settings" in current page administration
+    And I expand all fieldsets
+    And I expand the "Associated categories" autocomplete
+    And I click on "Category A" "text" in the "#fitem_id_customfield_categories .form-autocomplete-suggestions" "css_element"
+    And I press the escape key
+    And I press "Save and display"
+    And I am on the "block_dash > Default Dashboard" page
+    And I turn dash block editing mode on
+    And I open the "New Dash" block preference
+    Then I click on "Conditions" "link"
+    And I set the field "Course categories" to "1"
+    And I set the field "config_preferences[filters][c_course_categories_condition][coursecategories][]" to "Category A"
+    And I press "Save changes"
+    And I click on "Reset Dashboard for all users" "button"
+    And I log out
+    And I log in as "student1"
+    And I follow dashboard
+    And I should see "Course 2" in the ".courses-list .card:nth-child(1) .course-section-block" "css_element"
+    And I should see "Course 3" in the ".courses-list .card:nth-child(2) .course-section-block" "css_element"
+    And I should not see "Course 4" in the ".courses-list" "css_element"
+    And I log out

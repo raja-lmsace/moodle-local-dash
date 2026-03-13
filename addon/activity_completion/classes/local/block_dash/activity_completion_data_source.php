@@ -280,6 +280,12 @@ class activity_completion_data_source extends abstract_data_source {
                     case 'textarea':
                         break;
                     default:
+                        if (
+                            class_exists('\customfield_multicategory\condition_helper') &&
+                            \customfield_multicategory\condition_helper::should_skip_default_filter($field->get('type'))
+                        ) {
+                            break;
+                        }
                         $cmfiltercollection->add_filter(new customfield_filter(
                             $alias,
                             $select,

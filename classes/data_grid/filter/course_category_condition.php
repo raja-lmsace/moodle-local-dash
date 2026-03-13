@@ -41,7 +41,55 @@ class course_category_condition extends condition {
      * @return string
      */
     public function get_operation() {
+        // Use custom operation when multicategory plugin is available and we're in course context.
+        if ($this->is_course_context() && class_exists('\customfield_multicategory\condition_helper')) {
+            return self::OPERATION_CUSTOM;
+        }
         return self::OPERATION_IN_OR_EQUAL;
+    }
+
+    /**
+     * Check if this condition is being used in a course context (not categories).
+     *
+     * @return bool True if filtering courses, false if filtering categories.
+     */
+    protected function is_course_context(): bool {
+        $select = $this->get_select();
+        return strpos($select, 'cc.id') === false;
+    }
+
+    /**
+     * Return where SQL and params for placeholders.
+     *
+     * @return array
+     */
+    public function get_sql_and_params() {
+        global $DB;
+
+        $categoryids = $this->get_values();
+        if (empty($categoryids)) {
+            return ['', []];
+        }
+
+        $select = $this->get_select();
+        $name = $this->get_name();
+
+        // Get the IN clause for main category.
+        [$insql, $params] = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED, $name . '_cat');
+        $basesql = "$select $insql";
+
+        // Only extend with multicategory logic in course context.
+        if ($this->is_course_context() && class_exists('\customfield_multicategory\condition_helper')) {
+            $result = \customfield_multicategory\condition_helper::extend_category_sql(
+                $basesql,
+                $params,
+                $categoryids,
+                $name . '_mcat'
+            );
+            return [$result['sql'], $result['params']];
+        }
+
+        return [$basesql, $params];
     }
 
     /**

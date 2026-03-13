@@ -68,6 +68,7 @@ jobs:
           moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-enrol_programs.git --branch MOODLE_405_STABLE
           moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-local_openlms.git --branch MOODLE_405_STABLE
           moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-customfield_training.git --branch MOODLE_405_STABLE
+          moodle-plugin-ci add-plugin --clone https://github.com/raja-lmsace/moodle-local-dash.git --branch multicategory
 
           # Select correct branch for tool_certificate based on Moodle version
           if [[ "${{ matrix.moodle-branch }}" == "MOODLE_500_STABLE" ]]; then

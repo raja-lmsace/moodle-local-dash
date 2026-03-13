@@ -32,6 +32,15 @@ use local_dash\data_grid\filter\course_customfield_condition;
 
 
 /**
+ * Check if the customfield_multicategory plugin is installed.
+ *
+ * @return bool
+ */
+function local_dash_is_multicategory_installed() {
+    return array_key_exists('multicategory', core_component::get_plugin_list('customfield'));
+}
+
+/**
  * Register field definitions used in the layouts.
  *
  * @return void

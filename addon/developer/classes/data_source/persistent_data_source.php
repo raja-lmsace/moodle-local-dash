@@ -228,8 +228,8 @@ class persistent_data_source extends abstract_data_source {
 
             $paramname = "usr{$field}{$paramindex}";
 
-            // Replace only the first occurrence each time
-            $value = preg_replace('/\[LOGINUSER(?::(\w+))?\]/i', ':'.$paramname, $value, 1);
+            // Replace only the first occurrence each time.
+            $value = preg_replace('/\[LOGINUSER(?::(\w+))?\]/i', ':' . $paramname, $value, 1);
 
             if (property_exists($USER, $field)) {
                 $params[$paramname] = $USER->{$field};

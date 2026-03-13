@@ -133,7 +133,6 @@ Feature: Add conditions to the datasource in dash block
       | should not         | should not          | should           | Past                  |
 
   Scenario: Filter the courses list based on course start and end dates
-
     Given the following "courses" exist:
       | fullname       | shortname | category | startdate          | enddate              |
       | Course Past    | CD1       | CAT4     | ##1 year ago##     | ##1 month ago##      |

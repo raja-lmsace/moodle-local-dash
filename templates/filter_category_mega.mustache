@@ -1,0 +1,139 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_dash/filter_category_mega
+
+    Example context (json):
+    {
+        "name":    "filter_categoryfield",
+        "label":   "Categories",
+        "labelall": "All Categories",
+        "hastree": true,
+        "selectoptions": [
+            {"value": "-1", "label": "All Categories", "selected": true},
+            {"value": "4",  "label": "Demo Mandant 1", "selected": false}
+        ]
+    }
+}}
+
+<div class="dash-cat-mega-wrap" data-filtername="{{name}}" data-tree="{{treejson}}" data-labelall="{{labelall}}">
+    <select name="{{name}}"
+            class="filter-form-control dash-cat-hidden-select"
+            style="display:none"
+            multiple>
+        {{#selectoptions}}
+        <option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>
+        {{/selectoptions}}
+    </select>
+
+    {{! Desktop }}
+    <div class="dash-cat-dropdown d-none d-lg-block">
+        {{#hastree}}
+        <div class="d-flex align-items-center gap-1">
+        <div class="dropdown">
+            <button type="button"
+                    class="btn btn-outline-secondary dropdown-toggle dash-cat-toggle"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-label="{{label}}">
+                <span class="dash-cat-label">{{label}}</span>
+            </button>
+            <div class="dropdown-menu dash-mega-menu p-0">
+                <div class="dash-mega-cols d-flex">
+                    <div class="dash-mega-col" data-level="1">
+                        <ul class="list-unstyled m-0 p-0" role="menu"></ul>
+                    </div>
+                    <div class="dash-mega-col dash-mega-col--empty" data-level="2">
+                        <ul class="list-unstyled m-0 p-0" role="menu"></ul>
+                    </div>
+                    <div class="dash-mega-col dash-mega-col--empty" data-level="3">
+                        <ul class="list-unstyled m-0 p-0" role="menu"></ul>
+                    </div>
+                    <div class="dash-mega-col dash-mega-col--empty" data-level="4">
+                        <ul class="list-unstyled m-0 p-0" role="menu"></ul>
+                    </div>
+                    <div class="dash-mega-col dash-mega-col--empty" data-level="5">
+                        <ul class="list-unstyled m-0 p-0" role="menu"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button"
+                class="btn btn-outline-secondary btn-sm dash-cat-clear"
+                style="display:none"
+                title="Clear filter"
+                aria-label="Clear filter">&times;</button>
+        </div>
+        {{/hastree}}
+        {{^hastree}}
+        <button type="button"
+                class="btn btn-outline-secondary dash-cat-toggle disabled"
+                disabled
+                aria-label="{{label}}">
+            <span class="dash-cat-label">{{label}}</span>
+        </button>
+        {{/hastree}}
+    </div>
+
+    {{! Mobile — custom drawer, no Bootstrap offcanvas API }}
+    <div class="d-lg-none">
+        {{#hastree}}
+        <div class="d-flex align-items-center gap-1">
+        <button type="button"
+                class="btn btn-outline-secondary dash-cat-toggle dash-cat-mobile-open"
+                aria-label="{{label}}">
+            <span class="dash-cat-label">{{label}}</span>
+        </button>
+        <button type="button"
+                class="btn btn-outline-secondary btn-sm dash-cat-clear"
+                style="display:none"
+                title="Clear filter"
+                aria-label="Clear filter">&times;</button>
+        </div>
+
+        {{! Custom drawer: we own show/hide completely — no Bootstrap lifecycle }}
+        <div class="dash-cat-drawer" role="dialog" aria-modal="true" aria-hidden="true">
+            <div class="dash-cat-drawer-panel">
+                <div class="dash-cat-drawer-header">
+                    <button type="button"
+                            class="dash-mobile-back btn btn-link p-0 me-2"
+                            style="display:none"
+                            aria-label="{{#str}}back{{/str}}">&#8249;</button>
+                    <h5 class="dash-mobile-title">{{label}}</h5>
+                    <button type="button"
+                            class="btn-close dash-cat-drawer-close"
+                            aria-label="{{#str}}closebuttontitle, core{{/str}}"></button>
+                </div>
+                <div class="dash-cat-drawer-body p-0">
+                    <ul class="dash-mobile-list list-unstyled m-0 p-0" role="menu"></ul>
+                </div>
+            </div>
+        </div>
+        {{/hastree}}
+        {{^hastree}}
+        <button type="button"
+                class="btn btn-outline-secondary dash-cat-toggle disabled"
+                disabled
+                aria-label="{{label}}">
+            <span class="dash-cat-label">{{label}}</span>
+        </button>
+        {{/hastree}}
+    </div>
+
+</div>

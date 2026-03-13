@@ -241,12 +241,15 @@ class enrolments_widget extends abstract_widget {
                 $filter->get_name() == 'c_course_categories_condition'
                 && $filter->get_preferences('enabled') && $filter->get_preferences()
             ) {
-                $categories = $filter->get_values();
-                if (!$filter->get_preferences()['enabled'] || empty($categories)) {
+                if (!$filter->get_preferences()['enabled']) {
                     continue;
                 }
-                [$insql, $params] = $DB->get_in_or_equal($categories, SQL_PARAMS_NAMED, 'ctx');
-                $categorysql = "AND c.category $insql";
+
+                [$sql, $sqlparams] = $filter->get_sql_and_params();
+                if (!empty($sql)) {
+                    $categorysql = "AND ($sql)";
+                    $params = $sqlparams;
+                }
             }
 
             if ($filter->get_name() == 'c_status') {
