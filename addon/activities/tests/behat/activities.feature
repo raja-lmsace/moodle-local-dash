@@ -113,16 +113,16 @@ Feature: Add activities widget in dash block
     Given I log in as "student1"
     # Category filter
     And ".dash-block-content .dash-table" "css_element" should exist
-    Then I click on "select[name='cc_id'] + span .selection" "css_element"
-    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Category 01')]" "xpath_element"
+    And I click on "Category" "button" in the ".dash-cat-dropdown" "css_element"
+    When I click on ".dash-mega-col[data-level='1'] ul li:nth-child(2)" "css_element"
     And I should not see "Test choice 2" in the "Activities" "block"
     And I should see "Test choice 1" in the "Activities" "block"
     And I should not see "Test choice 3" in the "Activities" "block"
-    Then I click on "select[name='cc_id'] + span .selection" "css_element"
-    Then I click on "//span[@class='select2-results']//li[contains(normalize-space(.),'Category 02')]" "xpath_element"
-    And I should see "Test choice 1" in the "Activities" "block"
+    And I click on "Category" "button" in the ".dash-cat-dropdown" "css_element"
+    When I click on ".dash-mega-col[data-level='1'] ul li:nth-child(3)" "css_element"
     And I should see "Test choice 3" in the "Activities" "block"
-    And I should not see "Test assignment 1" in the "Activities" "block"
+    And I should see "Test assignment 1" in the "Activities" "block"
+    And I should not see "Test choice 1" in the "Activities" "block"
     Then I reload the page
 
     # Course filter
