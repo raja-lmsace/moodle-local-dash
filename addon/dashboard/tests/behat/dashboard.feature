@@ -444,4 +444,3 @@ Feature: Add a dashboard data source in dash block
     And "Learning Path" "block" should exist
     And "Course Enrolments" "block" should exist
     And "Calendar" "block" should exist
-

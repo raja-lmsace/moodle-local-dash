@@ -371,18 +371,15 @@ function dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
 
             // Self enrol plugin (may be null if not installed).
             $selfplugin = enrol_get_plugin('self');
-            
             foreach ($instances as $instance) {
                 // Self enrolment: use can_self_enrol() to respect dates, limits, keys, etc.
                 if ($instance->enrol === 'self' && $selfplugin) {
                     $result = $selfplugin->can_self_enrol($instance); // No $userid here.
-            
                     // Only treat it as available if it *really* returns boolean true.
                     if ($result === true) {
                         $canselfenrol = true;
                     }
                 }
-            
                 // Guest access: enabled guest enrol instance.
                 if ($instance->enrol === 'guest' && $instance->status == ENROL_INSTANCE_ENABLED) {
                     $guestaccess = true;

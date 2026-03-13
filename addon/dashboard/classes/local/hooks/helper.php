@@ -24,7 +24,6 @@ namespace dashaddon_dashboard\local\hooks;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class helper {
-
     /**
      * Clears the hook cache and optionally recreates it.
      *
@@ -51,7 +50,6 @@ class helper {
         }
 
         if (method_exists(\core\hook\manager::class, 'get_cache')) {
-
             $cache = $this->get_cache();
 
             $callbacks = $cache['callbacks'] ?? null;
@@ -63,9 +61,7 @@ class helper {
             $this->set_cache($callbacks, $deprecations, $hash);
 
             return true;
-
         } else if (\core_cache\config::instance()->get_definition_by_id('core/hookcallbacks')) {
-
             $cache = \cache::make('core', 'hookcallbacks');
             // Remove the event callbacks and recreate.
             $cache->delete('callbacks');
@@ -77,7 +73,6 @@ class helper {
             $cache->set('callbacks', $allhooks);
 
             return true;
-
         }
 
         return false;
@@ -108,7 +103,8 @@ class helper {
     /**
      * Store all relevant data in the cache.
      *
-     * Extend from core\hook\manager to be able to set the cache directly if the methods are available, otherwise write to the file cache.
+     * Extend from core\hook\manager to be able to set the cache directly if the methods are available,
+     * otherwise write to the file cache.
      *
      * @param array $callbacks
      * @param array $deprecations

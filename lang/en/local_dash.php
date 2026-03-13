@@ -22,8 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['clearfilter'] = 'Clear filter';
 $string['choose'] = 'Choose...';
+$string['clearfilter'] = 'Clear filter';
 $string['courseshape'] = 'Select course shape';
 $string['courseshape_desc'] = 'Choose the default shape to use for the course on the learning path.';
 $string['customselectfield'] = 'Select course field for shape';

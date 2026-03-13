@@ -179,7 +179,7 @@ function xmldb_local_dash_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2022011903, 'local', 'dash');
     }
 
-    if ($oldversion < 2023101406) {
+    if ($oldversion < 2024040428) {
         // Dash savepoint reached.
         $table = new xmldb_table('local_dash_dashboard');
         $dashaddondashboard = new xmldb_table('dashaddon_dashboard_dash');

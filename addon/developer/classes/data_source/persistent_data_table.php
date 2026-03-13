@@ -163,7 +163,6 @@ class persistent_data_table extends table {
                 // Create attribute to transform data.
                 $fieldattribute = [];
                 if ($fieldattributes[$i]) {
-
                     if (!is_array($fieldattributes[$i])) {
                         $fieldattributes[$i] = [$fieldattributes[$i]];
                     }
@@ -186,7 +185,10 @@ class persistent_data_table extends table {
                         // For example, the linked data attribute needs the url to construct the link,
                         // So we need to set the custom value to the attribute before transform the data.
                         if ($attribute->is_needs_construct_data() && !empty($customvalue[$i][$k])) {
-                            $attribute->set_transform_field(DASHADDON_DEVELOPER_MAIN_ALIAS . '_' . $fieldname, $customvalue[$i][$k]);
+                            $attribute->set_transform_field(
+                                DASHADDON_DEVELOPER_MAIN_ALIAS . '_' . $fieldname,
+                                $customvalue[$i][$k]
+                            );
                             $attribute->set_placeholders($placeholders);
                         } else if ($attribute->supports_direct_field()) {
                             // Attributes uses the direct field name to construct the data without receiving the data to transform,

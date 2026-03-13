@@ -31,7 +31,6 @@ use core_course_category;
  * Category filter that restricts options to categories in the actual result set.
  */
 class category_field_filter extends select_filter {
-
     /**
      * Initialize the filter. Load only categories that have at least one course.
      */
@@ -168,7 +167,7 @@ class category_field_filter extends select_filter {
                 $filtered[] = $cat;
             }
         }
-        usort($filtered, function($a, $b) {
+        usort($filtered, function ($a, $b) {
             return strcmp($a->path, $b->path);
         });
 
@@ -231,8 +230,10 @@ class category_field_filter extends select_filter {
      * @return string
      */
     public function get_operation() {
-        if (local_dash_is_multicategory_installed() &&
-            component_callback('customfield_multicategory', 'dash_has_custom_sql', [], false)) {
+        if (
+            local_dash_is_multicategory_installed() &&
+            component_callback('customfield_multicategory', 'dash_has_custom_sql', [], false)
+        ) {
             return self::OPERATION_CUSTOM;
         }
         return self::OPERATION_IN_OR_EQUAL;
@@ -258,8 +259,17 @@ class category_field_filter extends select_filter {
         $basesql = "$select $insql";
 
         $result = local_dash_is_multicategory_installed() ?
-            component_callback('customfield_multicategory', 'dash_category_extend_sql',
-                [$basesql, $params, $values, $name . '_mfcat'], null) : null;
+            component_callback(
+                'customfield_multicategory',
+                'dash_category_extend_sql',
+                [
+                    $basesql,
+                    $params,
+                    $values,
+                    $name . '_mfcat',
+                ],
+                null
+            ) : null;
         if (!empty($result['sql'])) {
             $basesql = $result['sql'];
             $params  = $result['params'];
@@ -306,8 +316,11 @@ class category_field_filter extends select_filter {
      * @return array Collapsed category tree nodes.
      */
     protected function collapse_single_path(array $nodes): array {
-        if (count($nodes) === 1 && count($nodes[0]['children']) === 1 &&
-            !in_array($nodes[0]['id'], $this->directcategoryids, true)) {
+        if (
+            count($nodes) === 1 &&
+            count($nodes[0]['children']) === 1 &&
+            !in_array($nodes[0]['id'], $this->directcategoryids, true)
+        ) {
             return $this->collapse_single_path($nodes[0]['children']);
         }
         return $nodes;
@@ -316,8 +329,8 @@ class category_field_filter extends select_filter {
     /**
      * Render category filter.
      *
-     * @param filter_collection_interface $filtercollection
-     * @param string $elementnameprefix
+     * @param filter_collection_interface $filtercollection Current filter collection
+     * @param string $elementnameprefix Prefix to add to the form element name.
      * @return string Rendered HTML.
      */
     public function create_form_element(filter_collection_interface $filtercollection, $elementnameprefix = '') {
@@ -433,7 +446,7 @@ class category_field_filter extends select_filter {
         }
 
         // Recursively convert id-based child lists to full node arrays.
-        $buildnode = function(int $id) use (&$buildnode, &$nodes): array {
+        $buildnode = function (int $id) use (&$buildnode, &$nodes): array {
             $node = $nodes[$id];
             $children = [];
             foreach ($node['children'] as $childid) {

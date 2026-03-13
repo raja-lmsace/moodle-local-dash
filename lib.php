@@ -178,7 +178,6 @@ function local_dash_extend_settings_navigation($settingsnav, $context) {
             }
         }
     }
-    
     $hidecategory = get_config('local_dash', 'hidecoursecategory');
     if ($hidecategory && !is_siteadmin() && !has_capability('moodle/category:manage', context_system::instance())) {
         $redirecturl = new moodle_url('/my');

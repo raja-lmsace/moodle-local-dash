@@ -183,14 +183,13 @@ class persistent_data_source extends abstract_data_source {
      * @param string $value
      * @return string|int
      */
-    public function update_current_user($value)  {
+    public function update_current_user($value) {
         global $USER;
 
         if (str_contains($value, '[LOGINUSER')) {
-
-            // [LOGINUSER]
-            // [LOGINUSER:id]
-            // [LOGINUSER:username]
+            // [LOGINUSER].
+            // [LOGINUSER:id].
+            // [LOGINUSER:username].
             preg_match('/\[LOGINUSER(?::(\w+))?\]/i', $value, $matches);
             $field = $matches[1] ?? 'id';
 
@@ -214,7 +213,7 @@ class persistent_data_source extends abstract_data_source {
         global $USER;
         static $paramindex = 0;
 
-        // Match [LOGINUSER] or [LOGINUSER:field]
+        // Match [LOGINUSER] or [LOGINUSER:field].
         preg_match_all('/\[LOGINUSER(?::(\w+))?\]/i', $value, $matches, PREG_SET_ORDER);
 
         if (empty($matches)) {

@@ -60,7 +60,7 @@ Feature: Check multicategory field in the datasource in dash block
     And I log in as "admin"
     And I log out
 
-Scenario: Course category condition includes courses from multicategory field
+ Scenario: Course category condition includes courses from multicategory field
     Given I log in as "admin"
     And I am on "Course 3" course homepage
     And I navigate to "Settings" in current page administration
@@ -158,8 +158,8 @@ Scenario: Course category condition includes courses from multicategory field
     And I should not see "Category 2, Category 3" in the "Course 1" "table_row"
     And I log out
 
-	Scenario: Display only categories with results in the category filter
-		Given I log in as "admin"
+  Scenario:Display only categories with results in the category filter
+	  Given I log in as "admin"
     And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I create dash "Courses" datasource
