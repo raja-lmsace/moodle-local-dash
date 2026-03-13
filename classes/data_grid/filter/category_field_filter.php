@@ -281,7 +281,8 @@ class category_field_filter extends select_filter {
     /**
      * Restrict options to categories present in the result set, in tree order.
      *
-     * {@inheritdoc}
+     * @param filter_collection_interface $filtercollection filter collection
+     * @return bool|array
      */
     protected function get_active_option_values(filter_collection_interface $filtercollection): ?array {
         $resultcategoryids = $this->get_result_category_ids($filtercollection);

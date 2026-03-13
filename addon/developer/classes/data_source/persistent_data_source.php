@@ -187,9 +187,6 @@ class persistent_data_source extends abstract_data_source {
         global $USER;
 
         if (str_contains($value, '[LOGINUSER')) {
-            // [LOGINUSER].
-            // [LOGINUSER:id].
-            // [LOGINUSER:username].
             preg_match('/\[LOGINUSER(?::(\w+))?\]/i', $value, $matches);
             $field = $matches[1] ?? 'id';
 

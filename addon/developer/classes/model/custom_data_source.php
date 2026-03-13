@@ -148,7 +148,7 @@ class custom_data_source extends persistent {
             if (is_null($value)) {
                 continue;
             }
-            $data->$property =  in_array($property, ['fieldattribute', 'attributevalue']) ?
+            $data->$property = in_array($property, ['fieldattribute', 'attributevalue']) ?
                 $this->revise_fieldattr($value) : json_decode($value);
         }
     }

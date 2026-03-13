@@ -1275,9 +1275,9 @@ form fieldset .fitem.fitem_f .felement {
 /* ── Dash category mega-menu filter ──────────────────────────────────────── */
 
 :root {
-    --dash-cat-active-text:#ffffff;
-    --dash-cat-hover-bg:#f3ecf8;
-    --dash-cat-border:#e0e0e0;
+    --dash-cat-active-text: #fff;
+    --dash-cat-hover-bg: #f3ecf8;
+    --dash-cat-border: #e0e0e0;
 }
 
 /* Toggle button */

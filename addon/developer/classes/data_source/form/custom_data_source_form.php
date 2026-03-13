@@ -283,7 +283,12 @@ class custom_data_source_form extends persistent_form {
         $header = '<h5 class="tablefields">' . get_string('fieldstatichdr', 'block_dash') . '</h5>';
 
         $fieldattrs = [];
-        $fieldattrs[] =& $mform->createElement('select', 'fieldattribute', get_string('fieldtransformdata', 'block_dash'), $attributes);
+        $fieldattrs[] =& $mform->createElement(
+            'select',
+            'fieldattribute',
+            get_string('fieldtransformdata', 'block_dash'),
+            $attributes
+        );
         $fieldattrs[] =& $mform->createElement('submit', 'addattributebtn', '+');
 
         $attrvalues = [];
@@ -596,14 +601,14 @@ class custom_data_source_form extends persistent_form {
         }
         for ($i = 0; $i < $repeats; $i++) {
             foreach ($options as $elementname => $elementoptions) {
-                $pos=strpos($elementname, '[');
-                if ($pos !== FALSE) {
+                $pos = strpos($elementname, '[');
+                if ($pos !== false) {
                     $realelementname = substr($elementname, 0, $pos) . "[$i]";
                     $realelementname .= substr($elementname, $pos);
                 } else {
-                    $realelementname = $elementname."[$i]";
+                    $realelementname = $elementname . "[$i]";
                 }
-                foreach ($elementoptions as  $option => $params) {
+                foreach ($elementoptions as $option => $params) {
                     switch ($option) {
                         case 'default':
                             $mform->setDefault($realelementname, str_replace('{no}', $i + 1, $params));
@@ -630,8 +635,8 @@ class custom_data_source_form extends persistent_form {
                             $function = ($option === 'disabledif') ? 'disabledIf' : 'hideIf';
                             call_user_func_array([&$mform, $function], $params);
                             break;
-                        case 'rule' :
-                            if (is_string($params)){
+                        case 'rule':
+                            if (is_string($params)) {
                                 $params = [null, $params, null, 'client'];
                             }
                             $params = array_merge([$realelementname], $params);

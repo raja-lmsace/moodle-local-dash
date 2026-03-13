@@ -60,7 +60,7 @@ Feature: Check multicategory field in the datasource in dash block
     And I log in as "admin"
     And I log out
 
- Scenario: Course category condition includes courses from multicategory field
+  Scenario: Course category condition includes courses from multicategory field
     Given I log in as "admin"
     And I am on "Course 3" course homepage
     And I navigate to "Settings" in current page administration
@@ -159,7 +159,7 @@ Feature: Check multicategory field in the datasource in dash block
     And I log out
 
   Scenario:Display only categories with results in the category filter
-	  Given I log in as "admin"
+    Given I log in as "admin"
     And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I create dash "Courses" datasource
@@ -174,7 +174,7 @@ Feature: Check multicategory field in the datasource in dash block
     And I set the field "Course: Full name" to "1"
     Then I click on "Filter" "link"
     And I set the field "Category" to "1"
-		Then I click on "Conditions" "link"
+    Then I click on "Conditions" "link"
     And I set the field "config_preferences[filters][c_course_categories_condition][enabled]" to "1"
     And I set the field "id_config_preferences_filters_c_course_categories_condition_coursecategories" to "Category A"
     And I set the field "config_preferences[filters][c_course_categories_condition][includesubcategories]" to "1"
