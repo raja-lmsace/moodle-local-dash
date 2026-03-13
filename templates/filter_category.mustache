@@ -24,7 +24,7 @@
 }}
 
 <div class="dash-cat-mega-wrap" data-filtername="{{name}}" data-tree="{{treejson}}" data-labelall="{{labelall}}">
-    <select name="{{name}}" class="filter-form-control dash-cat-hidden-select" style="display:none" multiple>
+    <select {{#name}}name="{{name}}"{{/name}} class="filter-form-control dash-cat-hidden-select" style="display:none" multiple>
         {{#selectoptions}}
             <option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>
         {{/selectoptions}}

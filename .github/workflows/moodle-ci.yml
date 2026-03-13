@@ -65,10 +65,19 @@ jobs:
         run: |
           moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-block_dash.git --branch dev
           moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-tool_skills.git --branch dev
-          moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-tool_certificate.git --branch MOODLE_400_STABLE
-          moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-mod_coursecertificate.git --branch MOODLE_400_STABLE
-          moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-enrol_programs.git --branch MOODLE_401_STABLE
-          moodle-plugin-ci add-plugin --clone https://github.com/Nithyanandan-lms/moodle-local_openlms.git
+          moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-enrol_programs.git --branch MOODLE_405_STABLE
+          moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-local_openlms.git --branch MOODLE_405_STABLE
+          moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-customfield_training.git --branch MOODLE_405_STABLE
+          moodle-plugin-ci add-plugin --clone https://github.com/raja-lmsace/moodle-customfield_multicategory.git
+
+          # Select correct branch for tool_certificate based on Moodle version
+          if [[ "${{ matrix.moodle-branch }}" == "MOODLE_500_STABLE" ]]; then
+            CERT_BRANCH="MOODLE_500_STABLE"
+          else
+            CERT_BRANCH="MOODLE_400_STABLE"
+          fi
+          moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-tool_certificate.git --branch "$CERT_BRANCH"
+          moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-mod_coursecertificate.git --branch "$CERT_BRANCH"
           moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
         env:
           DB: ${{ matrix.database }}
