@@ -17,9 +17,9 @@
 /**
  * Course enrols widget administration settings.
  *
- * @package   dashaddon_course_enrols
- * @copyright 2025 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_course_enrols
+ * @copyright  2025 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;

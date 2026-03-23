@@ -17,9 +17,9 @@
 /**
  * Library functions defined for course_sections dashaddon widget.
  *
- * @package   dashaddon_course_sections
- * @copyright 2024 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_course_sections
+ * @copyright  2024 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**

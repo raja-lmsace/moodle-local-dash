@@ -17,13 +17,12 @@
 /**
  * Library functions defined for dashaddon content widget.
  *
- * @package   dashaddon_activities
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_activities
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use dashaddon_activities\local\block_dash\data_grid\filter\activity_customfield_condition;
-
 
 /**
  * Checks if the Timetable plugin is installed and enabled.
@@ -36,7 +35,7 @@ function dashaddon_activities_is_timetable_installed() {
 
     if ($result == null) {
         if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
-            include_once($CFG->dirroot . '/admin/tool/timetable/classes/time_management.php');
+            require_once($CFG->dirroot . '/admin/tool/timetable/classes/time_management.php');
             $result = true;
         } else {
             $result = false;
@@ -67,8 +66,8 @@ function dashaddon_activities_is_designer_pro_installed() {
 /**
  * Get module user duedate.
  *
- * @param  object $mod
- * @param  int    $userid
+ * @param object $mod
+ * @param int $userid
  * @return int|bool Mod due date if available otherwiser returns false.
  */
 function dashaddon_activities_get_mod_user_duedate($mod, $userid) {
@@ -123,7 +122,7 @@ function dashaddon_activities_is_local_metadata_installed() {
 /**
  * Added the course module metedata fields to the activities datasource.
  *
- * @param  [object] $filter
+ * @param [object] $filter
  * @return void
  */
 function dashaddon_activities_customfield_conditions($filter) {
@@ -147,7 +146,7 @@ function dashaddon_activities_customfield_conditions($filter) {
 /**
  * Get the module purposes.
  *
- * @param  [array] $purposes
+ * @param [array] $purposes
  * @return array
  */
 function dashaddon_activities_get_purpose_module($purposes) {
@@ -166,7 +165,7 @@ function dashaddon_activities_get_purpose_module($purposes) {
 /**
  * Get the designer course modules purposes.
  *
- * @param  [array] $purposes
+ * @param [array] $purposes
  * @return array
  */
 function dashaddon_activities_get_designer_purpose($purposes) {

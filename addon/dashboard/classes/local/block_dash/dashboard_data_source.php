@@ -16,7 +16,6 @@
 
 /**
  * Dashboard data source.
- *
  * @package   dashaddon_dashboard
  * @copyright 2020 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -35,13 +34,11 @@ use dashaddon_dashboard\local\dash_framework\structure\dashboard_table;
 
 /**
  * Dashboard data source.
- *
  * @package   dashaddon_dashboard
  * @copyright 2020 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class dashboard_data_source extends abstract_data_source
-{
+class dashboard_data_source extends abstract_data_source {
     /**
      * Constructor.
      *
@@ -54,7 +51,6 @@ class dashboard_data_source extends abstract_data_source
 
     /**
      * Return query template for retrieving user info.
-     *
      * @return builder
      */
     public function get_query_template(): builder {
@@ -69,7 +65,6 @@ class dashboard_data_source extends abstract_data_source
 
     /**
      * Build and return filter collection.
-     *
      * @return filter_collection_interface
      */
     public function build_filter_collection() {
@@ -85,7 +80,7 @@ class dashboard_data_source extends abstract_data_source
     /**
      * Set the default preferences of the Course datasource, force the set the default settings.
      *
-     * @param  array $data
+     * @param array $data
      * @return array
      */
     public function set_default_preferences(&$data) {

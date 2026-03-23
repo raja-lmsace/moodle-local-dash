@@ -17,9 +17,9 @@
 /**
  * Dash content widget form to add content
  *
- * @package   dashaddon_content
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_content
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace dashaddon_content;
 
@@ -33,8 +33,7 @@ require_once($CFG->dirroot . '/lib/formslib.php');
 /**
  * Dash content widget dynamic form to setup content of the layout.
  */
-class contentform extends \core_form\dynamic_form
-{
+class contentform extends \core_form\dynamic_form {
     /**
      * Content form elements defined.
      *
@@ -51,7 +50,7 @@ class contentform extends \core_form\dynamic_form
         $layoutid = $this->_customdata['layoutid'] ?? '';
         $mform->addElement('hidden', 'layoutid', $layoutid);
 
-        include_once($CFG->dirroot . '/local/dash/addon/content/element-colorpicker.php');
+        require_once($CFG->dirroot . '/local/dash/addon/content/element-colorpicker.php');
         \MoodleQuickForm::registerElementType(
             'dashaddon_content_colorpicker',
             $CFG->dirroot . '/local/dash/addon/content/element-colorpicker.php',
@@ -348,7 +347,7 @@ class contentform extends \core_form\dynamic_form
     /**
      * Editor form element options.
      *
-     * @param  context $context
+     * @param context $context
      * @return array
      */
     protected function get_editor_options($context = null) {

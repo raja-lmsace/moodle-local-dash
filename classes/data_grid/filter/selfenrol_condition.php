@@ -17,9 +17,9 @@
 /**
  * Limit the courses based on the enrollment options course has.
  *
- * @package   local_dash
- * @copyright 2020 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2020 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -33,8 +33,7 @@ use MoodleQuickForm;
  *
  * @package local_dash
  */
-class selfenrol_condition extends condition
-{
+class selfenrol_condition extends condition {
     /**
      * Operation in where clause of the condition.
      *
@@ -114,9 +113,9 @@ class selfenrol_condition extends condition
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform      $moodleform
+     * @param moodleform $moodleform
      * @param MoodleQuickForm $mform
-     * @param string          $fieldnameformat
+     * @param string $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,

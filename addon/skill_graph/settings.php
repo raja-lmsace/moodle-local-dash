@@ -17,9 +17,9 @@
 /**
  * Compentancy widget administration settings page.
  *
- * @package   dashaddon_skill_graph
- * @copyright 2025 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_skill_graph
+ * @copyright  2025 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -28,13 +28,10 @@ global $CFG;
 require_once($CFG->dirroot . '/blocks/dash/lib.php');
 
 if (get_config('dashaddon_skill_graph', 'enabled') && !(in_array('skill_graph', block_dash_disabled_addons_list()))) {
-    $ADMIN->add(
-        'localdashsettings',
-        new \admin_externalpage(
-            'dashaddonskillgraph',
-            get_string('managecompentency', 'block_dash'),
-            new \moodle_url('/local/dash/addon/skill_graph/competencylist.php'),
-            'moodle/competency:competencymanage'
-        )
-    );
+    $ADMIN->add('localdashsettings', new \admin_externalpage(
+        'dashaddonskillgraph',
+        get_string('managecompentency', 'block_dash'),
+        new \moodle_url('/local/dash/addon/skill_graph/competencylist.php'),
+        'moodle/competency:competencymanage'
+    ));
 }

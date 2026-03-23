@@ -17,9 +17,9 @@
 /**
  * Fetch and process the course informations for the current user.
  *
- * @package   dashaddon_course_enrols
- * @copyright 2022 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     dashaddon_course_enrols
+ * @copyright   2022 bdecent gmbh <https://bdecent.de>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_enrols;
@@ -28,21 +28,16 @@ use dashaddon_course_enrols\output\status_field;
 use moodle_url;
 use pix_icon;
 
-/**
- * Edit enrolment action.
-*/
+/** Edit enrolment action. */
 define('COURSE_ENROLS_ACTION_EDIT', 'editenrolment');
 
-/**
- * Unenrol action.
-*/
+/** Unenrol action. */
 define('COURSE_ENROLS_ACTION_UNENROL', 'unenrol');
 
 /**
  * Fetch and process the course informations for the current user. Also works based on selected filters.
  */
-class info
-{
+class info {
     /**
      * Course format instance object
      *
@@ -129,8 +124,8 @@ class info
     /**
      * Check the user has capability to use the enrolment options.
      *
-     * @param  string $capability
-     * @param  int    $courseid
+     * @param string $capability
+     * @param int $courseid
      * @return bool
      */
     public static function has_capability($capability, $courseid = null) {
@@ -150,15 +145,12 @@ class info
         global $DB, $USER;
 
         if (
-            $usercontexts = $DB->get_records_sql(
-                "SELECT c.instanceid, c.instanceid
+            $usercontexts = $DB->get_records_sql("SELECT c.instanceid, c.instanceid
                                                 FROM {role_assignments} ra, {context} c, {user} u
                                                 WHERE ra.userid = ?
                                                         AND ra.contextid = c.id
                                                         AND c.instanceid = u.id
-                                                        AND c.contextlevel = " . CONTEXT_USER,
-                [$USER->id]
-            )
+                                                        AND c.contextlevel = " . CONTEXT_USER, [$USER->id])
         ) {
             $users = [];
             foreach ($usercontexts as $usercontext) {
@@ -190,7 +182,7 @@ class info
     /**
      * Get course completion criteria for completion of other courses.
      *
-     * @param  int $endsection
+     * @param int $endsection
      * @return array $course List of all available other completion courses.
      */
     public function get_course_criteria($endsection = 0) {
@@ -218,8 +210,8 @@ class info
     /**
      * Get course sections and course modules with completion details.
      *
-     * @param  modinfo $modinfo
-     * @param  info    $courseinfo
+     * @param modinfo $modinfo
+     * @param info $courseinfo
      * @return void
      */
     public static function get_sections($modinfo, $courseinfo) {
@@ -262,13 +254,13 @@ class info
     /**
      * Get list of user enroled courses with completion progress and completion of other course.
      *
-     * @param  int|null $userid
-     * @param  string   $sort
-     * @param  string   $status
-     * @param  int|null $limitfrom
-     * @param  int|null $limitnum
-     * @param  string   $condition
-     * @param  array    $conditionparams
+     * @param int|null $userid
+     * @param string $sort
+     * @param string $status
+     * @param int|null $limitfrom
+     * @param int|null $limitnum
+     * @param string $condition
+     * @param array $conditionparams
      * @return array
      */
     public static function get_courses_list(
@@ -282,9 +274,9 @@ class info
     ) {
 
         global $CFG, $USER, $DB;
-        include_once($CFG->dirroot . '/lib/enrollib.php');
-        include_once($CFG->dirroot . '/course/renderer.php');
-        include_once($CFG->dirroot . '/enrol/locallib.php');
+        require_once($CFG->dirroot . '/lib/enrollib.php');
+        require_once($CFG->dirroot . '/course/renderer.php');
+        require_once($CFG->dirroot . '/enrol/locallib.php');
 
         $userid = ($userid) ? $userid : $USER->id;
         $sortqueries = self::get_sort_sql();
@@ -317,9 +309,9 @@ class info
             $course->sections = array_merge($course->sections, $courseinfo->get_course_criteria($endsection));
 
             $category = (class_exists('\core_course_category'))
-            ? \core_course_category::get($course->category) : \coursecat::get($course->category);
+            ? \core_course_category::get($course->category, IGNORE_MISSING) : \coursecat::get($course->category, IGNORE_MISSING);
             $course->courseimage = $courseinfo->courseimage();
-            $course->categoryname = (isset($category->name) ? format_string($category->name) : '');
+            $course->categoryname = ($category && isset($category->name)) ? format_string($category->name) : '';
             $courseelement = (class_exists('\core_course_list_element'))
             ? new \core_course_list_element($course) : new \course_in_list($course);
             $summary = (new \coursecat_helper($course))->get_course_formatted_summary($courseelement);
@@ -343,7 +335,7 @@ class info
     public function courseimage() {
         global $DB, $CFG, $OUTPUT;
 
-        include_once("$CFG->dirroot/course/lib.php");
+        require_once("$CFG->dirroot/course/lib.php");
 
         if ($course = $DB->get_record('course', ['id' => $this->course->id])) {
             if (block_dash_is_totara()) {
@@ -376,7 +368,7 @@ class info
      * Find all the modules inside the given sections are completed by the logged in user.
      * If result is not true it will return the progress and current completion details of section.
      *
-     * @param  int $sectionid Section id.
+     * @param int $sectionid Section id.
      * @return bool|array Result of section completion or Current progress data.
      */
     public function get_section_completion($sectionid) {
@@ -416,7 +408,7 @@ class info
     /**
      * Get Module completion status for the course.
      *
-     * @param  cm_info $module
+     * @param cm_info $module
      * @return bool
      */
     public function get_module_completion($module) {
@@ -438,7 +430,7 @@ class info
     /**
      * Options for course enrolment menu.
      *
-     * @param  stdclass $user
+     * @param stdclass $user
      * @return string $enrolstatusoutput
      */
     public function enrolment_menus($user) {
@@ -450,7 +442,7 @@ class info
             $canviewfullnames = 1;
             $fullname = fullname($user, $canviewfullnames);
             $coursename = format_string($this->course->fullname, true, ['context' => $this->context]);
-            include_once($CFG->dirroot . '/enrol/locallib.php');
+            require_once($CFG->dirroot . '/enrol/locallib.php');
             $manager = new \course_enrolment_manager($PAGE, $this->course);
             $userenrolments = $manager->get_user_enrolments($user->id);
 
@@ -496,19 +488,13 @@ class info
                     $timeenrolled
                 );
                 $statusfielddata = $statusfield->set_status($statusval)->export_for_template($OUTPUT);
-                array_walk(
-                    $statusfielddata->enrolactions,
-                    function (&$value) {
-                        array_walk(
-                            $value->attributes,
-                            function ($val) use (&$value) {
-                                if ($val->name == 'title') {
-                                    $value->title = $val->value;
-                                }
-                            }
-                        );
-                    }
-                );
+                array_walk($statusfielddata->enrolactions, function (&$value) {
+                    array_walk($value->attributes, function ($val) use (&$value) {
+                        if ($val->name == 'title') {
+                            $value->title = $val->value;
+                        }
+                    });
+                });
                 $statusfielddata->hascapviewdetails = self::has_capability(
                     'dashaddon/course_enrols:viewdetails',
                     $this->course->id
@@ -520,6 +506,7 @@ class info
                     ['class' => 'iconhelp icon-pre', 'role' => 'presentation']
                 );
                 $statusfielddata->docicon = $docicon;
+                $statusfielddata->datatoggle = $CFG->branch >= 500 ? 'data-bs-toggle' : 'data-toggle';
                 $enrolstatusoutput .= $OUTPUT->render_from_template(
                     'dashaddon_course_enrols/status_field',
                     $statusfielddata
@@ -533,8 +520,8 @@ class info
     /**
      * Gets an array of the user enrolment actions
      *
-     * @param  course_enrolment_manager $manager
-     * @param  stdClass                 $ue
+     * @param course_enrolment_manager $manager
+     * @param stdClass $ue
      * @return array An array of user_enrolment_actions
      */
     public function get_user_enrolment_actions(\course_enrolment_manager $manager, $ue) {

@@ -17,9 +17,9 @@
 /**
  * Calendar events report source defined.
  *
- * @package   dashaddon_calendar_events
- * @copyright 2024 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_calendar_events
+ * @copyright  2024 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_calendar_events\local\block_dash;
@@ -49,8 +49,7 @@ use local_dash\data_grid\field\attribute\color_attribute;
 /**
  * Calendar events data source template queries and filter conditions defined.
  */
-class events_data_source extends abstract_data_source
-{
+class events_data_source extends abstract_data_source {
     /**
      * Constructor.
      *
@@ -74,8 +73,7 @@ class events_data_source extends abstract_data_source
         $builder = new builder();
 
         $builder
-            ->set_selects(
-                [
+            ->set_selects([
                 'ce_id' => 'ce.id',
                 'ce_categoryid' => 'ce.categoryid',
                 'ce_courseid' => 'ce.courseid',
@@ -86,8 +84,7 @@ class events_data_source extends abstract_data_source
                 'ce_instance' => 'ce.instance',
                 'ce_eventtype' => 'ce.eventtype',
                 'ce_cmid' => 'cm.id',
-                ]
-            )
+            ])
             ->select('g.name', 'g_name')
             ->select('g.courseid', 'g_courseid')
             ->select('c.fullname', 'c_fullname')
@@ -110,11 +107,8 @@ class events_data_source extends abstract_data_source
         foreach ($actionevents as $event) {
             if (
                 $event->modulename && $event->instance > 0 && $event->courseid > 0
-                && $DB->record_exists(
-                    'modules',
-                    ['name' => $event->modulename,
-                    'visible' => 1]
-                )
+                && $DB->record_exists('modules', ['name' => $event->modulename,
+                'visible' => 1])
             ) {
                 $calendarevent = new calendar_event($event);
                 $eventvisible = component_callback(
@@ -204,7 +198,7 @@ class events_data_source extends abstract_data_source
     /**
      * Get field by name. Returns null if not found.
      *
-     * @param  string $alias Field alias.
+     * @param string $alias Field alias.
      * @return ?field_interface
      */
     public function get_field(string $alias): ?field_interface {
@@ -227,7 +221,7 @@ class events_data_source extends abstract_data_source
     /**
      * Set the default preferences of the Calendar event datasource, force the set the default settings.
      *
-     * @param  array $data
+     * @param array $data
      * @return array
      */
     public function set_default_preferences(&$data) {

@@ -16,10 +16,9 @@
 
 /**
  * Timeline layout for reports builder.
- *
- * @package   local_dash
- * @copyright 2020 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2020 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\layout;
@@ -36,11 +35,9 @@ use local_dash\data_grid\field\attribute\event\event_color_attribute;
 /**
  * Timeline layout for reports builder.
  */
-class timeline_layout extends abstract_layout
-{
+class timeline_layout extends abstract_layout {
     /**
      * Get layout template filename.
-     *
      * @return string
      */
     public function get_mustache_template_name() {
@@ -82,8 +79,8 @@ class timeline_layout extends abstract_layout
      *
      * Be sure to call parent::build_preferences_form() if you override this method.
      *
-     * @param  \moodleform      $form
-     * @param  \MoodleQuickForm $mform
+     * @param \moodleform $form
+     * @param \MoodleQuickForm $mform
      * @throws \coding_exception
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -101,12 +98,9 @@ class timeline_layout extends abstract_layout
                 'select',
                 'config_preferences[iconfield]',
                 get_string('iconfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[iconfield]', PARAM_TEXT);
 
@@ -114,12 +108,9 @@ class timeline_layout extends abstract_layout
                 'select',
                 'config_preferences[subheadingfield]',
                 get_string('subheadingfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[subheadingfield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[subheadingfield]', 'subheadingfield', 'block_dash');
@@ -155,12 +146,9 @@ class timeline_layout extends abstract_layout
                 'select',
                 'config_preferences[headingfield]',
                 get_string('headingfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[headingfield]', PARAM_TEXT);
 
@@ -168,12 +156,9 @@ class timeline_layout extends abstract_layout
                 'select',
                 'config_preferences[bodyfield]',
                 get_string('bodyfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[bodyfield]', PARAM_TEXT);
 
@@ -181,12 +166,9 @@ class timeline_layout extends abstract_layout
                 'select',
                 'config_preferences[bodyfield2]',
                 get_string('bodyfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[bodyfield2]', PARAM_TEXT);
 
@@ -194,12 +176,9 @@ class timeline_layout extends abstract_layout
                 'select',
                 'config_preferences[bodyfield3]',
                 get_string('bodyfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[bodyfield3]', PARAM_TEXT);
 
@@ -207,12 +186,9 @@ class timeline_layout extends abstract_layout
                 'select',
                 'config_preferences[imageurlfield]',
                 get_string('imageurlfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $imageurlfields
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $imageurlfields
+                ))
             );
             $mform->setType('config_preferences[imageurlfield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[imageurlfield]', 'imageurlfield', 'block_dash');
@@ -241,8 +217,7 @@ class timeline_layout extends abstract_layout
     public function after_data(data_collection_interface $datacollection) {
 
         foreach ($datacollection->get_child_collections('rows') as $childcollection) {
-            $this->map_data(
-                [
+            $this->map_data([
                     'icon' => $this->get_data_source()->get_preferences('iconfield'),
                     'badgecolor' => $this->get_data_source()->get_preferences('badgecolorfield'),
                     'heading' => $this->get_data_source()->get_preferences('headingfield'),
@@ -251,16 +226,14 @@ class timeline_layout extends abstract_layout
                     'body2' => $this->get_data_source()->get_preferences('bodyfield2'),
                     'body3' => $this->get_data_source()->get_preferences('bodyfield3'),
                     'imageurl' => $this->get_data_source()->get_preferences('imageurlfield'),
-                ],
-                $childcollection
-            );
+                ], $childcollection);
         }
     }
 
     /**
      * Allows layout to modified preferences values before exporting to mustache template.
      *
-     * @param  array $preferences
+     * @param array $preferences
      * @return array
      */
     public function process_preferences(array $preferences) {

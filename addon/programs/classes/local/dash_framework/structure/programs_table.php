@@ -17,9 +17,9 @@
 /**
  * Programs - dashaddon programs table.
  *
- * @package   dashaddon_programs
- * @copyright 2020 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_programs
+ * @copyright  2020 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_programs\local\dash_framework\structure;
@@ -47,8 +47,7 @@ use local_dash\data_grid\field\attribute\tags_attribute;
 /**
  * Enrol programs table structure definitions for programs datasource.
  */
-class programs_table extends table
-{
+class programs_table extends table {
     /**
      * Build a new table.
      */
@@ -78,79 +77,37 @@ class programs_table extends table
         $sqlgroupconcat = $DB->sql_group_concat("eps.type", ",", "eps.type");
 
         $fields = [
-            new field(
-                'id',
-                new \lang_string('programs', 'dashaddon_programs'),
-                $this,
-                null,
-                [
+            new field('id', new \lang_string('programs', 'dashaddon_programs'), $this, null, [
                 new identifier_attribute(),
-                ]
-            ),
+            ]),
             new field('fullname', new lang_string('fullname'), $this),
-            new field(
-                'fullname_link',
-                new lang_string('fullnamelinked', 'block_dash'),
-                $this,
-                'epp.fullname',
-                [
+            new field('fullname_link', new lang_string('fullnamelinked', 'block_dash'), $this, 'epp.fullname', [
                 new linked_data_attribute(['url' => new moodle_url('/enrol/programs/catalogue/program.php', ['id' => 'epp_id'])]),
-                ]
-            ),
+            ]),
 
             new field('idnumber', new lang_string('idnumber'), $this),
 
-            new field(
-                'image',
-                new lang_string('programimage', 'enrol_programs'),
-                $this,
-                'epp.presentationjson, epp.contextid',
-                [
+            new field('image', new lang_string('programimage', 'enrol_programs'), $this, 'epp.presentationjson, epp.contextid', [
                 new program_image_url_attribute(), new image_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'image_link',
-                new lang_string('programimagelink', 'block_dash'),
-                $this,
-                'epp.id',
-                [
+            new field('image_link', new lang_string('programimagelink', 'block_dash'), $this, 'epp.id', [
                 new program_image_url_attribute(), new image_attribute(),
                 new linked_data_attribute(['url' => new moodle_url('/enrol/programs/catalogue/program.php', ['id' => 'epp_id'])]),
-                ]
-            ),
+            ]),
 
-            new field(
-                'contextid',
-                new lang_string('contextid', 'block_dash'),
-                $this,
-                null,
-                [
+            new field('contextid', new lang_string('contextid', 'block_dash'), $this, null, [
                 new program_context_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'context_linked',
-                new lang_string('contextlinked', 'block_dash'),
-                $this,
-                'epp.contextid',
-                [
+            new field('context_linked', new lang_string('contextlinked', 'block_dash'), $this, 'epp.contextid', [
                 new program_context_attribute(),
                 new linked_data_attribute(['url' => new moodle_url('/enrol/programs/my/index.php', ['contextid' => 'epp_ctx'])]),
-                ]
-            ),
+            ]),
 
-            new field(
-                'tags',
-                new lang_string('tags', 'core'),
-                $this,
-                'epp.id',
-                [
+            new field('tags', new lang_string('tags', 'core'), $this, 'epp.id', [
                 new tags_attribute(['component' => 'enrol_programs', 'itemtype' => 'program']),
-                ]
-            ),
+            ]),
 
             new field(
                 'description',
@@ -162,138 +119,61 @@ class programs_table extends table
                 ]
             ),
 
-            new field(
-                'archived',
-                new lang_string('archived', 'enrol_programs'),
-                $this,
-                'epp.archived',
-                [
+            new field('archived', new lang_string('archived', 'enrol_programs'), $this, 'epp.archived', [
                 new bool_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'public',
-                new lang_string('public', 'enrol_programs'),
-                $this,
-                null,
-                [
+            new field('public', new lang_string('public', 'enrol_programs'), $this, null, [
                 new bool_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'creategroups',
-                new lang_string('creategroups', 'enrol_programs'),
-                $this,
-                null,
-                [
+            new field('creategroups', new lang_string('creategroups', 'enrol_programs'), $this, null, [
                 new bool_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'content',
-                new lang_string('tabcontent', 'enrol_programs'),
-                $this,
-                'epp.id',
-                [
+            new field('content', new lang_string('tabcontent', 'enrol_programs'), $this, 'epp.id', [
                 new program_content_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'timeallocationstart',
-                new lang_string('allocationstart', 'enrol_programs'),
-                $this,
-                null,
-                [
+            new field('timeallocationstart', new lang_string('allocationstart', 'enrol_programs'), $this, null, [
                 new date_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'timeallocationend',
-                new lang_string('allocationend', 'enrol_programs'),
-                $this,
-                null,
-                [
+            new field('timeallocationend', new lang_string('allocationend', 'enrol_programs'), $this, null, [
                 new date_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'startdatejson',
-                new lang_string('programstart', 'enrol_programs'),
-                $this,
-                null,
-                [
+            new field('startdatejson', new lang_string('programstart', 'enrol_programs'), $this, null, [
                 new program_date_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'duedatejson',
-                new lang_string('programdue', 'enrol_programs'),
-                $this,
-                null,
-                [
+            new field('duedatejson', new lang_string('programdue', 'enrol_programs'), $this, null, [
                 new program_date_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'enddatejson',
-                new lang_string('programend', 'enrol_programs'),
-                $this,
-                null,
-                [
+            new field('enddatejson', new lang_string('programend', 'enrol_programs'), $this, null, [
                 new program_date_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'cohorts',
-                new lang_string('cohorts', 'enrol_programs'),
-                $this,
-                'epp.id',
-                [
+            new field('cohorts', new lang_string('cohorts', 'enrol_programs'), $this, 'epp.id', [
                 new program_cohort_attribute(),
-                ]
-            ),
+            ]),
 
-            new field(
-                'allocations',
-                new lang_string('allocation', 'enrol_programs'),
-                $this,
-                [
+            new field('allocations', new lang_string('allocation', 'enrol_programs'), $this, [
                 'select' => "(SELECT $sqlgroupconcat AS allocations FROM {enrol_programs_sources} eps WHERE eps.programid=epp.id)",
-                ]
-            ),
+            ]),
 
-            new field(
-                'button',
-                new lang_string('programs:viewcatalogue', 'enrol_programs'),
-                $this,
-                'epp.id',
-                [
+            new field('button', new lang_string('programs:viewcatalogue', 'enrol_programs'), $this, 'epp.id', [
                 new moodle_url_attribute(['url' => new moodle_url('/enrol/programs/my/program.php', ['id' => 'epp_id'])]),
                 new button_attribute(['label' => new lang_string('programs:view', 'block_dash')]),
-                ]
-            ),
+            ]),
 
-            new field(
-                'smart_program_button',
-                new lang_string('smart_coursebutton', 'block_dash'),
-                $this,
-                [
+            new field('smart_program_button', new lang_string('smart_coursebutton', 'block_dash'), $this, [
                 'select' => '(SELECT id FROM {enrol_programs_allocations}
                     WHERE programid = epp.id AND userid = ' . $USER->id . ')',
-                ],
-                [
+            ], [
                 new smart_program_button_attribute(),
-                ]
-            ),
+            ]),
 
         ];
         return $fields;

@@ -17,9 +17,9 @@
 /**
  * Strings for component 'dashaddon_skill_graph', language 'en', branch 'MOODLE_40_STABLE'
  *
- * @package   dashaddon_skill_graph
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_skill_graph
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['pluginname'] = 'Widget: Competency graph';

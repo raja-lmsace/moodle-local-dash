@@ -52,7 +52,8 @@ class behat_local_dash extends behat_base {
         if ($computedstyle != $value) {
             throw new ExpectationException(
                 'The \'' . $selector . '\' DOM element does not have the computed style \'' .
-                $style . '\'=\'' . $value . '\', it has the computed style \'' . $computedstyle . '\' instead.',
+                $style . '\'=\'' . $value . '\', it has the computed style \'' .
+                $computedstyle . '\' instead.',
                 $this->getSession()
             );
         }

@@ -16,10 +16,9 @@
 
 /**
  * Logstore data source.
- *
- * @package   dashaddon_logstore
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_logstore
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_logstore\local\block_dash;
@@ -59,8 +58,7 @@ use local_dash\data_grid\filter\event_condition;
 /**
  * Logstore data source.
  */
-class logstore_data_source extends abstract_data_source
-{
+class logstore_data_source extends abstract_data_source {
     /**
      * Constructor.
      *
@@ -77,7 +75,6 @@ class logstore_data_source extends abstract_data_source
 
     /**
      * Return query template for retrieving user info.
-     *
      * @return builder
      */
     public function get_query_template(): builder {
@@ -122,7 +119,6 @@ class logstore_data_source extends abstract_data_source
 
     /**
      * Build and return filter collection.
-     *
      * @return filter_collection_interface
      */
     public function build_filter_collection() {
@@ -152,15 +148,13 @@ class logstore_data_source extends abstract_data_source
 
         $logfiltercollection->add_filter(new course_format_field_filter('c_format', 'c.format'));
 
-        $logfiltercollection->add_filter(
-            new tags_field_filter(
-                'c_tags',
-                'c.id',
-                'core',
-                'course',
-                get_string('coursetags', 'tag')
-            )
-        );
+        $logfiltercollection->add_filter(new tags_field_filter(
+            'c_tags',
+            'c.id',
+            'core',
+            'course',
+            get_string('coursetags', 'tag')
+        ));
 
         $logfiltercollection->add_filter(new relations_role_condition('parentrole', 'u.id'));
 
@@ -175,26 +169,28 @@ class logstore_data_source extends abstract_data_source
                         $definitions[] = new bool_filter($alias, $select, $field->get_formatted_name());
                         break;
                     case 'date':
-                        $logfiltercollection->add_filter(
-                            new date_filter(
-                                $alias,
-                                $select,
-                                date_filter::DATE_FUNCTION_FLOOR,
-                                $field->get_formatted_name()
-                            )
-                        );
+                        $logfiltercollection->add_filter(new date_filter(
+                            $alias,
+                            $select,
+                            date_filter::DATE_FUNCTION_FLOOR,
+                            $field->get_formatted_name()
+                        ));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $logfiltercollection->add_filter(
-                            new customfield_filter(
-                                $alias,
-                                $select,
-                                $field,
-                                $field->get_formatted_name()
-                            )
-                        );
+                        if (
+                            class_exists('\customfield_multicategory\condition_helper') &&
+                            \customfield_multicategory\condition_helper::should_skip_default_filter($field->get('type'))
+                        ) {
+                            break;
+                        }
+                        $logfiltercollection->add_filter(new customfield_filter(
+                            $alias,
+                            $select,
+                            $field,
+                            $field->get_formatted_name()
+                        ));
                         break;
                 }
             }
@@ -210,26 +206,22 @@ class logstore_data_source extends abstract_data_source
                         $definitions[] = new bool_filter($alias, $select, $field->fullname);
                         break;
                     case 'date':
-                        $logfiltercollection->add_filter(
-                            new date_filter(
-                                $alias,
-                                $select,
-                                date_filter::DATE_FUNCTION_FLOOR,
-                                $field->fullname
-                            )
-                        );
+                        $logfiltercollection->add_filter(new date_filter(
+                            $alias,
+                            $select,
+                            date_filter::DATE_FUNCTION_FLOOR,
+                            $field->fullname
+                        ));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $logfiltercollection->add_filter(
-                            new customfield_filter(
-                                $alias,
-                                $select,
-                                $field,
-                                $field->fullname
-                            )
-                        );
+                        $logfiltercollection->add_filter(new customfield_filter(
+                            $alias,
+                            $select,
+                            $field,
+                            $field->fullname
+                        ));
                         break;
                 }
             }
@@ -282,7 +274,7 @@ class logstore_data_source extends abstract_data_source
     /**
      * Set the default preferences of the Course datasource, force the set the default settings.
      *
-     * @param  array $data
+     * @param array $data
      * @return array
      */
     public function set_default_preferences(&$data) {

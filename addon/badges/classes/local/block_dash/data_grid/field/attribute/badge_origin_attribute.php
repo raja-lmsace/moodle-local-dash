@@ -16,10 +16,9 @@
 
 /**
  * Transforms data to badge type.
- *
- * @package   dashaddon_badges
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_badges
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_badges\local\block_dash\data_grid\field\attribute;
@@ -31,13 +30,12 @@ use stdClass;
 /**
  * Transforms data to badge type.
  */
-class badge_origin_attribute extends abstract_field_attribute
-{
+class badge_origin_attribute extends abstract_field_attribute {
     /**
      * Convert the badge type value to human readable content.
      *
-     * @param  int      $data
-     * @param  stdClass $record
+     * @param int $data
+     * @param stdClass $record
      * @return string $data Type of the badge in text.
      */
     public function transform_data($data, stdClass $record) {

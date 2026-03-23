@@ -104,7 +104,7 @@ Feature: Dash program to show the list of course data certificate
     And I press "Save and display"
 
     #---Course Certificate dash block---#
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I add the "Dash" block
     And I click on "Course certificates" "radio"
     And I configure the "New Dash" block
@@ -117,8 +117,9 @@ Feature: Dash program to show the list of course data certificate
 
   Scenario: Display the Course certificate data source
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course certificates" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
@@ -156,6 +157,7 @@ Feature: Dash program to show the list of course data certificate
     And I configure the "New Dash" block
     And I set the field "Block title" to "Course certificates"
     And I press "Save changes"
+    And I wait until the page is ready
     And I open the "Course certificates" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
@@ -183,7 +185,7 @@ Feature: Dash program to show the list of course data certificate
 
   Scenario: Display certificate of category and subcatgories
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Adding course certificate dash block---#
     And I add the "Dash" block
@@ -193,6 +195,7 @@ Feature: Dash program to show the list of course data certificate
     And I set the following fields to these values:
     | Region | content |
     And I press "Save changes"
+    And I wait until the page is ready
     And I open the "Course certificates" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
@@ -210,8 +213,9 @@ Feature: Dash program to show the list of course data certificate
     And I log out
     #-------Sub categories---------#
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course certificates" block preference
     And I follow "Conditions"
     And I click on "Include subcategories" "checkbox"
@@ -228,9 +232,10 @@ Feature: Dash program to show the list of course data certificate
 
   Scenario: Display the certificate of the currently logged-in user
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     #---Adding course certificate dash block---#
+    And I wait until the page is ready
     And I open the "Course certificates" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
@@ -297,8 +302,9 @@ Feature: Dash program to show the list of course data certificate
     And I should see "Student Two" in the "#removeselect" "css_element"
     And I should see "Student Three" in the "#removeselect" "css_element"
     And I should see "Parent (2)" in the "Assign another role" "select"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course certificates" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
@@ -358,8 +364,9 @@ Feature: Dash program to show the list of course data certificate
     And I expand all fieldsets
     And I set the field "Dash fields" to "Wide"
     And I press "Save and display"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course certificates" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"

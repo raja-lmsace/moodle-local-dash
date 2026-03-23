@@ -69,10 +69,10 @@ Feature: User profile with stats
   @javascript
   Scenario: Display user profile block and stats
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I add the "Dash" block
-    And I click on "My profile" "radio"
+    And I create dash "My profile" datasource
     And I configure the "New Dash" block
     And I set the following fields to these values:
       | Block title | My profile |
@@ -92,7 +92,7 @@ Feature: User profile with stats
         | Points                 | 45      |
     And I press "Save changes"
     Then I should see "Points - 45" in the "beginner" "table_row"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I click on "#action-menu-toggle-0" "css_element"
     And I open the "My profile" block preference
@@ -115,7 +115,7 @@ Feature: User profile with stats
     And I click on "Settings" "link" in the ".secondary-navigation" "css_element"
     And I expand all fieldsets
     And I set the following fields to these values:
-        | Course start date | ##1 Mar 2026 08:00## |
+        | Course start date | ##tomorrow## |
     And I press "Save and display"
     And I log out
     And I am on the "Course 1" course page logged in as student1
@@ -147,10 +147,9 @@ Feature: User profile with stats
   @javascript
   Scenario: Display user profile block and due activities stats
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
-    And I add the "Dash" block
-    And I click on "My profile" "radio"
+    And I create dash "My profile" datasource
     And I click on "Reset Dashboard for all users" "button"
     And I log out
     And I log in as "student1"
@@ -165,8 +164,9 @@ Feature: User profile with stats
         | Points                 | 45      |
     And I press "Save changes"
     Then I should see "Points - 45" in the "beginner" "table_row"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "New Dash" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I set the following fields to these values:
@@ -213,10 +213,9 @@ Feature: User profile with stats
   @javascript
   Scenario: Display user profile block, login streak, Message and Team members stats
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
-    And I add the "Dash" block
-    And I click on "My profile" "radio"
+    And I create dash "My profile" datasource
     And I click on "Reset Dashboard for all users" "button"
     And I log out
     And I log in as "student1"
@@ -231,8 +230,9 @@ Feature: User profile with stats
         | Points                 | 45      |
     And I press "Save changes"
     Then I should see "Points - 45" in the "beginner" "table_row"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "New Dash" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I set the following fields to these values:

@@ -23,4 +23,5 @@
  */
 
 $string['datasource:categories_data_source'] = 'Course categories';
+$string['datasource:categories_data_source_help'] = 'List of course category details.';
 $string['pluginname'] = 'Data source: Categories';

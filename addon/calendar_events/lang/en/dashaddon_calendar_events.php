@@ -23,5 +23,6 @@
  */
 
 $string['datasource:events_data_source'] = 'Calendar events';
+$string['datasource:events_data_source_help'] = 'List of user calendar event details.';
 $string['pluginname'] = 'Data source: Calendar events';
 $string['tablealias_ce'] = 'Events';

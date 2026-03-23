@@ -17,9 +17,9 @@
 /**
  * Displays preconfigured dashboards.
  *
- * @package   dashaddon_dashboard
- * @copyright 2024 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_dashboard
+ * @copyright  2024 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use dashaddon_dashboard\model\dashboard;
@@ -60,14 +60,9 @@ if ($coursecontext = $context->get_course_context(false)) {
     }
 }
 
-$PAGE->set_url(
-    new moodle_url(
-        '/local/dash/addon/dashboard/dashboard.php',
-        [
-        'id' => $dashboard->get('id'),
-        ]
-    )
-);
+$PAGE->set_url(new moodle_url('/local/dash/addon/dashboard/dashboard.php', [
+    'id' => $dashboard->get('id'),
+]));
 
 if (!$dashboard->has_access($USER)) {
     throw new moodle_exception('notauthorized', 'block_dash');
@@ -123,15 +118,11 @@ if ($PAGE->user_allowed_editing()) {
 }
 
 // Send out the resulting CSS code. The theme revision will be set as etag to support the browser caching.
-$includestyle = new \moodle_url(
-    '/local/dash/addon/dashboard/styles.php',
-    ['id' => $dashboard->get('id'),
+$includestyle = new \moodle_url('/local/dash/addon/dashboard/styles.php', ['id' => $dashboard->get('id'),
     'rev' => theme_get_revision(),
-    ]
-);
+]);
 
-$PAGE->requires->js_amd_inline(
-    "
+$PAGE->requires->js_amd_inline("
     require(['jquery'], function($) {
         var element = $('.block-region section:nth-of-type(1)');
         var elementBottom = element.offset().top + element.outerHeight();
@@ -147,8 +138,7 @@ $PAGE->requires->js_amd_inline(
             }
         });
     })
-"
-);
+");
 
 $PAGE->requires->js_call_amd('dashaddon_dashboard/dashboard', 'init');
 
@@ -156,29 +146,25 @@ $PAGE->requires->css($includestyle);
 if ($PAGE->user_is_editing()) {
     if ($context->contextlevel == CONTEXT_COURSECAT) {
         if (has_capability('local/dash:managecoursecatedashboards', $context)) {
-            $PAGE->set_button(
-                $OUTPUT->single_button(
-                    new \moodle_url(
-                        '/local/dash/addon/dashboard/dashboards.php',
-                        ['action' => 'edit', 'id' => $dashboard->get('id')]
-                    ),
-                    get_string('editdashboard', 'block_dash'),
-                    'get'
-                )
-            );
+            $PAGE->set_button($OUTPUT->single_button(
+                new \moodle_url(
+                    '/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'edit', 'id' => $dashboard->get('id')]
+                ),
+                get_string('editdashboard', 'block_dash'),
+                'get'
+            ));
         }
     } else {
         if (has_capability('local/dash:managedashboards', $context)) {
-            $PAGE->set_button(
-                $OUTPUT->single_button(
-                    new \moodle_url(
-                        '/local/dash/addon/dashboard/dashboards.php',
-                        ['action' => 'edit', 'id' => $dashboard->get('id')]
-                    ),
-                    get_string('editdashboard', 'block_dash'),
-                    'get'
-                )
-            );
+            $PAGE->set_button($OUTPUT->single_button(
+                new \moodle_url(
+                    '/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'edit', 'id' => $dashboard->get('id')]
+                ),
+                get_string('editdashboard', 'block_dash'),
+                'get'
+            ));
         }
     }
 }

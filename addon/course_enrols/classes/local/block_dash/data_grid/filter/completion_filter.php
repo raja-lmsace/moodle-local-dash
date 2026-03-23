@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course completion status
  *
- * @package   dashaddon_course_enrols
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_course_enrols
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
  namespace dashaddon_course_enrols\local\block_dash\data_grid\filter;
@@ -31,12 +31,12 @@
 /**
  * Filters results to specific course completion status
  */
-class completion_filter extends select_filter
-{
+class completion_filter extends select_filter {
     use filter_element;
 
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
+     *
      */
     public function init() {
         global $DB;
@@ -101,8 +101,8 @@ class completion_filter extends select_filter
     /**
      * Override this method and call it after creating a form element.
      *
-     * @param  filter_collection_interface $filtercollection
-     * @param  string                      $elementnameprefix
+     * @param filter_collection_interface $filtercollection
+     * @param string $elementnameprefix
      * @throws \Exception
      * @return string
      */

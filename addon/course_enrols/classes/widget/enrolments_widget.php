@@ -17,9 +17,9 @@
 /**
  * Enrolments widget class contains the layout information and generate the data for widget.
  *
- * @package   dashaddon_course_enrols
- * @copyright 2022 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_course_enrols
+ * @copyright  2022 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_enrols\widget;
@@ -40,11 +40,9 @@ use dashaddon_course_enrols\info;
 /**
  * Enrolments widget class contains the layout information and generate the data for widget.
  */
-class enrolments_widget extends abstract_widget
-{
+class enrolments_widget extends abstract_widget {
     /**
      * Enrolment sort method.
-     *
      * @var string
      */
     protected $enrolmentsort;
@@ -129,7 +127,7 @@ class enrolments_widget extends abstract_widget
      * @return void
      */
     public function build_widget() {
-        global $PAGE, $USER;
+        global $PAGE, $USER, $CFG;
 
         $this->enrolmentsort = $this->get_default_sorting();
         $this->enrolstatus = 'all';
@@ -168,15 +166,14 @@ class enrolments_widget extends abstract_widget
             'hascapenrol' => info::has_capability('dashaddon/course_enrols:enrol'),
             'hascapviewdetails' => info::has_capability('dashaddon/course_enrols:viewdetails'),
             'capviewprofiledash' => $capviewprofiledash,
+            'datatoggle' => $CFG->branch >= 500 ? 'data-bs-toggle' : 'data-toggle',
+            'datatarget' => $CFG->branch >= 500 ? 'data-bs-target' : 'data-target',
         ];
         return $this->data;
     }
 
-
-
     /**
      * Get table pagination class.
-     *
      * @return paginator
      */
     public function widget_data_count() {
@@ -198,7 +195,7 @@ class enrolments_widget extends abstract_widget
     /**
      * Get potential courses for enrol the user.
      *
-     * @param  int $enrolled
+     * @param int $enrolled
      * @return array $enrolcourses
      */
     public function get_available_courses_for_enrol($enrolled) {
@@ -244,12 +241,15 @@ class enrolments_widget extends abstract_widget
                 $filter->get_name() == 'c_course_categories_condition'
                 && $filter->get_preferences('enabled') && $filter->get_preferences()
             ) {
-                $categories = $filter->get_values();
-                if (!$filter->get_preferences()['enabled'] || empty($categories)) {
+                if (!$filter->get_preferences()['enabled']) {
                     continue;
                 }
-                [$insql, $params] = $DB->get_in_or_equal($categories, SQL_PARAMS_NAMED, 'ctx');
-                $categorysql = "AND c.category $insql";
+
+                [$sql, $sqlparams] = $filter->get_sql_and_params();
+                if (!empty($sql)) {
+                    $categorysql = "AND ($sql)";
+                    $params = $sqlparams;
+                }
             }
 
             if ($filter->get_name() == 'c_status') {
@@ -290,8 +290,8 @@ class enrolments_widget extends abstract_widget
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
-     * @param  \moodleform      $form
-     * @param  \MoodleQuickForm $mform
+     * @param \moodleform $form
+     * @param \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {

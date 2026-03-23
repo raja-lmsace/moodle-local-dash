@@ -16,10 +16,9 @@
 
 /**
  * Boostrap accordian layout for course format.
- *
- * @package   local_dash
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\layout;
@@ -35,11 +34,9 @@ use block_dash\local\layout\abstract_layout;
 /**
  * Boostrap accordian layout for course format.
  */
-class accordion_layout extends abstract_layout
-{
+class accordion_layout extends abstract_layout {
     /**
      * Get layout template filename.
-     *
      * @return string
      */
     public function get_mustache_template_name() {
@@ -81,8 +78,8 @@ class accordion_layout extends abstract_layout
      *
      * Be sure to call parent::build_preferences_form() if you override this method.
      *
-     * @param  \moodleform      $form
-     * @param  \MoodleQuickForm $mform
+     * @param \moodleform $form
+     * @param \MoodleQuickForm $mform
      * @throws \coding_exception
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -119,7 +116,6 @@ class accordion_layout extends abstract_layout
 
     /**
      * Get data filter conditions.z
-     *
      * @return data_strategy_interface
      */
     public function get_data_strategy() {

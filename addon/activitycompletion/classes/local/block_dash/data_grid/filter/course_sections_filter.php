@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course sections activity completion.
  *
- * @package   dashaddon_activitycompletion
- * @copyright 2025 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_activitycompletion
+ * @copyright  2025 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activitycompletion\local\block_dash\data_grid\filter;
@@ -30,8 +30,7 @@ use block_dash\local\data_grid\filter\filter_collection_interface;
 /**
  * Filters results to specific course sections activity completion status.
  */
-class course_sections_filter extends select_filter
-{
+class course_sections_filter extends select_filter {
     use filter_element;
 
     /**
@@ -41,6 +40,7 @@ class course_sections_filter extends select_filter
 
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
+     *
      */
     public function init() {
 
@@ -66,7 +66,7 @@ class course_sections_filter extends select_filter
     /**
      * Return a list of sections this filter can handle for the courses.
      *
-     * @param  array $courses Array of course IDs or course objects.
+     * @param array $courses Array of course IDs or course objects.
      * @return array
      */
     public static function generate_dynamic_options_list($courses) {
@@ -154,8 +154,8 @@ class course_sections_filter extends select_filter
     /**
      * Override this method and call it after creating a form element.
      *
-     * @param  filter_collection_interface $filtercollection
-     * @param  string                      $elementnameprefix
+     * @param filter_collection_interface $filtercollection
+     * @param string $elementnameprefix
      * @throws \Exception
      * @return string
      */

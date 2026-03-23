@@ -26,9 +26,10 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'dashaddon_developer';
 $plugin->release = '1.0';
-$plugin->version = 2024042501;
+$plugin->version = 2026020600;
 $plugin->requires = 2015111610;
 $plugin->maturity = MATURITY_BETA;
 $plugin->dependencies = [
     'local_dash' => 2020020500,
+    'block_dash' => 2025103003,
 ];

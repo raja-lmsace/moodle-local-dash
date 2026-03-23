@@ -16,10 +16,9 @@
 
 /**
  * Logstore data source.
- *
- * @package   dashaddon_roleassignments
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_roleassignments
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_roleassignments\local\dash_framework\structure;
@@ -35,8 +34,7 @@ use block_dash\local\data_grid\field\attribute\date_attribute;
  * This class represents a table structure for role assignments within the Moodle dashboard framework.
  * It extends the base table class to provide specific functionality for handling role assignments.
  */
-class role_assignments_table extends table
-{
+class role_assignments_table extends table {
     /**
      * Build a new table.
      */
@@ -60,15 +58,9 @@ class role_assignments_table extends table
      */
     public function get_fields(): array {
         return [
-            new field(
-                'timemodified',
-                new lang_string('timemodified', 'block_dash'),
-                $this,
-                'ra.timemodified',
-                [
+            new field('timemodified', new lang_string('timemodified', 'block_dash'), $this, 'ra.timemodified', [
                 new date_attribute(),
-                ]
-            ),
+            ]),
         ];
     }
 }

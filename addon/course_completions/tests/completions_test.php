@@ -17,9 +17,9 @@
 /**
  * Unit test for filtering.
  *
- * @package   dashaddon_course_completions
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_course_completions
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_completions;
@@ -31,8 +31,7 @@ namespace dashaddon_course_completions;
  * @group bdecent
  * @group widgets_test
  */
-final class completions_test extends \advanced_testcase
-{
+final class completions_test extends \advanced_testcase {
     /**
      * Test course 1
      *
@@ -88,8 +87,8 @@ final class completions_test extends \advanced_testcase
     /**
      * Constructs a Page object for the User Dashboard.
      *
-     * @param  \stdClass $user User to create Dashboard for.
-     * @return \moodle_page
+     * @param   \stdClass       $user User to create Dashboard for.
+     * @return  \moodle_page
      */
     protected function construct_user_page(\stdClass $user) {
         $page = new \moodle_page();
@@ -103,9 +102,9 @@ final class completions_test extends \advanced_testcase
     /**
      * Creates an HTML block on a user.
      *
-     * @param  string $title
-     * @param  string $widget
-     * @return \block_instance
+     * @param   string  $title
+     * @param   string  $widget
+     * @return  \block_instance
      */
     protected function create_user_block($title, $widget) {
         global $USER;
@@ -126,7 +125,7 @@ final class completions_test extends \advanced_testcase
     /**
      * Get the last block on the page.
      *
-     * @param  \page $page Page
+     * @param \page $page Page
      * @return \block_html Block instance object
      */
     protected function get_last_block_on_page($page) {
@@ -139,7 +138,7 @@ final class completions_test extends \advanced_testcase
     /**
      * Creates an HTML block on a page.
      *
-     * @param  \page $page Page
+     * @param \page $page Page
      * @return void
      */
     protected function create_block($page) {
@@ -154,7 +153,7 @@ final class completions_test extends \advanced_testcase
      */
     public function test_coursecompletions(): void {
         global $CFG;
-        include_once($CFG->dirroot . '/completion/criteria/completion_criteria_activity.php');
+        require_once($CFG->dirroot . '/completion/criteria/completion_criteria_activity.php');
 
         $user = self::getDataGenerator()->create_and_enrol($this->course1, 'student');
         $user2 = self::getDataGenerator()->create_and_enrol($this->course1, 'student');
@@ -212,13 +211,11 @@ final class completions_test extends \advanced_testcase
         $completion->update_state($cmassign, COMPLETION_COMPLETE, $user->id);
         $completion->update_state($cmdata, COMPLETION_COMPLETE, $user->id);
 
-        $ccompletion = new \completion_completion(
-            ['course' => $this->course1->id,
+        $ccompletion = new \completion_completion(['course' => $this->course1->id,
                                                   'userid' => $user->id,
                                                   'timeenrolled' => time(),
                                                   'timestarted' => time(),
-            ]
-        );
+                                                ]);
         // Now, mark the course as completed.
         $ccompletion->mark_complete();
 

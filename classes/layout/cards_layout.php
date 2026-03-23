@@ -16,10 +16,9 @@
 
 /**
  * Boostrap cards layout2 for course format.
- *
- * @package   local_dash
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\layout;
@@ -33,19 +32,13 @@ use block_dash\local\data_grid\field\attribute\image_attribute;
 use block_dash\local\data_grid\field\attribute\image_url_attribute;
 use block_dash\local\data_grid\field\attribute\linked_data_attribute;
 
-/**
- * Edit enrolment action.
-*/
+/** Edit enrolment action. */
 define('CARD_LAYOUT_SLIDER_MODE', 'slider');
 
-/**
- * Unenrol action.
-*/
+/** Unenrol action. */
 define('CARD_LAYOUT_MASONRY_MODE', 'masonry');
 
-/**
- * Unenrol action.
-*/
+/** Unenrol action. */
 define('CARD_LAYOUT_NORMAL_MODE', 'none');
 
 
@@ -53,11 +46,9 @@ define('CARD_LAYOUT_NORMAL_MODE', 'none');
 /**
  * Boostrap cards layout2 for course format.
  */
-class cards_layout extends abstract_layout
-{
+class cards_layout extends abstract_layout {
     /**
      * Get layout template filename.
-     *
      * @return string
      */
     public function get_mustache_template_name() {
@@ -101,7 +92,7 @@ class cards_layout extends abstract_layout
     /**
      * Allows layout to modified preferences values before exporting to mustache template.
      *
-     * @param  array $preferences
+     * @param array $preferences
      * @return array
      */
     public function process_preferences(array $preferences) {
@@ -170,15 +161,15 @@ class cards_layout extends abstract_layout
      *
      * Be sure to call parent::build_preferences_form() if you override this method.
      *
-     * @param  \moodleform      $form
-     * @param  \MoodleQuickForm $mform
+     * @param \moodleform $form
+     * @param \MoodleQuickForm $mform
      * @throws \coding_exception
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
         global $CFG;
         if ($form->get_tab() == preferences_form::TAB_FIELDS) {
             // Register the dashcolorpicker element. - LMSACE.
-            include_once($CFG->dirroot . '/blocks/dash/form/element-colorpicker.php');
+            require_once($CFG->dirroot . '/blocks/dash/form/element-colorpicker.php');
             \MoodleQuickForm::registerElementType(
                 'dashcolorpicker',
                 $CFG->dirroot . '/blocks/dash/form/element-colorpicker.php',
@@ -186,28 +177,18 @@ class cards_layout extends abstract_layout
             );
 
             // Layout mode - LMSACE.
-            $mform->addElement(
-                'select',
-                'config_preferences[layoutmode]',
-                get_string('layoutmode', 'block_dash'),
-                [
+            $mform->addElement('select', 'config_preferences[layoutmode]', get_string('layoutmode', 'block_dash'), [
                 'none' => get_string('strgrid', 'block_dash'),
                 'slider' => get_string('strslider', 'block_dash'),
                 'masonry' => get_string('strmasonry', 'block_dash'),
-                ]
-            );
+            ]);
             $mform->setType('config_preferences[layoutmode]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[layoutmode]', 'layoutmode', 'block_dash');
             $mform->setDefault('config_preferences[layoutmode]', 'none');
 
-            $mform->addElement(
-                'select',
-                'config_preferences[columns]',
-                get_string('columns', 'block_dash'),
-                [
+            $mform->addElement('select', 'config_preferences[columns]', get_string('columns', 'block_dash'), [
                 12 => 1, 6 => 2, 4 => 3, 3 => 4, 25 => 5, 2 => 6, 1 => 12,
-                ]
-            );
+            ]);
             $mform->setType('config_preferences[columns]', PARAM_INT);
             $mform->addHelpButton('config_preferences[columns]', 'columns', 'block_dash');
             $mform->setDefault('config_preferences[columns]', 3);
@@ -347,13 +328,10 @@ class cards_layout extends abstract_layout
             $options = [];
             // Check course or user.
             if (
-                in_array(
-                    "dashaddon_courses\local\dash_framework\structure\course_table",
-                    array_map(
-                        'get_class',
-                        $this->get_data_source()->get_tables()
-                    )
-                )
+                in_array("dashaddon_courses\local\dash_framework\structure\course_table", array_map(
+                    'get_class',
+                    $this->get_data_source()->get_tables()
+                ))
             ) {
                 $handler = \core_course\customfield\course_handler::create();
                 $fields = $handler->get_fields();
@@ -362,13 +340,10 @@ class cards_layout extends abstract_layout
                     $options[$alias] = format_string($field->get_formatted_name());
                 }
             } else if (
-                in_array(
-                    "block_dash\local\dash_framework\structure\user_table",
-                    array_map(
-                        'get_class',
-                        $this->get_data_source()->get_tables()
-                    )
-                )
+                in_array("block_dash\local\dash_framework\structure\user_table", array_map(
+                    'get_class',
+                    $this->get_data_source()->get_tables()
+                ))
             ) {
                 $fields = profile_get_custom_fields();
                 foreach ($fields as $field) {
@@ -421,12 +396,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[imageurlfield]',
                 get_string('imageurlfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $courseimageurlfields
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $courseimageurlfields
+                ))
             );
             $mform->setType('config_preferences[imageurlfield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[imageurlfield]', 'imageurlfield', 'block_dash');
@@ -435,12 +407,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[imageoverlayfield]',
                 get_string('imageoverlayfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[imageoverlayfield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[imageoverlayfield]', 'imageoverlayfield', 'block_dash');
@@ -449,12 +418,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[subheadingfield]',
                 get_string('subheadingfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[subheadingfield]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[subheadingfield]', 'subheadingfield', 'block_dash');
@@ -463,12 +429,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[headingfield]',
                 get_string('headingfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[headingfield]', PARAM_TEXT);
 
@@ -476,12 +439,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[bodyfield]',
                 get_string('bodyfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[bodyfield]', PARAM_TEXT);
 
@@ -489,12 +449,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[body2field]',
                 get_string('bodyfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[body2field]', PARAM_TEXT);
 
@@ -502,12 +459,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[body3field]',
                 get_string('bodyfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[body3field]', PARAM_TEXT);
 
@@ -515,12 +469,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[footerfield]',
                 get_string('footerfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[footerfield]', PARAM_TEXT);
 
@@ -528,12 +479,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[footerrightfield]',
                 get_string('footerrightfield', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[footerrightfield]', PARAM_TEXT);
 
@@ -576,12 +524,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[details_title]',
                 get_string('details_title', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[details_title]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_title]', 'config_preferences[details_area]', 'eq', 'disabled');
@@ -590,12 +535,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[details_body_1]',
                 get_string('details_body_1', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[details_body_1]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_body_1]', 'config_preferences[details_area]', 'eq', 'disabled');
@@ -604,12 +546,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[details_body_2]',
                 get_string('details_body_2', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[details_body_2]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_body_2]', 'config_preferences[details_area]', 'eq', 'disabled');
@@ -618,12 +557,9 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[details_body_3]',
                 get_string('details_body_3', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[details_body_3]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_body_3]', 'config_preferences[details_area]', 'eq', 'disabled');
@@ -632,30 +568,19 @@ class cards_layout extends abstract_layout
                 'select',
                 'config_preferences[details_footer_left]',
                 get_string('details_footer_left', 'block_dash'),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
+                array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                    $this->get_data_source()->get_available_fields()
+                ))
             );
             $mform->setType('config_preferences[details_footer_left]', PARAM_TEXT);
             $mform->hideIf('config_preferences[details_footer_left]', 'config_preferences[details_area]', 'eq', 'disabled');
 
-            $mform->addElement(
-                'select',
-                'config_preferences[details_footer_right]',
-                get_string(
-                    'details_footer_right',
-                    'block_dash'
-                ),
-                array_merge(
-                    $noneoption,
-                    field_definition_factory::get_field_definition_options(
-                        $this->get_data_source()->get_available_fields()
-                    )
-                )
-            );
+            $mform->addElement('select', 'config_preferences[details_footer_right]', get_string(
+                'details_footer_right',
+                'block_dash'
+            ), array_merge($noneoption, field_definition_factory::get_field_definition_options(
+                $this->get_data_source()->get_available_fields()
+            )));
             $mform->setType('config_preferences[details_footer_right]', PARAM_TEXT);
             $mform->hideIf(
                 'config_preferences[details_footer_right]',
@@ -697,8 +622,7 @@ class cards_layout extends abstract_layout
      */
     public function after_data(data_collection_interface $datacollection) {
         foreach ($datacollection->get_child_collections('rows') as $childcollection) {
-            $this->map_data(
-                [
+            $this->map_data([
                 'bgimageurl' => $this->get_data_source()->get_preferences('backgroundimagefield'),
                 'imageurl' => $this->get_data_source()->get_preferences('imageurlfield'),
                 'imageoverlay' => $this->get_data_source()->get_preferences('imageoverlayfield'),
@@ -717,9 +641,7 @@ class cards_layout extends abstract_layout
                 'detailfooter' => $this->get_data_source()->get_preferences('details_footer_left'),
                 'detailfooterright' => $this->get_data_source()->get_preferences('details_footer_right'),
                 'stylingoptions' => $this->get_data_source()->get_preferences('layoutstyles'),
-                ],
-                $childcollection
-            );
+            ], $childcollection);
         }
     }
 }

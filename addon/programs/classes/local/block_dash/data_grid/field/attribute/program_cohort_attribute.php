@@ -17,9 +17,9 @@
 /**
  * List the cohorts assigned to the programs
  *
- * @package   dashaddon_programs
- * @copyright 2024 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_programs
+ * @copyright  2024 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_programs\local\block_dash\data_grid\field\attribute;
@@ -31,13 +31,12 @@ use stdClass;
 /**
  * List the cohorts assigned to the programs
  */
-class program_cohort_attribute extends abstract_field_attribute
-{
+class program_cohort_attribute extends abstract_field_attribute {
     /**
      * List the cohorts assigned to the programs
      *
-     * @param  int      $data
-     * @param  stdClass $record
+     * @param int $data
+     * @param stdClass $record
      * @return string
      */
     public function transform_data($data, stdClass $record) {

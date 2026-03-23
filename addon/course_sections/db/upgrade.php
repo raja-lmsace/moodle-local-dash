@@ -17,15 +17,14 @@
 /**
  * Dashadddon course sections plugin upgrade code.
  *
- * @package   dashaddon_course_sections
- * @copyright 2024 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_course_sections
+ * @copyright  2024 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * Function to upgrade dashaddon_course_sections.
- *
- * @param  int $oldversion the version we are upgrading from
+ * @param int $oldversion the version we are upgrading from
  * @return bool result
  */
 function xmldb_dashaddon_course_sections_upgrade($oldversion) {

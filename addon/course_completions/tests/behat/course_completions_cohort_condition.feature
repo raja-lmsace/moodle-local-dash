@@ -143,9 +143,9 @@ Feature: Dash program to show the list of cohort course
     And I click on "Mark as done" "button"
     And I log out
 
-  Scenario:Show cohort course in dashboard
+  Scenario: Show cohort course in dashboard
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I create dash "Course completions" datasource
     Then I configure the "New Dash" block
@@ -174,7 +174,7 @@ Feature: Dash program to show the list of cohort course
     And I should not see "Teacher One" in the "course completion cohort" "block"
     And I log out
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn editing mode on
     Then I open the "course completion cohort" block preference
     Then I click on "Conditions" "link"
@@ -193,7 +193,7 @@ Feature: Dash program to show the list of cohort course
     And I log out
     #--Condtion 2 only enabled
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn editing mode on
     Then I open the "course completion cohort" block preference
     Then I click on "Conditions" "link"
@@ -279,14 +279,14 @@ Feature: Dash program to show the list of cohort course
     #---student login---#
     And I log in as "student1"
     And I am on "Course 1" course homepage
-    And I click on "Dash-dashboard" "link"
+    And I navigate to "Dash-dashboard" in current page administration
     And I click on "Course information" "button" in the "Course 1" "table_row"
     And I should see "Dash-dashboard"
     And I click on "Course information" "button" in the "Course 3" "table_row"
     And I should see "You cannot enrol yourself in this course." in the "#notice" "css_element"
 
     And I am on "Course 1" course homepage
-    And I click on "Dash-dashboard" "link"
+    And I navigate to "Dash-dashboard" in current page administration
     #---recheck the hided line---#
     And I click on "Course information" "button" in the "Student First" "table_row"
     And I should see "Dash-dashboard"

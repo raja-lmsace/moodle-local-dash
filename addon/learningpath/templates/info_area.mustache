@@ -1,0 +1,138 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    @template dashaddon_learningpath/info_area
+
+    This template for text track tab
+
+    Variables optional for this template:
+
+    Example context (json):
+    {
+    }
+
+}}
+
+{{! KPIs Section - Only display if at least one KPI is configured }}
+{{#data.kpis}}
+<div class="learningpath-stats-block">
+    {{#data.kpis.kpi1}}
+    <div class="learning-path-kpi stats-block {{#data.kpis.kpi1.statusclass}}status-{{data.kpis.kpi1.statusclass}}{{/data.kpis.kpi1.statusclass}}" data-kpi="1">
+        <p><span>{{data.kpis.kpi1.label}}</span> <b>{{data.kpis.kpi1.value}}</b></p>
+    </div>
+    {{/data.kpis.kpi1}}
+
+    {{#data.kpis.kpi2}}
+    <div class="learning-path-kpi stats-block {{#data.kpis.kpi2.statusclass}}status-{{data.kpis.kpi2.statusclass}}{{/data.kpis.kpi2.statusclass}}" data-kpi="2">
+        <p><span>{{data.kpis.kpi2.label}}</span> <b>{{data.kpis.kpi2.value}}</b></p>
+    </div>
+    {{/data.kpis.kpi2}}
+
+    {{#data.kpis.kpi3}}
+    <div class="learning-path-kpi stats-block {{#data.kpis.kpi3.statusclass}}status-{{data.kpis.kpi3.statusclass}}{{/data.kpis.kpi3.statusclass}}" data-kpi="3">
+        <p><span>{{data.kpis.kpi3.label}}</span> <b>{{data.kpis.kpi3.value}}</b></p>
+    </div>
+    {{/data.kpis.kpi3}}
+
+    {{#data.kpis.kpi4}}
+    <div class="learning-path-kpi stats-block {{#data.kpis.kpi4.statusclass}}status-{{data.kpis.kpi4.statusclass}}{{/data.kpis.kpi4.statusclass}}" data-kpi="4">
+        <p><span>{{data.kpis.kpi4.label}}</span> <b>{{data.kpis.kpi4.value}}</b></p>
+    </div>
+    {{/data.kpis.kpi4}}
+</div>
+{{/data.kpis}}
+
+{{! Course Progress Accordion - Expandable progress bars }}
+{{#data.displaypathindex}}
+<div class="learningpath-course-completion" id="courseCompletionBlock">
+    <div class="completion-header collapsed"
+    {{#data.use_bs5}}data-bs-toggle="collapse" data-bs-target="#collapseCourseProgress"{{/data.use_bs5}}
+    {{^data.use_bs5}}data-toggle="collapse" data-target="#collapseCourseProgress"{{/data.use_bs5}}
+    aria-expanded="false"
+    aria-controls="collapseCourseProgress"
+    role="button">
+        <div class="completion-header-top">
+            <div class="completion-title-row">
+                <h4 class="completion-title">{{#str}}coursecompletion, block_dash{{/str}}</h4>
+                <i class="fa fa-chevron-down collapse-indicator"></i>
+            </div>
+        </div>
+
+        <div class="progress-bars-preview">
+            {{#data.coursesprogress}}
+            <div class="progress progress-mini" title="{{fullname}}: {{completionpercentage}}%">
+                <div class="progressbar {{progressclass}}" role="progressbar" style="width: {{completionpercentage}}%" aria-valuenow="{{completionpercentage}}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            {{/data.coursesprogress}}
+        </div>
+    </div>
+
+    <div id="collapseCourseProgress" class="collapse completion-body" aria-labelledby="courseCompletionBlock">
+        <div class="completion-details">
+            {{#data.coursesprogress}}
+            <div class="course-progress-item status-{{statusclass}}">
+                <div class="course-info">
+                    <a href="{{url}}" class="course-name">{{fullname}}</a>
+                    <span class="course-percentage">{{completionpercentage}}%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar {{progressclass}}" role="progressbar" style="width: {{completionpercentage}}%" aria-valuenow="{{completionpercentage}}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            {{/data.coursesprogress}}
+        </div>
+    </div>
+</div>
+{{/data.displaypathindex}}
+
+{{! Faculty/Coaches Section }}
+{{#data.displayfaculty}}
+<div class="faculty-block">
+    <h6 class="faculty-heading">{{#str}}coaches, block_dash{{/str}}</h6>
+    <ul class="faculty-list">
+        {{#data.faculty}}
+        <li class="faculty-member">
+            <a href="{{profileurl}}" class="faculty-link" title="{{fullname}}" aria-label="{{#str}}viewprofile, core{{/str}}: {{fullname}}">
+                <div class="faculty-avatar">
+                    <img src="{{pictureurl}}" alt="{{fullname}}" class="faculty-picture rounded-circle">
+                </div>
+                <span class="faculty-name sr-only">{{fullname}}</span>
+            </a>
+        </li>
+        {{/data.faculty}}
+    </ul>
+</div>
+{{/data.displayfaculty}}
+
+{{! Badges Section }}
+{{#data.displaybadges}}
+<div class="badges-block">
+    <h6 class="badges-heading">{{#str}}badges, block_dash{{/str}}</h6>
+    <ul class="badges-list">
+        {{#data.badges}}
+        <li class="badge-item {{#earned}}badge-earned{{/earned}}{{^earned}}badge-not-earned{{/earned}}"
+            title="{{name}}{{#earned}} - {{#str}}badgeearned, block_dash{{/str}}{{/earned}}"
+            data-badge-id="{{id}}">
+            <div class="badge-wrapper">
+                <img src="{{imageurl}}" alt="{{name}}" class="badge-image">
+            </div>
+        </li>
+        {{/data.badges}}
+    </ul>
+</div>
+{{/data.displaybadges}}

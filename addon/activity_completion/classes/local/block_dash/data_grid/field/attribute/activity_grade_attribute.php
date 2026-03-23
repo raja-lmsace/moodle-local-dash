@@ -17,9 +17,9 @@
 /**
  * Transform activity data into activity grade.
  *
- * @package   dashaddon_activity_completion
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_activity_completion
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activity_completion\local\block_dash\data_grid\field\attribute;
@@ -45,14 +45,13 @@ require_once($CFG->dirroot . '/grade/lib.php');
  *
  * @package dashaddon_activity_completion
  */
-class activity_grade_attribute extends abstract_field_attribute
-{
+class activity_grade_attribute extends abstract_field_attribute {
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param  \stdClass $data
-     * @param  \stdClass $record Entire row
+     * @param \stdClass $data
+     * @param \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
@@ -70,8 +69,8 @@ class activity_grade_attribute extends abstract_field_attribute
         }
 
         if (
-            has_capability('moodle/grade:edit', $context, $USER->id)
-            || has_capability('dashaddon/activity_completion:editgrade', $usercontext, $USER->id)
+            has_capability('moodle/grade:edit', $context, $USER->id) ||
+            has_capability('dashaddon/activity_completion:editgrade', $usercontext, $USER->id)
         ) {
             [$course, $cm] = get_course_and_cm_from_cmid($cmid);
 
@@ -105,8 +104,8 @@ class activity_grade_attribute extends abstract_field_attribute
      * Get the activity grade panel html form the course grades page.
      *
      * @param int $gradeitemid Grade item id.
-     * @param int $courseid    Course id.
-     * @param int $userid      User id.
+     * @param int $courseid Course id.
+     * @param int $userid User id.
      *
      * @return string
      */

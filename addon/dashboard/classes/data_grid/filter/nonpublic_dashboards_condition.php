@@ -16,10 +16,9 @@
 
 /**
  * Limit dashboards to non-public (logged in dashboards only).
- *
- * @package   dashaddon_dashboard
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_dashboard
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_dashboard\data_grid\filter;
@@ -32,8 +31,7 @@ use dashaddon_dashboard\model\dashboard;
  *
  * @package dashaddon_dashboard
  */
-class nonpublic_dashboards_condition extends condition
-{
+class nonpublic_dashboards_condition extends condition {
     /**
      * Get values from filter based on user selection. All filters must return an array of values.
      *
@@ -43,7 +41,7 @@ class nonpublic_dashboards_condition extends condition
      */
     public function get_values() {
         $values = [];
-
+        /** @var dashboard $dashboard */
         foreach (dashboard::get_records() as $dashboard) {
             if ($dashboard->get('permission') != dashboard::PERMISSION_PUBLIC) {
                 $values[] = $dashboard->get('id');
@@ -55,7 +53,6 @@ class nonpublic_dashboards_condition extends condition
 
     /**
      * Get the nonpublic dashboard condition label.
-     *
      * @return string
      */
     public function get_label() {

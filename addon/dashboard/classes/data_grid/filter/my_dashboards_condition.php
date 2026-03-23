@@ -17,9 +17,9 @@
 /**
  * Dashboard conditions.
  *
- * @package   dashaddon_dashboard
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_dashboard
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_dashboard\data_grid\filter;
@@ -30,19 +30,17 @@ use dashaddon_dashboard\model\dashboard;
 /**
  * Dashboard conditions.
  */
-class my_dashboards_condition extends condition
-{
+class my_dashboards_condition extends condition {
     /**
      * Get values from filter based on user selection. All filters must return an array of values.
      * Override in child class to add more values.
-     *
      * @return array
      */
     public function get_values() {
         global $USER;
 
         $values = [];
-
+        /** @var dashboard $dashboard */
         foreach (dashboard::get_records() as $dashboard) {
             if ($dashboard->has_access($USER)) {
                 $values[] = $dashboard->get('id');
@@ -54,7 +52,6 @@ class my_dashboards_condition extends condition
 
     /**
      * Get condition label.
-     *
      * @return string
      */
     public function get_label() {

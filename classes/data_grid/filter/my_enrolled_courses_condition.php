@@ -17,9 +17,9 @@
 /**
  * Filters results to enrolled courses, optionally with specific role(s).
  *
- * @package   local_dash
- * @copyright 2020 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2020 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -34,8 +34,7 @@ use MoodleQuickForm;
  *
  * @package local_dash
  */
-class my_enrolled_courses_condition extends condition
-{
+class my_enrolled_courses_condition extends condition {
     /**
      * Get filter SQL operation.
      *
@@ -81,8 +80,7 @@ class my_enrolled_courses_condition extends condition
         $params = ['enrolleduserid' => $userid];
         if (
             isset($this->get_preferences()['roleids'])
-            && is_array($this->get_preferences()['roleids'])
-            && count($this->get_preferences()['roleids']) > 0
+            && is_array($this->get_preferences()['roleids']) && count($this->get_preferences()['roleids']) > 0
         ) {
             [$rsql, $rparams] = $DB->get_in_or_equal($this->get_preferences()['roleids'], SQL_PARAMS_NAMED, 'roles');
             $sql .= " AND ra.roleid $rsql";
@@ -97,9 +95,9 @@ class my_enrolled_courses_condition extends condition
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform      $moodleform
+     * @param moodleform $moodleform
      * @param MoodleQuickForm $mform
-     * @param string          $fieldnameformat
+     * @param string $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,

@@ -22,5 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['datasource:roleassignments_data_source'] = 'Role Assignments';
+$string['datasource:roleassignments_data_source_help'] = 'List of user role assignments details.';
 $string['pluginname'] = 'Data source: Role Assignments';
 $string['upgradeplugin'] = 'This plugin requires installation of <b> {$a} </b> to enable.';

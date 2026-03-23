@@ -17,9 +17,9 @@
 /**
  * Class containing the data necessary for rendering the status field in the course participants page.
  *
- * @package   dashaddon_course_enrols
- * @copyright 2017 Jun Pataleta
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_course_enrols
+ * @copyright  2017 Jun Pataleta
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_enrols\output;
@@ -33,93 +33,64 @@ use user_enrolment_action;
 /**
  * Class containing the data for the status field.
  *
- * @package   dashaddon_course_enrols
- * @copyright 2017 Jun Pataleta
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_course_enrols
+ * @copyright  2017 Jun Pataleta
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class status_field implements renderable, templatable
-{
-    /**
- * Active user enrolment status constant.
-*/
+class status_field implements renderable, templatable {
+    /** Active user enrolment status constant. */
     const STATUS_ACTIVE = 0;
 
-    /**
- * Suspended user enrolment status constant.
-*/
+    /** Suspended user enrolment status constant. */
     const STATUS_SUSPENDED = 1;
 
-    /**
- * Not current user enrolment status constant.
-*/
+    /** Not current user enrolment status constant. */
     const STATUS_NOT_CURRENT = 2;
 
-    /**
-     * @var string $enrolinstancename The enrolment instance name.
-     */
+    /** @var string $enrolinstancename The enrolment instance name. */
     protected $enrolinstancename;
 
-    /**
-     * @var string $coursename The course's full name.
-     */
+    /** @var string $coursename The course's full name. */
     protected $coursename;
 
-    /**
-     * @var string $fullname The user's full name.
-     */
+    /** @var string $fullname The user's full name. */
     protected $fullname;
 
-    /**
-     * @var string $status The user enrolment status.
-     */
+    /** @var string $status The user enrolment status. */
     protected $status;
 
-    /**
-     * @var int $timestart The timestamp when the user's enrolment starts.
-     */
+    /** @var int $timestart The timestamp when the user's enrolment starts. */
     protected $timestart;
 
-    /**
-     * @var int $timeend The timestamp when the user's enrolment ends.
-     */
+    /** @var int $timeend The timestamp when the user's enrolment ends. */
     protected $timeend;
 
-    /**
-     * @var int $timeenrolled The timestamp when the user was enrolled.
-     */
+    /** @var int $timeenrolled The timestamp when the user was enrolled. */
     protected $timeenrolled;
 
-    /**
-     * @var user_enrolment_action[] $enrolactions Array of enrol action objects for the given enrolment method.
-     */
+    /** @var user_enrolment_action[] $enrolactions Array of enrol action objects for the given enrolment method. */
     protected $enrolactions;
 
-    /**
-     * @var bool $statusactive Indicates whether a user enrolment status should be rendered as active.
-     */
+    /** @var bool $statusactive Indicates whether a user enrolment status should be rendered as active. */
     protected $statusactive = false;
 
-    /**
-     * @var bool $statusactive Indicates whether a user enrolment status should be rendered as suspended.
-     */
+    /** @var bool $statusactive Indicates whether a user enrolment status should be rendered as suspended. */
     protected $statussuspended = false;
 
-    /**
-     * @var bool $statusactive Indicates whether a user enrolment status should be rendered as not current.
-     */
+    /** @var bool $statusactive Indicates whether a user enrolment status should be rendered as not current. */
     protected $statusnotcurrent = false;
 
     /**
      * status_field constructor.
      *
-     * @param string                  $enrolinstancename The enrolment instance name.
-     * @param string                  $coursename        The course's full name.
-     * @param string                  $fullname          The user's full name.
-     * @param string                  $status            The user enrolment status.
-     * @param int|null                $timestart         The timestamp when the user's enrolment starts.
-     * @param int|null                $timeend           The timestamp when the user's enrolment ends.
-     * @param user_enrolment_action[] $enrolactions      Array of enrol action objects for the given enrolment method.
-     * @param int|null                $timeenrolled      The timestamp when the user was enrolled.
+     * @param string $enrolinstancename The enrolment instance name.
+     * @param string $coursename The course's full name.
+     * @param string $fullname The user's full name.
+     * @param string $status The user enrolment status.
+     * @param int|null $timestart The timestamp when the user's enrolment starts.
+     * @param int|null $timeend The timestamp when the user's enrolment ends.
+     * @param user_enrolment_action[] $enrolactions Array of enrol action objects for the given enrolment method.
+     * @param int|null $timeenrolled The timestamp when the user was enrolled.
      */
     public function __construct(
         $enrolinstancename,
@@ -147,10 +118,11 @@ class status_field implements renderable, templatable
      * 1. No complex types - only stdClass, array, int, string, float, bool
      * 2. Any additional info that is required for the template is pre-calculated (e.g. capability checks).
      *
-     * @param  renderer_base $output Used to do a final render of any components that need to be rendered for export.
+     * @param renderer_base $output Used to do a final render of any components that need to be rendered for export.
      * @return stdClass|array
      */
     public function export_for_template(renderer_base $output) {
+        global $CFG;
         $data = new stdClass();
         $data->enrolinstancename = $this->enrolinstancename;
         $data->coursename = $this->coursename;
@@ -186,13 +158,16 @@ class status_field implements renderable, templatable
             $data->enrolactions[] = $action;
         }
 
+        // Bootstrap 5 data attribute for dropdowns.
+        $data->datatoggle = $CFG->branch >= 500 ? 'data-bs-toggle' : 'data-toggle';
+
         return $data;
     }
 
     /**
      * Status setter.
      *
-     * @param  int $status The user enrolment status representing one of this class' STATUS_* constants.
+     * @param int $status The user enrolment status representing one of this class' STATUS_* constants.
      * @return status_field This class' instance. Useful for chaining.
      */
     public function set_status($status = self::STATUS_ACTIVE) {

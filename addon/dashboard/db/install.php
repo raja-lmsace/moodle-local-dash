@@ -17,9 +17,9 @@
 /**
  * DB authentication plugin install code
  *
- * @package   dashaddon_dashboard
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_dashboard
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -27,12 +27,13 @@
  */
 function xmldb_dashaddon_dashboard_install() {
     global $CFG, $DB;
-    include_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
+    require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
     set_config('enabled', 1, 'dashaddon_dashboard');
 
     // Create the dashaddon_dashboard_dash table.
     $dbman = $DB->get_manager();
     if ($dbman->table_exists('dashaddon_dashboard_dash')) {
+        dashaddon_dashboard_create_core_dashboard();
         return true;
     }
     // Define table dash_data_source to be created.

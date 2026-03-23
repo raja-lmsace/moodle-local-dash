@@ -17,9 +17,9 @@
 /**
  * Certificates - dashaddon certificate table.
  *
- * @package   dashaddon_certificates
- * @copyright 2024 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_certificates
+ * @copyright  2024 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_certificates\local\dash_framework\structure;
@@ -39,8 +39,7 @@ use tool_certificate\reportbuilder\local\formatters\certificate as formatter;
 /**
  * Certificates table structure definitions for programs datasource.
  */
-class certificates_table extends table
-{
+class certificates_table extends table {
     /**
      * Build a new table.
      */
@@ -67,15 +66,9 @@ class certificates_table extends table
 
         $fields = [
 
-            new field(
-                'id',
-                new \lang_string('certificate', 'tool_certificate'),
-                $this,
-                null,
-                [
+            new field('id', new \lang_string('certificate', 'tool_certificate'), $this, null, [
                 new identifier_attribute(),
-                ]
-            ),
+            ]),
 
             // Name of the certificate template.
             new field('templatename', new lang_string('certificatetemplatename', 'tool_certificate'), $this, 'tct.name'),
@@ -84,76 +77,38 @@ class certificates_table extends table
             new field('code', new lang_string('code', 'tool_certificate'), $this, 'tci.code'),
 
             // Certificate code with link.
-            new field(
-                'code_link',
-                new lang_string('certificatecodelinked', 'block_dash'),
-                $this,
-                'tci.code',
-                [
-                new widget_attribute(
-                    [
+            new field('code_link', new lang_string('certificatecodelinked', 'block_dash'), $this, 'tci.code', [
+                new widget_attribute([
                     'callback' => fn($row, $data) => formatter::code_with_link($data, $row),
-                    ]
-                ),
-                ]
-            ),
+                ]),
+            ]),
 
             // Certificate date issued.
-            new field(
-                'timecreated',
-                new lang_string('issueddate', 'tool_certificate'),
-                $this,
-                null,
-                [
-                new date_attribute(
-                    [
+            new field('timecreated', new lang_string('issueddate', 'tool_certificate'), $this, null, [
+                new date_attribute([
                     'format' => get_string('strftimedaydatetime', 'langconfig'),
-                    ]
-                ),
-                ]
-            ),
+                ]),
+            ]),
 
             // Certificate expiry date.
-            new field(
-                'expires',
-                new lang_string('expirydate', 'tool_certificate'),
-                $this,
-                null,
-                [
-                new widget_attribute(
-                    [
+            new field('expires', new lang_string('expirydate', 'tool_certificate'), $this, null, [
+                new widget_attribute([
                     'callback' => fn($row, $data) => $data > 0 ? userdate($data) : get_string('never', 'tool_certificate'),
-                    ]
-                ),
-                ]
-            ),
+                ]),
+            ]),
 
             // Certificate status.
-            new field(
-                'status',
-                new lang_string('status', 'tool_certificate'),
-                $this,
-                'tci.expires AS expires, tci.expires',
-                [
-                new widget_attribute(
-                    [
+            new field('status', new lang_string('status', 'tool_certificate'), $this, 'tci.expires AS expires, tci.expires', [
+                new widget_attribute([
                     'callback' => fn($row, $data) => formatter::certificate_issued_status($data, $row),
-                    ]
-                ),
-                ]
-            ),
+                ]),
+            ]),
 
             // Download certificate button.
-            new field(
-                'downloadbutton',
-                new lang_string('downloadcertificate', 'block_dash'),
-                $this,
-                'tci.code AS code, tci.code',
-                [
+            new field('downloadbutton', new lang_string('downloadcertificate', 'block_dash'), $this, 'tci.code AS code, tci.code', [
                 // Coursecertificate module doesn't provide option to download the certificate.
                 // Create a certificate as link.
-                new widget_attribute(
-                    [
+                new widget_attribute([
                     'callback' => function ($record, $data) {
                         $url = \tool_certificate\template::instance($record->tct_templateid)->get_issue_file_url($record);
                         $murl = new moodle_url($url);
@@ -163,23 +118,15 @@ class certificates_table extends table
                         $data = get_string('downloadcertificate', 'block_dash');
                         return $attr->transform_data($data, $record);
                     },
-                    ]
-                ),
+                ]),
 
-                ]
-            ),
+            ]),
 
             // View certificate button.
-            new field(
-                'viewbutton',
-                new lang_string('viewcertificate', 'tool_certificate'),
-                $this,
-                'tci.code',
-                [
+            new field('viewbutton', new lang_string('viewcertificate', 'tool_certificate'), $this, 'tci.code', [
                 new moodle_url_attribute(['url' => new moodle_url('/admin/tool/certificate/view.php', ['code' => 'tci_code'])]),
                 new button_attribute(['label' => new lang_string('viewcertificate', 'tool_certificate')]),
-                ]
-            ),
+            ]),
 
         ];
         return $fields;

@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course categories.
  *
- * @package   local_dash
- * @copyright 2020 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2020 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -34,15 +34,62 @@ use MoodleQuickForm;
  *
  * @package local_dash
  */
-class course_category_condition extends condition
-{
+class course_category_condition extends condition {
     /**
      * Get filter SQL operation.
      *
      * @return string
      */
     public function get_operation() {
+        // Use custom operation when multicategory plugin is available and we're in course context.
+        if ($this->is_course_context() && class_exists('\customfield_multicategory\condition_helper')) {
+            return self::OPERATION_CUSTOM;
+        }
         return self::OPERATION_IN_OR_EQUAL;
+    }
+
+    /**
+     * Check if this condition is being used in a course context (not categories).
+     *
+     * @return bool True if filtering courses, false if filtering categories.
+     */
+    protected function is_course_context(): bool {
+        $select = $this->get_select();
+        return strpos($select, 'cc.id') === false;
+    }
+
+    /**
+     * Return where SQL and params for placeholders.
+     *
+     * @return array
+     */
+    public function get_sql_and_params() {
+        global $DB;
+
+        $categoryids = $this->get_values();
+        if (empty($categoryids)) {
+            return ['', []];
+        }
+
+        $select = $this->get_select();
+        $name = $this->get_name();
+
+        // Get the IN clause for main category.
+        [$insql, $params] = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED, $name . '_cat');
+        $basesql = "$select $insql";
+
+        // Only extend with multicategory logic in course context.
+        if ($this->is_course_context() && class_exists('\customfield_multicategory\condition_helper')) {
+            $result = \customfield_multicategory\condition_helper::extend_category_sql(
+                $basesql,
+                $params,
+                $categoryids,
+                $name . '_mcat'
+            );
+            return [$result['sql'], $result['params']];
+        }
+
+        return [$basesql, $params];
     }
 
     /**
@@ -86,7 +133,7 @@ class course_category_condition extends condition
                             }
                         } else {
                             // Moodle 3.5 compatibility.
-                            include_once("$CFG->dirroot/lib/coursecatlib.php");
+                            require_once("$CFG->dirroot/lib/coursecatlib.php");
                             if ($coursecat = \coursecat::get($categoryid, IGNORE_MISSING)) {
                                 foreach ($coursecat->get_children() as $category) {
                                     $categoryids[] = $category->id;
@@ -103,9 +150,9 @@ class course_category_condition extends condition
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform      $moodleform
+     * @param moodleform $moodleform
      * @param MoodleQuickForm $mform
-     * @param string          $fieldnameformat
+     * @param string $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
@@ -129,7 +176,7 @@ class course_category_condition extends condition
             $categories = \core_course_category::make_categories_list('moodle/course:create');
         } else {
             // Moodle 3.5 compatibility.
-            include_once("$CFG->dirroot/lib/coursecatlib.php");
+            require_once("$CFG->dirroot/lib/coursecatlib.php");
             $categories = \coursecat::make_categories_list('moodle/course:create');
         }
 

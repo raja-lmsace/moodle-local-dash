@@ -71,6 +71,7 @@
 }
 .dash-block-content .timeline > li > .timeline-panel {
     width: 46%;
+    min-height: 70px;
     float: left;
     border: 1px solid #d4d4d4;
     border-radius: 2px;
@@ -234,6 +235,9 @@
 .block_dash .dash-container .dash-block-content .card .badge {
     white-space: pre-wrap;
 }
+.block_dash .dash-container .dash-block-content .card .badge + .card-body {
+    margin-top: 20px;
+}
 .block_dash .dash-container .dash-block-content .card a {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -241,6 +245,7 @@
 .block_dash .dash-container .dash-block-content .card img {
     height: 100%;
     object-fit: cover;
+    border-radius: 7px;
 }
 .block_dash .dash-container .dash-block-content .card .card-body p img {
     margin-bottom: 10px;
@@ -255,6 +260,7 @@
     margin-top: 5px;
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.floating-block.fit-content > .card-block {
+    width: 100%;
     margin-bottom: 0;
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.fit-content
@@ -482,6 +488,7 @@
 .block_dash .card-body .card-text .dash-block-content nav > .pagination,
 .block_dash .card-body .card-text .dash-block-content .pagination-summary {
     margin-top: 20px;
+    flex-wrap: wrap;
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.one-column-block {
     margin: 0;
@@ -497,11 +504,11 @@
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.fit-content.expand-block:not(.expand-card) {
     display: flex;
 }
-.block_dash .dash-container .dash-block-content
+/* .block_dash .dash-container .dash-block-content
 .card-layout-row.card-layout-default.floating-block.fit-content:not(.floating-card) {
     justify-content: left;
     display: flex;
-}
+} */
 .block_dash .dash-container .dash-block-content
 .card-layout-row.card-layout-default.floating-block.fit-content:not(.floating-card) .card.details-area-block:hover {
     margin-bottom: 0;
@@ -527,6 +534,7 @@
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.fit-content.expand-card .card-block,
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.fit-content.floating-card .card-block {
     max-width: none;
+    width: 100%;
     margin-bottom: 0;
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.fit-content
@@ -556,6 +564,7 @@
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default > .card-block,
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout_masonry > .card-block {
+    width: 100%;
     border-radius: 7px;
     padding: 0 5px;
     margin-bottom: 10px;
@@ -564,6 +573,7 @@
 }
 .block_dash .dash-container .dash-block-content .card-layout-row.card-layout-default.expand-block.fit-content > .card-block {
     max-width: none;
+    width: 100%;
 }
 .block_dash .dash-container .dash-block-content
 .card-layout-row.card-layout-default > .card-block.expand-card:not(.col-sm-12) .card.card-background,
@@ -747,9 +757,9 @@ form fieldset .fitem.fitem_f .felement {
 }
 .block_dash .dash-block-content .card_layout_slider .slick-arrow {
     color: #fff;
-    border: 1px solid var(--primary);
+    border: 1px solid var(--primary, var(--bs-primary));
     border-radius: 5px;
-    background: var(--primary);
+    background: var(--primary, var(--bs-primary));
     padding: 4px 12px;
     display: flex;
     align-items: center;
@@ -934,8 +944,10 @@ form fieldset .fitem.fitem_f .felement {
 .block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-right {
     width: 100%;
 }
-.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-left img,
-.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-right img {
+.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card
+.card-footer-left img:not(.icon-responsive),
+.block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card
+.card-footer-right img:not(.icon-responsive) {
     max-width: 200px;
 }
 .block_dash .dash-block-content .card_layout_slider .slick-list .slick-slide .card-block .card .card-footer-right img {
@@ -1259,3 +1271,236 @@ form fieldset .fitem.fitem_f .felement {
 .block_dash .dash-container .dash-table td .activity-completion-override {
     cursor: pointer;
 }
+
+/* ── Dash category mega-menu filter ──────────────────────────────────────── */
+
+:root {
+    --dash-cat-active-text: #fff;
+    --dash-cat-hover-bg: #f3ecf8;
+    --dash-cat-border: #e0e0e0;
+}
+
+/* Toggle button */
+.dash-cat-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+
+.dash-cat-dropdown .dropdown-menu.dash-mega-menu {
+    min-width: 0;
+    width: auto;
+    max-width: 95vw;
+    overflow: hidden;
+    padding: 0;
+}
+
+/* 3-column flex row */
+.dash-mega-cols {
+    max-width: 750px;
+    overflow: auto;
+    padding-bottom: 5px;
+    display: flex;
+    align-items: stretch;
+}
+
+/* Individual column */
+.dash-mega-col {
+    flex: 0 0 250px;
+    min-width: 180px;
+    border-right: 1px solid var(--dash-cat-border);
+    overflow-y: auto;
+    max-height: 360px;
+    min-height: 60px;
+}
+
+.dash-mega-col:last-child {
+    border-right: none;
+}
+
+.dash-mega-col-empty {
+    display: none;
+}
+
+/* Column list items */
+.dash-mega-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dash-mega-col li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    border-bottom: 1px solid #f3f3f3;
+    transition: background 0.1s, color 0.1s;
+    user-select: none;
+}
+
+.dash-mega-col li:last-child {
+    border-bottom: none;
+}
+
+.dash-mega-col li:hover {
+    background: var(--dash-cat-hover-bg);
+}
+
+.dash-mega-col li.active {
+    background: var(--primary, var(--bs-primary));
+    color: var(--dash-cat-active-text);
+}
+
+.dash-cat-item-name {
+    min-width: 0;
+    flex: 1;
+}
+
+.dash-cat-chevron {
+    font-size: 1rem;
+    line-height: 1;
+    color: #999;
+    margin-left: 6px;
+    flex-shrink: 0;
+}
+
+.dash-mega-col li.active .dash-cat-chevron {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* ── Mobile custom drawer (no Bootstrap offcanvas) ───────────────────────── */
+
+/* Full-screen overlay; acts as the backdrop — clicking it closes the drawer. */
+.dash-cat-drawer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1045;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.dash-cat-drawer.show {
+    display: block;
+}
+
+/* Slide-in panel */
+.dash-cat-drawer-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 85vw;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    /* Panel sits above the overlay so clicks on it don't close the drawer */
+    pointer-events: auto;
+}
+
+.dash-cat-drawer.show .dash-cat-drawer-panel {
+    transform: translateX(0);
+}
+
+/* Header row: back ‹ | title | close × */
+.dash-cat-drawer-header {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--dash-cat-border);
+    flex-shrink: 0;
+}
+
+.dash-cat-drawer-header .dash-mobile-title {
+    flex: 1;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Scrollable list area */
+.dash-cat-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile: drill-down list */
+.dash-mobile-back {
+    display: none;   /* shown by AMD when drill-down stack > 0 */
+    font-size: 1.25rem;
+    padding-left: 0;
+}
+
+.dash-mobile-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dash-mobile-list li {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    padding: 0 0 0 20px;
+    border-bottom: 1px solid var(--dash-cat-border);
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.1s;
+    user-select: none;
+    min-height: 50px;
+}
+
+.dash-mobile-list li > span:first-child {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 14px 0;
+}
+
+.dash-mobile-list li:hover {
+    background: var(--dash-cat-hover-bg);
+}
+
+.dash-mobile-list li.active {
+    background: var(--primary, var(--bs-primary));
+    color: var(--dash-cat-active-text);
+}
+
+.dash-mobile-list li.active .dash-cat-chevron {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Mobile chevron — separate tap target for drilling into children */
+.dash-mobile-list li .dash-cat-chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin-left: auto;
+    padding: 0 10px;
+    border-left: 1px solid var(--dash-cat-border);
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #666;
+    flex-shrink: 0;
+}
+
+.dash-mobile-list li .dash-cat-chevron:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #333;
+}
+
+/* ── End category mega-menu ──────────────────────────────────────────────── */

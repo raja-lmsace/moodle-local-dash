@@ -16,64 +16,52 @@
 /**
  * Search user selector module.
  *
- * @module    block_dash/group-user-selector
+ * @module block_dash/group-user-selector
  * @copyright 2017 The Open University
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(
-    ['jquery', 'core/ajax', 'core/templates'], function ($, Ajax, Templates) {
+define(['jquery', 'core/ajax', 'core/templates'], function ($, Ajax, Templates) {
 
-        return /**
-                * 
-                *
-                * @alias module:block_dash/group-user-selector 
-                */ {
+    return /** @alias module:block_dash/group-user-selector */ {
 
-    processResults: function (selector, results) {
-        return results;
-    },
+        processResults: function (selector, results) {
+            return results;
+        },
 
-            transport: function (selector, query, success, failure) {
-                var promise;
+        transport: function (selector, query, success, failure) {
+            var promise;
 
-                // Search within specific course if known and if the 'search within' dropdown is set
-                // to search within course or activity.
-                var args = { query: query };
+            // Search within specific course if known and if the 'search within' dropdown is set
+            // to search within course or activity.
+            var args = { query: query };
 
-                // Tables to fetch the fields.
-                var tables = { main: '', joins: [] };
+            // Tables to fetch the fields.
+            var tables = { main: '', joins: [] };
 
-                document.querySelectorAll('[name="maintable"]').forEach(
-                    function (r) {
-                        tables.main = r.value;
-                    }
-                );
+            document.querySelectorAll('[name="maintable"]').forEach(function (r) {
+                tables.main = r.value;
+            });
 
-                document.querySelectorAll('[name^="tablejoins"]').forEach(
-                    function (r) {
-                        // Verify the enable joins is checked.
-                        if (document.querySelector('[type="checkbox"][name="enablejoins"]').checked) {
-                            tables.joins.push(r.value);
-                        }
-                    }
-                );
+            document.querySelectorAll('[name^="tablejoins"]').forEach(function (r) {
+                // Verify the enable joins is checked.
+                if (document.querySelector('[type="checkbox"][name="enablejoins"]').checked) {
+                    tables.joins.push(r.value);
+                }
+            });
 
-                // Include the tables in the params.
-                args.tables = tables;
+            // Include the tables in the params.
+            args.tables = tables;
 
-                // Call AJAX request.
-                promise = Ajax.call([{ methodname: 'dashaddon_developer_get_fields_list', args: args }]);
+            // Call AJAX request.
+            promise = Ajax.call([{ methodname: 'dashaddon_developer_get_fields_list', args: args }]);
 
-                promise[0].then(
-                    function (result) {
-                        success(result);
-                        return;
-                    }
-                ).fail(failure);
-            }
+            promise[0].then(function (result) {
+                success(result);
+                return;
+            }).fail(failure);
+        }
 
-        };
+    };
 
-    }
-);
+});

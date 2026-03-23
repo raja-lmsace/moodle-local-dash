@@ -17,20 +17,19 @@
 /**
  * DB authentication plugin upgrade code
  *
- * @package   dashaddon_dashboard
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_dashboard
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * Function to upgrade dashaddon_dashboard.
- *
- * @param  int $oldversion the version we are upgrading from
+ * @param int $oldversion the version we are upgrading from
  * @return bool result
  */
 function xmldb_dashaddon_dashboard_upgrade($oldversion) {
     global $CFG, $DB;
-    include_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
+    require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
     dashaddon_dashboard_create_core_dashboard();
     $dbman = $DB->get_manager();
 

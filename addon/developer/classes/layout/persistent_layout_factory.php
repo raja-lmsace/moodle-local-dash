@@ -35,13 +35,12 @@ use dashaddon_developer\model\custom_layout;
  *
  * @package dashaddon_developer
  */
-class persistent_layout_factory implements layout_factory_interface
-{
+class persistent_layout_factory implements layout_factory_interface {
     /**
      * Get layout object with datasource.
      *
-     * @param  string                $identifier
-     * @param  data_source_interface $datasource
+     * @param string $identifier
+     * @param data_source_interface $datasource
      * @return layout_interface
      */
     public static function build_layout($identifier, data_source_interface $datasource) {

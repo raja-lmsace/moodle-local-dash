@@ -17,9 +17,9 @@
 /**
  * Dash attribute convert seconds to minutes.
  *
- * @package   local_dash
- * @copyright 2024 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2024 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\field\attribute;
@@ -32,15 +32,14 @@ use DateTime;
  *
  * @package local_dash
  */
-class minutes_attribute extends abstract_field_attribute
-{
+class minutes_attribute extends abstract_field_attribute {
     /**
      * Convert a duration from seconds to minutes.
      *
      * Takes a duration in seconds and converts it into a whole number of minutes.
      *
-     * @param  string    $data
-     * @param  \stdClass $record Entire row
+     * @param string $data
+     * @param \stdClass $record Entire row
      * @return mixed
      */
     public function transform_data($data, \stdClass $record) {

@@ -17,9 +17,9 @@
 /**
  * Library functions defined for skill graph widget.
  *
- * @package   dashaddon_dashboard
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_dashboard
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 // Constants which are use throughout this dashaddon.
@@ -29,13 +29,13 @@ define('SYSTEMCONTEXT', 2);
 /**
  * Dashboard plugin file definitions, List of fileareas used in local_dash plugin.
  *
- * @param  stdclass $course
- * @param  stdclass $cm
- * @param  stdclass $context
- * @param  string   $filearea
- * @param  array    $args
- * @param  bool     $forcedownload
- * @param  array    $options
+ * @param stdclass $course
+ * @param stdclass $cm
+ * @param stdclass $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool $forcedownload
+ * @param array $options
  * @return void
  */
 function dashaddon_dashboard_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
@@ -76,7 +76,7 @@ function dashaddon_dashboard_pluginfile($course, $cm, $context, $filearea, $args
 /**
  * Get the dashboard background image.
  *
- * @param  int $dashboardid Dashboard ID
+ * @param int $dashboardid Dashboard ID
  * @return string
  */
 function dashaddon_dashboard_get_dashboard_background($dashboardid) {
@@ -134,9 +134,9 @@ function dashaddon_dashboard_create_core_dashboard() {
 /**
  * Extend the course navigation, then added the course context dashboard link in secondary menu.
  *
- * @param  \navigation_node $coursenode
- * @param  stdclass         $course
- * @param  \context_course  $coursecontext
+ * @param \navigation_node $coursenode
+ * @param stdclass $course
+ * @param \context_course $coursecontext
  * @return void
  */
 function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $coursecontext) {
@@ -163,8 +163,7 @@ function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $cou
             }
 
             if (isset($nodes) && !empty($nodes)) {
-                $PAGE->requires->js_amd_inline(
-                    "
+                $PAGE->requires->js_amd_inline("
                     require(['jquery', 'core/moremenu'], function($, moremenu) {
                         window.onload=() => {
                             var secondarynav = document.querySelector('.secondary-navigation ul.nav-tabs');
@@ -180,8 +179,7 @@ function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $cou
                             moremenu(secondarynav);
                         }
                     })
-                "
-                );
+                ");
             }
         }
     }
@@ -194,16 +192,8 @@ function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $cou
  */
 function dashaddon_dashboard_change_pagetypepattern() {
     global $DB;
-
-    $likepattern = $DB->sql_like('pagetypepattern', ':pattern');
-    $sql = "SELECT *
-            FROM {block_instances}
-            WHERE {$likepattern}";
-    $params = [
-        'pattern' => 'local-dash-dashboard%',
-    ];
-
-    $records = $DB->get_records_sql($sql, $params);
+    $sql = "SELECT * FROM {block_instances} WHERE blockname = 'dash' AND pagetypepattern LIKE 'local-dash-dashboard%'";
+    $records = $DB->get_records_sql($sql);
     foreach ($records as $record) {
         $pagetypepattern = $record->pagetypepattern;
         $prefix = 'local-dash';

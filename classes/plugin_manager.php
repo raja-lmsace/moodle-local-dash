@@ -45,24 +45,16 @@ require_once($CFG->dirroot . '/blocks/dash/lib.php');
  * @copyright 2021 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class plugin_manager
-{
-    /**
-     * @var object the url of the manage plugin page
-     */
+class plugin_manager {
+    /** @var object the url of the manage plugin page */
     private $pageurl;
-    /**
-     * @var string any error from the current action
-     */
+    /** @var string any error from the current action */
     private $error = '';
-    /**
-     * @var string either submission or feedback
-     */
+    /** @var string either submission or feedback */
     private $subtype = '';
 
     /**
      * Constructor for this dashaddon plugin manager
-     *
      * @param string $subtype - only dashaddon implemented
      */
     public function __construct($subtype) {
@@ -110,10 +102,10 @@ class plugin_manager
     /**
      * Util function for writing an action icon link
      *
-     * @param  string $action URL parameter to include in the link
-     * @param  string $plugin URL parameter to include in the link
-     * @param  string $icon   The key to the icon to use (e.g. 't/up')
-     * @param  string $alt    The string description of the link used as the title and alt text
+     * @param string $action URL parameter to include in the link
+     * @param string $plugin URL parameter to include in the link
+     * @param string $icon The key to the icon to use (e.g. 't/up')
+     * @param string $alt The string description of the link used as the title and alt text
      * @return string The icon/link
      */
     private function format_icon_link($action, $plugin, $icon, $alt) {
@@ -147,24 +139,20 @@ class plugin_manager
      */
     private function view_plugins_table() {
         global $OUTPUT, $CFG;
-        include_once($CFG->libdir . '/tablelib.php');
+        require_once($CFG->libdir . '/tablelib.php');
 
         // Set up the table.
         $this->view_header();
         $table = new flexible_table($this->subtype . 'pluginsadminttable');
         $table->define_baseurl($this->pageurl);
-        $table->define_columns(
-            [
+        $table->define_columns([
             'pluginname', 'version', 'hideshow', 'status',
-            ]
-        );
-        $table->define_headers(
-            [
+        ]);
+        $table->define_headers([
             get_string($this->subtype . 'pluginname', 'block_dash'),
             get_string('version'), get_string('hideshow', 'block_dash'),
             get_string('status'),
-            ]
-        );
+        ]);
         $table->set_attribute('id', $this->subtype . 'plugins');
         $table->set_attribute('class', 'admintable generaltable');
         $table->setup();
@@ -247,7 +235,7 @@ class plugin_manager
     /**
      * Hide this plugin.
      *
-     * @param  string $plugin - The plugin to hide
+     * @param string $plugin - The plugin to hide
      * @return string The next page to display
      */
     public function hide_plugin($plugin) {
@@ -260,7 +248,7 @@ class plugin_manager
     /**
      * Show this plugin.
      *
-     * @param  string $plugin - The plugin to show
+     * @param string $plugin - The plugin to show
      * @return string The next page to display
      */
     public function show_plugin($plugin) {
@@ -273,8 +261,8 @@ class plugin_manager
     /**
      * This is the entry point for this controller class.
      *
-     * @param  string $action - The action to perform
-     * @param  string $plugin - Optional name of a plugin type to perform the action on
+     * @param string $action - The action to perform
+     * @param string $plugin - Optional name of a plugin type to perform the action on
      * @return None
      */
     public function execute($action, $plugin) {

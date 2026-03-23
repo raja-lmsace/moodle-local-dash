@@ -16,10 +16,9 @@
 
 /**
  * Logstore data source.
- *
- * @package   dashaddon_roleassignments
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_roleassignments
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_roleassignments\local\block_dash;
@@ -50,8 +49,7 @@ use local_dash\data_grid\filter\context_level_condition;
  * This class extends the abstract_data_source class and is responsible for handling
  * role assignments data source within the block_dash addon in Moodle.
  */
-class roleassignments_data_source extends abstract_data_source
-{
+class roleassignments_data_source extends abstract_data_source {
     /**
      * Constructor for the roleassignments_data_source class.
      * It then calls the parent constructor with the provided context.
@@ -98,6 +96,7 @@ class roleassignments_data_source extends abstract_data_source
 
     /**
      * Builds and returns a filter collection for role assignments data source.
+     *
      *
      * @return filter_collection The constructed filter collection.
      */

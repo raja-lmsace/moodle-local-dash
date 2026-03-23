@@ -29,15 +29,13 @@ use dashaddon_developer\model\custom_layout;
 
 /**
  * A layout contains information on how to display data.
- *
  * @see abstract_layout for creating new layouts.
  *
  * This is a container for custom layouts.
  *
  * @package dashaddon_developer
  */
-class persistent_layout extends abstract_layout
-{
+class persistent_layout extends abstract_layout {
     /**
      * Layout.
      *
@@ -48,7 +46,7 @@ class persistent_layout extends abstract_layout
     /**
      * Set the layout.
      *
-     * @param  custom_layout $customlayout
+     * @param custom_layout $customlayout
      * @return void
      */
     public function set_custom_layout(custom_layout $customlayout) {

@@ -17,9 +17,9 @@
 /**
  * Strings for component 'dashaddon_activitycompletion', language 'en'
  *
- * @package   dashaddon_activitycompletion
- * @copyright 2025 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_activitycompletion
+ * @copyright  2025 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['activitycompletion:reportuser'] = 'Activitycompletion: Activity completion progress report user.';

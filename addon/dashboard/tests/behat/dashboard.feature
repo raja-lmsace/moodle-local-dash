@@ -404,3 +404,43 @@ Feature: Add a dashboard data source in dash block
     And I click on "Edit dashboard title" "link"
     And I should see "Edit dashboard title"
     And I should not see "edit dashboard page"
+
+  Scenario: Public dashboards are accessible without login
+    Given I log in as "admin"
+    And I turn dash block editing mode on
+    #---Create course restriction & redirect to course dashboard---#
+    And I click on "Manage dashboards" "button"
+    And I click on "Create dashboard" "button"
+    And I set the following fields to these values:
+    | Name                     | Public dashboard           |
+    | Short name               | Dash                       |
+    | Description              | Welcome to Publicdashboard |
+    | Context type             | course                     |
+    | Select course            | Course 1                   |
+    | redirecttodashboard      | 1                          |
+    | Restrict access to       | public                     |
+    | Add to course navigation | 1                          |
+    And I press "Save changes"
+    And I click on "Public dashboard" "link"
+    And I add the "Dash" block to the "Dash" region
+    And I click on "Learning Path" "radio"
+    Then I configure the "New Dash" block
+    And I set the following fields to these values:
+    | Block title | Learning Path |
+    And I press "Save changes"
+    And I add the "Dash" block to the "Dash" region
+    And I click on "Course Enrolments" "radio"
+    Then I configure the "New Dash" block
+    And I set the following fields to these values:
+    | Block title | Course Enrolments |
+    And I press "Save changes"
+    And I add the "Calendar" block to the "Dash" region
+    And I am on site homepage
+    And I add the "Dash" block
+    And I click on "Dashboard" "radio"
+    And I log out
+    When I click on "Public dashboard" "link"
+    Then I should see "Public dashboard"
+    And "Learning Path" "block" should exist
+    And "Course Enrolments" "block" should exist
+    And "Calendar" "block" should exist

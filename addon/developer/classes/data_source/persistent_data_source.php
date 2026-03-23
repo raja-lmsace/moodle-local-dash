@@ -37,8 +37,7 @@ use dashaddon_developer\data_source\persistent_data_table;
 /**
  * Datasource of the custom persistent, creates custom persistent records as seperate unique datasource.
  */
-class persistent_data_source extends abstract_data_source
-{
+class persistent_data_source extends abstract_data_source {
     /**
      * Model handler of this datasource.
      *
@@ -80,7 +79,7 @@ class persistent_data_source extends abstract_data_source
      * @throws \coding_exception
      */
     public function get_query_template(): builder {
-
+        global $USER;
         // Find the main table.
         $table = $this->instance->get('maintable');
 
@@ -110,8 +109,12 @@ class persistent_data_source extends abstract_data_source
                 }
 
                 $alias = $joinalias[$key]; // Table alias.
-                $builder->join($join, $alias, '', '');
-                $builder->join_condition($alias, $joinon[$key]);
+                $joinval = $joinon[$key];
+                // Update the current user placeholder in the join condition and get the parameters to bind in the query.
+                $extraparam = $this->update_current_user_query($joinval);
+
+                $builder->join($join, $alias, '', '', join::TYPE_INNER_JOIN, $extraparam);
+                $builder->join_condition($alias, $joinval);
             }
         }
 
@@ -147,11 +150,13 @@ class persistent_data_source extends abstract_data_source
                 $values = clean_param($conditionvalue[$key], PARAM_NOTAGS);
                 $values = explode(',', $values);
 
+                $values = array_map([$this, 'update_current_user'], $values);
                 // Update the field table name with its alias.
                 $field = $this->instance->update_field_alias($field);
                 if (!$field) {
                     continue;
                 }
+
                 // Include the where condition in the builder.
                 $builder->where(
                     $field,
@@ -165,10 +170,73 @@ class persistent_data_source extends abstract_data_source
         // Raw condition.
         $customcondition = $this->instance->get('customcondition');
         if ($customcondition) {
-            $builder->where_raw($customcondition);
+            $parameter = $this->update_current_user_query($customcondition);
+            $builder->where_raw($customcondition, $parameter);
         }
 
         return $builder;
+    }
+
+    /**
+     * Update the value if it contains the current user placeholder.
+     *
+     * @param string $value
+     * @return string|int
+     */
+    public function update_current_user($value) {
+        global $USER;
+
+        if (str_contains($value, '[LOGINUSER')) {
+            preg_match('/\[LOGINUSER(?::(\w+))?\]/i', $value, $matches);
+            $field = $matches[1] ?? 'id';
+
+            if (property_exists($USER, $field)) {
+                return $USER->{$field};
+            }
+
+            return $USER->id;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Update the value if it contains the current user placeholder in the query and return the parameters.
+     *
+     * @param string $value
+     * @return array
+     */
+    public function update_current_user_query(&$value): array {
+        global $USER;
+        static $paramindex = 0;
+
+        // Match [LOGINUSER] or [LOGINUSER:field].
+        preg_match_all('/\[LOGINUSER(?::(\w+))?\]/i', $value, $matches, PREG_SET_ORDER);
+
+        if (empty($matches)) {
+            return [];
+        }
+
+        $params = [];
+
+        foreach ($matches as $match) {
+            $field = $match[1] ?? 'id';
+
+            $paramname = "usr{$field}{$paramindex}";
+
+            // Replace only the first occurrence each time.
+            $value = preg_replace('/\[LOGINUSER(?::(\w+))?\]/i', ':' . $paramname, $value, 1);
+
+            if (property_exists($USER, $field)) {
+                $params[$paramname] = $USER->{$field};
+            } else {
+                $params[$paramname] = $USER->id;
+            }
+
+            $paramindex++;
+        }
+
+        return $params;
     }
 
     /**

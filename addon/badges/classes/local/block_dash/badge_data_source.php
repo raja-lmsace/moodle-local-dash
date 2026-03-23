@@ -17,9 +17,9 @@
 /**
  * Badges report source defined.
  *
- * @package   dashaddon_badges
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_badges
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_badges\local\block_dash;
@@ -40,8 +40,7 @@ use mod_forum\local\exporters\group;
 /**
  * Badges data source template queries and filter conditions defined.
  */
-class badge_data_source extends abstract_data_source
-{
+class badge_data_source extends abstract_data_source {
     /**
      * Constructor.
      *
@@ -106,7 +105,7 @@ class badge_data_source extends abstract_data_source
     /**
      * Set the default preferences of the Badge datasource, force the set the default settings.
      *
-     * @param  array $data
+     * @param array $data
      * @return array
      */
     public function set_default_preferences(&$data) {

@@ -16,10 +16,9 @@
 
 /**
  * Filter items based on tags in a certain component and itemtype.
- *
- * @package   local_dash
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -31,8 +30,7 @@ use block_dash\local\data_grid\filter\select_filter;
  *
  * @package local_dash
  */
-class tags_field_filter extends select_filter
-{
+class tags_field_filter extends select_filter {
     /**
      * Current component.
      *
@@ -49,7 +47,6 @@ class tags_field_filter extends select_filter
 
     /**
      * Condition construtor.
-     *
      * @param string $name
      * @param string $select
      * @param string $component

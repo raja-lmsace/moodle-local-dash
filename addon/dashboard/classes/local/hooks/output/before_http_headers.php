@@ -22,12 +22,11 @@ use context_course;
 /**
  * Hook callbacks for dashaddon_dashboard
  *
- * @package   dashaddon_dashboard
- * @copyright 2024 Marina Glancy
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_dashboard
+ * @copyright  2024 Marina Glancy
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class before_http_headers
-{
+class before_http_headers {
     /**
      * Callback allowing to add warning on the filter settings page
      *
@@ -46,13 +45,8 @@ class before_http_headers
                 $courseid  = $PAGE->url->get_param('id');
                 $coursecontext = context_course::instance($courseid);
                 if (!is_enrolled($coursecontext)) {
-                    $coursedashboard = $DB->get_record(
-                        'dashaddon_dashboard_dash',
-                        ['courseid' => $courseid,
-                        'redirecttodashboard' => true, 'permission' => 'public'],
-                        '*',
-                        IGNORE_MULTIPLE
-                    );
+                    $coursedashboard = $DB->get_record('dashaddon_dashboard_dash', ['courseid' => $courseid,
+                        'redirecttodashboard' => true, 'permission' => 'public'], '*', IGNORE_MULTIPLE);
                     if ($coursedashboard) {
                         redirect(new moodle_url('/local/dash/addon/dashboard/dashboard.php', ['id' => $coursedashboard->id]));
                     }

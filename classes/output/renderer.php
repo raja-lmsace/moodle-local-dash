@@ -17,10 +17,10 @@
 /**
  * Renderers to align Moodle's HTML with that expected by Bootstrap
  *
- * @package   local_dash
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @author    LMSACE Dev Team
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @author LMSACE Dev Team
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\output;
@@ -33,11 +33,10 @@ use coding_exception;
  * This class extends the core_renderer to provide custom rendering
  * functionality for the local dash plugin in Moodle.
  *
- * @package  local_dash
- * @category output
+ * @package   local_dash
+ * @category  output
  */
-class renderer extends \core_renderer
-{
+class renderer extends \core_renderer {
     /**
      * Renders a custom block region.
      *
@@ -49,8 +48,8 @@ class renderer extends \core_renderer
      * As such it asks the theme what method it is using.
      * It can be one of two values, blocks or blocks_for_region (deprecated).
      *
-     * @param  string      $regionname The name of the custom region to add.
-     * @param  string|bool $dashboard  The dashboard object.
+     * @param string $regionname The name of the custom region to add.
+     * @param string|bool $dashboard The dashboard object.
      * @return string HTML for the block region.
      */
     public function custom_block_region($regionname, $dashboard = null) {
@@ -64,12 +63,12 @@ class renderer extends \core_renderer
     /**
      * Get the HTML for blocks in the given region.
      *
-     * @since  Moodle 2.5.1 2.6
-     * @param  string      $region         The region to get HTML for.
-     * @param  array       $classes        Wrapping tag classes.
-     * @param  string      $tag            Wrapping tag.
-     * @param  boolean     $fakeblocksonly Include fake blocks only.
-     * @param  string|bool $dashboard      The dashboard object.
+     * @since Moodle 2.5.1 2.6
+     * @param string $region The region to get HTML for.
+     * @param array $classes Wrapping tag classes.
+     * @param string $tag Wrapping tag.
+     * @param boolean $fakeblocksonly Include fake blocks only.
+     * @param string|bool $dashboard The dashboard object.
      * @return string HTML.
      */
     public function blocks($region, $classes = [], $tag = 'aside', $fakeblocksonly = false, $dashboard = null) {
@@ -94,9 +93,9 @@ class renderer extends \core_renderer
     /**
      * Output all the blocks in a particular region.
      *
-     * @param  string      $region         the name of a region on this page.
-     * @param  boolean     $fakeblocksonly Output fake block only.
-     * @param  string|bool $dashboard      The dashboard object.
+     * @param string $region the name of a region on this page.
+     * @param boolean $fakeblocksonly Output fake block only.
+     * @param string|bool $dashboard The dashboard object.
      * @return string the HTML to be output.
      */
     public function blocks_for_region($region, $fakeblocksonly = false, $dashboard = null) {

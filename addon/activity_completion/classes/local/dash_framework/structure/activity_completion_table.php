@@ -17,9 +17,9 @@
 /**
  * Activity completion table.
  *
- * @package   dashaddon_activity_completion
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_activity_completion
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activity_completion\local\dash_framework\structure;
@@ -36,8 +36,7 @@ use lang_string;
 /**
  * Activity completion table structure definitions for activity completion datasource.
  */
-class activity_completion_table extends table
-{
+class activity_completion_table extends table {
     /**
      * Build a new table.
      */
@@ -79,15 +78,9 @@ class activity_completion_table extends table
                 [new completion_overridedate_attribute()]
             ),
 
-            new field(
-                'moduleduedate',
-                new lang_string('duedate', 'block_dash'),
-                $this,
-                'cm.completionexpected',
-                [
+            new field('moduleduedate', new lang_string('duedate', 'block_dash'), $this, 'cm.completionexpected', [
                 new activity_duedate_attribute(),
-                ]
-            ),
+            ]),
             new field(
                 'modulestartdate',
                 new lang_string('startdate', 'dashaddon_activity_completion'),

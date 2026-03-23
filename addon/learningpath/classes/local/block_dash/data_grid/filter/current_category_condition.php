@@ -17,9 +17,9 @@
 /**
  * Filters results to current category only.
  *
- * @package   dashaddon_learningpath
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_learningpath
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_learningpath\local\block_dash\data_grid\filter;
@@ -31,8 +31,7 @@ use block_dash\local\data_grid\filter\condition;
  *
  * @package dashaddon_learningpath
  */
-class current_category_condition extends condition
-{
+class current_category_condition extends condition {
     /**
      * Return where SQL and params for placeholders.
      *

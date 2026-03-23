@@ -17,13 +17,14 @@
 /**
  * Class enrol_table.
  *
- * @package   dashaddon_course_completions
- * @copyright 2020 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_course_completions
+ * @copyright  2020 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_completions\local\dash_framework\structure;
 
+use block_dash\local\dash_framework\query_builder\join_raw;
 use block_dash\local\dash_framework\structure\field;
 use block_dash\local\dash_framework\structure\field_interface;
 use block_dash\local\dash_framework\structure\table;
@@ -49,8 +50,7 @@ use moodle_url;
  *
  * @package dashaddon_course_completions
  */
-class enrol_table extends table
-{
+class enrol_table extends table {
     /**
      * Build a new table.
      */
@@ -69,38 +69,19 @@ class enrol_table extends table
 
     /**
      * Define the fields available in the reports for this table data source.
-     *
      * @return field_interface[]
      */
     public function get_fields(): array {
         $fields = [
-            new field(
-                'id',
-                new lang_string('enrollmentmethod', 'block_dash'),
-                $this,
-                null,
-                [
+            new field('id', new lang_string('enrollmentmethod', 'block_dash'), $this, null, [
                 new identifier_attribute(),
-                ]
-            ),
-            new field(
-                'enrol',
-                new lang_string('enrollmentmethod', 'block_dash'),
-                $this,
-                null,
-                [
+            ]),
+            new field('enrol', new lang_string('enrollmentmethod', 'block_dash'), $this, null, [
                 new enrol_name_attribute(),
-                ]
-            ),
-            new field(
-                'status',
-                new lang_string('enrollmentmethodstatus', 'block_dash'),
-                $this,
-                null,
-                [
+            ]),
+            new field('status', new lang_string('enrollmentmethodstatus', 'block_dash'), $this, null, [
                 new enrol_status_attribute(),
-                ]
-            ),
+            ]),
             new field(
                 'enrolled_users',
                 new lang_string('enrolledusers', 'enrol'),
@@ -110,11 +91,9 @@ class enrol_table extends table
                 ['supports_sorting' => false],
                 '',
                 null,
-                'LEFT JOIN (
-                    SELECT ue.enrolid, COUNT(ue.id) AS enrolledusers
+                new join_raw('SELECT ue.enrolid, COUNT(ue.id) AS enrolledusers
                     FROM {user_enrolments} ue
-                    GROUP BY ue.enrolid
-                ) ue100 ON ue100.enrolid = e.id',
+                    GROUP BY ue.enrolid', 'ue100', 'enrolid', 'e.id', join_raw::TYPE_LEFT_JOIN)
             ),
         ];
 

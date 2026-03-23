@@ -16,10 +16,9 @@
 
 /**
  * Available enrolment status based field.
- *
- * @package   local_dash
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -29,8 +28,7 @@ use block_dash\local\data_grid\filter\select_filter;
 /**
  * Available enrolment status based field.
  */
-class enrollment_status_field_filter extends select_filter
-{
+class enrollment_status_field_filter extends select_filter {
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -44,7 +42,6 @@ class enrollment_status_field_filter extends select_filter
 
     /**
      * Get the enrolment status filter label.
-     *
      * @return string
      */
     public function get_label() {

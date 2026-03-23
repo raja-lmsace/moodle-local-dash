@@ -17,17 +17,16 @@
 /**
  * My profile - dashaddon widget. Contains functions to verify the due and overdues from the learning tools timemanagement.
  *
- * @package   dashaddon_myprofile
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_myprofile
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 
 /**
  * Get user due activies.
  *
- * @param  int $courseid
- * @param  int $userid   User id.
+ * @param int $courseid
+ * @param int $userid User id.
  * @return int count due activites.
  */
 function dashaddon_myprofile_get_user_dueactivities($courseid, $userid) {
@@ -36,7 +35,7 @@ function dashaddon_myprofile_get_user_dueactivities($courseid, $userid) {
     $duecount = 0;
     $overduecount = 0;
 
-    include_once($CFG->dirroot . '/lib/completionlib.php');
+    require_once($CFG->dirroot . '/lib/completionlib.php');
 
     $modinfo = get_fast_modinfo($courseid);
     $completion = new \completion_info($modinfo->get_course());
@@ -66,9 +65,9 @@ function dashaddon_myprofile_get_user_dueactivities($courseid, $userid) {
 /**
  * Get module user duedate.
  *
- * @param  object $mod
- * @param  int    $userid
- * @param  bool   $duestatus
+ * @param object $mod
+ * @param int $userid
+ * @param bool $duestatus
  * @return int|bool Mod due date if available otherwiser returns false.
  */
 function dashaddon_myprofile_get_mod_user_duedate($mod, $userid, $duestatus = false) {
@@ -93,8 +92,7 @@ function dashaddon_myprofile_get_mod_user_duedate($mod, $userid, $duestatus = fa
  *
  * Modified from format_designer.
  */
-class cm_completion
-{
+class cm_completion {
     /**
      * @var cm_info
      */
@@ -116,7 +114,7 @@ class cm_completion
      * Constructor.
      *
      * @param cm_info $cm
-     * @param int     $userid
+     * @param int $userid
      */
     public function __construct(cm_info $cm, $userid) {
         $this->cm = $cm;
@@ -148,8 +146,8 @@ class cm_completion
      * Get timemanagement tools due date for the module.
      *
      * @param cm_info $cm
-     * @param int     $userid
-     * @param bool    $timemanagement
+     * @param int $userid
+     * @param bool $timemanagement
      *
      * @return int|bool Mod due date if available otherwiser returns false.
      */
@@ -192,7 +190,7 @@ class cm_completion
 
         if ($result == null) {
             if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
-                include_once($CFG->dirroot . '/admin/tool/timetable/classes/time_management.php');
+                require_once($CFG->dirroot . '/admin/tool/timetable/classes/time_management.php');
                 $result = true;
             } else {
                 $result = false;

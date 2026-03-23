@@ -17,9 +17,9 @@
 /**
  * Field definitions.
  *
- * @package   local_dash
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_dash
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -225,22 +225,22 @@ if (class_exists('\core_course\customfield\course_handler')) {
         switch ($field->get('type')) {
             case 'checkbox':
                 $attributes[] = [
-                'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class,
+                    'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class,
                 ];
                 break;
             case 'date':
                 $attributes[] = [
-                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
+                    'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
                 ];
                 break;
             case 'textarea':
                 break;
             case 'select':
                 $attributes[] = [
-                'type' => \local_dash\data_grid\field\attribute\customfield_select_attribute::class,
-                'options' => [
-                    'field' => $field,
-                ],
+                    'type' => \local_dash\data_grid\field\attribute\customfield_select_attribute::class,
+                    'options' => [
+                        'field' => $field,
+                    ],
                 ];
                 break;
         }
@@ -270,22 +270,22 @@ if (class_exists('\core_course\customfield\course_handler')) {
         switch ($field->datatype) {
             case 'checkbox':
                 $attributes[] = [
-                'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class,
+                    'type' => \block_dash\local\data_grid\field\attribute\bool_attribute::class,
                 ];
                 break;
             case 'date':
                 $attributes[] = [
-                'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
+                    'type' => \block_dash\local\data_grid\field\attribute\date_attribute::class,
                 ];
                 break;
             case 'textarea':
                 break;
             case 'select':
                 $attributes[] = [
-                'type' => \local_dash\data_grid\field\attribute\customfield_select_attribute::class,
-                'options' => [
-                    'field' => $field,
-                ],
+                    'type' => \local_dash\data_grid\field\attribute\customfield_select_attribute::class,
+                    'options' => [
+                        'field' => $field,
+                    ],
                 ];
                 break;
         }
@@ -303,9 +303,7 @@ if (class_exists('\core_course\customfield\course_handler')) {
     }
 }
 
-$definitions = array_merge(
-    $definitions,
-    [
+$definitions = array_merge($definitions, [
     // Course categories.
     [
         'name' => 'cc_id',
@@ -567,7 +565,6 @@ $definitions = array_merge(
         'title' => get_string('eventname'),
         'tables' => ['sl'],
     ],
-    ]
-);
+]);
 
 return $definitions;

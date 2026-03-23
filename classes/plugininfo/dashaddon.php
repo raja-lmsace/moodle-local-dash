@@ -28,11 +28,9 @@ use moodle_url;
 /**
  * Dashaddon is subplugin of local_dash.
  */
-class dashaddon extends \core\plugininfo\base
-{
+class dashaddon extends \core\plugininfo\base {
     /**
      * Return URL used for management of plugins of this type.
-     *
      * @return moodle_url
      */
     public static function get_manage_url() {
@@ -94,8 +92,8 @@ class dashaddon extends \core\plugininfo\base
      * Alternatively it can create a link to some settings page (instance of admin_externalpage)
      *
      * @param \part_of_admin_tree $adminroot
-     * @param string              $parentnodename
-     * @param bool                $hassiteconfig  whether the current user has moodle/site:config capability
+     * @param string $parentnodename
+     * @param bool $hassiteconfig whether the current user has moodle/site:config capability
      */
     public function load_settings(\part_of_admin_tree $adminroot, $parentnodename, $hassiteconfig) {
 
@@ -122,12 +120,12 @@ class dashaddon extends \core\plugininfo\base
     /**
      * Check the addon is disabled from the config file parameters.
      *
-     * @param  string $name
+     * @param string $name
      * @return bool
      */
     public function is_dashaddon_disabled($name) {
         global $CFG;
-        include_once($CFG->dirroot . '/blocks/dash/lib.php');
+        require_once($CFG->dirroot . '/blocks/dash/lib.php');
         $disabledaddons = block_dash_disabled_addons_list();
 
         // Check if the addon is in the disabled list.

@@ -17,9 +17,9 @@
 /**
  * Badges report source defined.
  *
- * @package   dashaddon_activities
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_activities
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash;
@@ -156,15 +156,13 @@ class activities_data_source extends abstract_data_source {
 
         $filtercollection->add_filter(new module_field_filter('m_id', 'm.id', get_string('modulename', 'block_dash')));
 
-        $filtercollection->add_filter(
-            new tags_field_filter(
-                'cm_tags',
-                'cm.id',
-                'core',
-                'course_modules',
-                get_string('activitytags', 'dashaddon_activities')
-            )
-        );
+        $filtercollection->add_filter(new tags_field_filter(
+            'cm_tags',
+            'cm.id',
+            'core',
+            'course_modules',
+            get_string('activitytags', 'dashaddon_activities')
+        ));
 
         $filtercollection->add_filter(new activity_type_field_filter('cm_type', ''));
 
@@ -181,26 +179,22 @@ class activities_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, format_string($field->name));
                         break;
                     case 'datetime':
-                        $filtercollection->add_filter(
-                            new date_filter(
-                                $alias,
-                                $select,
-                                date_filter::DATE_FUNCTION_FLOOR,
-                                format_string($field->name)
-                            )
-                        );
+                        $filtercollection->add_filter(new date_filter(
+                            $alias,
+                            $select,
+                            date_filter::DATE_FUNCTION_FLOOR,
+                            format_string($field->name)
+                        ));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $filtercollection->add_filter(
-                            new customfield_filter(
-                                $alias,
-                                $select,
-                                $field,
-                                format_string($field->name)
-                            )
-                        );
+                        $filtercollection->add_filter(new customfield_filter(
+                            $alias,
+                            $select,
+                            $field,
+                            format_string($field->name)
+                        ));
                         break;
                 }
             }
@@ -217,26 +211,28 @@ class activities_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->get_formatted_name());
                         break;
                     case 'date':
-                        $filtercollection->add_filter(
-                            new date_filter(
-                                $alias,
-                                $select,
-                                date_filter::DATE_FUNCTION_FLOOR,
-                                $field->get_formatted_name()
-                            )
-                        );
+                        $filtercollection->add_filter(new date_filter(
+                            $alias,
+                            $select,
+                            date_filter::DATE_FUNCTION_FLOOR,
+                            $field->get_formatted_name()
+                        ));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $filtercollection->add_filter(
-                            new customfield_filter(
-                                $alias,
-                                $select,
-                                $field,
-                                $field->get_formatted_name()
-                            )
-                        );
+                        if (
+                            class_exists('\customfield_multicategory\condition_helper') &&
+                            \customfield_multicategory\condition_helper::should_skip_default_filter($field->get('type'))
+                        ) {
+                            break;
+                        }
+                        $filtercollection->add_filter(new customfield_filter(
+                            $alias,
+                            $select,
+                            $field,
+                            $field->get_formatted_name()
+                        ));
                         break;
                 }
             }
@@ -252,26 +248,22 @@ class activities_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->fullname);
                         break;
                     case 'date':
-                        $filtercollection->add_filter(
-                            new date_filter(
-                                $alias,
-                                $select,
-                                date_filter::DATE_FUNCTION_FLOOR,
-                                $field->fullname
-                            )
-                        );
+                        $filtercollection->add_filter(new date_filter(
+                            $alias,
+                            $select,
+                            date_filter::DATE_FUNCTION_FLOOR,
+                            $field->fullname
+                        ));
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $filtercollection->add_filter(
-                            new customfield_filter(
-                                $alias,
-                                $select,
-                                $field,
-                                $field->fullname
-                            )
-                        );
+                        $filtercollection->add_filter(new customfield_filter(
+                            $alias,
+                            $select,
+                            $field,
+                            $field->fullname
+                        ));
                         break;
                 }
             }
@@ -283,15 +275,13 @@ class activities_data_source extends abstract_data_source {
 
         $filtercollection->add_filter(new course_condition('c_course', 'c.id'));
 
-        $filtercollection->add_filter(
-            new tags_condition(
-                'activity_tags',
-                'cm.id',
-                'core',
-                'course_modules',
-                get_string('activitytags', 'dashaddon_activities')
-            )
-        );
+        $filtercollection->add_filter(new tags_condition(
+            'activity_tags',
+            'cm.id',
+            'core',
+            'course_modules',
+            get_string('activitytags', 'dashaddon_activities')
+        ));
 
         // Course dates condition - past, present, future.
         $filtercollection->add_filter(new course_dates_condition('c_coursedates', 'c.id'));

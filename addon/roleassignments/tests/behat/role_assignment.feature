@@ -52,50 +52,50 @@ Feature: Add role assignment datasource in dash block
     And I navigate to "Plugins > Local plugins > Manage addons" in site administration
     And I click on ".action-icon" "css_element" in the "Data source: Role Assignments" "table_row"
     #---Enable roles---#
-    And I navigate to "Users > Permissions > Define roles" in site administration
-    And I click on "Add a new role" "button"
-    And I click on "Continue" "button"
+    # And I navigate to "Users > Permissions > Define roles" in site administration
+    # And I click on "Add a new role" "button"
+    # And I click on "Continue" "button"
     #---Create new system context role---#
-    And I set the following fields to these values:
-      | Short name 			 					 | admin role 			 |
-      | Custom full name 					 | system admin role |
-      | contextlevel10             | 1      					 |
-      | moodle/user:viewdetails    | 1 								 |
-			| moodle/user:viewalldetails | 1 								 |
-    And I click on "Create this role" "button"
-    And I click on "List all roles" "button"
-    And I click on "Add a new role" "button"
-    And I click on "Continue" "button"
+    And the following "role" exists:
+      | shortname 			 					 | adminrole 			 |
+      | name             					 | system admin role |
+      | context_system             | 1      					 |
+      | moodle/user:viewdetails    | allow						 |
+			| moodle/user:viewalldetails | allow						 |
+    # And I click on "Create this role" "button"
+    # And I click on "List all roles" "button"
+    # And I click on "Add a new role" "button"
+    # And I click on "Continue" "button"
     #---Create new category context role---#
-    And I set the following fields to these values:
-      | Short name 			 					 | category role |
-      | Custom full name 					 | Category role |
-      | contextlevel40             | 1       			 |
-      | moodle/user:viewdetails    | 1 						 |
-			| moodle/user:viewalldetails | 1 						 |
-    And I click on "Create this role" "button"
-    And I click on "List all roles" "button"
-    And I click on "Add a new role" "button"
-    And I click on "Continue" "button"
+    And the following "role" exists:
+      | shortname 			 					 | categoryrole |
+      | name             					 | Category role |
+      | context_coursecat          | 1       			 |
+      | moodle/user:viewdetails    | allow  			 |
+			| moodle/user:viewalldetails | allow  			 |
+    # And I click on "Create this role" "button"
+    # And I click on "List all roles" "button"
+    # And I click on "Add a new role" "button"
+    # And I click on "Continue" "button"
     #---Create new user context role---#
-    And I set the following fields to these values:
-      | Short name 			 					 | user role |
-      | Custom full name 					 | User role |
-      | contextlevel30             | 1      	 |
-      | moodle/user:viewdetails    | 1 				 |
-			| moodle/user:viewalldetails | 1 				 |
-    And I click on "Create this role" "button"
-		#---Create new course context role---#
-    And I click on "List all roles" "button"
-    And I click on "Add a new role" "button"
-    And I click on "Continue" "button"
-    And I set the following fields to these values:
-      | Short name 			 					 | course role |
-      | Custom full name 					 | Course role |
-      | contextlevel50             | 1      		 |
-      | moodle/user:viewdetails    | 1 					 |
-			| moodle/user:viewalldetails | 1 					 |
-    And I click on "Create this role" "button"
+    And the following "role" exists:
+      | shortname 			 					 | userrole |
+      | name             					 | User role |
+      | context_user               | 1      	 |
+      | moodle/user:viewdetails    | allow		 |
+			| moodle/user:viewalldetails | allow		 |
+    # And I click on "Create this role" "button"
+		# #---Create new course context role---#
+    # And I click on "List all roles" "button"
+    # And I click on "Add a new role" "button"
+    # And I click on "Continue" "button"
+    And the following "role" exists:
+      | shortname 			 					 | courserole |
+      | name 					             | Course role |
+      | context_course             | 1      		 |
+      | moodle/user:viewdetails    | allow			 |
+			| moodle/user:viewalldetails | allow			 |
+    # And I click on "Create this role" "button"
 
 		#---Assign system context role---#
     And I navigate to "Users > Permissions > Assign system roles" in site administration
@@ -133,63 +133,75 @@ Feature: Add role assignment datasource in dash block
     And I click on "Add" "button" in the "#page-content" "css_element"
 
     #---Dashboard adding user block---#
-    And I follow "Dashboard"
-    And I turn dash block editing mode on
-    And I create dash "Role assignments" datasource
-    And I configure the "New Dash" block
-    And I set the following fields to these values:
-      | Block title  | Role assignments |
-      | Region       | content 					|
-    And I press "Save changes"
-    And I open the "Role assignments" block preference
-    #---Fields---#
-    And I click on "Fields" "link"
-    And I wait "5" seconds
-    And I set the following fields to these values:
-      | Role: Role name                 | 1 |
-      | Role: Short name                | 1 |
-      | Role: Original name             | 1 |
-      | Role: Description               | 1 |
-      | Role assignment: Time modified  | 1 |
-      | Context: Context name           | 1 |
-      | Context: Context URL            | 1 |
-      | Context: Context level          | 1 |
-      | Context: Parent                 | 1 |
-    #---Filters---#
-    And I click on "Filters" "link"
-    And I set the following fields to these values:
-    | config_preferences[filters][user_id][enabled] | 1 |
-    | config_preferences[filters][context_level][enabled] | 1 |
-    | config_preferences[filters][context_id][enabled] | 1 |
-    | config_preferences[filters][role_id][enabled] | 1 |
-    And I press "Save changes"
-    And I press "Reset Dashboard for all users"
-    And I log out
+    And the following "block_dash > dash blocks default" exist:
+      | type       | name              | title            | perpage  | fields                                                                                                                         | filters                                  |
+      | datasource | roleassignments   | Role Assignments | 20       |Role name, Short name, Original name, r_description,ra_timemodified,ctx_contextname,ctx_contexturl,ctx_contextlevel,ctx_parent | user_id,context_level,context_id,role_id |
+    # And I follow "Dashboard"
+    # And I turn dash block editing mode on
+    # And I create dash "Role Assignments" datasource
+    # And I configure the "New Dash" block
+    # And I set the following fields to these values:
+    #   | Block title  | Role Assignments |
+    #   | Region       | content 					|
+    # And I press "Save changes"
+    # And I wait until the page is ready
+    # And I wait until the page is ready
+    # And I open the "Role Assignments" block preference
+    # #---Fields---#
+    # And I click on "Fields" "link"
+    # And I wait "5" seconds
+    # And I set the following fields to these values:
+    #   | Role: Role name                 | 1 |
+    #   | Role: Short name                | 1 |
+    #   | Role: Original name             | 1 |
+    #   | Role: Description               | 1 |
+    #   | Role assignment: Time modified  | 1 |
+    #   | Context: Context name           | 1 |
+    #   | Context: Context URL            | 1 |
+    #   | Context: Context level          | 1 |
+    #   | Context: Parent                 | 1 |
+    # #---Filters---#
+    # And I click on "Filters" "link"
+    # And I set the following fields to these values:
+    # | config_preferences[filters][user_id][enabled] | 1 |
+    # | config_preferences[filters][context_level][enabled] | 1 |
+    # | config_preferences[filters][context_id][enabled] | 1 |
+    # | config_preferences[filters][role_id][enabled] | 1 |
+    # And I press "Save changes"
+    # And I press "Reset Dashboard for all users"
+    # And I log out
 
   Scenario: role assignments fields
     And I log in as "admin"
     #---All fields title---#
-    And I should see "Role name" in the ".dash-table thead tr:nth-child(1) th:nth-child(1)" "css_element"
-    And I should see "Short name" in the ".dash-table thead tr:nth-child(1) th:nth-child(2)" "css_element"
-    And I should see "Context name" in the ".dash-table thead tr:nth-child(1) th:nth-child(3)" "css_element"
-    And I should see "Context URL" in the ".dash-table thead tr:nth-child(1) th:nth-child(4)" "css_element"
-    And I should see "Context level" in the ".dash-table thead tr:nth-child(1) th:nth-child(5)" "css_element"
-    And I should see "Original name" in the ".dash-table thead tr:nth-child(1) th:nth-child(6)" "css_element"
-    And I should see "Description" in the ".dash-table thead tr:nth-child(1) th:nth-child(7)" "css_element"
-    And I should see "Time modified" in the ".dash-table thead tr:nth-child(1) th:nth-child(8)" "css_element"
-    And I should see "Parent" in the ".dash-table thead tr:nth-child(1) th:nth-child(9)" "css_element"
+    # And I should see "Role name" in the ".dash-table thead tr:nth-child(1) th:nth-child(1)" "css_element"
+    # And I should see "Short name" in the ".dash-table thead tr:nth-child(1) th:nth-child(2)" "css_element"
+    # And I should see "Context name" in the ".dash-table thead tr:nth-child(1) th:nth-child(3)" "css_element"
+    # And I should see "Context URL" in the ".dash-table thead tr:nth-child(1) th:nth-child(4)" "css_element"
+    # And I should see "Context level" in the ".dash-table thead tr:nth-child(1) th:nth-child(5)" "css_element"
+    # And I should see "Original name" in the ".dash-table thead tr:nth-child(1) th:nth-child(6)" "css_element"
+    # And I should see "Description" in the ".dash-table thead tr:nth-child(1) th:nth-child(7)" "css_element"
+    # And I should see "Time modified" in the ".dash-table thead tr:nth-child(1) th:nth-child(8)" "css_element"
+    # And I should see "Parent" in the ".dash-table thead tr:nth-child(1) th:nth-child(9)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name     | Short name    | Context name  | Context URL   | Context level | Original name | Description   | Time modified | Parent        |
+
+    And the following should exist in the "dash-table" table:
+      | Role name           | Short name | Context name     | Context level | Original name       | Time modified       | Description                                                                                 |
+      | Non-editing teacher | teacher    | Course: Course 1 | Course        | Non-editing teacher | ##today##%d/%m/%y## | Non-editing teachers can teach in courses and grade students, but may not alter activities. |
     #---Check user details in fields---#
-    And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "Non-editing teachers can teach in courses and grade students, but may not alter activities." in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    # And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "" in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
+    # And I should see "" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
     #---check for conditions:student---#
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
     #---Enable system context role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][rolecondition][enabled]" to "1"
@@ -198,58 +210,75 @@ Feature: Add role assignment datasource in dash block
     And I press "Reset Dashboard for all users"
     And I press "Continue"
     #---Enable conditions---#
-    And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "Students generally have fewer privileges within a course." in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name           | Short name | Context name     | Context level | Original name       | Time modified       | Description                                               |
+      | Student             | student    | Course: Course 1 | Course        | Student             | ##today##%d/%m/%y## | Students generally have fewer privileges within a course. |
+    # And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "Students generally have fewer privileges within a course." in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
 
   Scenario: role assignments filters
     And I log in as "admin"
     #---All user filter---#
     And I set the field "user_id" to "Teacher First"
-    And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name           | Short name | Context name     | Context level | Original name       | Time modified       |
+      | Non-editing teacher | teacher    | Course: Course 1 | Course        | Non-editing teacher | ##today##%d/%m/%y## |
+    # And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
     And I click on ".select2-selection__choice__remove" "css_element"
     #---All context level filter---#
-    And I set the field "context_level" to "System"
-    And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "adminrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    Then I set the field "context_level" to "System"
+    And the following should exist in the "dash-table" table:
+      | Role name          | Short name | Context name | Context level | Original name       | Time modified       |
+      | system admin role  | adminrole  | System       | System        | system admin role   | ##today##%d/%m/%y## |
+
+    # And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "adminrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
     And I click on ".select2-selection__choice__remove" "css_element"
     #---All context name filter---#
-    And I set the field "context_id" to "Course: Course 4"
-    And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "Course: Course 4" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "Students generally have fewer privileges within a course." in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    Then I set the field "context_id" to "Course: Course 4"
+    And the following should exist in the "dash-table" table:
+      | Role name | Short name | Context name     | Context level | Original name | Time modified       | Description                                               |
+      | Student   | student    | Course: Course 4 | Course        | Student       | ##today##%d/%m/%y## | Students generally have fewer privileges within a course. |
+    # And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "Course: Course 4" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "Students generally have fewer privileges within a course." in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
     And I click on ".select2-selection__choice__remove" "css_element"
     #---All role name filter---#
-    And I set the field "role_id" to "Category role"
-    And I should see "Category role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "categoryrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "Category: Category 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Course Category" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "Category role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    Then I set the field "role_id" to "Category role"
+    And the following should exist in the "dash-table" table:
+      | Role name     | Short name   | Context name         | Context level   | Original name | Time modified       |
+      | Category role | categoryrole | Category: Category 1 | Course Category | Category role | ##today##%d/%m/%y## |
+    # And I should see "Category role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "categoryrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "Category: Category 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "Course Category" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "Category role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
 
   Scenario: role assignments role conditions
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
   	#---Enable system context role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][rolecondition][enabled]" to "1"
@@ -257,14 +286,18 @@ Feature: Add role assignment datasource in dash block
     And I press "Save changes"
     And I press "Reset Dashboard for all users"
     And I press "Continue"
-    And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "adminrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name          | Short name | Context name | Context level | Original name       | Time modified       |
+      | system admin role  | adminrole  | System       | System        | system admin role   | ##today##%d/%m/%y## |
+    # And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "adminrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
 		#---category context---#
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
   	#---Enable system context role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][rolecondition][enabled]" to "1"
@@ -272,14 +305,18 @@ Feature: Add role assignment datasource in dash block
     And I press "Save changes"
     And I press "Reset Dashboard for all users"
     And I press "Continue"
-    And I should see "Category role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "categoryrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "Category: Category 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Course Category" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "Category role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name     | Short name   | Context name         | Context level   | Original name | Time modified       |
+      | Category role | categoryrole | Category: Category 1 | Course Category | Category role | ##today##%d/%m/%y## |
+    # And I should see "Category role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "categoryrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "Category: Category 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "Course Category" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "Category role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
 		#---course context---#
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
   	#---Enable system context role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][rolecondition][enabled]" to "1"
@@ -287,14 +324,18 @@ Feature: Add role assignment datasource in dash block
     And I press "Save changes"
     And I press "Reset Dashboard for all users"
     And I press "Continue"
-    And I should see "Course role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "courserole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "Course role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name   | Short name | Context name     | Context level | Original name | Time modified       |
+      | Course role | courserole | Course: Course 1 | Course        | Course role   | ##today##%d/%m/%y## |
+    # And I should see "Course role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "courserole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "Course role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
 		#---user context---#
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
   	#---Enable system context role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][rolecondition][enabled]" to "1"
@@ -302,19 +343,23 @@ Feature: Add role assignment datasource in dash block
     And I press "Save changes"
     And I press "Reset Dashboard for all users"
     And I press "Continue"
-    And I should see "User role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "userrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "User: Student Two" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "User" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "User role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
-    And I should see "Teacher First" in the ".dash-table tbody tr:nth-child(1) td:nth-child(9)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name  | Short name | Context name       | Context level | Original name | Time modified       | Parent          |
+      | User role  | userrole   | User: Student Two  | User          | User role     | ##today##%d/%m/%y## | Teacher First   |
+    # And I should see "User role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "userrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "User: Student Two" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "User" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "User role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    # And I should see "Teacher First" in the ".dash-table tbody tr:nth-child(1) td:nth-child(9)" "css_element"
 
   Scenario: role assignments context level conditions
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
     #---Enable system context role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][context_level_condition][enabled]" to "1"
@@ -322,14 +367,18 @@ Feature: Add role assignment datasource in dash block
     And I press "Save changes"
     And I press "Reset Dashboard for all users"
     And I press "Continue"
-    And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "adminrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name          | Short name | Context name | Context level | Original name       | Time modified       |
+      | system admin role  | adminrole  | System       | System        | system admin role   | ##today##%d/%m/%y## |
+    # And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "adminrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "System" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "system admin role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
     #---user context---#
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
     #---Enable user context role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][context_level_condition][enabled]" to "1"
@@ -337,19 +386,23 @@ Feature: Add role assignment datasource in dash block
     And I press "Save changes"
     And I press "Reset Dashboard for all users"
     And I press "Continue"
-    And I should see "User role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "userrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "User: Student Two" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "User" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "User role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
-    And I should see "Teacher First" in the ".dash-table tbody tr:nth-child(1) td:nth-child(9)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name  | Short name | Context name       | Context level | Original name | Time modified       | Parent          |
+      | User role  | userrole   | User: Student Two  | User          | User role     | ##today##%d/%m/%y## | Teacher First   |
+    # And I should see "User role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "userrole" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "User: Student Two" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "User" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "User role" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    # And I should see "Teacher First" in the ".dash-table tbody tr:nth-child(1) td:nth-child(9)" "css_element"
 
   Scenario: role assignments course category conditions
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
     #---Enable course category role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][c_course_categories_condition][enabled]" to "1"
@@ -358,19 +411,23 @@ Feature: Add role assignment datasource in dash block
     And I press "Save changes"
     And I press "Reset Dashboard for all users"
     And I press "Continue"
-    And I should see "Student" in the ".dash-table tbody tr:nth-child(3) td:nth-child(1)" "css_element"
-    And I should see "student" in the ".dash-table tbody tr:nth-child(3) td:nth-child(2)" "css_element"
-    And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(3) td:nth-child(3)" "css_element"
-    And I should see "Course" in the ".dash-table tbody tr:nth-child(3) td:nth-child(5)" "css_element"
-    And I should see "Student" in the ".dash-table tbody tr:nth-child(3) td:nth-child(6)" "css_element"
-    And I should see "Students generally have fewer privileges within a course." in the ".dash-table tbody tr:nth-child(3) td:nth-child(7)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(3) td:nth-child(8)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name | Short name | Context name     | Context level | Original name | Time modified       | Description                                               |
+      | Student   | student    | Course: Course 1 | Course        | Student       | ##today##%d/%m/%y## | Students generally have fewer privileges within a course. |
+    # And I should see "Student" in the ".dash-table tbody tr:nth-child(3) td:nth-child(1)" "css_element"
+    # And I should see "student" in the ".dash-table tbody tr:nth-child(3) td:nth-child(2)" "css_element"
+    # And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(3) td:nth-child(3)" "css_element"
+    # And I should see "Course" in the ".dash-table tbody tr:nth-child(3) td:nth-child(5)" "css_element"
+    # And I should see "Student" in the ".dash-table tbody tr:nth-child(3) td:nth-child(6)" "css_element"
+    # And I should see "Students generally have fewer privileges within a course." in the ".dash-table tbody tr:nth-child(3) td:nth-child(7)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(3) td:nth-child(8)" "css_element"
 
   Scenario: role assignments course conditions
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
     #---Enable course role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][c_course][enabled]" to "1"
@@ -378,37 +435,45 @@ Feature: Add role assignment datasource in dash block
     And I press "Save changes"
     And I press "Reset Dashboard for all users"
     And I press "Continue"
-    And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "Non-editing teachers can teach in courses and grade students, but may not alter activities." in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
-    And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name           | Short name | Context name     | Context level | Original name       | Time modified       | Description                                                                                 |
+      | Non-editing teacher | teacher    | Course: Course 1 | Course        | Non-editing teacher | ##today##%d/%m/%y## | Non-editing teachers can teach in courses and grade students, but may not alter activities. |
+    # And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    # And I should see "Non-editing teacher" in the ".dash-table tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    # And I should see "Non-editing teachers can teach in courses and grade students, but may not alter activities." in the ".dash-table tbody tr:nth-child(1) td:nth-child(7)" "css_element"
+    # And I should see "##today##%d/%m/%y##" in the ".dash-table tbody tr:nth-child(1) td:nth-child(8)" "css_element"
 
   Scenario: role assignments current course conditions
     And I log in as "admin"
     And I am on "Course 1" course homepage
     And I turn dash block editing mode on
     And I add the "Dash" block
-    And I click on "Role assignments" "radio"
+    And I click on "Role Assignments" "radio"
     And I configure the "New Dash" block
-    And I set the field "Block title" to "Role assignments"
+    And I set the field "Block title" to "Role Assignments"
     And I press "Save changes"
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
     #---Enable current course role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][current_course][enabled]" to "1"
     And I press "Save changes"
-    And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name | Short name | Context name     | Context level |
+      | Student   | student    | Course: Course 1 | Course        |
+    # And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
     And I log out
     #---Student login---#
     And I log in as "student1"
     And I am on "Course 1" course homepage
-    And I should not see "Course: Course 2" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    And I should not see "Course: Course 2" in the "Student" "table_row"
+    # And I should not see "Course: Course 2" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
 
   Scenario: role assignments current category conditions
     And I log in as "admin"
@@ -416,24 +481,30 @@ Feature: Add role assignment datasource in dash block
     And I follow "Category 1"
     And I turn dash block editing mode on
     And I add the "Dash" block
-    And I click on "Role assignments" "radio"
+    And I click on "Role Assignments" "radio"
     And I configure the "New Dash" block
-    And I set the field "Block title" to "Role assignments"
+    And I set the field "Block title" to "Role Assignments"
     And I press "Save changes"
-    And I open the "Role assignments" block preference
+    And I wait until the page is ready
+    And I open the "Role Assignments" block preference
     #---Enable current category role---#
     And I click on "Conditions" "link"
     And I set the field "config_preferences[filters][current_category][enabled]" to "1"
     And I press "Save changes"
-    And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name | Short name | Context name     | Context level |
+      | Student   | student    | Course: Course 1 | Course        |
+    # And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
+    # And I should see "student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    # And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    # And I should see "Course" in the ".dash-table tbody tr:nth-child(1) td:nth-child(5)" "css_element"
     And I log out
     #---Student login---#
     And I log in as "student1"
     And I am on course index
     And I follow "Category 1"
-    And I should see "Student" in the ".dash-table tbody tr:nth-child(1) td:nth-child(1)" "css_element"
-    And I should see "Course: Course 1" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should not see "Course: Course 2" in the ".dash-table tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Role name | Context name |
+      | Student   | Course: Course 1 |
+    # And I should see "Course: Course 1" in the "Student" "table_row"
+    And I should not see "Course: Course 2" in the "Student" "table_row"

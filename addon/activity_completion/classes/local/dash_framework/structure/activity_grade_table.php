@@ -17,9 +17,9 @@
 /**
  * Activity grade table.
  *
- * @package   dashaddon_activity_completion
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_activity_completion
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activity_completion\local\dash_framework\structure;
@@ -35,8 +35,7 @@ use lang_string;
 /**
  * Activities grade table structure definitions for activity completion datasource.
  */
-class activity_grade_table extends table
-{
+class activity_grade_table extends table {
     /**
      * Build a new table.
      */

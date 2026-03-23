@@ -17,9 +17,9 @@
 /**
  * Transform activity data into activity icon.
  *
- * @package   dashaddon_activity_completion
- * @copyright 2023 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_activity_completion
+ * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activity_completion\local\block_dash\data_grid\field\attribute;
@@ -33,14 +33,13 @@ use moodle_url;
  *
  * @package dashaddon_activity_completion
  */
-class activity_currentgrade_attribute extends abstract_field_attribute
-{
+class activity_currentgrade_attribute extends abstract_field_attribute {
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param  \stdClass $data
-     * @param  \stdClass $record Entire row
+     * @param \stdClass $data
+     * @param \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */

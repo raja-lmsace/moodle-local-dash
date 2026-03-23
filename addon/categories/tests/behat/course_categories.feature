@@ -1,4 +1,4 @@
-@local @local_dash @dashaddon @dash_course_categories
+@local @local_dash @javascript @_file_upload @dashaddon @dash_course_categories
 Feature: Dash program to show the list of course categories data
   In order to show the course categories data source in dash block on the dashboard
   As an admin
@@ -38,7 +38,7 @@ Feature: Dash program to show the list of course categories data
     And I navigate to "Plugins > Blocks > Dash" in site administration
     And I upload "blocks/dash/tests/assets/background.jpg" file to "Category fallback image" filemanager
     And I press "Save changes"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I add the "Dash" block
     And I click on "Course categories" "radio"
@@ -51,14 +51,14 @@ Feature: Dash program to show the list of course categories data
     And I click on "Reset Dashboard for all users" "button"
     And I log out
 
-  @javascript @_file_upload
   Scenario: Display the Course categories data source
     Given I log in as "admin"
     And I navigate to "Plugins > Blocks > Dash" in site administration
     And I upload "blocks/dash/tests/assets/img-1.jpg" file to "Category 1" filemanager
     And I press "Save changes"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course Categories" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
@@ -107,11 +107,11 @@ Feature: Dash program to show the list of course categories data
     And I should see "1" in the "Course 4" "table_row"
     And I should see "Course 4" in the "Category 4" "table_row"
 
-  @javascript @_file_upload
   Scenario: Display the Course categories with filter conditions
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course Categories" block preference
     Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "Select all" "button"
@@ -134,8 +134,9 @@ Feature: Dash program to show the list of course categories data
     And I should see "Course 3" in the "Category 3" "table_row"
     And "Category 4" "table_row" should not exist
 
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course Categories" block preference
     Then I click on "Conditions" "link" in the "Edit preferences" "dialogue"
     And I click on "Include subcategories" "checkbox"

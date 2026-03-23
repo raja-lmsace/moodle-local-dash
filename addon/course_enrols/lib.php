@@ -17,9 +17,9 @@
 /**
  * Course enrolments library functions.
  *
- * @package   dashaddon_course_enrols
- * @copyright 2022 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_course_enrols
+ * @copyright  2022 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -40,7 +40,7 @@ function dashaddon_course_enrols_register_widget() {
 /**
  * Serve the user enrolment form as a fragment.
  *
- * @param  array $args List of named arguments for the fragment loader.
+ * @param array $args List of named arguments for the fragment loader.
  * @return string
  */
 function dashaddon_course_enrols_output_fragment_user_enrolment_form($args) {
@@ -66,7 +66,7 @@ function dashaddon_course_enrols_output_fragment_user_enrolment_form($args) {
         parse_str($serialiseddata, $data);
     }
 
-    include_once("$CFG->dirroot/enrol/editenrolment_form.php");
+    require_once("$CFG->dirroot/enrol/editenrolment_form.php");
     $mform = new \enrol_user_enrolment_form(null, $customdata, 'post', '', null, true, $data);
 
     if (!empty($data)) {
@@ -85,14 +85,14 @@ function dashaddon_course_enrols_output_fragment_user_enrolment_form($args) {
  *
  * Cloned from enrollib enrol_get_all_users_courses
  *
- * @param  int         $userid          User whose courses are returned, defaults to the current user.
- * @param  bool        $onlyactive      Return only active enrolments in courses user may see.
- * @param  string|null $sort            Comma separated list of fields to sort by, defaults to respecting navsortmycoursessort.
- * @param  string|null $status          Course completion status based condition.
- * @param  integer     $limitfrom       Limit the records from.
- * @param  integer     $limitnum        Number of records needs to fetch.
- * @param  string      $condition       Additional conditions.
- * @param  array       $conditionparams Additional condition params.
+ * @param int $userid User whose courses are returned, defaults to the current user.
+ * @param bool $onlyactive Return only active enrolments in courses user may see.
+ * @param string|null $sort Comma separated list of fields to sort by, defaults to respecting navsortmycoursessort.
+ * @param string|null $status Course completion status based condition.
+ * @param integer $limitfrom Limit the records from.
+ * @param integer $limitnum Number of records needs to fetch.
+ * @param string $condition Additional conditions.
+ * @param array $conditionparams Additional condition params.
  * @return array list of courses and count of courses.
  */
 function dashaddon_enrolments_get_all_users_courses(

@@ -16,10 +16,9 @@
 
 /**
  * Form for editing block preferences.
- *
- * @package   dashaddon_dashboard
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_dashboard
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_dashboard\form;
@@ -37,12 +36,11 @@ require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
 /**
  * Form for editing block preferences.
  *
- * @package   dashaddon_dashboard
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_dashboard
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class dashboard_form extends persisten_form
-{
+class dashboard_form extends persisten_form {
     /**
      * Dashboard class object.
      *
@@ -88,17 +86,14 @@ class dashboard_form extends persisten_form
         // Context settings section.
         $mform->addElement('header', 'contextsettings', get_string('contextsettings', 'block_dash'));
         if ($this->get_persistent()->get('shortname') != 'coredashboard') {
-            $options = $DB->get_records_sql_menu(
-                'SELECT c.id, c.fullname FROM {course} c
+            $options = $DB->get_records_sql_menu('SELECT c.id, c.fullname FROM {course} c
                                                     JOIN {context} ctx ON ctx.contextlevel = :contextlevel
                                                     AND ctx.instanceid = c.id
                                                     WHERE c.format != :format
-                                                    ORDER BY c.fullname',
-                [
+                                                    ORDER BY c.fullname', [
                                                         'contextlevel' => CONTEXT_COURSE,
                                                         'format' => 'site',
-                ]
-            );
+                                                    ]);
             // Context type selection.
             $contexttypes = [
                 'system' => get_string('contextsystem', 'block_dash'),
@@ -136,15 +131,10 @@ class dashboard_form extends persisten_form
             $mform->hideIf('courseid', 'contexttype', 'neq', 'course');
 
             if (local_dash_secondarynav()) {
-                $mform->addElement(
-                    'select',
-                    'secondarynav',
-                    get_string('secondarynav', 'block_dash'),
-                    [
+                $mform->addElement('select', 'secondarynav', get_string('secondarynav', 'block_dash'), [
                     1 => get_string('yes'),
                     0 => get_string('no'),
-                    ]
-                );
+                ]);
                 $mform->setType('secondarynav', PARAM_INT);
                 $mform->hideIf('secondarynav', 'contexttype', 'neq', 'course');
             } else {
@@ -166,17 +156,12 @@ class dashboard_form extends persisten_form
 
         if ($this->get_persistent()->get('shortname') != 'coredashboard') {
             // Permission selector.
-            $mform->addElement(
-                'select',
-                'permission',
-                get_string('permissions', 'block_dash'),
-                [
+            $mform->addElement('select', 'permission', get_string('permissions', 'block_dash'), [
                 'loggedin' => get_string('permissionsloggedin', 'block_dash'),
                 'public' => get_string('permissionspublic', 'block_dash'),
                 'cohort' => get_string('permissionscohort', 'block_dash'),
                 'role' => get_string('permissionsrole', 'block_dash'),
-                ]
-            );
+            ]);
             $mform->setType('permission', PARAM_TEXT);
 
             // Cohort selector.

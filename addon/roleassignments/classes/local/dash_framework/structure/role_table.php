@@ -16,10 +16,9 @@
 
 /**
  * Logstore data source.
- *
- * @package   dashaddon_roleassignments
- * @copyright 2019 bdecent gmbh <https://bdecent.de>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    dashaddon_roleassignments
+ * @copyright  2019 bdecent gmbh <https://bdecent.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_roleassignments\local\dash_framework\structure;
@@ -37,8 +36,7 @@ use lang_string;
  *
  * It extends the base table class to provide specific functionality for handling role assignments.
  */
-class role_table extends table
-{
+class role_table extends table {
     /**
      * Build a new table.
      */
@@ -62,15 +60,12 @@ class role_table extends table
      */
     public function get_fields(): array {
         return [
-            new field(
-                'id',
-                new lang_string('role'),
-                $this,
-                'r.id',
-                [
+            new field('id', new lang_string('role'), $this, 'r.id', [
                 new identifier_attribute(),
-                ]
-            ),
+            ]),
+            new field('ra_id', new lang_string('roleassignment', 'core_role'), $this, 'ra.id', [
+                new identifier_attribute(),
+            ]),
             new field(
                 'rolename',
                 new lang_string('rolename', 'block_dash'),
@@ -78,15 +73,9 @@ class role_table extends table
                 'r.id',
                 [new role_name_attribute()]
             ),
-            new field(
-                'roleoriginalname',
-                new lang_string('originalrolename', 'block_dash'),
-                $this,
-                'r.id',
-                [
+            new field('roleoriginalname', new lang_string('originalrolename', 'block_dash'), $this, 'r.id', [
                 new role_originalname_attribute(),
-                ]
-            ),
+            ]),
             new field('shortname', new lang_string('shortname'), $this, 'r.shortname'),
             new field('description', new lang_string('description'), $this, 'r.id', [new role_description_attribute()]),
         ];
