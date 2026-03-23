@@ -17,9 +17,9 @@
 /**
  * Library functions defined for skill graph widget.
  *
- * @package    dashaddon_dashboard
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_dashboard
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 // Constants which are use throughout this dashaddon.
@@ -29,13 +29,13 @@ define('SYSTEMCONTEXT', 2);
 /**
  * Dashboard plugin file definitions, List of fileareas used in local_dash plugin.
  *
- * @param stdclass $course
- * @param stdclass $cm
- * @param stdclass $context
- * @param string $filearea
- * @param array $args
- * @param bool $forcedownload
- * @param array $options
+ * @param  stdclass $course
+ * @param  stdclass $cm
+ * @param  stdclass $context
+ * @param  string   $filearea
+ * @param  array    $args
+ * @param  bool     $forcedownload
+ * @param  array    $options
  * @return void
  */
 function dashaddon_dashboard_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
@@ -55,7 +55,7 @@ function dashaddon_dashboard_pluginfile($course, $cm, $context, $filearea, $args
         if (!$args) {
             $filepath = '/';
         } else {
-            $filepath = '/'.implode('/', $args).'/';
+            $filepath = '/' . implode('/', $args) . '/';
         }
 
         // Retrieve the file from the Files API.
@@ -76,13 +76,18 @@ function dashaddon_dashboard_pluginfile($course, $cm, $context, $filearea, $args
 /**
  * Get the dashboard background image.
  *
- * @param int $dashboardid Dashboard ID
+ * @param  int $dashboardid Dashboard ID
  * @return string
  */
 function dashaddon_dashboard_get_dashboard_background($dashboardid) {
     $fs = get_file_storage();
     $files = $fs->get_area_files(
-        \context_system::instance()->id, 'dashaddon_dashboard', 'dashbgimage', $dashboardid, '', false
+        \context_system::instance()->id,
+        'dashaddon_dashboard',
+        'dashbgimage',
+        $dashboardid,
+        '',
+        false
     );
 
     if (!empty($files)) {
@@ -90,8 +95,13 @@ function dashaddon_dashboard_get_dashboard_background($dashboardid) {
         $file = reset($files);
 
         $url = \moodle_url::make_pluginfile_url(
-            $file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
-            $file->get_filename(), false
+            $file->get_contextid(),
+            $file->get_component(),
+            $file->get_filearea(),
+            $file->get_itemid(),
+            $file->get_filepath(),
+            $file->get_filename(),
+            false
         );
         return $url;
     }
@@ -108,7 +118,7 @@ function dashaddon_dashboard_create_core_dashboard() {
         return;
     }
 
-    $dashboard = new stdclass;
+    $dashboard = new stdclass();
     $dashboard->shortname = 'coredashboard';
     $dashboard->contextid = context_system::instance()->id;
     $dashboard->timecreated = time();
@@ -124,14 +134,14 @@ function dashaddon_dashboard_create_core_dashboard() {
 /**
  * Extend the course navigation, then added the course context dashboard link in secondary menu.
  *
- * @param \navigation_node $coursenode
- * @param stdclass $course
- * @param \context_course $coursecontext
+ * @param  \navigation_node $coursenode
+ * @param  stdclass         $course
+ * @param  \context_course  $coursecontext
  * @return void
  */
 function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $coursecontext) {
     global $PAGE, $USER, $DB;
-    if ($PAGE->context instanceof \context_course ) {
+    if ($PAGE->context instanceof \context_course) {
         $context = $PAGE->context;
         if ($records = $DB->get_records('dashaddon_dashboard_dash', ['contextid' => $context->id, 'secondarynav' => 1])) {
             foreach ($records as $id => $record) {
@@ -141,18 +151,20 @@ function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $cou
                     $node = navigation_node::create(
                         $record->name,
                         $url,
-                        navigation_node::TYPE_SETTING, '',
-                        $record->shortname, new pix_icon('i/dashboard', '')
+                        navigation_node::TYPE_SETTING,
+                        '',
+                        $record->shortname,
+                        new pix_icon('i/dashboard', '')
                     );
                     $node->add_class('dash-course-dashboard');
                     $coursenode->add_node($node);
                     $nodes[] = $record->shortname;
-
                 }
             }
 
             if (isset($nodes) && !empty($nodes)) {
-                $PAGE->requires->js_amd_inline("
+                $PAGE->requires->js_amd_inline(
+                    "
                     require(['jquery', 'core/moremenu'], function($, moremenu) {
                         window.onload=() => {
                             var secondarynav = document.querySelector('.secondary-navigation ul.nav-tabs');
@@ -168,9 +180,37 @@ function dashaddon_dashboard_extend_navigation_course($coursenode, $course, $cou
                             moremenu(secondarynav);
                         }
                     })
-                ");
+                "
+                );
             }
         }
     }
+}
 
+/**
+ * Change the block instance pagetype pattern.
+ *
+ * @return void
+ */
+function dashaddon_dashboard_change_pagetypepattern() {
+    global $DB;
+
+    $likepattern = $DB->sql_like('pagetypepattern', ':pattern');
+    $sql = "SELECT *
+            FROM {block_instances}
+            WHERE {$likepattern}";
+    $params = [
+        'pattern' => 'local-dash-dashboard%',
+    ];
+
+    $records = $DB->get_records_sql($sql, $params);
+    foreach ($records as $record) {
+        $pagetypepattern = $record->pagetypepattern;
+        $prefix = 'local-dash';
+        $replacement = 'dashaddon';
+        $modifiypattern = str_replace($prefix, $replacement, $pagetypepattern);
+        $record->pagetypepattern = $modifiypattern;
+        $DB->update_record('block_instances', $record);
+    }
+    return true;
 }

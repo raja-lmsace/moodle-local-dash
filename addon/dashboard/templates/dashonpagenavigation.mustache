@@ -1,0 +1,70 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    @template local_dash/dashonpagenavigation
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+
+    Dashboard on-page navigation template.
+
+    Example context (json):
+    {
+        "dashboardname": "My Dashboard",
+        "ctaurl": "https://example.com",
+        "ctatext": "Register Now",
+        "hidebuttontitle": false,
+        "showtitleclass": "show-title",
+        "showctaclass": "show-cta",
+        "moremenubar": {
+            "extraclasses": "navbar-light"
+        }
+    }
+}}
+
+<div class="onpage-navigation">
+    <div class="dash-tab-block">
+        <nav>
+            <div class="dash-tab-element {{#hidebuttontitle}}hide-title-button{{/hidebuttontitle}} {{showtitleclass}} {{showctaclass}}">
+                <div class="dash-tab-title">
+                    <h2> {{dashboardname}} </h2>
+                    <div class="dash-register-block">
+                        <a href="{{{ctaurl}}}">{{ctatext}}</a>
+                    </div>
+                </div>
+                <div class="dash-tab-title dash-nav-block">
+                    {{#moremenubar}}
+                        <nav class="navbar navbar-expand {{extraclasses}}" aria-label="{{#str}}sitemenubar, admin{{/str}}">
+                                {{> core/moremenu}}
+                        </nav>
+                    {{/moremenubar}}
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+{{#js}}
+    require(['jquery'], function($) {
+        $(document).ready(function() {
+            $('.dash-tab-element .moremenu li .nav-link').on('click', function() {
+                $('.dash-tab-element .moremenu li .nav-link').removeClass('active');
+                $(this).addClass('active');
+            });
+            $('.dash-tab-element .moremenu li .nav-link').first().addClass('active');
+        });
+    });
+{{/js}}

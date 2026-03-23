@@ -17,9 +17,9 @@
 /**
  * Filters results to specific sections.
  *
- * @package    local_dash
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -33,7 +33,6 @@ use coding_exception;
  * @package local_dash
  */
 class users_mycohort_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -93,7 +92,7 @@ class users_mycohort_condition extends condition {
         $select = $this->get_select();
         $cohortids = $DB->get_records_menu("cohort_members", ['userid' => $USER->id], '', 'id,cohortid');
         if ($cohortids) {
-            list($cohortsql, $cohortparams) = $DB->get_in_or_equal($cohortids, SQL_PARAMS_NAMED);
+            [$cohortsql, $cohortparams] = $DB->get_in_or_equal($cohortids, SQL_PARAMS_NAMED);
             $sql = "$select IN(SELECT cm.userid
                             FROM {cohort} ch
                             JOIN {cohort_members} cm ON cm.cohortid = ch.id

@@ -19,7 +19,7 @@ Feature: Enable the slider layout in dash block on the dashboard page and view i
       | student4 | Student   | Four     | student3@example.com |
       | student5 | Student   | Five     | student3@example.com |
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     # And I add the "Dash" block
     And I create dash "Courses" datasource
@@ -28,6 +28,7 @@ Feature: Enable the slider layout in dash block on the dashboard page and view i
     # And I click on "#id_config_data_source_idnumber_local_dashlocalblock_dashcourses_data_source" "css_element"
     And I press "Save changes"
     # And I click on "Preferences" "button" in the "Course datasource" "block"
+    And I wait until the page is ready
     And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     Then I click on "General" "link"
@@ -56,10 +57,11 @@ Feature: Enable the slider layout in dash block on the dashboard page and view i
 
   Scenario: Check the slider settings
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     Then ".dash-block-content .card_layout_slider .slick-next" "css_element" should exist
     Then ".dash-block-content .card_layout_slider .slick-prev" "css_element" should exist
+    And I wait until the page is ready
     And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     And I set the field "Layout mode" to "Slider"
@@ -73,6 +75,7 @@ Feature: Enable the slider layout in dash block on the dashboard page and view i
     And I press "Save changes"
     Then ".dash-block-content .card_layout_slider .slick-next" "css_element" should not exist
     Then ".dash-block-content .card_layout_slider .slick-prev" "css_element" should not exist
+    And I wait until the page is ready
     And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     And I set the field "Slides to show" to "2"

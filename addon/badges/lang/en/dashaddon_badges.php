@@ -22,17 +22,17 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Data source: Badges';
-$string['datasource:badge_data_source'] = 'Badges';
-
 $string['badge'] = 'Badge';
+$string['badgebutton'] = 'Badge button';
 $string['badgeimage'] = 'Badge image';
 $string['badgeimagelink'] = 'Badge link';
+$string['badgeimageurl'] = 'Badge Image URL';
+$string['badgeurl'] = 'Badge URL';
+$string['datasource:badge_data_source'] = 'Badges';
+$string['datasource:badge_data_source_help'] = 'List of user badge details.';
+$string['dateissued'] = 'Issued date';
 $string['origin'] = 'Origin';
+$string['pluginname'] = 'Data source: Badges';
 $string['sitebadge'] = 'Site Badge';
 $string['tablealias_bd'] = 'Badges';
-$string['dateissued'] = 'Issued date';
-$string['badgeurl'] = 'Badge URL';
-$string['badgebutton'] = 'Badge button';
 $string['viewbadge'] = 'View badge';
-$string['badgeimageurl'] = 'Badge Image URL';

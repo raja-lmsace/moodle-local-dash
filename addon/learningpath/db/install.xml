@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/dash/addon/learningpath/db" VERSION="20241003" COMMENT="XMLDB file for dashaddon_learningpath"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="dashaddon_learningpath_zones" COMMENT="Learning path zone configurations">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="blockid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="svgtype" TYPE="char" LENGTH="50" NOTNULL="true" COMMENT="Type of SVG (desktop, tablet, mobile)"/>
+        <FIELD NAME="zoneid" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="SVG element ID"/>
+        <FIELD NAME="zonetype" TYPE="char" LENGTH="50" NOTNULL="true" COMMENT="SVG element type (circle, rect, etc)"/>
+        <FIELD NAME="zoneindex" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Assigned course ID"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="blockid" TYPE="foreign" FIELDS="blockid" REFTABLE="block_instances" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="blockid_svgtype" UNIQUE="false" FIELDS="blockid, svgtype"/>
+        <INDEX NAME="zoneid_blockid" UNIQUE="true" FIELDS="zoneid, blockid, svgtype"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

@@ -17,9 +17,9 @@
 /**
  * Library functions defined for skill graph widget.
  *
- * @package    dashaddon_learningpath
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_learningpath
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use core_course\external\course_summary_exporter;
@@ -29,7 +29,7 @@ use core_course\external\course_summary_exporter;
  *
  * @return array List of widgets.
  */
-function dashaddon_learningpath_register_widget() : array {
+function dashaddon_learningpath_register_widget(): array {
     return [
         [
             'name' => get_string('widget:learningpath', 'block_dash'),
@@ -42,13 +42,13 @@ function dashaddon_learningpath_register_widget() : array {
 /**
  * Learningpath plugin file definitions, List of fileareas used in local_dash plugin.
  *
- * @param stdclass $course
- * @param stdclass $cm
- * @param stdclass $context
- * @param string $filearea
- * @param array $args
- * @param bool $forcedownload
- * @param array $options
+ * @param  stdclass $course
+ * @param  stdclass $cm
+ * @param  stdclass $context
+ * @param  string   $filearea
+ * @param  array    $args
+ * @param  bool     $forcedownload
+ * @param  array    $options
  * @return void
  */
 function dashaddon_learningpath_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
@@ -69,7 +69,7 @@ function dashaddon_learningpath_pluginfile($course, $cm, $context, $filearea, $a
         if (!$args) {
             $filepath = '/';
         } else {
-            $filepath = '/'.implode('/', $args).'/';
+            $filepath = '/' . implode('/', $args) . '/';
         }
 
         // Retrieve the file from the Files API.
@@ -90,7 +90,7 @@ function dashaddon_learningpath_pluginfile($course, $cm, $context, $filearea, $a
 /**
  * Get the course details to display in the details area modal.
  *
- * @param array $args
+ * @param  array $args
  * @return string
  */
 function dashaddon_learningpath_output_fragment_course_details_area($args) {
@@ -104,49 +104,302 @@ function dashaddon_learningpath_output_fragment_course_details_area($args) {
     $template['courseurl'] = new moodle_url('/course/view.php', ['id' => $course->id]);
     $template['courseimg'] = dashaddon_learningpath_courseimage($course->id);
     $template += dashaddon_learningpath_generate_completion_stats($course->id, $USER->id);
-    $coursenavid = $args['isgrid'] ? "grid-course-" : "circle-course-";
-    if ($args['prevcourse']) {
-        $prevcourse = get_course($args['prevcourse']);
-        $template['prevcourse'] = format_string($prevcourse->fullname);
-        $template['prevcoursecircle'] = $coursenavid . $prevcourse->id;
+
+    // Get timetable assignment override information.
+    $assignment = dashaddon_learningpath_get_assignment_override($course->id, $USER->id);
+    if ($assignment && $args['sidebar']) {
+        $template['hasassignment'] = true;
+        $template['assignment'] = $assignment;
     }
 
-    if ($args['nextcourse']) {
-        $nextcourse = get_course($args['nextcourse']);
-        $template['nextcourse'] = format_string($nextcourse->fullname);
-        $template['nextcoursecircle'] = $coursenavid . $nextcourse->id;
+    if (!$args['sidebar']) {
+        $coursenavid = $args['isgrid'] ? "grid-course-" : "circle-course-";
+        if ($args['prevcourse']) {
+            $prevcourse = get_course($args['prevcourse']);
+            $template['prevcourse'] = format_string($prevcourse->fullname);
+            $template['prevcoursecircle'] = $coursenavid . $prevcourse->id;
+        }
+
+        if ($args['nextcourse']) {
+            $nextcourse = get_course($args['nextcourse']);
+            $template['nextcourse'] = format_string($nextcourse->fullname);
+            $template['nextcoursecircle'] = $coursenavid . $nextcourse->id;
+        }
     }
 
     return $OUTPUT->render_from_template('dashaddon_learningpath/course_details', $template);
 }
 
 /**
+ * Get timetable assignment override information for a user and course.
+ *
+ * @param int $courseid Course ID
+ * @param int $userid User ID
+ * @return array|null Assignment override information or null if not found
+ */
+function dashaddon_learningpath_get_assignment_override($courseid, $userid) {
+    global $DB;
+
+    // Check if timetable tool plugin is installed and enabled.
+    $pluginmanager = \core_plugin_manager::instance();
+    $plugininfo = $pluginmanager->get_plugin_info('tool_timetable');
+
+    if (!$plugininfo || $plugininfo->get_status() === \core_plugin_manager::PLUGIN_STATUS_MISSING) {
+        return null;
+    }
+
+    // Check if timetable table exists.
+    if (!$DB->get_manager()->table_exists('tool_timetable_course_overrides')) {
+        return null;
+    }
+
+    $override = $DB->get_record_sql(
+        "SELECT * FROM {tool_timetable_course_overrides}
+         WHERE courseid = :courseid
+           AND overridetype = 'user'
+           AND userid = :userid
+         ORDER BY timemodified DESC",
+        ['courseid' => $courseid, 'userid' => $userid],
+        IGNORE_MULTIPLE
+    );
+
+    if ($override) {
+        return dashaddon_learningpath_format_assignment_data($override);
+    }
+
+    $usergroups = groups_get_user_groups($courseid, $userid);
+    if (!empty($usergroups[0])) {
+        [$insql, $inparams] = $DB->get_in_or_equal($usergroups[0], SQL_PARAMS_NAMED);
+
+        $override = $DB->get_record_sql(
+            "SELECT * FROM {tool_timetable_course_overrides}
+             WHERE courseid = :courseid
+               AND overridetype = 'group'
+               AND groupid $insql
+             ORDER BY timemodified DESC",
+            array_merge(['courseid' => $courseid], $inparams),
+            IGNORE_MULTIPLE
+        );
+
+        if ($override) {
+            return dashaddon_learningpath_format_assignment_data($override);
+        }
+    }
+
+    $userenrolments = dashaddon_learningpath_get_user_enrolments($courseid, $userid);
+    if (!empty($userenrolments)) {
+        $enrolids = array_column($userenrolments, 'enrolid');
+
+        if (!empty($enrolids)) {
+            [$insql, $inparams] = $DB->get_in_or_equal($enrolids, SQL_PARAMS_NAMED);
+
+            $override = $DB->get_record_sql(
+                "SELECT * FROM {tool_timetable_course_overrides}
+                 WHERE courseid = :courseid
+                   AND overridetype = 'enrolment'
+                   AND enrolmentid $insql
+                 ORDER BY timemodified DESC",
+                array_merge(['courseid' => $courseid], $inparams),
+                IGNORE_MULTIPLE
+            );
+
+            if ($override) {
+                return dashaddon_learningpath_format_assignment_data($override);
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Get user enrolments for a course.
+ *
+ * @param int $courseid Course ID
+ * @param int $userid User ID
+ * @return array Array of enrolment records
+ */
+function dashaddon_learningpath_get_user_enrolments($courseid, $userid) {
+    global $DB;
+
+    $sql = "SELECT ue.id, ue.enrolid, e.enrol
+            FROM {user_enrolments} ue
+            JOIN {enrol} e ON e.id = ue.enrolid
+            WHERE e.courseid = :courseid
+              AND ue.userid = :userid
+              AND ue.status = :active";
+
+    $enrolments = $DB->get_records_sql($sql, [
+        'courseid' => $courseid,
+        'userid' => $userid,
+        'active' => ENROL_USER_ACTIVE,
+    ]);
+
+    return $enrolments ? array_values($enrolments) : [];
+}
+
+/**
+ * Format assignment override data for display.
+ *
+ * @param object $override Override record from database
+ * @return array Formatted assignment data
+ */
+function dashaddon_learningpath_format_assignment_data($override) {
+    global $USER;
+    if (!$override) {
+        return null;
+    }
+
+    $assignment = [];
+
+    // Assignment start date.
+    if (!empty($override->assignstartdate)) {
+        $assignment['startdate'] = userdate($override->assignstartdate, get_string('strftimedatefullshort', 'core_langconfig'));
+        $assignment['startdatetimestamp'] = $override->assignstartdate;
+    }
+
+    // Assignment due date.
+    if (!empty($override->duedate)) {
+        $assignment['duedate'] = userdate($override->duedate, get_string('strftimedatefullshort', 'core_langconfig'));
+        $assignment['duedatetimestamp'] = $override->duedate;
+    } else {
+        $timemanagement = new \tool_timetable\time_management($override->courseid);
+        $usercourseenrollinfo = $timemanagement->get_course_user_enrollment($USER->id);
+        $startdate = $usercourseenrollinfo[0]['timestart'] ?? 0;
+        $enddate = $usercourseenrollinfo[0]['timeend'] ?? 0;
+        $coursduedate = $timemanagement->get_user_course_due_date($startdate, $enddate, $USER->id);
+        $assignment['duedate'] = userdate($coursduedate, get_string('strftimedatefullshort', 'core_langconfig'));
+        $assignment['duedatetimestamp'] = $coursduedate;
+    }
+
+    // Assignment end date.
+    if (!empty($override->assignenddate)) {
+        $assignment['enddate'] = userdate($override->assignenddate, get_string('strftimedatefullshort', 'core_langconfig'));
+        $assignment['enddatetimestamp'] = $override->assignenddate;
+    }
+
+    // Assignment type.
+    if (isset($override->type)) {
+        $assignment['type'] = $override->type;
+        $assignment['typename'] = $override->type == 0
+            ? get_string('assignment_mandatory', 'block_dash')
+            : get_string('assignment_optional', 'block_dash');
+    }
+
+    // Assignment priority.
+    if (isset($override->priority)) {
+        $assignment['priority'] = $override->priority;
+        switch ($override->priority) {
+            case 1:
+                $assignment['priorityname'] = get_string('assignment_priority_low', 'block_dash');
+                $assignment['priorityclass'] = 'priority-low';
+                break;
+            case 3:
+                $assignment['priorityname'] = get_string('assignment_priority_high', 'block_dash');
+                $assignment['priorityclass'] = 'priority-high';
+                break;
+            default:
+                $assignment['priorityname'] = get_string('assignment_priority_normal', 'block_dash');
+                $assignment['priorityclass'] = 'priority-normal';
+                break;
+        }
+    }
+
+    // Assignment tags.
+    if (!empty($override->tags)) {
+        $overridetags = json_decode($override->tags);
+        $trimmedtags = array_map('trim', $overridetags);
+        $assignment['tags'] = [];
+        foreach ($trimmedtags as $tag) {
+            if (!empty($tag)) {
+                $assignment['tags'][] = ['name' => $tag];
+            }
+        }
+        $assignment['tagslist'] = implode(', ', $trimmedtags);
+    }
+
+    return !empty($assignment) ? $assignment : null;
+}
+
+/**
  * Generate the course completion report.
  *
  * @param int $courseid Course id
- * @param int $userid User id
+ * @param int $userid   User id
  *
  * @return array course completion report.
  */
-function  dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
+function dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
     global $DB, $PAGE, $CFG, $USER;
     require_once($CFG->dirroot . '/enrol/locallib.php');
-    // Filter the disabled enrollments.
+    require_once($CFG->libdir . '/gradelib.php');
+    require_once($CFG->dirroot . '/grade/lib.php');
+    require_once($CFG->dirroot . '/grade/querylib.php');
+
     $context = \context_course::instance($courseid);
     $course = get_course($courseid);
+
     $courseprogress = \core_completion\progress::get_course_progress_percentage($course);
     $courseprogress = $courseprogress ? round($courseprogress) : 0;
-    $report['completed'] = ($courseprogress == 100) ? true : false;
-    $report['inprogress'] = ($courseprogress != 100 && $courseprogress > 0) ? true : false;
-    $report['notstarted'] = ($courseprogress == 0) ? true : false;
+
+    $completion = new completion_info($course);
+
+    $report = [];
+    $report['notstarted'] = ($courseprogress == 0);
+    if ($DB->record_exists('course_completion_crit_compl', ['course' => $courseid, 'userid' => $userid])) {
+        $report['inprogress'] = true;
+    } else {
+        $report['inprogress'] = ($courseprogress > 0);
+    }
+    $report['completed'] = $completion->is_course_complete($userid);
+    if (!$DB->record_exists('course_completion_criteria', ['course' => $courseid]) && $courseprogress == 100) {
+        $report['completed'] = true;
+    }
     $report['progress'] = $courseprogress;
+    $report['available'] = false;
+
     $now = time();
 
-    if (($course->startdate && $course->startdate > $now) || ($course->enddate && $course->enddate < $now)
-        || !is_enrolled($context, $userid)) {
-        $report['unavailable'] = true;
+    // Availability logic: only relevant if not completed and not in progress.
+    if (!$report['completed'] && !$report['inprogress']) {
+        $enrolled = is_enrolled($context, $userid);
+
+        if (!$enrolled) {
+            $instances = enrol_get_instances($course->id, true);
+            $canselfenrol = false;
+            $guestaccess = false;
+
+            // Self enrol plugin (may be null if not installed).
+            $selfplugin = enrol_get_plugin('self');
+
+            foreach ($instances as $instance) {
+                // Self enrolment: use can_self_enrol() to respect dates, limits, keys, etc.
+                if ($instance->enrol === 'self' && $selfplugin) {
+                    $result = $selfplugin->can_self_enrol($instance); // No $userid here.
+
+                    // Only treat it as available if it *really* returns boolean true.
+                    if ($result === true) {
+                        $canselfenrol = true;
+                    }
+                }
+
+                // Guest access: enabled guest enrol instance.
+                if ($instance->enrol === 'guest' && $instance->status == ENROL_INSTANCE_ENABLED) {
+                    $guestaccess = true;
+                }
+            }
+
+            // Your rule:
+            // "available" if user can self enrol NOW or guest access is enabled, but is NOT enrolled.
+            if ($canselfenrol || $guestaccess) {
+                $report['available'] = true;
+            } else {
+                $report['unavailable'] = true;
+            }
+        }
     }
 
+    // Existing checks for suspended / time-limited enrolments.
     $manager = new \course_enrolment_manager($PAGE, $course);
     $userenrolments = $manager->get_user_enrolments($USER->id);
     foreach ($userenrolments as $ue) {
@@ -157,13 +410,54 @@ function  dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
             $report['unavailable'] = true;
         }
     }
+
+    // Possible "failed" detection.
+    if (
+        !$report['completed'] && $record = $DB->get_record(
+            'course_completion_criteria',
+            [
+                'course' => $courseid,
+                'criteriatype' => COMPLETION_CRITERIA_TYPE_GRADE,
+            ]
+        )
+    ) {
+        if (
+            $record && dashaddon_learningpath_is_possible_failed($course, $userid) &&
+            !$DB->record_exists(
+                'course_completion_crit_compl',
+                ['userid' => $userid, 'criteriaid' => $record->id, 'course' => $courseid]
+            )
+        ) {
+            $report['failed'] = true;
+        }
+    }
+
     return $report;
+}
+
+/**
+ * Check if course is possibly failed for user.
+ *
+ * @param object $course Course object
+ * @param int $userid User ID
+ * @return bool True if possibly failed
+ */
+function dashaddon_learningpath_is_possible_failed($course, $userid) {
+    global $DB;
+    $coursegradeitems = $DB->get_records('grade_items', ['courseid' => $course->id, 'itemtype' => 'mod']);
+    foreach ($coursegradeitems as $item) {
+        $sql = "SELECT * FROM {grade_grades} WHERE itemid = :itemid AND userid = :userid AND finalgrade IS NOT NULL";
+        if (!$DB->record_exists_sql($sql, ['itemid' => $item->id, 'userid' => $userid])) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**
  * Get course image.
  *
- * @param int $courseid
+ * @param  int $courseid
  * @return mixed
  * @throws \moodle_exception
  */
@@ -171,17 +465,86 @@ function dashaddon_learningpath_courseimage($courseid) {
     global $DB, $CFG, $OUTPUT, $PAGE;
 
     require_once("$CFG->dirroot/course/lib.php");
-    require_once($CFG->dirroot. "/blocks/dash/lib.php");
+    require_once($CFG->dirroot . "/blocks/dash/lib.php");
 
     if ($course = $DB->get_record('course', ['id' => $courseid])) {
-
         $context = context_course::instance($courseid);
         $exporter = new course_summary_exporter($course, ['context' => $context]);
         $list = $exporter->export($PAGE->get_renderer('core'));
         $nocoursesurl = $OUTPUT->image_url('courses', 'block_recentlyaccessedcourses')->out(false);
         return ($list->courseimage) ? $list->courseimage : $nocoursesurl;
-
     }
 
     return false;
+}
+
+
+/**
+ * Get available list of all activity mask images.
+ *
+ * @param string $filearea
+ * @return array $results List of mask images.
+ */
+function dashaddon_learningpath_get_all_learning_paths($filearea) {
+    global $CFG;
+    $results = [ 0 => get_string('none') ];
+    require_once($CFG->libdir . '/filelib.php');
+    $fs = get_file_storage();
+    $learingpaths = $fs->get_area_files(
+        \context_system::instance()->id,
+        'dashaddon_learningpath',
+        $filearea,
+        0,
+        '',
+        false
+    );
+
+    foreach ($learingpaths as $path) {
+        $results[$path->get_filename()] = ucwords(explode('.', $path->get_filename())[0]);
+    }
+
+    return $results;
+}
+
+/**
+ * Get filename path for learning path file.
+ *
+ * @param string $filearea File area
+ * @param string $filename Filename
+ * @return string File path or empty string
+ */
+function dashaddon_learningpath_get_filename_path($filearea, $filename) {
+    global $CFG;
+    require_once($CFG->libdir . '/filelib.php');
+    $fs = get_file_storage();
+    $file = $fs->get_file(
+        \context_system::instance()->id,
+        'dashaddon_learningpath',
+        $filearea,
+        0,
+        '/',
+        $filename
+    );
+
+    if ($file) {
+        return $file;
+    }
+
+    return null;
+}
+
+
+/**
+ * Serve fragment content.
+ * @param array $args
+ * @return string
+ */
+function dashaddon_learningpath_output_fragment_handler($args) {
+    $method = isset($args['method']) ? $args['method'] : '';
+    switch ($method) {
+        case 'zone_config':
+            return \dashaddon_learningpath\output\fragment::zone_config($args);
+        default:
+            return '';
+    }
 }

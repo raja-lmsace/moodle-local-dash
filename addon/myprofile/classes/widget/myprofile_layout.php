@@ -17,9 +17,9 @@
 /**
  * A widget layout contains information on how to display data.
  *
- * @package    dashaddon_myprofile
- * @copyright  2022 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_myprofile
+ * @copyright 2022 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_myprofile\widget;
@@ -34,7 +34,6 @@ use block_dash\local\data_grid\data\data_collection_interface;
  * Layout section for the contacts widget.
  */
 class myprofile_layout extends abstract_layout {
-
     /**
      * Tempalte mustache file name, the layout uses.
      *
@@ -118,23 +117,32 @@ class myprofile_layout extends abstract_layout {
      *
      * Be sure to call parent::build_preferences_form() if you override this method.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @throws \coding_exception
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
         global $CFG;
 
         if ($form->get_tab() == preferences_form::TAB_FIELDS) {
-
             // None option.
             $noneoption = [null => get_string('none', 'block_dash')];
 
-            $mform->addElement('advcheckbox', 'config_preferences[profileimage]',
-                get_string('field:profileimage', 'block_dash'), '', [0, 1]);
+            $mform->addElement(
+                'advcheckbox',
+                'config_preferences[profileimage]',
+                get_string('field:profileimage', 'block_dash'),
+                '',
+                [0, 1]
+            );
 
-            $mform->addElement('advcheckbox', 'config_preferences[fullname]',
-                get_string('field:fullname', 'block_dash'), '', [0, 1]);
+            $mform->addElement(
+                'advcheckbox',
+                'config_preferences[fullname]',
+                get_string('field:fullname', 'block_dash'),
+                '',
+                [0, 1]
+            );
 
             // Normal grid iteam.
             $userprofilefields = [];
@@ -148,27 +156,42 @@ class myprofile_layout extends abstract_layout {
             $kpiattributes = $this->get_kpi_fields();
 
             // Additional user information 1.
-            $mform->addElement('select', 'config_preferences[userinfo1]', get_string('field:profileuserinfo', 'block_dash', 1),
-                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields)));
+            $mform->addElement(
+                'select',
+                'config_preferences[userinfo1]',
+                get_string('field:profileuserinfo', 'block_dash', 1),
+                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields))
+            );
             $mform->setType('config_preferences[userinfo1]', PARAM_TEXT);
 
             // Additional user information 2.
-            $mform->addElement('select', 'config_preferences[userinfo2]', get_string('field:profileuserinfo', 'block_dash', 2),
-                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields)));
+            $mform->addElement(
+                'select',
+                'config_preferences[userinfo2]',
+                get_string('field:profileuserinfo', 'block_dash', 2),
+                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields))
+            );
             $mform->setType('config_preferences[userinfo2]', PARAM_TEXT);
 
             // Additional user information 3.
-            $mform->addElement('select', 'config_preferences[userinfo3]', get_string('field:profileuserinfo', 'block_dash', 3),
-                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields)));
+            $mform->addElement(
+                'select',
+                'config_preferences[userinfo3]',
+                get_string('field:profileuserinfo', 'block_dash', 3),
+                array_merge($noneoption, field_definition_factory::get_field_definition_options($userprofilefields))
+            );
             $mform->setType('config_preferences[userinfo3]', PARAM_TEXT);
 
             foreach (range(1, myprofile_widget::KPIFIELDCOUNT) as $n) {
                 // Key progress indicator.
-                $mform->addElement('select', "config_preferences[kpi$n]", get_string('field:kpi', 'block_dash', $n),
-                    array_merge($noneoption, $kpiattributes));
+                $mform->addElement(
+                    'select',
+                    "config_preferences[kpi$n]",
+                    get_string('field:kpi', 'block_dash', $n),
+                    array_merge($noneoption, $kpiattributes)
+                );
                 $mform->setType("config_preferences[kpi$n]", PARAM_TEXT);
             }
-
         }
     }
 
@@ -180,13 +203,16 @@ class myprofile_layout extends abstract_layout {
      */
     public function after_data(data_collection_interface $datacollection) {
         foreach ($datacollection->get_child_collections('rows') as $childcollection) {
-            $this->map_data([
+            $this->map_data(
+                [
                 'bgimageurl' => $this->get_data_source()->get_preferences('backgroundimagefield'),
                 'userinfo1' => $this->get_data_source()->get_preferences('userinfo1'),
                 'userinfo2' => $this->get_data_source()->get_preferences('userinfo2'),
                 'userinfo3' => $this->get_data_source()->get_preferences('userinfo3'),
                 'fullname' => 'u_fullname_linked',
-            ], $childcollection);
+                ],
+                $childcollection
+            );
         }
     }
 }

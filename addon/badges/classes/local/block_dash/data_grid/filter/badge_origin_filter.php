@@ -17,9 +17,9 @@
 /**
  * Badges report filters defined.
  *
- * @package    dashaddon_badges
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_badges
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_badges\local\block_dash\data_grid\filter;
@@ -30,10 +30,8 @@ use block_dash\local\data_grid\filter\select_filter;
  * Badge filters preference options.
  */
 class badge_origin_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
-     *
      */
     public function init() {
         global $DB;
@@ -52,12 +50,11 @@ class badge_origin_filter extends select_filter {
      * @return array
      */
     public function get_sql_and_params() {
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
         $values = $this->get_values();
         if (array_search('0', $values) !== false) {
-            $sql = ' bd.type = 1 OR '. $sql;
+            $sql = ' bd.type = 1 OR ' . $sql;
         }
         return [$sql, $params];
     }
-
 }

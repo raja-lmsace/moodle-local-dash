@@ -17,9 +17,9 @@
 /**
  * Transform activity data into activity purpose.
  *
- * @package    dashaddon_activities
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activities
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash\data_grid\field\attribute;
@@ -32,13 +32,14 @@ use cm_info;
  *
  * @package dashaddon_activities
  */
-class activity_purpose_attribute extends abstract_field_attribute {
+class activity_purpose_attribute extends abstract_field_attribute
+{
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param \stdClass $data
-     * @param \stdClass $record Entire row
+     * @param  \stdClass $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
@@ -47,8 +48,10 @@ class activity_purpose_attribute extends abstract_field_attribute {
 
         $modulename = $DB->get_field("modules", 'name', ['id' => $record->cm_module]);
         $cm = cm_info::create(get_coursemodule_from_id('', $record->cm_id));
-        if ($cm->get_course()->format == 'designer' &&
-            dashaddon_activities_is_designer_pro_installed()) {
+        if (
+            $cm != null && $cm->get_course()->format == 'designer'
+            && dashaddon_activities_is_designer_pro_installed()
+        ) {
             $modpurpose = \format_designer\options::get_option($data, 'purpose');
             if (!$modpurpose) {
                 $modpurpose = get_config('local_designer', "purpose_" . $modulename);

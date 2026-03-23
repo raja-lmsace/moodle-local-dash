@@ -22,6 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['learningpath:reportuser'] = 'Calculate In report';
 $string['pluginname'] = 'Widget: Learning path';
-$string['widget:learningpath'] = ' Learning path widget';
-$string['learningpath:reportuser'] = 'Caluculate In report';
+$string['widget:learningpath'] = 'Learning path widget';

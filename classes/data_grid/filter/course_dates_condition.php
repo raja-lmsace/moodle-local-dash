@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course completion status.
  *
- * @package    local_dash
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -35,7 +35,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class course_dates_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -58,14 +57,15 @@ class course_dates_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -78,8 +78,11 @@ class course_dates_condition extends condition {
             'future' => get_string('coursedate:future', 'block_dash'),
         ];
 
-        $select = $mform->addElement('select', $fieldname . '[coursedates]',
-            get_string('coursedates', 'block_dash'), $choices,
+        $select = $mform->addElement(
+            'select',
+            $fieldname . '[coursedates]',
+            get_string('coursedates', 'block_dash'),
+            $choices,
             ['class' => 'select2-form']
         );
         $mform->hideIf($fieldname . '[coursedates]', $fieldname . '[enabled]');
@@ -103,21 +106,20 @@ class course_dates_condition extends condition {
                 switch ($date) {
                     case 'past':
                         $sql[] = "(c.enddate <> 0 AND c.enddate < :cdc_now_$key)";
-                        $params += ['cdc_now_'.$key => time()];
+                        $params += ['cdc_now_' . $key => time()];
                         break;
                     case 'present':
                         $sql[] = "(c.startdate < :cdc_startdate_$key AND ( c.enddate = 0 OR c.enddate > :cdc_enddate_$key) )";
-                        $params += ['cdc_enddate_'.$key => time(), 'cdc_startdate_'.$key => time()];
+                        $params += ['cdc_enddate_' . $key => time(), 'cdc_startdate_' . $key => time()];
                         break;
                     case 'future':
                         $sql[] = "(c.startdate > :cdc_now_$key)";
-                        $params += ['cdc_now_'.$key => time()];
+                        $params += ['cdc_now_' . $key => time()];
                         break;
                 }
             }
 
-            return ['('.implode(' OR ', $sql).')', $params];
+            return ['(' . implode(' OR ', $sql) . ')', $params];
         }
-
     }
 }

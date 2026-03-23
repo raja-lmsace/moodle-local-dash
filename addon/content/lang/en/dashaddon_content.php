@@ -22,10 +22,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Addon: Content';
+$string['content'] = 'Content';
+$string['content:managecontent'] = 'Manage dash content';
+$string['contentdesc'] = 'Choose from the following layouts';
 $string['datasource:badge_data_source'] = 'Badges';
 $string['datasource:content_customtype'] = 'Custom content';
 $string['fullwidth'] = 'Full width';
-$string['content'] = 'Content';
-$string['contentdesc'] = 'Choose from the following layouts';
-$string['content:managecontent'] = 'Manage dash content';
+$string['pluginname'] = 'Addon: Content';

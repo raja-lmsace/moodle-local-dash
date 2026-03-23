@@ -24,4 +24,3 @@
 
 $string['pluginname'] = 'Widget: My profile';
 $string['widget:myprofile'] = 'Dashaddon myprofile widget';
-

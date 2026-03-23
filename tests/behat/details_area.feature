@@ -19,12 +19,13 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
       | student4 | Student   | Four     | student3@example.com |
       | student5 | Student   | Five     | student3@example.com |
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I create dash "Courses" datasource
     And I configure the "New Dash" block
     And I set the field "Block title" to "Course datasource"
     And I press "Save changes"
+    And I wait until the page is ready
     And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     Then I click on "General" "link"
@@ -42,12 +43,13 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
 
   Scenario: Check expand area detials in default layouts.
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     Then ".table.dash-table" "css_element" should not exist
     Then ".card-layout-default.card-layout-row" "css_element" should exist
     Then ".card-layout-default .card-block:nth-child(1) .card .card-body" "css_element" should exist
     Then I should see "C1" in the ".card-layout-default .card-block:nth-child(1) .card-title-sub" "css_element"
+    And I wait until the page is ready
     And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     And I set the field "Details area" to "Expanding"
@@ -64,8 +66,9 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
 
   Scenario: Check floating area detials in default layouts.
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     Then I should see "Details area"
@@ -79,8 +82,9 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
 
   Scenario: Check modal area detials in default layouts.
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course datasource" block preference
     Then I click on "Fields" "link"
     Then I should see "Details area"

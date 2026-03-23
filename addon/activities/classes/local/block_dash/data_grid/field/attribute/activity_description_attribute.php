@@ -17,9 +17,9 @@
 /**
  * Transform activity data into activity description.
  *
- * @package    dashaddon_activities
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activities
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash\data_grid\field\attribute;
@@ -33,28 +33,37 @@ use context_module;
  *
  * @package dashaddon_activities
  */
-class activity_description_attribute extends abstract_field_attribute {
+class activity_description_attribute extends abstract_field_attribute
+{
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param \stdClass $data
-     * @param \stdClass $record Entire row
+     * @param  \stdClass $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
     public function transform_data($data, \stdClass $record) {
         global $DB, $CFG;
-        require_once($CFG->libdir . '/externallib.php');
+        include_once($CFG->libdir . '/externallib.php');
         $module = $DB->get_record('modules', ['id' => $record->cm_module]);
         $instance = $DB->get_record($module->name, ['id' => $record->cm_instance]);
         $cm = cm_info::create(get_coursemodule_from_id($module->name, $data));
         $modulecontext = context_module::instance($data);
-        $cmcontent = format_module_intro($module->name,
-                                    $instance, $cm->id, false);
-
-        list($intro, $format) = external_format_text($cmcontent,
-                                    FORMAT_HTML, $modulecontext->id, $cm->modname, 'intro', $cm->id, ['noclean' => true]);
+        if ($cm == null) {
+            return '';
+        }
+        $cmcontent = format_module_intro($module->name, $instance, $cm->id, false);
+        [$intro, $format] = external_format_text(
+            $cmcontent,
+            FORMAT_HTML,
+            $modulecontext->id,
+            $cm->modname,
+            'intro',
+            $cm->id,
+            ['noclean' => true]
+        );
         return $intro;
     }
 }

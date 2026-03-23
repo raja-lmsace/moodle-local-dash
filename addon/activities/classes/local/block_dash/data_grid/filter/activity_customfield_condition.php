@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course completion status.
  *
- * @package    dashaddon_activities
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activities
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash\data_grid\filter;
@@ -37,7 +37,6 @@ use MoodleQuickForm;
  * @package dashaddon_activities
  */
 class activity_customfield_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -64,14 +63,15 @@ class activity_customfield_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -89,14 +89,18 @@ class activity_customfield_condition extends condition {
 
     /**
      * Get custom field instance data. it contains the field_controller instance data.
-     * @param \moodle_form $mform
+     *
+     * @param  \moodle_form $mform
      * @return field_data
      */
     public function get_field_data(&$mform) {
         global $DB;
-        $field = $DB->get_record('local_metadata_field', ['shortname' => $this->get_name(),
+        $field = $DB->get_record(
+            'local_metadata_field',
+            ['shortname' => $this->get_name(),
             'contextlevel' => CONTEXT_MODULE,
-        ]);
+            ]
+        );
         if ($field) {
             $newfield = "\\metadatafieldtype_{$field->datatype}\\metadata";
             $data = new $newfield($field->id, $this->instance->id);
@@ -130,11 +134,11 @@ class activity_customfield_condition extends condition {
         if (isset($this->get_preferences()['value']) && !empty($fieldid)) {
             $name = strtolower($this->get_name());
             $value = $this->get_preferences()['value'];
-            $valuecheck = $DB->sql_compare_text(':value_'.$name);
+            $valuecheck = $DB->sql_compare_text(':value_' . $name);
             $sql = "cm.id IN (
                 SELECT instanceid FROM {local_metadata} mfd WHERE mfd.fieldid = :fieldid_$name AND mfd.data=$valuecheck
             )";
-            $params = ['fieldid_'.$name => $fieldid, 'value_'.$name => $value];
+            $params = ['fieldid_' . $name => $fieldid, 'value_' . $name => $value];
             return [$sql, $params];
         }
     }

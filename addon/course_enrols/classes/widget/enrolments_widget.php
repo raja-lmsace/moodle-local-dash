@@ -17,9 +17,9 @@
 /**
  * Enrolments widget class contains the layout information and generate the data for widget.
  *
- * @package    dashaddon_course_enrols
- * @copyright  2022 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_enrols
+ * @copyright 2022 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_enrols\widget;
@@ -41,9 +41,9 @@ use dashaddon_course_enrols\info;
  * Enrolments widget class contains the layout information and generate the data for widget.
  */
 class enrolments_widget extends abstract_widget {
-
     /**
      * Enrolment sort method.
+     *
      * @var string
      */
     protected $enrolmentsort;
@@ -128,13 +128,13 @@ class enrolments_widget extends abstract_widget {
      * @return void
      */
     public function build_widget() {
-        global $PAGE, $USER;
+        global $PAGE, $USER, $CFG;
 
         $this->enrolmentsort = $this->get_default_sorting();
         $this->enrolstatus = 'all';
         $this->userid = info::get_related_userid();
 
-        list($enrolledcourses, $count) = $this->generate_available_course_report();
+        [$enrolledcourses, $count] = $this->generate_available_course_report();
         $addcourse = $this->get_preferences('addcourse');
         $capviewprofiledash = true;
         if ($PAGE->pagelayout == 'mypublic') {
@@ -167,14 +167,15 @@ class enrolments_widget extends abstract_widget {
             'hascapenrol' => info::has_capability('dashaddon/course_enrols:enrol'),
             'hascapviewdetails' => info::has_capability('dashaddon/course_enrols:viewdetails'),
             'capviewprofiledash' => $capviewprofiledash,
+            'datatoggle' => $CFG->branch >= 500 ? 'data-bs-toggle' : 'data-toggle',
+            'datatarget' => $CFG->branch >= 500 ? 'data-bs-target' : 'data-target',
         ];
         return $this->data;
     }
 
-
-
     /**
      * Get table pagination class.
+     *
      * @return paginator
      */
     public function widget_data_count() {
@@ -190,13 +191,13 @@ class enrolments_widget extends abstract_widget {
         $sort = $this->get_preferences('default_sort');
         $sortdirection = $this->get_preferences('default_sort_direction');
         $menus = \dashaddon_course_enrols\info::get_sorting_menus();
-        return isset($menus[$sort.'_'.$sortdirection]) ? $sort.'_'.$sortdirection : 'enrolmentdate_asc';
+        return isset($menus[$sort . '_' . $sortdirection]) ? $sort . '_' . $sortdirection : 'enrolmentdate_asc';
     }
 
     /**
      * Get potential courses for enrol the user.
      *
-     * @param int $enrolled
+     * @param  int $enrolled
      * @return array $enrolcourses
      */
     public function get_available_courses_for_enrol($enrolled) {
@@ -238,19 +239,20 @@ class enrolments_widget extends abstract_widget {
         $categorysql = '';
         $params = [];
         foreach ($filters as $filter) {
-            if ($filter->get_name() == 'c_course_categories_condition'
-                && $filter->get_preferences('enabled') && $filter->get_preferences()) {
-
+            if (
+                $filter->get_name() == 'c_course_categories_condition'
+                && $filter->get_preferences('enabled') && $filter->get_preferences()
+            ) {
                 $categories = $filter->get_values();
                 if (!$filter->get_preferences()['enabled'] || empty($categories)) {
                     continue;
                 }
-                list($insql, $params) = $DB->get_in_or_equal($categories, SQL_PARAMS_NAMED, 'ctx');
+                [$insql, $params] = $DB->get_in_or_equal($categories, SQL_PARAMS_NAMED, 'ctx');
                 $categorysql = "AND c.category $insql";
             }
 
             if ($filter->get_name() == 'c_status') {
-                list($insql, $inparams) = $filter->get_sql_and_params();
+                [$insql, $inparams] = $filter->get_sql_and_params();
                 $categorysql .= ($insql) ? " AND $insql " : '';
                 $params += $inparams;
             }
@@ -271,19 +273,24 @@ class enrolments_widget extends abstract_widget {
                     $this->userid = $user ? $user : $this->userid;
                 }
             }
-
         }
 
         return \dashaddon_course_enrols\info::get_courses_list(
-            $this->userid, $this->enrolmentsort, $this->enrolstatus, $limitfrom, $limitnum, $categorysql, $params
+            $this->userid,
+            $this->enrolmentsort,
+            $this->enrolstatus,
+            $limitfrom,
+            $limitnum,
+            $categorysql,
+            $params
         );
     }
 
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -311,13 +318,20 @@ class enrolments_widget extends abstract_widget {
                 0 => get_string('disable', 'core'),
             ];
 
-            $mform->addElement('select', 'config_preferences[default_sort]', get_string('defaultsortfield', 'block_dash'),
-                $sortablefields);
+            $mform->addElement(
+                'select',
+                'config_preferences[default_sort]',
+                get_string('defaultsortfield', 'block_dash'),
+                $sortablefields
+            );
             $mform->setType('config_preferences[default_sort]', PARAM_TEXT);
             $mform->addHelpButton('config_preferences[default_sort]', 'defaultsortfield', 'block_dash');
 
-            $mform->addElement('select', 'config_preferences[default_sort_direction]',
-                get_string('defaultsortdirection', 'block_dash'), [ 'asc' => 'ASC', 'desc' => 'DESC']
+            $mform->addElement(
+                'select',
+                'config_preferences[default_sort_direction]',
+                get_string('defaultsortdirection', 'block_dash'),
+                [ 'asc' => 'ASC', 'desc' => 'DESC']
             );
             $mform->setType('config_preferences[default_sort_direction]', PARAM_TEXT);
 
@@ -325,16 +339,24 @@ class enrolments_widget extends abstract_widget {
             $mform->setType('config_preferences[perpage]', PARAM_INT);
             $mform->addHelpButton('config_preferences[perpage]', 'perpage', 'block_dash');
 
-            $mform->addElement('select', 'config_preferences[progress]',
-                get_string('course_enrolments:progress', 'block_dash'), $choices);
+            $mform->addElement(
+                'select',
+                'config_preferences[progress]',
+                get_string('course_enrolments:progress', 'block_dash'),
+                $choices
+            );
             $mform->setType('config_preferences[progress]', PARAM_INT);
             $mform->addHelpButton('config_preferences[progress]', 'progress', 'block_dash');
             if (!isset($preferences['progress'])) {
                 $mform->setDefault('config_preferences[progress]', 1);
             }
 
-            $mform->addElement('select', 'config_preferences[expandable]',
-                get_string('course_enrolments:expandable', 'block_dash'), $choices);
+            $mform->addElement(
+                'select',
+                'config_preferences[expandable]',
+                get_string('course_enrolments:expandable', 'block_dash'),
+                $choices
+            );
             $mform->setType('config_preferences[expandable]', PARAM_INT);
             $mform->addHelpButton('config_preferences[expandable]', 'expandable', 'block_dash');
             if (!isset($preferences['expandable'])) {
@@ -346,11 +368,14 @@ class enrolments_widget extends abstract_widget {
                 1 => get_string('course_enrolments:abovecourseform', 'block_dash'),
                 2 => get_string('course_enrolments:belowcourseform', 'block_dash'),
             ];
-            $mform->addElement('select', 'config_preferences[addcourse]',
-                get_string('course_enrolments:displayaddcourse', 'block_dash'), $choices);
+            $mform->addElement(
+                'select',
+                'config_preferences[addcourse]',
+                get_string('course_enrolments:displayaddcourse', 'block_dash'),
+                $choices
+            );
             $mform->setType('config_preferences[addcourse]', PARAM_INT);
             $mform->addHelpButton('config_preferences[addcourse]', 'addcourse', 'block_dash');
-
         } else {
             $mform->addElement('html', get_string('fieldalert', 'block_dash'), 'fieldalert');
         }

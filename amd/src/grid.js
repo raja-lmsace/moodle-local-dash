@@ -1,4 +1,4 @@
-define([], function() {
+define([], function () {
 
     var uniqueID;
 
@@ -87,7 +87,7 @@ define([], function() {
                             var expandClass = (prevElement == 5) ? 25 : 2;
                             previousElements.forEach((prev) => {
                                 removeClass(prev);
-                                prev.classList.add('col-sm-'+expandClass.toString());
+                                prev.classList.add('col-sm-' + expandClass.toString());
                             });
                         }
                         return;
@@ -166,7 +166,7 @@ define([], function() {
     };
 
     return {
-        init: function(uniqueid, columnSize=1) {
+        init: function (uniqueid, columnSize = 1) {
             uniqueID = uniqueid;
             Columns = parseInt(columnSize);
             expandDetails();

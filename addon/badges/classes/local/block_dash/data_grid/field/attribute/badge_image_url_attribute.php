@@ -17,9 +17,9 @@
 /**
  * Transforms data to badge image url.
  *
- * @package    dashaddon_badges
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_badges
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_badges\local\block_dash\data_grid\field\attribute;
@@ -33,12 +33,11 @@ use moodle_url;
  * Transforms data to badge image url.
  */
 class badge_image_url_attribute extends abstract_field_attribute {
-
     /**
      * Generate the badge image url based on the badge id.
      *
-     * @param int $data
-     * @param stdClass $record
+     * @param  int      $data
+     * @param  stdClass $record
      * @return string
      */
     public function transform_data($data, stdClass $record) {

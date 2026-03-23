@@ -19,13 +19,13 @@
 
     Example context (json):
     {
+        "uniqueid": "63e200b"
     }
 
 }}
 
-<!-- Load the progress bar template -->
 {{#data.progressgraph}}
-{{> dashaddon_skill_graph/competency_progress }}
+{{> dashaddon_skill_graph/competency_progress}}
 {{/data.progressgraph}}
 
 {{^data.progressgraph}}
@@ -42,16 +42,14 @@
         <div class="clearfix"></div>
     </div>
     {{/data.datasetcount}}
-
     {{^data.datasetcount}}
         {{#noresult}}{{{noresult}}}{{/noresult}}
     {{/data.datasetcount}}
-
-    {{#js}}
-        {{#data.datalabels}}
-        require(['jquery', 'dashaddon_skill_graph/skill_graph'], function($, skillGraph) {
-            skillGraph.init('{{uniqueid}}', {{{data.datalabels}}}, {{{data.dataset}}});
-        });
-        {{/data.datalabels}}
-    {{/js}}
+{{#js}}
+{{#data.datalabels}}
+require(['jquery', 'dashaddon_skill_graph/skill_graph'], function($, skillGraph) {
+    skillGraph.init('{{uniqueid}}', {{{data.datalabels}}}, {{{data.dataset}}});
+});
+{{/data.datalabels}}
+{{/js}}
 {{/data.progressgraph}}

@@ -1,4 +1,4 @@
-define(['jquery', 'core/chartjs', 'dashaddon_course_completions/chart-labels'], function($, Chart, Labels) {
+define(['jquery', 'core/chartjs', 'dashaddon_course_completions/chart-labels'], function ($, Chart, Labels) {
 
     /* global dashCourseCompletionData */
     var completionData = dashCourseCompletionData;
@@ -13,20 +13,20 @@ define(['jquery', 'core/chartjs', 'dashaddon_course_completions/chart-labels'], 
         fontFamily: fontFamily
     };
 
-    const courseCompletions = function(uniqueid, courses) {
+    const courseCompletions = function (uniqueid, courses) {
         // Courses empty check.
         if (!courses) {
             return;
         }
 
-        courses.forEach(function(course) {
+        courses.forEach(function (course) {
             if (course.dataset.length > 0) {
                 completionChart(course, uniqueid);
             }
         });
     };
 
-    const completionChart = function(course, uniqueid) {
+    const completionChart = function (course, uniqueid) {
 
         var chartID = 'completion-widget-course-' + course.info.id + '-' + uniqueid;
         var ctx = document.getElementById(chartID).getContext('2d');
@@ -47,7 +47,7 @@ define(['jquery', 'core/chartjs', 'dashaddon_course_completions/chart-labels'], 
             options: {
                 responsive: true,
                 color: '#000000',
-                font: {size: 14},
+                font: { size: 14 },
                 title: {
                     display: false,
                 },
@@ -74,7 +74,7 @@ define(['jquery', 'core/chartjs', 'dashaddon_course_completions/chart-labels'], 
 
     var completionStat = {
         id: 'completionStat',
-        beforeDatasetsDraw: function(chart) {
+        beforeDatasetsDraw: function (chart) {
             var ctx = chart.ctx;
             var top = chart.chartArea.top;
 

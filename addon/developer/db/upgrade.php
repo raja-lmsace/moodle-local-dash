@@ -25,7 +25,7 @@
 /**
  * Function to upgrade db.
  *
- * @param int $oldversion the version we are upgrading from
+ * @param  int $oldversion the version we are upgrading from
  * @return bool result
  */
 function xmldb_dashaddon_developer_upgrade($oldversion) {
@@ -34,7 +34,6 @@ function xmldb_dashaddon_developer_upgrade($oldversion) {
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2020012303) {
-
         // Define table dash_custom_data_source to be created.
         $table = new xmldb_table('dash_custom_data_source');
 
@@ -64,7 +63,6 @@ function xmldb_dashaddon_developer_upgrade($oldversion) {
     }
 
     if ($oldversion < 2020012400) {
-
         // Define field timecreated to be added to dash_custom_data_source.
         $table = new xmldb_table('dash_custom_data_source');
         $field = new xmldb_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'layout_mustache');
@@ -97,7 +95,6 @@ function xmldb_dashaddon_developer_upgrade($oldversion) {
     }
 
     if ($oldversion < 2020020400) {
-
         // Define table dash_custom_layout to be created.
         $table = new xmldb_table('dash_custom_layout');
 
@@ -126,7 +123,6 @@ function xmldb_dashaddon_developer_upgrade($oldversion) {
     }
 
     if ($oldversion < 2020020600) {
-
         // Define field layout_type to be dropped from dash_custom_data_source.
         $table = new xmldb_table('dash_custom_data_source');
         $field = new xmldb_field('layout_type');

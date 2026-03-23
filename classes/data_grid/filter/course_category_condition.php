@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course categories.
  *
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -35,7 +35,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class course_category_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -76,15 +75,17 @@ class course_category_condition extends condition {
                 foreach ($rootcategoryids as $categoryid) {
                     $categoryids[] = $categoryid;
 
-                    if (isset($this->get_preferences()['includesubcategories'])
-                        && $this->get_preferences()['includesubcategories']) {
+                    if (
+                        isset($this->get_preferences()['includesubcategories'])
+                        && $this->get_preferences()['includesubcategories']
+                    ) {
                         if (class_exists("\core_course_category")) {
                             if ($coursecat = \core_course_category::get($categoryid, IGNORE_MISSING)) {
                                 $categoryids = array_merge($categoryids, $coursecat->get_all_children_ids());
                             }
                         } else {
                             // Moodle 3.5 compatibility.
-                            require_once("$CFG->dirroot/lib/coursecatlib.php");
+                            include_once("$CFG->dirroot/lib/coursecatlib.php");
                             if ($coursecat = \coursecat::get($categoryid, IGNORE_MISSING)) {
                                 foreach ($coursecat->get_children() as $category) {
                                     $categoryids[] = $category->id;
@@ -101,14 +102,15 @@ class course_category_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -120,14 +122,13 @@ class course_category_condition extends condition {
             if ($role = $DB->get_record('role', ['id' => $roleid])) {
                 $options[$roleid] = role_get_name($role);
             }
-
         }
 
         if (class_exists("\core_course_category")) {
             $categories = \core_course_category::make_categories_list('moodle/course:create');
         } else {
             // Moodle 3.5 compatibility.
-            require_once("$CFG->dirroot/lib/coursecatlib.php");
+            include_once("$CFG->dirroot/lib/coursecatlib.php");
             $categories = \coursecat::make_categories_list('moodle/course:create');
         }
 

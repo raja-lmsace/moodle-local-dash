@@ -17,9 +17,9 @@
 /**
  * Transforms data to program dates.
  *
- * @package    dashaddon_programs
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_programs
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_programs\local\block_dash\data_grid\field\attribute;
@@ -33,12 +33,11 @@ use stdClass;
  * Transforms data to program dates.
  */
 class program_date_attribute extends abstract_field_attribute {
-
     /**
      * Converts json data to program dates.
      *
-     * @param int $data
-     * @param stdClass $record
+     * @param  int      $data
+     * @param  stdClass $record
      * @return string
      */
     public function transform_data($data, stdClass $record) {
@@ -57,6 +56,3 @@ class program_date_attribute extends abstract_field_attribute {
         return $result;
     }
 }
-
-
-

@@ -16,9 +16,10 @@
 
 /**
  * Filter items based on tags in a certain component and itemtype.
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -33,7 +34,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class tags_condition extends condition {
-
     /**
      * Current component.
      *
@@ -77,15 +77,15 @@ class tags_condition extends condition {
             $itemids = [];
 
             $collectionid = \core_tag_area::get_collection($this->component, $this->itemtype);
-
-            foreach ($values as $value) {
-                if ($tag = \core_tag_tag::get_by_name($collectionid, $value)) {
-                    foreach ($tag->get_tagged_items($this->component, $this->itemtype) as $item) {
-                        $itemids[] = $item->id;
+            if (is_array($values)) {
+                foreach ($values as $value) {
+                    if ($tag = \core_tag_tag::get_by_name($collectionid, $value)) {
+                        foreach ($tag->get_tagged_items($this->component, $this->itemtype) as $item) {
+                            $itemids[] = $item->id;
+                        }
                     }
                 }
             }
-
             return !empty($itemids) ? $itemids : [0];
         }
     }
@@ -93,13 +93,15 @@ class tags_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
-        MoodleQuickForm $mform, $fieldnameformat = 'filters[%s]'): void {
+        MoodleQuickForm $mform,
+        $fieldnameformat = 'filters[%s]'
+    ): void {
 
         global $OUTPUT;
 
@@ -116,9 +118,15 @@ class tags_condition extends condition {
             $options[$tag->name] = $tag->name;
         }
 
-        $mform->addElement('autocomplete', $fieldname . '[tags]', get_string('tags', 'block_dash'), $options, [
+        $mform->addElement(
+            'autocomplete',
+            $fieldname . '[tags]',
+            get_string('tags', 'block_dash'),
+            $options,
+            [
             'multiple' => true,
-        ]);
+            ]
+        );
         $mform->hideIf($fieldname . '[tags]', $fieldname . '[enabled]');
     }
 }

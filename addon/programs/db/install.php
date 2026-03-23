@@ -17,19 +17,20 @@
 /**
  * Enable plugin for new install
  *
- * @package     dashaddon_programs
- * @copyright   2021 bdecent gmbh <https://bdecent.de>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_programs
+ * @copyright 2021 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
 /**
  * Enable this plugin for new installs
+ *
  * @return bool
  */
 function xmldb_dashaddon_programs_install() {
     global $CFG;
-    require_once($CFG->dirroot. "/local/dash/addon/programs/lib.php");
+    require_once($CFG->dirroot . "/local/dash/addon/programs/lib.php");
     if (empty(dashaddon_programs_extend_added_dependencies())) {
         set_config('enabled', 1, 'dashaddon_programs');
     }

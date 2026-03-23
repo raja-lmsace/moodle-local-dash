@@ -17,9 +17,9 @@
 /**
  * Table that lists layouts.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_developer\layout\table;
@@ -34,11 +34,10 @@ require_once($CFG->libdir . '/tablelib.php');
  * @package dashaddon_developer
  */
 class layout_table extends \table_sql {
-
     /**
      * Define the headers and columns of this table.
      *
-     * @param string $uniqueid
+     * @param  string $uniqueid
      * @throws \coding_exception
      */
     public function __construct($uniqueid) {
@@ -60,18 +59,20 @@ class layout_table extends \table_sql {
     /**
      * Name of the layout.
      *
-     * @param object $data
+     * @param  object $data
      * @return string
      */
     public function col_name($data) {
-        return \html_writer::link(new \moodle_url('/local/dash/addon/developer/customlayouts.php', ['id' => $data->id]),
-            $data->name);
+        return \html_writer::link(
+            new \moodle_url('/local/dash/addon/developer/customlayouts.php', ['id' => $data->id]),
+            $data->name
+        );
     }
 
     /**
      * Actions for layouts.
      *
-     * @param \stdClass $data
+     * @param  \stdClass $data
      * @return string
      * @throws \coding_exception
      * @throws \moodle_exception
@@ -79,23 +80,28 @@ class layout_table extends \table_sql {
     public function col_actions($data) {
         global $OUTPUT;
 
-        return $OUTPUT->single_button(new \moodle_url('/local/dash/addon/developer/customlayout.php',
-                ['action' => 'edit', 'id' => $data->id]), get_string('edit', 'block_dash'), 'get') .
-            $OUTPUT->single_button(new \moodle_url('/local/dash/addon/developer/customlayout.php',
-                ['action' => 'delete', 'id' => $data->id]), get_string('delete', 'block_dash'), 'get');
+        return $OUTPUT->single_button(
+            new \moodle_url('/local/dash/addon/developer/customlayout.php', ['action' => 'edit', 'id' => $data->id]),
+            get_string('edit', 'block_dash'),
+            'get'
+        ) . $OUTPUT->single_button(
+            new \moodle_url('/local/dash/addon/developer/customlayout.php', ['action' => 'delete', 'id' => $data->id]),
+            get_string('delete', 'block_dash'),
+            'get'
+        );
     }
 
     /**
      * Fetch the records from the DB based on the querys defined in this datasource.
      *
-     * @param int $pagesize
-     * @param bool $useinitialsbar
+     * @param  int  $pagesize
+     * @param  bool $useinitialsbar
      * @throws \dml_exception
      */
     public function query_db($pagesize, $useinitialsbar = true) {
         global $DB;
 
-        list($wsql, $params) = $this->get_sql_where();
+        [$wsql, $params] = $this->get_sql_where();
 
         $sql = 'SELECT * FROM {dashaddon_developer_layout} l ' . $wsql;
 

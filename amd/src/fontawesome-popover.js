@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'theme_boost/popover', 'core/fragment'], function($, popover, Fragment) {
+define(['jquery', 'theme_boost/popover', 'core/fragment'], function ($, popover, Fragment) {
 
     const SELECTORS = {
         PICKERCONTAINER: '.fontawesome-iconpicker-popover',
@@ -133,7 +133,7 @@ define(['jquery', 'theme_boost/popover', 'core/fragment'], function($, popover, 
 
         // Fetch the icons list and setup popover with icons list.
         // eslint-disable-next-line promise/valid-params
-        getIconList().then(function(html) {
+        getIconList().then(function (html) {
 
             $(pickerInput).popover({
                 content: html,
@@ -147,7 +147,7 @@ define(['jquery', 'theme_boost/popover', 'core/fragment'], function($, popover, 
             // Event observer when the popover is inserted in DOM, create event listner for each icon in icons list.
             // Icon is clicked, set the icon data-value as value for select box.
             // Set the icon label to value of autocomplete picker.
-            $(pickerInput).on('inserted.bs.popover', function() {
+            $(pickerInput).on('inserted.bs.popover', function () {
                 var ul = document.querySelector('.fontawesome-iconpicker-popover ul.fontawesome-icon-suggestions');
                 ul.querySelectorAll('li').forEach((li) => {
                     li.addEventListener('click', (e) => {
@@ -168,7 +168,7 @@ define(['jquery', 'theme_boost/popover', 'core/fragment'], function($, popover, 
                 $(pickerInput).popover('hide');
             }
         },
-        true);
+            true);
 
         document.addEventListener('keydown', e => {
             if (pickerIsShown && e.key === 'Escape') {
@@ -182,7 +182,7 @@ define(['jquery', 'theme_boost/popover', 'core/fragment'], function($, popover, 
                 $(pickerInput).popover('hide');
             }
         },
-        true);
+            true);
 
         $(pickerInput).on('shown.bs.popover', () => {
             pickerIsShown = true;
@@ -192,7 +192,7 @@ define(['jquery', 'theme_boost/popover', 'core/fragment'], function($, popover, 
                 if (iconSuggestion.querySelector('li[data-label="' + pickerInput.value + '"]') !== null) {
                     // Remove selected class.
                     iconSuggestion.querySelectorAll('li').forEach((li) =>
-                            li.classList.remove('selected'));
+                        li.classList.remove('selected'));
                     // Assign selected class for new.
                     iconSuggestion.querySelector('li[data-label="' + pickerInput.value + '"]').classList.add('selected');
                 }
@@ -203,7 +203,7 @@ define(['jquery', 'theme_boost/popover', 'core/fragment'], function($, popover, 
             pickerIsShown = false;
         });
 
-        pickerInput.addEventListener('keyup', function(e) {
+        pickerInput.addEventListener('keyup', function (e) {
             filterIcons(e.target);
         });
 

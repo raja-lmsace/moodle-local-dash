@@ -49,7 +49,7 @@ Feature: Add course completion widget in dash block
       | admin    | C3     | student | 0           | 0       |
       | admin    | C4     | student | 0           | 0       |
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I add the "Dash" block
     # And I create dash "Course completions" datasource
@@ -87,8 +87,9 @@ Feature: Add course completion widget in dash block
 
   Scenario: Widget completion conditions
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course completions" block preference
     Then I click on "Conditions" "link"
     And I set the field "My enrolled courses" to "1"
@@ -104,8 +105,9 @@ Feature: Add course completion widget in dash block
 
   Scenario: Course dates condition test
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course completions" block preference
     Then I click on "Conditions" "link"
     And I set the field "config_preferences[filters][coursedates][enabled]" to "1"
@@ -119,8 +121,9 @@ Feature: Add course completion widget in dash block
 
   Scenario: Custom field conditions for completion
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course completions" block preference
     Then I click on "Conditions" "link"
     And I should see "Field 1"

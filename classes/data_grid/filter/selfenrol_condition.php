@@ -17,9 +17,9 @@
 /**
  * Limit the courses based on the enrollment options course has.
  *
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -34,7 +34,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class selfenrol_condition extends condition {
-
     /**
      * Operation in where clause of the condition.
      *
@@ -104,7 +103,7 @@ class selfenrol_condition extends condition {
 
         $values = $this->get_value();
         if ($values !== false) {
-            list($insql, $inparams) = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED, 'eo', true, true);
+            [$insql, $inparams] = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED, 'eo', true, true);
             $sql = " c.id $insql ";
             return [$sql, $inparams];
         }
@@ -114,14 +113,15 @@ class selfenrol_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -137,8 +137,11 @@ class selfenrol_condition extends condition {
         }
 
         $select = $mform->addElement(
-            'autocomplete', $fieldname . '[enrollmentoptions]',
-            get_string('enrollmentoptions', 'block_dash'), $list, ['multiple' => true]
+            'autocomplete',
+            $fieldname . '[enrollmentoptions]',
+            get_string('enrollmentoptions', 'block_dash'),
+            $list,
+            ['multiple' => true]
         );
         $mform->hideIf($fieldname . '[enrollmentoptions]', $fieldname . '[enabled]');
     }

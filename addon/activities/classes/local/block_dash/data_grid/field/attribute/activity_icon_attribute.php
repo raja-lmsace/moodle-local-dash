@@ -17,9 +17,9 @@
 /**
  * Transform activity data into activity icon.
  *
- * @package    dashaddon_activities
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activities
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash\data_grid\field\attribute;
@@ -35,19 +35,22 @@ use cm_info;
  * @package dashaddon_activities
  */
 class activity_icon_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param \stdClass $data
-     * @param \stdClass $record Entire row
+     * @param  \stdClass $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
     public function transform_data($data, \stdClass $record) {
         global $DB;
         $cm = cm_info::create(get_coursemodule_from_id('', $data));
-        return html_writer::tag('img', '', ['src' => $cm->get_icon_url(), 'class' => 'icon-responsive']);
+        if ($cm != null) {
+            return html_writer::tag('img', '', ['src' => $cm->get_icon_url(), 'class' => 'icon-responsive']);
+        } else {
+            return '';
+        }
     }
 }

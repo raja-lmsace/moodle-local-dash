@@ -6,7 +6,7 @@ define([
     'dashaddon_developer/codemirror_addon_matchbrackets',
     'dashaddon_developer/codemirror_addon_show_hint',
     'dashaddon_developer/codemirror_addon_sql_hint'
-], function(CodeMirror) {
+], function (CodeMirror) {
 
     var mustacheTextarea = document.getElementById("id_mustache_template");
 
@@ -14,7 +14,7 @@ define([
         CodeMirror.fromTextArea(mustacheTextarea, {
             lineNumbers: true,
             matchBrackets: true,
-            mode: {name: 'handlebars', base: 'text/html'}
+            mode: { name: 'handlebars', base: 'text/html' }
         });
     }
 });

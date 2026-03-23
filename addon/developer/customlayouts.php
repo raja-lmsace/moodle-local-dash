@@ -17,14 +17,14 @@
 /**
  * Manage custom layouts.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use dashaddon_developer\layout\table\layout_table;
 
-require(__DIR__.'/../../../../config.php');
+require(__DIR__ . '/../../../../config.php');
 require_once("$CFG->libdir/adminlib.php");
 
 global $USER;
@@ -37,8 +37,15 @@ $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
 $PAGE->set_title(get_string('managelayouts', 'block_dash'));
 $PAGE->set_heading(get_string('managelayouts', 'block_dash'));
-$PAGE->set_button($OUTPUT->single_button(new moodle_url('/local/dash/addon/developer/customlayout.php',
-    ['action' => 'create']), get_string('createlayout', 'block_dash')));
+$PAGE->set_button(
+    $OUTPUT->single_button(
+        new moodle_url(
+            '/local/dash/addon/developer/customlayout.php',
+            ['action' => 'create']
+        ),
+        get_string('createlayout', 'block_dash')
+    )
+);
 $PAGE->navbar->add(get_string('managelayouts', 'block_dash'));
 
 require_login();

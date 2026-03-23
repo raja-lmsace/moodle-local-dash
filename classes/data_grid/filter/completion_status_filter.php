@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course completion status
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -30,18 +30,16 @@ use block_dash\local\data_grid\filter\select_filter;
  * Filters results to specific course completion status
  */
 class completion_status_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
-     *
      */
     public function init() {
         global $DB;
 
         $choices = [
-            'completed' => get_string('status:completed', 'block_dash'),
-            'inprogress' => get_string('status:inprogress', 'block_dash'),
             'enrolled' => get_string('status:enrolled', 'block_dash'),
+            'inprogress' => get_string('status:inprogress', 'block_dash'),
+            'completed' => get_string('status:completed', 'block_dash'),
         ];
         $this->add_options($choices);
         parent::init();
@@ -55,8 +53,7 @@ class completion_status_filter extends select_filter {
      */
     public function get_sql_and_params() {
         global $USER, $DB;
-
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
         $inparams = [];
         if ($sql) {
             $params['fueuserid'] = $USER->id;
@@ -74,11 +71,12 @@ class completion_status_filter extends select_filter {
                     LEFT JOIN {enrol} e ON ue.enrolid = e.id
                     LEFT JOIN {course_completions} cc ON cc.course = e.courseid AND ue.userid = cc.userid
                 WHERE ue.userid = :fueuserid
-                ) ue WHERE ".$sql, $params
+                ) ue WHERE " . $sql,
+                $params
             );
 
             $courses = array_column((array) $courses, 'courseid');
-            list($insql, $inparams) = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'f', true, true);
+            [$insql, $inparams] = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'f', true, true);
             $sql = ' c.id ' . $insql;
         }
         return [$sql, $params + $inparams];

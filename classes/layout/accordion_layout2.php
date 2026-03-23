@@ -16,9 +16,10 @@
 
 /**
  * Boostrap accordian layout2 for course format.
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\layout;
@@ -35,9 +36,9 @@ use block_dash\local\layout\abstract_layout;
  * Boostrap accordian layout2 for course format.
  */
 class accordion_layout2 extends accordion_layout {
-
     /**
      * Get layout template filename.
+     *
      * @return string
      */
     public function get_mustache_template_name() {
@@ -79,8 +80,8 @@ class accordion_layout2 extends accordion_layout {
      *
      * Be sure to call parent::build_preferences_form() if you override this method.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @throws \coding_exception
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -103,39 +104,71 @@ class accordion_layout2 extends accordion_layout {
 
             $mform->addElement('html', '<hr>');
 
-            $mform->addElement('select', 'config_preferences[field1]',
-                get_string('accordionfield1', 'block_dash'), array_merge($noneoption, $options));
+            $mform->addElement(
+                'select',
+                'config_preferences[field1]',
+                get_string('accordionfield1', 'block_dash'),
+                array_merge($noneoption, $options)
+            );
             $mform->setType('config_preferences[field1]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[field1_icon]',
-                get_string('accordionfield1icon', 'block_dash'), $icons);
+            $mform->addElement(
+                'select',
+                'config_preferences[field1_icon]',
+                get_string('accordionfield1icon', 'block_dash'),
+                $icons
+            );
 
             $mform->addElement('html', '<hr>');
 
-            $mform->addElement('select', 'config_preferences[field2]',
-                get_string('accordionfield2', 'block_dash'), array_merge($noneoption, $options));
+            $mform->addElement(
+                'select',
+                'config_preferences[field2]',
+                get_string('accordionfield2', 'block_dash'),
+                array_merge($noneoption, $options)
+            );
             $mform->setType('config_preferences[field2]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[field2_icon]',
-                get_string('accordionfield2icon', 'block_dash'), $icons);
+            $mform->addElement(
+                'select',
+                'config_preferences[field2_icon]',
+                get_string('accordionfield2icon', 'block_dash'),
+                $icons
+            );
 
             $mform->addElement('html', '<hr>');
 
-            $mform->addElement('select', 'config_preferences[field3]',
-                get_string('accordionfield3', 'block_dash'), array_merge($noneoption, $options));
+            $mform->addElement(
+                'select',
+                'config_preferences[field3]',
+                get_string('accordionfield3', 'block_dash'),
+                array_merge($noneoption, $options)
+            );
             $mform->setType('config_preferences[field3]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[field3_icon]',
-                get_string('accordionfield3icon', 'block_dash'), $icons);
+            $mform->addElement(
+                'select',
+                'config_preferences[field3_icon]',
+                get_string('accordionfield3icon', 'block_dash'),
+                $icons
+            );
 
             $mform->addElement('html', '<hr>');
 
-            $mform->addElement('select', 'config_preferences[field4]',
-                get_string('accordionfield4', 'block_dash'), array_merge($noneoption, $options));
+            $mform->addElement(
+                'select',
+                'config_preferences[field4]',
+                get_string('accordionfield4', 'block_dash'),
+                array_merge($noneoption, $options)
+            );
             $mform->setType('config_preferences[field4]', PARAM_TEXT);
 
-            $mform->addElement('select', 'config_preferences[field4_icon]',
-                get_string('accordionfield4icon', 'block_dash'), $icons);
+            $mform->addElement(
+                'select',
+                'config_preferences[field4_icon]',
+                get_string('accordionfield4icon', 'block_dash'),
+                $icons
+            );
         }
 
         parent::build_preferences_form($form, $mform);
@@ -144,7 +177,7 @@ class accordion_layout2 extends accordion_layout {
     /**
      * Allows layout to modified preferences values before exporting to mustache template.
      *
-     * @param array $preferences
+     * @param  array $preferences
      * @return array
      */
     public function process_preferences(array $preferences) {
@@ -176,12 +209,15 @@ class accordion_layout2 extends accordion_layout {
     public function after_data(data_collection_interface $datacollection) {
         foreach ($datacollection->get_child_collections('sections') as $childcollection) {
             foreach ($childcollection->get_child_collections('rows') as $row) {
-                $this->map_data([
+                $this->map_data(
+                    [
                     'field1' => $this->get_data_source()->get_preferences('field1'),
                     'field2' => $this->get_data_source()->get_preferences('field2'),
                     'field3' => $this->get_data_source()->get_preferences('field3'),
                     'field4' => $this->get_data_source()->get_preferences('field4'),
-                ], $row);
+                    ],
+                    $row
+                );
             }
         }
     }

@@ -29,14 +29,13 @@ use enrol_programs\output\catalogue\renderer as programrenderer;
 /**
  * Renderer of the program catelogue.
  *
- * @package   dashaddon_programs
+ * @package dashaddon_programs
  */
 class renderer extends programrenderer {
-
     /**
      * Fetch the content of the program.
      *
-     * @param \stdClass $program
+     * @param  \stdClass $program
      * @return string
      */
     public function get_program_content(\stdClass $program): string {

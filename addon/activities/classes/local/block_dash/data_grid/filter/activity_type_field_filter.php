@@ -16,9 +16,10 @@
 
 /**
  * Module type based filter option.
- * @package    dashaddon_activities
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_activities
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash\data_grid\filter;
@@ -30,7 +31,6 @@ use block_dash\local\data_grid\filter\filter;
  * Modulename based filter option.
  */
 class activity_type_field_filter extends select_filter {
-
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
      * If overridden call parent.
@@ -46,6 +46,7 @@ class activity_type_field_filter extends select_filter {
 
     /**
      * Get the enrolment status filter label.
+     *
      * @return string
      */
     public function get_label() {
@@ -63,15 +64,15 @@ class activity_type_field_filter extends select_filter {
         global $DB;
         $values = $this->get_values();
         if (count($values) == 1 && $values[0] != self::ALL_OPTION) {
-            list($sql, $params) = parent::get_sql_and_params();
+            [$sql, $params] = parent::get_sql_and_params();
             $inparams = [];
-            list($activities, $resources) = dashaddon_activities_get_resources_activities();
+            [$activities, $resources] = dashaddon_activities_get_resources_activities();
             if ($values[0] == MOD_ARCHETYPE_RESOURCE) {
                 $list = $resources;
             } else {
                 $list = $activities;
             }
-            list($insql, $inparams) = $DB->get_in_or_equal($list, SQL_PARAMS_NAMED);
+            [$insql, $inparams] = $DB->get_in_or_equal($list, SQL_PARAMS_NAMED);
             $sql = ' m.name ' . $insql;
             return [$sql, $params + $inparams];
         }

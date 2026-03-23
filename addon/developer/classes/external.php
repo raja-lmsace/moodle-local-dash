@@ -17,9 +17,9 @@
 /**
  * External API class.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_developer;
@@ -38,12 +38,11 @@ use external_multiple_structure;
 /**
  * External API class. - NOT USED SHOULD removed in next version.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class external extends external_api {
-
     // Region get_database_schema_structure.
 
     /**
@@ -93,9 +92,11 @@ class external extends external_api {
      * @return \external_description
      */
     public static function get_database_schema_structure_returns() {
-        return new \external_single_structure([
+        return new \external_single_structure(
+            [
             'schema' => new \external_value(PARAM_RAW),
-        ]);
+            ]
+        );
     }
 
     /**
@@ -104,24 +105,29 @@ class external extends external_api {
      * @return \external_function_parameters
      */
     public static function get_field_edit_row_parameters() {
-        return new \external_function_parameters([
+        return new \external_function_parameters(
+            [
             'name' => new \external_value(PARAM_TEXT, 'Name of field definition'),
-        ]);
+            ]
+        );
     }
 
     /**
      * Create a new competency framework
      *
-     * @param string $name
+     * @param  string $name
      * @return array
      * @throws \moodle_exception | \coding_exception | \invalid_parameter_exception
      */
     public static function get_field_edit_row($name) {
         global $OUTPUT;
 
-        $params = self::validate_parameters(self::get_field_edit_row_parameters(), [
+        $params = self::validate_parameters(
+            self::get_field_edit_row_parameters(),
+            [
             'name' => $name,
-        ]);
+            ]
+        );
 
         self::validate_context(\context_system::instance());
 
@@ -138,9 +144,11 @@ class external extends external_api {
      * @return \external_description
      */
     public static function get_field_edit_row_returns() {
-        return new \external_single_structure([
+        return new \external_single_structure(
+            [
             'html' => new \external_value(PARAM_RAW),
-        ]);
+            ]
+        );
     }
 
     /**
@@ -156,9 +164,12 @@ class external extends external_api {
                     [
                         'main' => new external_value(PARAM_ALPHANUMEXT, 'Main table'),
                         'joins' => new \external_multiple_structure(
-                            new external_value(PARAM_ALPHANUMEXT, 'Course id'), 'List of tables joined', VALUE_OPTIONAL
+                            new external_value(PARAM_ALPHANUMEXT, 'Course id'),
+                            'List of tables joined',
+                            VALUE_OPTIONAL
                         ),
-                    ], 'Tables defined'
+                    ],
+                    'Tables defined'
                 ),
                 'query' => new external_value(PARAM_ALPHANUMEXT, 'Main table', VALUE_DEFAULT, null),
             ]
@@ -168,8 +179,8 @@ class external extends external_api {
     /**
      * Get list of badges based on the requested type.
      *
-     * @param string $tables List of tables main and joins.
-     * @param string $query
+     * @param  string $tables List of tables main and joins.
+     * @param  string $query
      * @return array $type List of badge types.
      */
     public static function get_fields_list($tables, $query = null) {
@@ -193,7 +204,6 @@ class external extends external_api {
             // Tables.
             $i = 1;
             foreach ($tables as $table) {
-
                 $columns = $DB->get_columns($table);
                 $columns = array_keys($columns);
 
@@ -219,8 +229,9 @@ class external extends external_api {
                     'value' => new \external_value(PARAM_TEXT, 'Field selector', VALUE_OPTIONAL),
                     'label' => new \external_value(PARAM_TEXT, 'Field label', VALUE_OPTIONAL),
                 ]
-            ), '', VALUE_OPTIONAL
+            ),
+            '',
+            VALUE_OPTIONAL
         );
     }
-
 }

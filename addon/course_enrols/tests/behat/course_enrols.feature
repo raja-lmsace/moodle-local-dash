@@ -40,15 +40,16 @@ Feature: Add course enrol widget in dash block
       | admin    | C3     | student | 0           | 0       |
       | admin    | C4     | student | 0           | 0       |
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I create dash "Course Enrolments" datasource
-    # And I configure the "New Dash" block
-    # # And I set the field "Block title" to "Course enrols"
+    And I configure the "New Dash" block
+    And I set the field "Block title" to "New Dash"
     # # And I click on "Course Enrolments" "text" in the "New Dash" "block"
-    # And I set the following fields to these values:
-    #   | Region | content |
-    # And I press "Save changes"
+    And I set the following fields to these values:
+      | Region | content |
+    And I press "Save changes"
+    And I wait until the page is ready
     And I open the "New Dash" block preference
     Then I click on "Filters" "link"
     And I set the field "User" to "1"
@@ -56,6 +57,7 @@ Feature: Add course enrol widget in dash block
     And I set the field "Sort" to "1"
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
+    And I click on "Continue" "button"
     And I log out
 
   Scenario: Display course for specific course categories.
@@ -64,8 +66,9 @@ Feature: Add course enrol widget in dash block
     And I should see "Course 3" in the "New Dash" "block"
     And I should see "Course 4" in the "New Dash" "block"
     Then I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "New Dash" block preference
     Then I click on "Conditions" "link"
     And I set the field "Course categories" to "1"
@@ -80,7 +83,7 @@ Feature: Add course enrol widget in dash block
   Scenario: Check the course enrol for fields.
     Given I log in as "admin"
     And ".dash-block-content .pagination" "css_element" should not exist
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     Then I open the "New Dash" block preference
     Then I click on "Fields" "link"
@@ -120,7 +123,7 @@ Feature: Add course enrol widget in dash block
 
   Scenario: Check the course enrol to enrol course.
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     Then I open the "New Dash" block preference
     Then I click on "Fields" "link"
@@ -130,7 +133,7 @@ Feature: Add course enrol widget in dash block
     And I log in as "student1"
     And I should not see "Course 5" in the ".course-enrols-courses-list .courses-list" "css_element"
     And I set the field "courses[]" to "Course 5"
-    Then I click on "Enrol now" "button" in the "New Dash" "block"
+    Then I click on "Enrol Now" "button" in the "New Dash" "block"
     Then I reload the page
     And I should see "Course 5" in the ".course-enrols-courses-list .courses-list" "css_element"
 

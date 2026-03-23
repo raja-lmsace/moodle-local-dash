@@ -22,5 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Data source: Categories';
 $string['datasource:categories_data_source'] = 'Course categories';
+$string['datasource:categories_data_source_help'] = 'List of course category details.';
+$string['pluginname'] = 'Data source: Categories';

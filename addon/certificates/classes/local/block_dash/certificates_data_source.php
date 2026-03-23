@@ -17,9 +17,9 @@
 /**
  * Certificates report source defined.
  *
- * @package    dashaddon_certificates
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_certificates
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_certificates\local\block_dash;
@@ -36,13 +36,12 @@ use block_dash\local\dash_framework\query_builder\join;
 use block_dash\local\data_grid\filter\current_course_condition;
 use block_dash\local\data_grid\filter\logged_in_user_condition;
 use local_dash\data_grid\filter\course_category_condition;
-use local_dash\data_grid\filter\parent_role_condition;
+use local_dash\data_grid\filter\relations_role_condition;
 
 /**
  * Certificates data source template queries and condition defined.
  */
 class certificates_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *
@@ -99,7 +98,7 @@ class certificates_data_source extends abstract_data_source {
 
         $filtercollection->add_filter(new logged_in_user_condition('current_user', 'u.id'));
 
-        $filtercollection->add_filter(new parent_role_condition('parentrole', 'u.id'));
+        $filtercollection->add_filter(new relations_role_condition('parentrole', 'u.id'));
 
         // Attach the custom course field conditions.
         local_dash_customfield_conditions($filtercollection);

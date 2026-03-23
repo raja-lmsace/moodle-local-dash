@@ -17,9 +17,9 @@
 /**
  * Library functions defined for skill graph widget.
  *
- * @package    dashaddon_course_completions
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_completions
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -27,7 +27,7 @@
  *
  * @return array List of widgets.
  */
-function dashaddon_course_completions_register_widget() : array {
+function dashaddon_course_completions_register_widget(): array {
     return [
         [
             'name' => get_string('widget:course_completions', 'block_dash'),

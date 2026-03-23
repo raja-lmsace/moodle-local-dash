@@ -16,13 +16,13 @@
 
 /**
  *  Table that lists dashboards.
- * @package    dashaddon_dashboard
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_dashboard
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_dashboard\table;
-
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -34,16 +34,25 @@ require_once($CFG->dirroot . '/local/dash/lib.php');
  *
  * @package dashaddon_dashboard
  */
-class dashboard_table extends \table_sql {
+class dashboard_table extends \table_sql
+{
+    /**
+     * Summary of contextid
+     *
+     * @var int
+     */
+    public $contextid;
 
     /**
      * sessions_report_table constructor.
-     * @param string $uniqueid
+     *
+     * @param  string $uniqueid
+     * @param  int    $contextid
      * @throws \coding_exception
      */
-    public function __construct($uniqueid) {
+    public function __construct($uniqueid, $contextid = 0) {
         parent::__construct($uniqueid);
-
+        $this->contextid = $contextid;
         // Define the headers and columns.
         $headers = [];
         $columns = [];
@@ -73,22 +82,25 @@ class dashboard_table extends \table_sql {
         $this->no_sorting('actions');
 
         // Set help icons.
-        $this->define_help_for_headers([
+        $this->define_help_for_headers(
+            [
 
-        ]);
+            ]
+        );
     }
 
     /**
      * Table column name data process.
      *
-     * @param \stdclass $data
+     * @param  \stdclass $data
      * @return string
      */
     public function col_name($data) {
         if (!$data->coredash) {
             return \html_writer::link(
                 new \moodle_url('/local/dash/addon/dashboard/dashboard.php', ['id' => $data->id]),
-                $data->name);
+                $data->name
+            );
         } else {
             return \html_writer::link(new \moodle_url('/my', ['id' => $data->id]), $data->name);
         }
@@ -97,14 +109,14 @@ class dashboard_table extends \table_sql {
     /**
      * Table column name data process.
      *
-     * @param \stdclass $data
+     * @param  \stdclass $data
      * @return string
      */
     public function col_backgroundimage($data) {
         global $CFG;
-        require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
+        include_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
         if ($url = dashaddon_dashboard_get_dashboard_background($data->id)) {
-            return \html_writer::empty_tag('img', ['src' => $url, 'class' => 'img-responsive']);
+            return \html_writer::empty_tag('img', ['src' => $url, 'class' => 'img-responsive', 'alt' => $data->name]);
         } else {
             return "";
         }
@@ -113,7 +125,7 @@ class dashboard_table extends \table_sql {
     /**
      * Cotextid column data process.
      *
-     * @param \stdclass $data
+     * @param  \stdclass $data
      * @return string
      */
     public function col_contextid($data) {
@@ -129,7 +141,7 @@ class dashboard_table extends \table_sql {
     /**
      * Permissions column data process.
      *
-     * @param \stdclass $data
+     * @param  \stdclass $data
      * @return string
      */
     public function col_permission($data) {
@@ -139,7 +151,7 @@ class dashboard_table extends \table_sql {
     /**
      * Status of the display the course context menus in course secondary menu.
      *
-     * @param \stdclass $data
+     * @param  \stdclass $data
      * @return string
      */
     public function col_secondarynav($data) {
@@ -149,7 +161,7 @@ class dashboard_table extends \table_sql {
     /**
      * Actions for tags.
      *
-     * @param \stdClass $data
+     * @param  \stdClass $data
      * @return string
      * @throws \coding_exception
      * @throws \moodle_exception
@@ -157,30 +169,74 @@ class dashboard_table extends \table_sql {
     public function col_actions($data) {
         global $OUTPUT;
 
-        $output = $OUTPUT->single_button(
-                new \moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => 'edit', 'id' => $data->id]),
-                get_string('edit', 'block_dash'), 'get');
-        if (!$data->coredash) {
-            $output .= $OUTPUT->single_button(
-                new \moodle_url('/local/dash/addon/dashboard/dashboards.php', ['action' => 'delete', 'id' => $data->id]),
-                get_string('delete', 'block_dash'), 'get');
+        $actions = [];
+
+        $actions += [
+            [
+                'url' => new \moodle_url(
+                    '/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'duplicate', 'id' => $data->id]
+                ),
+                'icon' => new \pix_icon('t/copy', \get_string('duplicate')),
+                'attributes' => ['class' => 'action-copy'],
+                'name' => 'copy',
+            ],
+            [
+                'url' => new \moodle_url(
+                    '/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'edit', 'id' => $data->id]
+                ),
+                'icon' => new \pix_icon('t/edit', \get_string('edit')),
+                'attributes' => ['class' => 'action-edit'],
+                'name' => 'edit',
+            ],
+            [
+                'url' => new \moodle_url(
+                    '/local/dash/addon/dashboard/dashboards.php',
+                    ['action' => 'delete', 'id' => $data->id]
+                ),
+                'icon' => new \pix_icon('t/delete', \get_string('delete')),
+                'attributes' => ['class' => 'action-delete'],
+                'name' => 'delete',
+            ],
+        ];
+        $actionshtml = [];
+        foreach ($actions as $action) {
+            $action['attributes']['role'] = 'button';
+            if ($data->coredash && $action['name'] == 'copy') {
+                $actionshtml[] = '&nbsp;';
+            } else {
+                if ($this->contextid) {
+                    $action['url']->param('contextid', $this->contextid);
+                }
+                $actionshtml[] = $OUTPUT->action_icon($action['url'], $action['icon'], null, $action['attributes']);
+            }
         }
-        return $output;
+        return \html_writer::span(join('', $actionshtml), 'course-item-actions item-actions me-0');
     }
 
     /**
      * Defined table database queries and data process methods.
-     * @param int $pagesize
-     * @param bool $useinitialsbar
+     *
+     * @param  int  $pagesize
+     * @param  bool $useinitialsbar
      * @throws \dml_exception
      */
     public function query_db($pagesize, $useinitialsbar = true) {
         global $DB;
 
-        list($wsql, $params) = $this->get_sql_where();
+        [$wsql, $params] = $this->get_sql_where();
 
+        if ($this->contextid) {
+            if (!empty($wsql)) {
+                $wsql .= ' AND ';
+            } else {
+                $wsql = ' WHERE ';
+            }
+            $wsql .= ' d.contextid = :contextid';
+            $params['contextid'] = $this->contextid;
+        }
         $sql = 'SELECT * FROM {dashaddon_dashboard_dash} d' . $wsql;
-
         $sort = $this->get_sql_sort();
         if ($sort) {
             $sql = $sql . ' ORDER BY ' . $sort;

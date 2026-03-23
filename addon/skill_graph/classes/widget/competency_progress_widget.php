@@ -17,9 +17,9 @@
 /**
  * SkillGraph progress widget class contains the layout information and generate the data for widget.
  *
- * @package    dashaddon_skill_graph
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_skill_graph
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_skill_graph\widget;
@@ -34,7 +34,6 @@ use dashaddon_skill_graph\data_grid\filter\competency_condition;
  * SkillGraph widget class contains the layout information and generate the data for widget.
  */
 class competency_progress_widget extends abstract_widget {
-
     /**
      * List of available competencies for the selected framework.
      *
@@ -168,7 +167,7 @@ class competency_progress_widget extends abstract_widget {
      * Generate the competency frameword tree with competency proficied and grade, name.
      * It converts the normal data to dataset which is used in the chart.
      *
-     * @param int $frameworkid ID of the framework.
+     * @param  int $frameworkid ID of the framework.
      * @return void
      */
     public function generate_competency_framework_tree(int $frameworkid) {
@@ -181,7 +180,6 @@ class competency_progress_widget extends abstract_widget {
         $data = $this->build_competency_data($tree);
 
         foreach ($data as $key => $maindata) {
-
             $proficiencycount = 0;
             $childcount = 0;
             // Find the count of child competencies and proficient competencies.
@@ -207,14 +205,13 @@ class competency_progress_widget extends abstract_widget {
     /**
      * Build the competency data with image and color, also includes the childrens list.
      *
-     * @param stdclass $competencies
+     * @param  stdclass $competencies
      * @return array
      */
     protected function build_competency_data($competencies) {
         global $USER;
 
         foreach ($competencies as $key => $value) {
-
             $competency = $value->competency;
 
             $compid = $competency->get('id'); // Id of the competency.
@@ -239,7 +236,7 @@ class competency_progress_widget extends abstract_widget {
     /**
      * Get competency image.
      *
-     * @param int $itemid
+     * @param  int $itemid
      * @return stdClass
      */
     protected function get_background_image($itemid) {
@@ -256,8 +253,13 @@ class competency_progress_widget extends abstract_widget {
             $file = reset($files);
 
             $url = \moodle_url::make_pluginfile_url(
-                $file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
-                $file->get_filename(), false
+                $file->get_contextid(),
+                $file->get_component(),
+                $file->get_filearea(),
+                $file->get_itemid(),
+                $file->get_filepath(),
+                $file->get_filename(),
+                false
             )->out(false);
         }
 
@@ -267,8 +269,8 @@ class competency_progress_widget extends abstract_widget {
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -299,21 +301,5 @@ class competency_progress_widget extends abstract_widget {
         );
 
         return $filtercollection;
-    }
-
-    /**
-     * Include the global settings page.
-     *
-     * @param \parentable_part_of_admin_tree $admin
-     * @return void
-     */
-    public static function include_global_settings_page($admin) {
-
-        $admin->add('localdashsettings', new \admin_externalpage(
-            'dashaddonskillgraph',
-            get_string('managecompentency', 'block_dash'),
-            new \moodle_url('/local/dash/addon/skill_graph/competencylist.php'),
-            'moodle/competency:competencymanage')
-        );
     }
 }

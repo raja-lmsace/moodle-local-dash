@@ -17,9 +17,9 @@
 /**
  * Fetch the course format name from record data.
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\field\attribute;
@@ -31,13 +31,14 @@ use block_dash\local\data_grid\field\attribute\abstract_field_attribute;
  *
  * @package local_dash
  */
-class course_format_attribute extends abstract_field_attribute {
+class course_format_attribute extends abstract_field_attribute
+{
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param \stdClass $data
-     * @param \stdClass $record Entire row
+     * @param  \stdClass $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
@@ -46,7 +47,7 @@ class course_format_attribute extends abstract_field_attribute {
             if (get_string_manager()->string_exists('pluginname', 'format_' . $data)) {
                 $data = get_string('pluginname', 'format_' . $data);
             } else {
-                $data = 'format_'.$data;
+                $data = 'format_' . $data;
             }
         }
 

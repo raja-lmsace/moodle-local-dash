@@ -36,6 +36,7 @@ use pix_icon;
 
 require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->dirroot . '/local/dash/lib.php');
+require_once($CFG->dirroot . '/blocks/dash/lib.php');
 
 /**
  * Class that handles the display and configuration of the list of tab plugins.
@@ -45,23 +46,28 @@ require_once($CFG->dirroot . '/local/dash/lib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class plugin_manager {
-
-    /** @var object the url of the manage plugin page */
+    /**
+     * @var object the url of the manage plugin page
+     */
     private $pageurl;
-    /** @var string any error from the current action */
+    /**
+     * @var string any error from the current action
+     */
     private $error = '';
-    /** @var string either submission or feedback */
+    /**
+     * @var string either submission or feedback
+     */
     private $subtype = '';
 
     /**
      * Constructor for this dashaddon plugin manager
+     *
      * @param string $subtype - only dashaddon implemented
      */
     public function __construct($subtype) {
         $this->pageurl = new moodle_url('/local/dash/manageaddon.php', ['subtype' => $subtype]);
         $this->subtype = $subtype;
     }
-
 
     /**
      * Return a list of plugins sorted by the order defined in the admin interface
@@ -73,9 +79,18 @@ class plugin_manager {
 
         $result = [];
         $disabled = [];
+        $disabledlist = [];
 
         foreach ($names as $name => $path) {
             $classname = '\\' . $this->subtype . '_' . $name . '\\dashaddon';
+
+            // If the addon is in the disabled list, store it separately.
+            if (in_array($name, block_dash_disabled_addons_list())) {
+                $disabledlist[] = $name;
+                $this->hide_plugin($name);
+                continue;
+            }
+
             if (
                 !empty(get_config($this->subtype . '_' . $name, 'enabled'))
                 && (!class_exists($classname) || empty($classname::added_dependencies()))
@@ -86,17 +101,18 @@ class plugin_manager {
                 $disabled[] = $name;
             }
         }
-        return array_merge($result, $disabled);
-    }
 
+        // Append the disabled addons at the end of the list.
+        return array_merge($result, $disabled, $disabledlist);
+    }
 
     /**
      * Util function for writing an action icon link
      *
-     * @param string $action URL parameter to include in the link
-     * @param string $plugin URL parameter to include in the link
-     * @param string $icon The key to the icon to use (e.g. 't/up')
-     * @param string $alt The string description of the link used as the title and alt text
+     * @param  string $action URL parameter to include in the link
+     * @param  string $plugin URL parameter to include in the link
+     * @param  string $icon   The key to the icon to use (e.g. 't/up')
+     * @param  string $alt    The string description of the link used as the title and alt text
      * @return string The icon/link
      */
     private function format_icon_link($action, $plugin, $icon, $alt) {
@@ -105,17 +121,22 @@ class plugin_manager {
         $url = $this->pageurl;
 
         if ($action === 'delete') {
-            $url = core_plugin_manager::instance()->get_uninstall_url($this->subtype.'_'.$plugin, 'manage');
+            $url = core_plugin_manager::instance()->get_uninstall_url($this->subtype . '_' . $plugin, 'manage');
             if (!$url) {
                 return '&nbsp;';
             }
             return html_writer::link($url, get_string('uninstallplugin', 'core_admin'));
         }
 
-        return $OUTPUT->action_icon(new moodle_url($url,
-                ['action' => $action, 'plugin' => $plugin, 'sesskey' => sesskey()]),
-                new pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
-                null, ['title' => $alt]) . ' ';
+        return $OUTPUT->action_icon(
+            new moodle_url(
+                $url,
+                ['action' => $action, 'plugin' => $plugin, 'sesskey' => sesskey()]
+            ),
+            new pix_icon($icon, $alt, 'moodle', ['title' => $alt]),
+            null,
+            ['title' => $alt]
+        ) . ' ';
     }
 
     /**
@@ -125,28 +146,32 @@ class plugin_manager {
      */
     private function view_plugins_table() {
         global $OUTPUT, $CFG;
-        require_once($CFG->libdir . '/tablelib.php');
+        include_once($CFG->libdir . '/tablelib.php');
 
         // Set up the table.
         $this->view_header();
         $table = new flexible_table($this->subtype . 'pluginsadminttable');
         $table->define_baseurl($this->pageurl);
-        $table->define_columns([
+        $table->define_columns(
+            [
             'pluginname', 'version', 'hideshow', 'status',
-        ]);
-        $table->define_headers([
+            ]
+        );
+        $table->define_headers(
+            [
             get_string($this->subtype . 'pluginname', 'block_dash'),
             get_string('version'), get_string('hideshow', 'block_dash'),
             get_string('status'),
-        ]);
+            ]
+        );
         $table->set_attribute('id', $this->subtype . 'plugins');
         $table->set_attribute('class', 'admintable generaltable');
         $table->setup();
 
         $plugins = $this->get_sorted_plugins_list();
         $shortsubtype = $this->subtype;
-
         $addondependencies = get_plugin_list_with_function('dashaddon', 'extend_added_dependencies', 'lib.php');
+
         foreach ($plugins as $idx => $plugin) {
             $row = [];
             $class = '';
@@ -157,19 +182,25 @@ class plugin_manager {
             $dependenciesfunction = isset($addondependencies[$this->subtype . '_' . $plugin]) ?
                 $addondependencies[$this->subtype . '_' . $plugin] : '';
 
-            $visible = !empty(get_config($this->subtype . '_' .$plugin, 'enabled')) &&
-                (!function_exists($dependenciesfunction) || empty($dependenciesfunction()));
+            $visible = !empty(get_config($this->subtype . '_' . $plugin, 'enabled')) &&
+            (!function_exists($dependenciesfunction) || empty($dependenciesfunction()));
 
-            if ($visible) {
-                $row[] = $this->format_icon_link('hide', $plugin, 't/hide', get_string('disable'));
-            } else if (function_exists($dependenciesfunction) && $dependenciesfunction()) {
+            if (in_array($plugin, block_dash_disabled_addons_list())) {
                 $row[] = '';
-            } else {
-                $row[] = $this->format_icon_link('show', $plugin, 't/show', get_string('enable'));
+                $row[] = get_string('disabledaddons', 'block_dash');
                 $class = 'dimmed_text';
-            }
+            } else {
+                if ($visible) {
+                    $row[] = $this->format_icon_link('hide', $plugin, 't/hide', get_string('disable'));
+                } else if (function_exists($dependenciesfunction) && $dependenciesfunction()) {
+                    $row[] = '';
+                } else {
+                    $row[] = $this->format_icon_link('show', $plugin, 't/show', get_string('enable'));
+                    $class = 'dimmed_text';
+                }
 
-            $row[] = function_exists($dependenciesfunction) ? $dependenciesfunction() : '';
+                $row[] = function_exists($dependenciesfunction) ? $dependenciesfunction() : '';
+            }
 
             $table->add_data($row, $class);
         }
@@ -215,7 +246,7 @@ class plugin_manager {
     /**
      * Hide this plugin.
      *
-     * @param string $plugin - The plugin to hide
+     * @param  string $plugin - The plugin to hide
      * @return string The next page to display
      */
     public function hide_plugin($plugin) {
@@ -228,7 +259,7 @@ class plugin_manager {
     /**
      * Show this plugin.
      *
-     * @param string $plugin - The plugin to show
+     * @param  string $plugin - The plugin to show
      * @return string The next page to display
      */
     public function show_plugin($plugin) {
@@ -241,8 +272,8 @@ class plugin_manager {
     /**
      * This is the entry point for this controller class.
      *
-     * @param string $action - The action to perform
-     * @param string $plugin - Optional name of a plugin type to perform the action on
+     * @param  string $action - The action to perform
+     * @param  string $plugin - Optional name of a plugin type to perform the action on
      * @return None
      */
     public function execute($action, $plugin) {

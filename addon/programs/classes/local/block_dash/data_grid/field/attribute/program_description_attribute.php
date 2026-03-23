@@ -17,9 +17,9 @@
 /**
  * Format the program description with images.
  *
- * @package    dashaddon_programs
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_programs
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_programs\local\block_dash\data_grid\field\attribute;
@@ -31,12 +31,11 @@ use stdClass;
  * Format the program description with images
  */
 class program_description_attribute extends abstract_field_attribute {
-
     /**
      * Generate the program description.
      *
-     * @param int $data
-     * @param stdClass $record
+     * @param  int      $data
+     * @param  stdClass $record
      * @return string
      */
     public function transform_data($data, stdClass $record) {
@@ -44,7 +43,13 @@ class program_description_attribute extends abstract_field_attribute {
         $context = \context::instance_by_id($record->epp_ctx);
 
         $description = file_rewrite_pluginfile_urls(
-            $data, 'pluginfile.php', $context->id, 'enrol_programs', 'description', $record->epp_id);
+            $data,
+            'pluginfile.php',
+            $context->id,
+            'enrol_programs',
+            'description',
+            $record->epp_id
+        );
         $description = format_text($description, $record->descriptionformat, ['context' => $context]);
 
         return $description;

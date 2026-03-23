@@ -17,27 +17,29 @@
 /**
  * Library functions defined for dashaddon content widget.
  *
- * @package    dashaddon_content
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_content
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * Dash plugin file definitions, List of fileareas used in local_dash plugin.
  *
- * @param stdclass $course
- * @param stdclass $cm
- * @param stdclass $context
- * @param string $filearea
- * @param array $args
- * @param bool $forcedownload
- * @param array $options
+ * @param  stdclass $course
+ * @param  stdclass $cm
+ * @param  stdclass $context
+ * @param  string   $filearea
+ * @param  array    $args
+ * @param  bool     $forcedownload
+ * @param  array    $options
  * @return void
  */
 function dashaddon_content_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
 
-    if ($context->contextlevel == CONTEXT_BLOCK
-        && (stripos($filearea, 'content') !== false || stripos($filearea, 'backgroundimage') !== false)) {
+    if (
+        $context->contextlevel == CONTEXT_BLOCK
+        && (stripos($filearea, 'content') !== false || stripos($filearea, 'backgroundimage') !== false)
+    ) {
         // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
         $itemid = array_shift($args);
         // Use the itemid to retrieve any relevant data records and perform any security checks to see if the
@@ -47,7 +49,7 @@ function dashaddon_content_pluginfile($course, $cm, $context, $filearea, $args, 
         if (!$args) {
             $filepath = '/';
         } else {
-            $filepath = '/'.implode('/', $args).'/';
+            $filepath = '/' . implode('/', $args) . '/';
         }
 
         // Retrieve the file from the Files API.

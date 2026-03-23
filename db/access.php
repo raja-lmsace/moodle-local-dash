@@ -17,9 +17,9 @@
 /**
  * Dash Pro local capabilities.
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -39,6 +39,16 @@ $capabilities = [
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => [
             'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    'local/dash:managecoursecatedashboards' => [
+        'riskbitmask'  => RISK_MANAGETRUST,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_COURSECAT,
+        'archetypes'   => [
+            'manager' => CAP_ALLOW,
+            'coursecreator' => CAP_ALLOW,
         ],
     ],
 ];

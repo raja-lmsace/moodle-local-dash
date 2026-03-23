@@ -17,9 +17,9 @@
 /**
  * Replace the course completion status data to string.
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\field\attribute;
@@ -33,13 +33,12 @@ use block_dash\local\data_grid\filter\course_condition;
  * @package local_dash
  */
 class enrollment_options_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param \int $data
-     * @param \stdClass $record Entire row
+     * @param  \int      $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
@@ -55,22 +54,24 @@ class enrollment_options_attribute extends abstract_field_attribute {
     /**
      * Get enrollment options available for course has "self, fee, credits" enrolments enabled.
      *
-     * @param int $courseid Course id.
+     * @param  int $courseid Course id.
      * @return string|null
      */
     public function get_course_enrollment_options(int $courseid): ?string {
         $enrolinstances = enrol_get_instances($courseid, true);
         // Filter the instance basecd on the availability.
-        $instances = array_filter($enrolinstances, function($instance) {
-            global $USER;
+        $instances = array_filter(
+            $enrolinstances,
+            function ($instance) {
+                global $USER;
 
-            if (!in_array($instance->enrol, ['self', 'credit', 'autoenrol', 'guest', 'fee'])) {
-                return false;
+                if (!in_array($instance->enrol, ['self', 'credit', 'autoenrol', 'guest', 'fee'])) {
+                    return false;
+                }
+
+                return self::is_self_enrollment($instance) ? true : false;
             }
-
-            return self::is_self_enrollment($instance) ? true : false;
-
-        });
+        );
 
         $credits = '';
         $creditcount = 0;
@@ -105,8 +106,11 @@ class enrollment_options_attribute extends abstract_field_attribute {
                         : get_string('enrollmentoptions:credits', 'block_dash', $credits);
                     break;
                 case "fee":
-                    return get_string('enrollmentoptions:cost', 'block_dash',
-                        ['cost' => $instance->cost, 'currency' => $instance->currency]);
+                    return get_string(
+                        'enrollmentoptions:cost',
+                        'block_dash',
+                        ['cost' => $instance->cost, 'currency' => $instance->currency]
+                    );
                     break;
                 default:
                     return '-';
@@ -118,7 +122,7 @@ class enrollment_options_attribute extends abstract_field_attribute {
     /**
      * Verify is self enrollment enabled.
      *
-     * @param \stdclass $instance
+     * @param  \stdclass $instance
      * @return bool
      */
     public static function is_self_enrollment($instance) {

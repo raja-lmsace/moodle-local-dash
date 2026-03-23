@@ -17,9 +17,9 @@
 /**
  * Dash content widget form to add content
  *
- * @package    dashaddon_content
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_content
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace dashaddon_content;
 
@@ -28,13 +28,12 @@ defined('MOODLE_INTERNAL') || die();
 use context;
 use moodle_url;
 
-require_once($CFG->dirroot.'/lib/formslib.php');
+require_once($CFG->dirroot . '/lib/formslib.php');
 
 /**
  * Dash content widget dynamic form to setup content of the layout.
  */
 class contentform extends \core_form\dynamic_form {
-
     /**
      * Content form elements defined.
      *
@@ -51,32 +50,47 @@ class contentform extends \core_form\dynamic_form {
         $layoutid = $this->_customdata['layoutid'] ?? '';
         $mform->addElement('hidden', 'layoutid', $layoutid);
 
-        require_once($CFG->dirroot.'/local/dash/addon/content/element-colorpicker.php');
+        require_once($CFG->dirroot . '/local/dash/addon/content/element-colorpicker.php');
         \MoodleQuickForm::registerElementType(
             'dashaddon_content_colorpicker',
-            $CFG->dirroot.'/local/dash/addon/content/element-colorpicker.php',
+            $CFG->dirroot . '/local/dash/addon/content/element-colorpicker.php',
             'moodlequickform_dashaddon_content_colorpicker'
         );
 
         // Editor options.
         $editor = $this->get_editor_options($this->get_context_for_dynamic_submission());
-        $mform->addElement('editor', 'content_preferences[content_editor]',
-            get_string('contenteditor', 'block_dash'), [], $editor);
+        $mform->addElement(
+            'editor',
+            'content_preferences[content_editor]',
+            get_string('contenteditor', 'block_dash'),
+            [],
+            $editor
+        );
 
         // Dashaddon content.
-        $mform->addElement('dashaddon_content_colorpicker', 'content_preferences[backgroundcolor]',
-            get_string('backgroundcolor', 'block_dash'));
+        $mform->addElement(
+            'dashaddon_content_colorpicker',
+            'content_preferences[backgroundcolor]',
+            get_string('backgroundcolor', 'block_dash')
+        );
         $mform->setType('content_preferences[backgroundcolor]', PARAM_RAW);
 
         // Dashaddon content.
-        $mform->addElement('dashaddon_content_colorpicker', 'content_preferences[textcolor]',
-            get_string('textcolor', 'block_dash'));
+        $mform->addElement(
+            'dashaddon_content_colorpicker',
+            'content_preferences[textcolor]',
+            get_string('textcolor', 'block_dash')
+        );
         $mform->setType('content_preferences[textcolor]', PARAM_RAW);
 
         // Background image.
-        $mform->addElement('filemanager', 'content_preferences[backgroundimage]',
-            get_string('backgroundimage', 'block_dash'), null, $editor);
-
+        $mform->addElement(
+            'filemanager',
+            'content_preferences[backgroundimage]',
+            get_string('backgroundimage', 'block_dash'),
+            null,
+            $editor
+        );
     }
 
     /**
@@ -124,7 +138,7 @@ class contentform extends \core_form\dynamic_form {
         if (!empty($block->config)) {
             $config = clone($block->config);
         } else {
-            $config = new \stdClass;
+            $config = new \stdClass();
         }
 
         if (!isset($config->preferences)) {
@@ -225,16 +239,20 @@ class contentform extends \core_form\dynamic_form {
 
         // Prepare the editors to save the files placed in the editors.
         foreach ($editors as $configname => $filearea) {
-
             if (!isset($contentpreferences->$configname)) {
                 $contentpreferences->$configname = '';
-                $contentpreferences->{$configname."format"} = editors_get_preferred_format();
+                $contentpreferences->{$configname . "format"} = editors_get_preferred_format();
             }
 
             $filearea .= '_' . $layoutid; // Filearea with layout.
             $contentpreferences = file_prepare_standard_editor(
-                $contentpreferences, $configname, $this->get_editor_options($context),
-                $context, 'dashaddon_content', $filearea, $blockid
+                $contentpreferences,
+                $configname,
+                $this->get_editor_options($context),
+                $context,
+                'dashaddon_content',
+                $filearea,
+                $blockid
             );
         }
 
@@ -242,13 +260,17 @@ class contentform extends \core_form\dynamic_form {
 
         // Prepare the file manager fields to store images.
         foreach ($filemanagers as $configname => $filearea) {
-
             $filearea .= '_' . $layoutid;
 
             $draftitemid = file_get_submitted_draft_itemid($filearea);
 
             file_prepare_draft_area(
-                $draftitemid, $context->id, 'dashaddon_content', $filearea, $blockid, [
+                $draftitemid,
+                $context->id,
+                'dashaddon_content',
+                $filearea,
+                $blockid,
+                [
                     'subdirs' => 0,
                     'accepted_types' => ['web_image'],
                 ]
@@ -256,7 +278,6 @@ class contentform extends \core_form\dynamic_form {
 
             $defaultvalues->content_preferences[$configname] = $draftitemid;
         }
-
     }
 
     /**
@@ -294,11 +315,16 @@ class contentform extends \core_form\dynamic_form {
 
         foreach ($editors as $configname => $filearea) {
             // Verify the element is editor.
-            $filearea .= '_' . $layoutid;
+            $filearea = $filearea . '_' . $layoutid;
 
             $contentpreferences = file_postupdate_standard_editor(
-                $contentpreferences, $configname, $this->get_editor_options($context),
-                $context,  'dashaddon_content', $filearea, $blockid
+                $contentpreferences,
+                $configname,
+                $this->get_editor_options($context),
+                $context,
+                'dashaddon_content',
+                $filearea,
+                $blockid
             );
         }
 
@@ -308,20 +334,23 @@ class contentform extends \core_form\dynamic_form {
             // Now save the files in correct part of the File API.
             $filearea .= '_' . $layoutid;
             file_save_draft_area_files(
-                $contentpreferences->$configname, $context->id, 'dashaddon_content', $filearea,
-                $blockid, $this->get_editor_options($context)
+                $contentpreferences->$configname,
+                $context->id,
+                'dashaddon_content',
+                $filearea,
+                $blockid,
+                $this->get_editor_options($context)
             );
         }
-
     }
 
     /**
      * Editor form element options.
      *
-     * @param context $context
+     * @param  context $context
      * @return array
      */
-    protected function get_editor_options($context=null) {
+    protected function get_editor_options($context = null) {
         global $PAGE;
 
         return [

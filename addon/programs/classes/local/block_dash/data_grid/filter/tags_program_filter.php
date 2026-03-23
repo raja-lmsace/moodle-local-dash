@@ -17,9 +17,9 @@
 /**
  * Filter items based on tags in a certain component and itemtype.
  *
- * @package    dashaddon_programs
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_programs
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_program\local\block_dash\data_grid\filter;
@@ -32,7 +32,6 @@ use block_dash\local\data_grid\filter\select_filter;
  * @package dashaddon_programs
  */
 class tags_program_filter extends select_filter {
-
     /**
      * Current component.
      *
@@ -95,6 +94,7 @@ class tags_program_filter extends select_filter {
 
     /**
      * Condition construtor.
+     *
      * @param string $name
      * @param string $select
      * @param string $component
@@ -117,17 +117,19 @@ class tags_program_filter extends select_filter {
     public function get_sql_and_params() {
         global $DB;
 
-        list($sql, $values) = parent::get_sql_and_params();
+        [$sql, $values] = parent::get_sql_and_params();
 
         if (!empty($values)) {
-
             $collectionid = \core_tag_area::get_collection($this->component, $this->itemtype);
 
-            array_walk($values, function(&$value) {
-                $value = \core_text::strtolower($value);
-            });
+            array_walk(
+                $values,
+                function (&$value) {
+                    $value = \core_text::strtolower($value);
+                }
+            );
 
-            list($taginsql, $taginparams) = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED, 'tgp');
+            [$taginsql, $taginparams] = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED, 'tgp');
             $sql = "epp.id IN (SELECT ti.itemid
                     FROM {tag_instance} ti
                     JOIN {tag} t ON ti.tagid = t.id

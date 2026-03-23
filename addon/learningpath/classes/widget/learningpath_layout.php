@@ -17,9 +17,9 @@
 /**
  * A widget layout contains information on how to display data.
  *
- * @package    dashaddon_learningpath
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_learningpath
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_learningpath\widget;
@@ -31,7 +31,6 @@ use block_dash\local\data_source\form\preferences_form;
  * Layout section for the skill level visuals widget.
  */
 class learningpath_layout extends abstract_layout {
-
     /**
      * Tempalte mustache file name, the layout uses.
      *

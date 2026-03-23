@@ -17,9 +17,9 @@
 /**
  * Dash addon skill graph widget form to setup color and image of competencies.
  *
- * @package    dashaddon_skill_graph
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_skill_graph
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace dashaddon_skill_graph;
 
@@ -28,13 +28,12 @@ defined('MOODLE_INTERNAL') || die();
 use context;
 use moodle_url;
 
-require_once($CFG->dirroot.'/lib/formslib.php');
+require_once($CFG->dirroot . '/lib/formslib.php');
 
 /**
  * Dash addon skill graph dynamic form to setup color and image of competencies.
  */
 class competencyform extends \core_form\dynamic_form {
-
     /**
      * Competency color config name.
      */
@@ -53,22 +52,29 @@ class competencyform extends \core_form\dynamic_form {
         $competencyid = $this->_customdata['competencyid'] ?? '';
         $mform->addElement('hidden', 'competencyid', $competencyid);
 
-        require_once($CFG->dirroot.'/local/dash/element-colorpicker.php');
+        require_once($CFG->dirroot . '/local/dash/element-colorpicker.php');
         \MoodleQuickForm::registerElementType(
             'local_dash_colorpicker',
-            $CFG->dirroot.'/local/dash/element-colorpicker.php',
+            $CFG->dirroot . '/local/dash/element-colorpicker.php',
             'moodlequickform_local_dash_colorpicker'
         );
 
         // Competency color.
-        $mform->addElement('local_dash_colorpicker', 'competency_preferences[color]',
-            get_string('competencycolor', 'block_dash'));
+        $mform->addElement(
+            'local_dash_colorpicker',
+            'competency_preferences[color]',
+            get_string('competencycolor', 'block_dash')
+        );
         $mform->setType('competency_preferences[color]', PARAM_RAW);
 
         // Competency image.
-        $mform->addElement('filemanager', 'competency_preferences[competencyimage]',
-            get_string('competencyimage', 'block_dash'), null, $editor);
-
+        $mform->addElement(
+            'filemanager',
+            'competency_preferences[competencyimage]',
+            get_string('competencyimage', 'block_dash'),
+            null,
+            $editor
+        );
     }
 
     /**
@@ -162,11 +168,15 @@ class competencyform extends \core_form\dynamic_form {
 
         // Prepare the file manager fields to store images.
         foreach ($filemanagers as $configname => $filearea) {
-
             $draftitemid = file_get_submitted_draft_itemid($filearea);
 
             file_prepare_draft_area(
-                $draftitemid, $context->id, 'dashaddon_skill_graph', $filearea, $competencyid, [
+                $draftitemid,
+                $context->id,
+                'dashaddon_skill_graph',
+                $filearea,
+                $competencyid,
+                [
                     'subdirs' => 0,
                     'accepted_types' => ['web_image'],
                 ]
@@ -174,7 +184,6 @@ class competencyform extends \core_form\dynamic_form {
 
             $defaultvalues->competency_preferences[$configname] = $draftitemid;
         }
-
     }
 
     /**
@@ -204,24 +213,27 @@ class competencyform extends \core_form\dynamic_form {
         foreach ($filemanagers as $configname => $filearea) {
             // Now save the files in correct part of the File API.
             file_save_draft_area_files(
-                $competencypreferences->$configname, $context->id, 'dashaddon_skill_graph', $filearea,
-                $competencyid, $this->get_editor_options($context)
+                $competencypreferences->$configname,
+                $context->id,
+                'dashaddon_skill_graph',
+                $filearea,
+                $competencyid,
+                $this->get_editor_options($context)
             );
         }
 
         if (property_exists($competencypreferences, 'color')) {
             set_config(self::COMPETENCYCOLOR . "_" . $competencyid, $competencypreferences->color, 'dashaddon_skill_graph');
         }
-
     }
 
     /**
      * Editor form element options.
      *
-     * @param context $context
+     * @param  context $context
      * @return array
      */
-    protected function get_editor_options($context=null) {
+    protected function get_editor_options($context = null) {
         global $PAGE;
 
         return [

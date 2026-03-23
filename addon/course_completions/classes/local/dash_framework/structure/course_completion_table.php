@@ -17,13 +17,14 @@
 /**
  * Class course_completion_table.
  *
- * @package    dashaddon_course_completions
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_completions
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_completions\local\dash_framework\structure;
 
+use block_dash\local\dash_framework\query_builder\join_raw;
 use block_dash\local\dash_framework\structure\field;
 use block_dash\local\dash_framework\structure\field_interface;
 use block_dash\local\dash_framework\structure\table;
@@ -33,8 +34,9 @@ use block_dash\local\data_grid\field\attribute\identifier_attribute;
 use lang_string;
 use local_dash\data_grid\field\attribute\activity_progress_attribute;
 use local_dash\data_grid\field\attribute\activity_progress_bar_attribute;
-
 use local_dash\data_grid\field\attribute\completion_status_attribute;
+use block_dash\local\data_grid\field\attribute\button_attribute;
+use block_dash\local\data_grid\field\attribute\course_information_url_attribute;
 
 /**
  * Class course_completion_table.
@@ -42,7 +44,6 @@ use local_dash\data_grid\field\attribute\completion_status_attribute;
  * @package dashaddon_course_completions
  */
 class course_completion_table extends table {
-
     /**
      * Build a new table.
      */
@@ -61,34 +62,79 @@ class course_completion_table extends table {
 
     /**
      * Define the fields available in the reports for this table data source.
+     *
      * @return field_interface[]
      */
     public function get_fields(): array {
         return [
-            new field('id', new lang_string('coursecompletion'), $this, null, [
-                new identifier_attribute(),
-            ]),
-            new field('total_activities', new lang_string('totalactivitiescompletion', 'block_dash'), $this,
-                '(SELECT COUNT(*) FROM {course_completion_criteria} ccc200 WHERE ccc200.course = c.id AND ccc200.criteriatype = 4)',
-                [], ['supports_sorting' => false]
+            new field('id', new lang_string('coursecompletion'), $this, null, [new identifier_attribute()]),
+            new field(
+                'total_activities',
+                new lang_string('totalactivitiescompletion', 'block_dash'),
+                $this,
+                'ccc200.totalactivities',
+                [],
+                ['supports_sorting' => false],
+                '',
+                null,
+                new join_raw(
+                    'SELECT ccc.course, COUNT(*) AS totalactivities
+                       FROM {course_completion_criteria} ccc
+                      WHERE ccc.criteriatype = 4
+                    GROUP BY ccc.course',
+                    'ccc200',
+                    'course',
+                    'c.id',
+                    join_raw::TYPE_LEFT_JOIN
+                ),
+                true, // Force join even if not visible.
             ),
-            new field('completed_activities', new lang_string('completedactivities', 'block_dash'), $this,
+
+            new field(
+                'completed_activities',
+                new lang_string('completedactivities', 'block_dash'),
+                $this,
                 '(SELECT COUNT(*) FROM {course_completion_crit_compl} cccc100
+                JOIN {course_completion_criteria} cccc200 ON cccc200.id = cccc100.criteriaid AND cccc200.criteriatype = 4
                 WHERE cccc100.userid = u.id AND cccc100.course = c.id)',
-                [], ['supports_sorting' => false]),
-            new field('completed', new lang_string('coursecompleted', 'completion'), $this, 'ccp.id', [
-                new bool_attribute(),
-            ]),
-            new field('timecompleted', new lang_string('datecompleted', 'block_dash'), $this, null, [
-                new date_attribute(),
-            ]),
-            new field('progress', new lang_string('activityprogress', 'block_dash'), $this, 'ccp.id', [
-                new activity_progress_attribute(),
-            ], ['supports_sorting' => false]),
-            new field('progressbar', new lang_string('activityprogressbar', 'block_dash'), $this, 'ccp.id', [
-                new activity_progress_attribute(),
-                new activity_progress_bar_attribute(),
-            ], ['supports_sorting' => false]),
+                [],
+                ['supports_sorting' => false]
+            ),
+
+            new field(
+                'completed',
+                new lang_string('coursecompleted', 'completion'),
+                $this,
+                'ccp.timecompleted',
+                [new bool_attribute()]
+            ),
+            new field('timecompleted', new lang_string('datecompleted', 'block_dash'), $this, null, [new date_attribute()]),
+            new field(
+                'progress',
+                new lang_string('activityprogress', 'block_dash'),
+                $this,
+                'ccp.id',
+                [new activity_progress_attribute()],
+                ['supports_sorting' => false]
+            ),
+            new field(
+                'progressbar',
+                new lang_string('activityprogressbar', 'block_dash'),
+                $this,
+                'ccp.id',
+                [new activity_progress_attribute(), new activity_progress_bar_attribute()],
+                ['supports_sorting' => false]
+            ),
+            new field(
+                'courseinformation',
+                new lang_string('courseinformation', 'block_dash'),
+                $this,
+                'c.id',
+                [
+                    new course_information_url_attribute(),
+                    new button_attribute(['label' => new lang_string('courseinformation', 'block_dash')]),
+                ]
+            ),
         ];
     }
 }

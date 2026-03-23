@@ -24,14 +24,39 @@
 
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
-use Behat\Gherkin\Node\TableNode as TableNode,
-Behat\Mink\Exception\DriverException as DriverException,
-Behat\Mink\Exception\ExpectationException as ExpectationException;
+use Behat\Gherkin\Node\TableNode,
+Behat\Mink\Exception\DriverException,
+Behat\Mink\Exception\ExpectationException;
 
 /**
  * Custom behat step definitions.
  */
 class behat_local_dash extends behat_base {
+    /**
+     * Checks if the given DOM element has the given computed style.
+     *
+     * @copyright 2023 Alexander Bias <bias@alexanderbias.de>
+     * @Then DOM element :arg1 should have computed style :arg2 :arg3
+     * @param string $selector
+     * @param string $style
+     * @param string $value
+     * @throws ExpectationException
+     */
+    public function dom_element_should_have_computed_style($selector, $style, $value) {
+        $stylejs = "
+            return (
+                window.getComputedStyle(document.querySelector('$selector')).getPropertyValue('$style')
+            )
+        ";
+        $computedstyle = $this->evaluate_script($stylejs);
+        if ($computedstyle != $value) {
+            throw new ExpectationException(
+                'The \'' . $selector . '\' DOM element does not have the computed style \'' .
+                $style . '\'=\'' . $value . '\', it has the computed style \'' . $computedstyle . '\' instead.',
+                $this->getSession()
+            );
+        }
+    }
 
 
     /**
@@ -68,7 +93,38 @@ class behat_local_dash extends behat_base {
 
         $nodetext = ($CFG->branch >= "400") ? 'Settings' : 'Edit settings';
         $this->execute('behat_navigation::i_navigate_to_in_current_page_administration', [$nodetext]);
-
     }
 
+    /**
+     * View assignment submission button.
+     *
+     * @Given /^I click on assignment submissions link$/
+     *
+     * @throws DriverException If there aren't exactly 2 windows open.
+     */
+    public function i_click_on_assignment_submissions_link() {
+        global $CFG;
+
+        if ($CFG->branch >= 405) {
+            $this->execute(
+                'behat_general::i_click_on_in_the',
+                ['Submissions', 'link', '.secondary-navigation', 'css_element']
+            );
+        } else {
+            $this->execute(
+                'behat_general::i_click_on_in_the',
+                ['View all submissions', 'link', '.tertiary-navigation', 'css_element']
+            );
+        }
+    }
+
+    /**
+     * Scroll down page.
+     *
+     * @When /^I scroll down page$/
+     */
+    public function i_scroll_down_page() {
+        global $CFG;
+        $this->evaluate_script("window.scrollTo(0, document.body.scrollHeight);");
+    }
 }

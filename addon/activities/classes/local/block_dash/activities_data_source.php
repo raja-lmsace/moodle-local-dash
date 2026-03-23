@@ -17,9 +17,9 @@
 /**
  * Badges report source defined.
  *
- * @package    dashaddon_activities
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activities
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash;
@@ -30,8 +30,6 @@ use local_dash\data_grid\filter\course_field_filter;
 use dashaddon_activities\local\block_dash\data_grid\filter\module_field_filter;
 use dashaddon_activities\local\block_dash\data_grid\filter\activity_type_field_filter;
 use dashaddon_activities\local\block_dash\data_grid\filter\activity_purpose_field_filter;
-
-
 use block_dash\local\data_grid\filter\course_condition;
 use block_dash\local\data_grid\filter\filter_collection;
 use block_dash\local\dash_framework\query_builder\builder;
@@ -41,15 +39,13 @@ use local_dash\data_grid\filter\tags_condition;
 use local_dash\data_grid\filter\customfield_filter;
 use block_dash\local\data_grid\filter\bool_filter;
 use block_dash\local\data_grid\filter\date_filter;
-
-
-
 use block_dash\local\data_grid\filter\current_course_condition;
 use dashaddon_activities\local\dash_framework\structure\activities_table;
 use block_dash\local\dash_framework\query_builder\join;
 use mod_forum\local\exporters\group;
 use local_dash\data_grid\filter\tags_field_filter;
-
+use local_dash\data_grid\filter\course_dates_condition;
+use local_dash\data_grid\filter\activity_modulename_condition;
 use dashaddon_courses\local\dash_framework\structure\course_table;
 use dashaddon_categories\local\dash_framework\structure\course_category_table;
 
@@ -57,7 +53,6 @@ use dashaddon_categories\local\dash_framework\structure\course_category_table;
  * Badges data source template queries and filter conditions defined.
  */
 class activities_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *
@@ -87,9 +82,15 @@ class activities_data_source extends abstract_data_source {
             ->select('c.id', 'cm_course')
             ->select('cc.id', 'cm_category')
             ->from('course_modules', 'cm')
-            ->join('modules', 'm', 'id', 'cm.module')
-            ->join('course_modules_completion', 'cmc', 'coursemoduleid', 'cm.id AND cmc.userid = :userid1',
-                join::TYPE_LEFT_JOIN, ["userid1" => $USER->id])
+            ->join('modules', 'm', 'id', 'cm.module AND m.visible = 1')
+            ->join(
+                'course_modules_completion',
+                'cmc',
+                'coursemoduleid',
+                'cm.id AND cmc.userid = :userid1',
+                join::TYPE_LEFT_JOIN,
+                ["userid1" => $USER->id]
+            )
             ->join('course', 'c', 'id', 'cm.course')
             ->join('course_categories', 'cc', 'id', 'c.category')
             ->join('course_sections', 'cs', 'id', 'cm.section');
@@ -136,7 +137,6 @@ class activities_data_source extends abstract_data_source {
 
         $builder->where_raw("cm.deletioninprogress = 0 AND (cm.visible = 1 OR cm.visible = $bypassadmin)");
         return $builder;
-
     }
 
     /**
@@ -156,8 +156,15 @@ class activities_data_source extends abstract_data_source {
 
         $filtercollection->add_filter(new module_field_filter('m_id', 'm.id', get_string('modulename', 'block_dash')));
 
-        $filtercollection->add_filter(new tags_field_filter('cm_tags', 'cm.id', 'core', 'course_modules',
-            get_string('activitytags', 'dashaddon_activities')));
+        $filtercollection->add_filter(
+            new tags_field_filter(
+                'cm_tags',
+                'cm.id',
+                'core',
+                'course_modules',
+                get_string('activitytags', 'dashaddon_activities')
+            )
+        );
 
         $filtercollection->add_filter(new activity_type_field_filter('cm_type', ''));
 
@@ -166,7 +173,6 @@ class activities_data_source extends abstract_data_source {
         if (dashaddon_activities_is_local_metadata_installed()) {
             $modulefields = $DB->get_records('local_metadata_field', ['contextlevel' => CONTEXT_MODULE]);
             foreach ($modulefields as $field) {
-
                 $alias = 'cm_mf_' . strtolower($field->shortname);
                 $select = $alias . '.data';
 
@@ -175,14 +181,26 @@ class activities_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, format_string($field->name));
                         break;
                     case 'datetime':
-                        $filtercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
-                        format_string($field->name)));
+                        $filtercollection->add_filter(
+                            new date_filter(
+                                $alias,
+                                $select,
+                                date_filter::DATE_FUNCTION_FLOOR,
+                                format_string($field->name)
+                            )
+                        );
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $filtercollection->add_filter(new customfield_filter($alias, $select, $field,
-                        format_string($field->name)));
+                        $filtercollection->add_filter(
+                            new customfield_filter(
+                                $alias,
+                                $select,
+                                $field,
+                                format_string($field->name)
+                            )
+                        );
                         break;
                 }
             }
@@ -191,7 +209,6 @@ class activities_data_source extends abstract_data_source {
         if (class_exists('\core_course\customfield\course_handler')) {
             $coursehandler = \core_course\customfield\course_handler::create();
             foreach ($coursehandler->get_fields() as $field) {
-
                 $alias = 'c_f_' . strtolower($field->get('shortname'));
                 $select = $alias . '.value';
 
@@ -200,14 +217,26 @@ class activities_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->get_formatted_name());
                         break;
                     case 'date':
-                        $filtercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
-                            $field->get_formatted_name()));
+                        $filtercollection->add_filter(
+                            new date_filter(
+                                $alias,
+                                $select,
+                                date_filter::DATE_FUNCTION_FLOOR,
+                                $field->get_formatted_name()
+                            )
+                        );
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $filtercollection->add_filter(new customfield_filter($alias, $select, $field,
-                            $field->get_formatted_name()));
+                        $filtercollection->add_filter(
+                            new customfield_filter(
+                                $alias,
+                                $select,
+                                $field,
+                                $field->get_formatted_name()
+                            )
+                        );
                         break;
                 }
             }
@@ -215,7 +244,6 @@ class activities_data_source extends abstract_data_source {
             global $DB;
 
             foreach ($DB->get_records('course_info_field') as $field) {
-
                 $alias = 'c_f_' . strtolower($field->shortname);
                 $select = $alias . '.data';
 
@@ -224,14 +252,26 @@ class activities_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->fullname);
                         break;
                     case 'date':
-                        $filtercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
-                            $field->fullname));
+                        $filtercollection->add_filter(
+                            new date_filter(
+                                $alias,
+                                $select,
+                                date_filter::DATE_FUNCTION_FLOOR,
+                                $field->fullname
+                            )
+                        );
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $filtercollection->add_filter(new customfield_filter($alias, $select, $field,
-                            $field->fullname));
+                        $filtercollection->add_filter(
+                            new customfield_filter(
+                                $alias,
+                                $select,
+                                $field,
+                                $field->fullname
+                            )
+                        );
                         break;
                 }
             }
@@ -243,8 +283,21 @@ class activities_data_source extends abstract_data_source {
 
         $filtercollection->add_filter(new course_condition('c_course', 'c.id'));
 
-        $filtercollection->add_filter(new tags_condition('activity_tags', 'cm.id', 'core', 'course_modules',
-            get_string('activitytags', 'dashaddon_activities')));
+        $filtercollection->add_filter(
+            new tags_condition(
+                'activity_tags',
+                'cm.id',
+                'core',
+                'course_modules',
+                get_string('activitytags', 'dashaddon_activities')
+            )
+        );
+
+        // Course dates condition - past, present, future.
+        $filtercollection->add_filter(new course_dates_condition('c_coursedates', 'c.id'));
+
+        // Module name condition.
+        $filtercollection->add_filter(new activity_modulename_condition('modulename', 'm.id'));
 
         if (dashaddon_activities_is_local_metadata_installed()) {
             dashaddon_activities_customfield_conditions($filtercollection);
@@ -266,5 +319,4 @@ class activities_data_source extends abstract_data_source {
         $configpreferences['available_fields']['cm_modsection']['visible'] = true;
         $data['config_preferences'] = $configpreferences;
     }
-
 }

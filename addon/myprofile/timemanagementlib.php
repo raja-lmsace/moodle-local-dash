@@ -17,17 +17,16 @@
 /**
  * My profile - dashaddon widget. Contains functions to verify the due and overdues from the learning tools timemanagement.
  *
- * @package    dashaddon_myprofile
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_myprofile
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 
 /**
  * Get user due activies.
  *
- * @param int $courseid
- * @param int $userid User id.
+ * @param  int $courseid
+ * @param  int $userid   User id.
  * @return int count due activites.
  */
 function dashaddon_myprofile_get_user_dueactivities($courseid, $userid) {
@@ -36,7 +35,7 @@ function dashaddon_myprofile_get_user_dueactivities($courseid, $userid) {
     $duecount = 0;
     $overduecount = 0;
 
-    require_once($CFG->dirroot.'/lib/completionlib.php');
+    require_once($CFG->dirroot . '/lib/completionlib.php');
 
     $modinfo = get_fast_modinfo($courseid);
     $completion = new \completion_info($modinfo->get_course());
@@ -45,15 +44,15 @@ function dashaddon_myprofile_get_user_dueactivities($courseid, $userid) {
             if (!empty($modnumbers)) {
                 foreach ($modnumbers as $modnumber) {
                     $mod = $modinfo->cms[$modnumber];
-                    if ($DB->record_exists('course_modules', ['id' => $mod->id, 'deletioninprogress' => 0])
-                        && !empty($mod) && $mod->uservisible) {
-
+                    if (
+                        $DB->record_exists('course_modules', ['id' => $mod->id, 'deletioninprogress' => 0])
+                        && !empty($mod) && $mod->uservisible
+                    ) {
                         $data = $completion->get_data($mod, true, $userid);
                         if ($data->completionstate != COMPLETION_COMPLETE) {
                             $cmcompletion = new cm_completion($mod, $userid);
                             $overduecount = ($cmcompletion->is_overdue()) ? $overduecount + 1 : $overduecount;
                             $duecount = ($cmcompletion->is_due_today()) ? $duecount + 1 : $duecount;
-
                         }
                     }
                 }
@@ -66,24 +65,26 @@ function dashaddon_myprofile_get_user_dueactivities($courseid, $userid) {
 /**
  * Get module user duedate.
  *
- * @param object $mod
- * @param int $userid
- * @param bool $duestatus
+ * @param  object $mod
+ * @param  int    $userid
+ * @param  bool   $duestatus
  * @return int|bool Mod due date if available otherwiser returns false.
  */
 function dashaddon_myprofile_get_mod_user_duedate($mod, $userid, $duestatus = false) {
     global $DB;
     $course = $mod->get_course();
-    $userenrolments = ltool_timemanagement_get_course_user_enrollment($course->id, $userid);
+    $record = $DB->get_record('tool_timetable_modules', ['cmid' => $mod->id ?? 0]);
+    $timemanagement = new \tool_timetable\time_management($course->id);
+    $userenrolments = $timemanagement->get_course_user_enrollment($userid, $course->id);
     if (!empty($userenrolments)) {
-        $timestarted = $userenrolments[0]['timestart'];
-        $record = $DB->get_record('ltool_timemanagement_modules', ['cmid' => $mod->id]);
+        $timestarted = $userenrolments[0]['timestart'] ?? 0;
+        $timeended = $userenrolments[0]['timeend'] ?? 0;
         if ($record) {
-            list('startdate' => $startdate, 'duedate' => $duedate) = ltool_timemanagement_cal_coursemodule_managedates(
-                    $record, $timestarted);
+            $moduledates = $timemanagement->calculate_coursemodule_managedates($record, $timestarted, $timeended);
+            $duedate = $moduledates['duedate'] ?? false;
         }
     }
-    return $duedate ?? false;;
+    return $duedate ?? false;
 }
 
 /**
@@ -92,7 +93,6 @@ function dashaddon_myprofile_get_mod_user_duedate($mod, $userid, $duestatus = fa
  * Modified from format_designer.
  */
 class cm_completion {
-
     /**
      * @var cm_info
      */
@@ -114,12 +114,11 @@ class cm_completion {
      * Constructor.
      *
      * @param cm_info $cm
-     * @param int $userid
+     * @param int     $userid
      */
     public function __construct(cm_info $cm, $userid) {
         $this->cm = $cm;
         $this->userid = $userid;
-
     }
 
     /**
@@ -147,14 +146,14 @@ class cm_completion {
      * Get timemanagement tools due date for the module.
      *
      * @param cm_info $cm
-     * @param int $userid
-     * @param bool $timemanagement
+     * @param int     $userid
+     * @param bool    $timemanagement
      *
      * @return int|bool Mod due date if available otherwiser returns false.
      */
-    public static function timetool_duedate($cm, $userid, $timemanagement=false) {
+    public static function timetool_duedate($cm, $userid, $timemanagement = false) {
 
-        if (self::is_timemanagement_installed() && function_exists('ltool_timemanagement_get_mod_user_info')) {
+        if (self::is_timemanagement_installed()) {
             $duedate = dashaddon_myprofile_get_mod_user_duedate($cm, $userid);
             return $duedate ?? false;
         }
@@ -186,17 +185,18 @@ class cm_completion {
      * @return bool
      */
     public static function is_timemanagement_installed() {
-        global $DB, $CFG;
+        global $CFG;
+        static $result;
 
-        $tools = \core_plugin_manager::instance()->get_subplugins_of_plugin('local_learningtools');
-        if (in_array('ltool_timemanagement', array_keys($tools))) {
-            $status = $DB->get_field('local_learningtools_products', 'status', ['shortname' => 'timemanagement']);
-            if ($status) {
-                require_once($CFG->dirroot.'/local/learningtools/ltool/timemanagement/lib.php');
+        if ($result == null) {
+            if (array_key_exists('timetable', \core_component::get_plugin_list('tool'))) {
+                require_once($CFG->dirroot . '/admin/tool/timetable/classes/time_management.php');
+                $result = true;
+            } else {
+                $result = false;
             }
-            return ($status) ? true : false;
         }
-        return false;
-    }
 
+        return $result;
+    }
 }

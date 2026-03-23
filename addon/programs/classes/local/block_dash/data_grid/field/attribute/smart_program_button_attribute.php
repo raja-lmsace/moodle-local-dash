@@ -17,9 +17,9 @@
 /**
  * Smart programs button.
  *
- * @package    dashaddon_programs
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_programs
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_programs\local\block_dash\data_grid\field\attribute;
@@ -32,12 +32,11 @@ use block_dash\local\data_grid\field\attribute\abstract_field_attribute;
  * @package dashaddon_programs
  */
 class smart_program_button_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      *
-     * @param \int $isassigned
-     * @param \stdClass $record Entire row
+     * @param  \int      $isassigned
+     * @param  \stdClass $record     Entire row
      * @return mixed
      * @throws \moodle_exception
      */
@@ -60,9 +59,10 @@ class smart_program_button_attribute extends abstract_field_attribute {
 
         // Signup by self.
         $source = $DB->get_record('enrol_programs_sources', ['programid' => $program->id, 'type' => 'selfallocation']);
-        if ($source
-            && \enrol_programs\local\source\selfallocation::can_user_request($program, $source, (int)$USER->id, $failurereason)) {
-
+        if (
+            $source
+            && \enrol_programs\local\source\selfallocation::can_user_request($program, $source, (int)$USER->id, $failurereason)
+        ) {
             $classname = '\enrol_programs\local\source\selfallocation';
             $data = json_decode($source->datajson);
             $string = (isset($data->key) && $data->key != '')
@@ -72,7 +72,6 @@ class smart_program_button_attribute extends abstract_field_attribute {
             $url = new \moodle_url('/enrol/programs/catalogue/source_selfallocation.php', ['sourceid' => $source->id]);
             $button = new \local_openlms\output\dialog_form\button($url, $string);
 
-            /** @var \local_openlms\output\dialog_form\renderer $dialogformoutput */
             $dialogformoutput = $PAGE->get_renderer('local_openlms', 'dialog_form');
             $button = $dialogformoutput->render($button);
 
@@ -81,18 +80,17 @@ class smart_program_button_attribute extends abstract_field_attribute {
 
         // Request for the approval for the program.
         $source = $DB->get_record('enrol_programs_sources', ['programid' => $program->id, 'type' => 'approval']);
-        if ($source
-            && \enrol_programs\local\source\approval::can_user_request($program, $source, (int)$USER->id, $failurereason)) {
-
+        if (
+            $source
+            && \enrol_programs\local\source\approval::can_user_request($program, $source, (int)$USER->id, $failurereason)
+        ) {
             $classname = '\enrol_programs\local\source\approval';
             $actions = $classname::get_catalogue_actions($program, $source);
             return $actions[0] ?? '';
-
         } else {
             return \html_writer::span(get_string('notavailable', 'block_dash'));
         }
 
         return '';
     }
-
 }

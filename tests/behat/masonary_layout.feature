@@ -19,13 +19,15 @@ Feature: Enable the masonry layout in dash block on the dashboard page and view 
       | student4 | Student   | Four     | student3@example.com |
       | student5 | Student   | Five     | student3@example.com |
     And I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I create dash "Courses" datasource
     And I configure the "New Dash" block
     And I set the field "Block title" to "Course datasource"
     And I press "Save changes"
+    And I wait until the page is ready
     And I open the "Course datasource" block preference
+    And I wait "2" seconds
     Then I click on "Fields" "link"
     Then I click on "General" "link"
     And I set the field "Layout" to "Grid layout"
@@ -49,16 +51,21 @@ Feature: Enable the masonry layout in dash block on the dashboard page and view 
 
   Scenario: Check the masonry settings
     Given the following "custom field categories" exist:
-      | name  | component   | area   | itemid |
-      | Other | core_course | course | 0      |
+      | name          | component   | area   | itemid |
+      | Other         | core_course | course | 0      |
+      | Dash settings | core_course | course | 1      |
     And the following "custom fields" exist:
-      | name    | category | type     | shortname | configdata            |
-      | Field 1 | Other    | checkbox | checkbox  |                       |
-      | Field 2 | Other    | date     | date      |                       |
+      | name      | category      | type     | shortname | configdata                             |
+      | Field 1   | Other         | checkbox | checkbox  |                                        |
+      | Field 2   | Other         | date     | date      |                                        |
+      | Grid size | Dash settings | select   | gridsize  | {"options":"Wide\nTall\nSquare"}       |
+      | Promotion | Dash settings | select   | promotion | {"options":"Featured\nNormal\nDimmed"} |
     And I log in as "admin"
     Then I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on
+    And I wait until the page is ready
     And I open the "Course datasource" block preference
+    And I wait "2" seconds
     Then I click on "Fields" "link"
     And I set the field "Layout mode" to "Masonry"
     Then I set the field "Search box" to "1"
@@ -67,21 +74,21 @@ Feature: Enable the masonry layout in dash block on the dashboard page and view 
     And I set the field "Heading field" to "course: Full name"
     Then I press "Save changes"
     And I am on the "C1" "course editing" page
-    Then I follow "Expand all"
+    And I expand all fieldsets
     And I set the field "Grid size" to "Wide"
     And I set the field "Promotion" to "Featured"
     Then I press "Save and display"
     And I am on the "C2" "course editing" page
-    Then I follow "Expand all"
+    And I expand all fieldsets
     And I set the field "Grid size" to "Tall"
     And I set the field "Promotion" to "Normal"
     Then I press "Save and display"
     And I am on the "C3" "course editing" page
-    Then I follow "Expand all"
+    And I expand all fieldsets
     And I set the field "Grid size" to "Square"
     And I set the field "Promotion" to "Dimmed"
     Then I press "Save and display"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     Then ".card_layout_masonry .card-block:nth-child(1).Wide" "css_element" should exist
     Then ".card_layout_masonry .card-block:nth-child(1).Featured" "css_element" should exist
     Then ".card_layout_masonry .card-block:nth-child(1).Tall" "css_element" should not exist

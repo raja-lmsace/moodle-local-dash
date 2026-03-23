@@ -21,7 +21,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'core/modal_factory', 'core/str', 'core_form/modalform'], function($, ModalFactory, Str, ModalForm) {
+define(['jquery', 'core/str', 'core_form/modalform'], function ($, Str, ModalForm) {
 
     const SELECTORS = {
         table: 'table.competency-list',
@@ -51,15 +51,15 @@ define(['jquery', 'core/modal_factory', 'core/str', 'core_form/modalform'], func
 
                 formClass: formClass,
                 // Add as many arguments as you need, they will be passed to the form:
-                args: {competencyid: this.competencyID},
+                args: { competencyid: this.competencyID },
                 // Modal configurations, here set modal title.
-                modalConfig: {title: Str.get_string('courseskills', 'tool_skills')},
+                modalConfig: { title: Str.get_string('courseskills', 'tool_skills') },
             });
 
             modalForm.show();
 
             // Listen to events if you want to execute something on form submit.
-            modalForm.addEventListener(modalForm.events.FORM_SUBMITTED, function() {
+            modalForm.addEventListener(modalForm.events.FORM_SUBMITTED, function () {
                 window.location.reload();
             });
         }
@@ -69,7 +69,7 @@ define(['jquery', 'core/modal_factory', 'core/str', 'core_form/modalform'], func
 
             var self = this;
 
-            this.getRoot().addEventListener('click', function(e) {
+            this.getRoot().addEventListener('click', function (e) {
 
                 if (e.target.closest(SELECTORS.editskill)) {
                     e.preventDefault();
@@ -96,7 +96,7 @@ define(['jquery', 'core/modal_factory', 'core/str', 'core_form/modalform'], func
 
     return {
 
-        init: function() {
+        init: function () {
             DashAddonSkillsProgress.createInstances();
         }
     };

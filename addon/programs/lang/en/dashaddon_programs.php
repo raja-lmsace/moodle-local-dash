@@ -22,9 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Data source: Programs';
 $string['datasource:programs_data_source'] = 'Enrol Programs';
+$string['pluginname'] = 'Data source: Programs';
 $string['programs'] = 'Programs';
 $string['tablealias_epp'] = 'Programs';
 $string['upgradeplugin'] = "This plugin requires installation of <a href='https://moodle.org/plugins/enrol_programs'> Programs </a> to enable.";
-

@@ -17,9 +17,9 @@
 /**
  * Transform dash dashboard data into dash thumbnail image.
  *
- * @package    dashaddon_dashboard
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_dashboard
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_dashboard\local\block_dash\data_grid\field\attribute;
@@ -35,13 +35,12 @@ use cm_info;
  * @package dashaddon_dashboard
  */
 class dashboard_dash_thumbnail_image_attribute extends abstract_field_attribute {
-
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param \stdClass $data
-     * @param \stdClass $record Entire row
+     * @param  \stdClass $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
@@ -50,15 +49,25 @@ class dashboard_dash_thumbnail_image_attribute extends abstract_field_attribute 
 
         $fs = get_file_storage();
         $files = $fs->get_area_files(
-            \context_system::instance()->id, 'dashaddon_dashboard', 'dashthumbnailimage', $data, '', false
+            \context_system::instance()->id,
+            'dashaddon_dashboard',
+            'dashthumbnailimage',
+            $data,
+            '',
+            false
         );
         $imageurl = '';
         if (!empty($files)) {
             $file = reset($files);
 
             $imageurl = \moodle_url::make_pluginfile_url(
-                $file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
-                $file->get_filename(), false
+                $file->get_contextid(),
+                $file->get_component(),
+                $file->get_filearea(),
+                $file->get_itemid(),
+                $file->get_filepath(),
+                $file->get_filename(),
+                false
             );
         }
         return $imageurl;

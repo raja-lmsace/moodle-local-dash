@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course completion status.
  *
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -35,7 +35,6 @@ use MoodleQuickForm;
  * @package local_dash
  */
 class completion_status_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -77,14 +76,15 @@ class completion_status_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $DB, $CFG;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -92,9 +92,9 @@ class completion_status_condition extends condition {
         $fieldname = sprintf($fieldnameformat, $this->get_name());
 
         $choices = [
-            'completed' => get_string('status:completed', 'block_dash'),
-            'inprogress' => get_string('status:inprogress', 'block_dash'),
             'enrolled' => get_string('status:enrolled', 'block_dash'),
+            'inprogress' => get_string('status:inprogress', 'block_dash'),
+            'completed' => get_string('status:completed', 'block_dash'),
         ];
 
         $select = $mform->addElement('select', $fieldname . '[completionstatus]', '', $choices, ['class' => 'select2-form']);
@@ -111,7 +111,8 @@ class completion_status_condition extends condition {
     public function get_sql_and_params() {
         global $USER, $DB;
 
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
+
         if ($sql) {
             $params['cueuserid'] = $USER->id;
             $courses = $DB->get_records_sql(
@@ -126,15 +127,17 @@ class completion_status_condition extends condition {
                     LEFT JOIN {enrol} e ON ue.enrolid = e.id
                     LEFT JOIN {course_completions} cc ON cc.course = e.courseid AND ue.userid = cc.userid
                 WHERE ue.userid = :cueuserid
-                ) ue WHERE ".$sql, $params
+                ) ue WHERE " . $sql,
+                $params
             );
 
             $courses = array_column((array) $courses, 'courseid');
 
-            list($insql, $inparams) = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'cs', true, true);
+            [$insql, $inparams] = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'cs', true, true);
             $sql = ' c.id ' . $insql;
             $params = array_merge($params, $inparams);
         }
+
         return [$sql, $params];
     }
 }

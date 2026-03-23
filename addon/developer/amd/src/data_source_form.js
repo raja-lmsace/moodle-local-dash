@@ -9,7 +9,7 @@ define([
     'dashaddon_developer/codemirror_addon_matchbrackets',
     'dashaddon_developer/codemirror_addon_show_hint',
     'dashaddon_developer/codemirror_addon_sql_hint'
-], function($, jqueryui, Ajax, CodeMirror) {
+], function ($, jqueryui, Ajax, CodeMirror) {
 
     var mustacheTextarea = document.getElementById("id_layout_mustache");
     var queryTemplateTextarea = document.getElementById("id_query_template");
@@ -18,7 +18,7 @@ define([
         CodeMirror.fromTextArea(mustacheTextarea, {
             lineNumbers: true,
             matchBrackets: true,
-            mode: {name: 'handlebars', base: 'text/html'}
+            mode: { name: 'handlebars', base: 'text/html' }
         });
     }
 
@@ -49,20 +49,20 @@ define([
         handle: ".drag-handle"
     });
 
-    $("#add-new-field-definition").on('change', function(e) {
+    $("#add-new-field-definition").on('change', function (e) {
         var fieldName = $(this).val();
         if (fieldName) {
             var promises = Ajax.call([{
                 methodname: 'dashaddon_developer_get_field_edit_row',
-                args: {name: fieldName}
+                args: { name: fieldName }
             }]);
-            promises[0].done(function(result) {
+            promises[0].done(function (result) {
                 $("#field_edits tbody").append(result.html);
             });
         }
     });
 
-    $("#field_edits").on("click", ".delete-field", function(e) {
+    $("#field_edits").on("click", ".delete-field", function (e) {
         e.preventDefault();
         $(this).closest('.field').remove();
     });

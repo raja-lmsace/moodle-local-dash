@@ -17,21 +17,22 @@
 /**
  * DB authentication plugin upgrade code
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * Function to upgrade local_dash.
- * @param int $oldversion the version we are upgrading from
+ *
+ * @param  int $oldversion the version we are upgrading from
  * @return bool result
  */
 function xmldb_local_dash_upgrade($oldversion) {
     global $CFG, $DB;
     $dbman = $DB->get_manager();
 
-    require_once($CFG->dirroot.'/local/dash/lib.php');
+    require_once($CFG->dirroot . '/local/dash/lib.php');
 
     if ($oldversion < 2019112402) {
         // Define table dash_data_source to be created.
@@ -152,8 +153,11 @@ function xmldb_local_dash_upgrade($oldversion) {
         foreach ($DB->get_records('block_instances', ['blockname' => 'dash']) as $record) {
             $instance = block_instance('dash', $record);
             if (isset($instance->config->data_source_idnumber)) {
-                $instance->config->data_source_idnumber = str_replace('local_dash\\data_source', 'local_dash\\local\\block_dash',
-                    $instance->config->data_source_idnumber);
+                $instance->config->data_source_idnumber = str_replace(
+                    'local_dash\\data_source',
+                    'local_dash\\local\\block_dash',
+                    $instance->config->data_source_idnumber
+                );
                 $instance->instance_config_save($instance->config);
             }
         }
@@ -192,7 +196,6 @@ function xmldb_local_dash_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
         // Define field description format to be added to dash_dashboard.
-        $table = new xmldb_table('dashaddon_dashboard_dash');
         $field = new xmldb_field('descriptionformat', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'description');
         // Conditionally launch add field description format.
         if (!$dbman->field_exists($table, $field)) {
@@ -200,14 +203,12 @@ function xmldb_local_dash_upgrade($oldversion) {
         }
 
         // Define field description to be added to dash_dashboard.
-        $table = new xmldb_table('dashaddon_dashboard_dash');
         $field = new xmldb_field('coredash', XMLDB_TYPE_INTEGER, '2', null, null, null, 0, 'secondarynav');
         // Conditionally launch add field cohort_id.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
         // Define field dash icon to be added to dash_dashboard.
-        $table = new xmldb_table('dashaddon_dashboard_dash');
         $field = new xmldb_field('dashicon', XMLDB_TYPE_CHAR, '50', null, null, null, null, 'descriptionformat');
         // Conditionally launch add field dashicon.
         if (!$dbman->field_exists($table, $field)) {
@@ -215,14 +216,12 @@ function xmldb_local_dash_upgrade($oldversion) {
         }
 
         // Define field dash icon to be added to dash_dashboard.
-        $table = new xmldb_table('dashaddon_dashboard_dash');
         $field = new xmldb_field('dashthumbnailimage', XMLDB_TYPE_INTEGER, '15', null, null, null, null, 'dashicon');
         // Conditionally launch add field dashicon.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
         // Define field dash icon to be added to dash_dashboard.
-        $table = new xmldb_table('dashaddon_dashboard_dash');
         $field = new xmldb_field('dashbgimage', XMLDB_TYPE_INTEGER, '15', null, null, null, null, 'dashthumbnailimage');
         // Conditionally launch add field dashicon.
         if (!$dbman->field_exists($table, $field)) {
@@ -230,7 +229,6 @@ function xmldb_local_dash_upgrade($oldversion) {
         }
 
         // Remove the role_id field.
-        $table = new xmldb_table('dashaddon_dashboard_dash');
         $field = new xmldb_field('role_id');
         // Conditionally launch drop field role_id.
         if ($dbman->field_exists($table, $field)) {
@@ -238,7 +236,6 @@ function xmldb_local_dash_upgrade($oldversion) {
         }
 
         // Define field roles to be added to dash_dashboard.
-        $table = new xmldb_table('dashaddon_dashboard_dash');
         $field = new xmldb_field('roles', XMLDB_TYPE_TEXT, null, null, null, null, null, 'cohort_id');
         // Conditionally launch add field roles.
         if (!$dbman->field_exists($table, $field)) {
@@ -246,7 +243,6 @@ function xmldb_local_dash_upgrade($oldversion) {
         }
 
         // Define field rolecontext to be added to dash_dashboard.
-        $table = new xmldb_table('dashaddon_dashboard_dash');
         $field = new xmldb_field('rolecontext', XMLDB_TYPE_INTEGER, '9', null, null, null, null, 'roles');
         // Conditionally launch add field rolecontext.
         if (!$dbman->field_exists($table, $field)) {
@@ -257,13 +253,84 @@ function xmldb_local_dash_upgrade($oldversion) {
             $dashboardrecord->permission = 'public';
             $DB->update_record('dashaddon_dashboard_dash', $dashboardrecord);
         }
+
+        $field = new xmldb_field('secondarynav', XMLDB_TYPE_INTEGER, '4', null, null, null, null, 'dashbgimage');
+        $dbman->change_field_type($table, $field);
+
+         // Add context type field.
+        $field = new xmldb_field('contexttype', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'system');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add category ID field.
+        $field = new xmldb_field('categoryid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add course ID field.
+        $field = new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field1 = new xmldb_field('includedblocks', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'dashbgimage');
+        $field2 = new xmldb_field('displaydashboardtitle', XMLDB_TYPE_INTEGER, '10', null, null, null, '0', 'includedblocks');
+        $field3 = new xmldb_field('displaycta', XMLDB_TYPE_INTEGER, '10', null, null, null, '0', 'displaydashboardtitle');
+        $field4 = new xmldb_field('ctalink', XMLDB_TYPE_CHAR, '255', null, null, null, 'enrolment', 'displaycta');
+        $field5 = new xmldb_field('ctacampaignid', XMLDB_TYPE_INTEGER, '10', null, null, null, '0', 'ctalink');
+        $field6 = new xmldb_field('ctacustomurl', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'ctacampaignid');
+
+        // Conditionally launch add field includedblocks.
+        if (!$dbman->field_exists($table, $field1)) {
+            $dbman->add_field($table, $field1);
+        }
+
+        // Conditionally launch add field displaydashboardtitle.
+        if (!$dbman->field_exists($table, $field2)) {
+            $dbman->add_field($table, $field2);
+        }
+
+        // Conditionally launch add field displaycta.
+        if (!$dbman->field_exists($table, $field3)) {
+            $dbman->add_field($table, $field3);
+        }
+
+        // Conditionally launch add field ctalink.
+        if (!$dbman->field_exists($table, $field4)) {
+            $dbman->add_field($table, $field4);
+        }
+
+        // Conditionally launch add field ctacampaignid.
+        if (!$dbman->field_exists($table, $field5)) {
+            $dbman->add_field($table, $field5);
+        }
+
+        // Conditionally launch add field ctacustomurl.
+        if (!$dbman->field_exists($table, $field6)) {
+            $dbman->add_field($table, $field6);
+        }
+
+        // Define fields to be added to dash_addon_dashboard table.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('ctacustomurltext', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'ctacustomurl');
+        // Conditionally launch add field includedblocks.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define fields to be added to dash_addon_dashboard table.
+        $table = new xmldb_table('dashaddon_dashboard_dash');
+        $field = new xmldb_field('redirecttodashboard', XMLDB_TYPE_INTEGER, '4', null, null, null, null, 'ctacustomurltext');
+        // Conditionally launch add field includedblocks.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        local_dash_upgrade_blocks_data_source_idnumber();
         upgrade_plugin_savepoint(true, 2024040428, 'local', 'dash');
     }
 
-    if ($oldversion < 2024050304) {
-        local_dash_upgrade_blocks_data_source_idnumber();
-        // Dash savepoint reached.
-        upgrade_plugin_savepoint(true, 2024050304, 'local', 'dash');
-    }
     return true;
 }

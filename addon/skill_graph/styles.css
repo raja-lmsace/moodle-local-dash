@@ -125,6 +125,7 @@
     font-size: 2.5rem;
     font-weight: 700;
 }
+
 .competency-progress-dash-widget .donut-competency-progress .competency-total-info .competency-framework-percent i {
     margin-left: 5px;
 }
@@ -138,6 +139,7 @@
     flex: 0 0 75%;
     max-width: 75%;
 }
+
 .drawer .competency-progress-dash-widget .competency-item .competency-basic-info .competency-progress-text {
     flex: 0 0 25%;
     max-width: 25%;

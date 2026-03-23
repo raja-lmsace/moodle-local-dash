@@ -1,0 +1,97 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template dashaddon_course_sections/sections
+
+    Example context (json):
+    {
+        "sitefullname": "Moodle - 44",
+		"courseurl": "https://localhost/moodle/course/view.php?id=2"
+    }
+}}
+
+<div class="course-sections-block">
+    <div class="widget-course_sections">
+        {{#data.contents}}
+        <div class="course-sections">
+            <div class="course-desc-block"> <!--Course title and description block-->
+                <a href="{{{courseurl}}}"> <h3>{{{fullname}}}</h3> </a>
+                {{{summary}}}
+            </div>
+            <div class="course-sections-list">
+                <div id="course-section-accordion" class="course-section-accordion-block"> <!--Course accordion block-->
+                    {{#coursecontent}}
+                    <div class="card section-{{section}}" data-number="{{section}}">
+                        <div class="card-header {{#notgeneral}}{{#highlighted}} dash-section-highlighted {{/highlighted}}{{/notgeneral}}"
+                            id="course-section-head-{{id}}"> <!--Course accordion header block-->
+
+                            <h5 class="mb-0">
+                                <button class="btn btn-link
+                                {{#collapsible}}collapsed{{/collapsible}}"
+                                {{#collapsible}}{{datatoggle}}="collapse"{{/collapsible}} {{datatarget}}="#course-section-content-{{id}}"
+                                aria-expanded={{expanded}} aria-controls="course-section-content-{{id}}">{{{name}}}</button>
+                                {{^uservisible}}
+                                    <i class="fa fa-lock"></i>
+                                {{/uservisible}}
+                            </h5>
+
+                            {{#sectiontype}}
+                            <div class="section-block">
+                                <span class="badge" style="color:{{sectiontypetextcolor}}; background-color:{{sectiontypebackcolor}};">
+                                    {{sectiontype}}
+                                </span>
+                            </div>
+                            {{/sectiontype}}
+
+                            {{{summary}}}
+
+                            {{#estimatedtime}}
+                                <div class="estimated-time-block">{{{estimatedtime}}}</div>
+                            {{/estimatedtime}}
+
+                        </div>
+
+                        {{#uservisible}}
+                        <div id="course-section-content-{{id}}" class="collapse {{#expanded}}show{{/expanded}}"
+                            aria-labelledby="course-section-head-{{id}}" {{^expanded}} data-parent="#course-section-accordion" {{/expanded}}>
+                            {{^hidemodules}}
+                            <div class="card-body">
+                                {{#modules}}
+                                <div class="course-section-block">
+                                    <h5>
+                                        <img src="{{{modicon}}}" role="presentation" class="dash-mod-icon">
+                                        {{#urlstatus}}<a href="{{{url}}}">{{{name}}}</a>{{/urlstatus}}
+                                        {{^urlstatus}}{{{name}}}{{/urlstatus}}
+                                    </h5>
+                                    {{#completiondata.state}}
+                                    <i class="fa fa-circle-check"></i>
+                                    {{/completiondata.state}}
+                                </div>
+                                {{/modules}}
+                            </div>
+                            {{/hidemodules}}
+                        </div>
+                        {{/uservisible}}
+
+                    </div>
+                    {{/coursecontent}}
+                </div>
+            </div>
+        </div>
+        {{/data.contents}}
+    </div>
+</div>

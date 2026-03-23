@@ -17,9 +17,9 @@
 /**
  * Transforms data to programs image url.
  *
- * @package    dashaddon_programs
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_programs
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_programs\local\block_dash\data_grid\field\attribute;
@@ -32,12 +32,11 @@ use moodle_url;
  * Transforms data to programs image url.
  */
 class program_image_url_attribute extends abstract_field_attribute {
-
     /**
      * Generate the programs image url based on the program id.
      *
-     * @param int $data
-     * @param stdClass $record
+     * @param  int      $data
+     * @param  stdClass $record
      * @return string
      */
     public function transform_data($data, stdClass $record) {
@@ -47,12 +46,20 @@ class program_image_url_attribute extends abstract_field_attribute {
         $context = \context::instance_by_id($record->epp_ctx);
         $imageurl = '';
         if (isset($presentation['image'])) {
-            $imageurl = moodle_url::make_file_url("$CFG->wwwroot/pluginfile.php",
-                    '/' . $context->id . '/enrol_programs/image/' . $record->epp_id . '/'. $presentation['image'], false);
+            $imageurl = moodle_url::make_file_url(
+                "$CFG->wwwroot/pluginfile.php",
+                '/' . $context->id . '/enrol_programs/image/' . $record->epp_id . '/' . $presentation['image'],
+                false
+            );
         } else {
             $fs = get_file_storage();
             $files = $fs->get_area_files(
-                \context_system::instance()->id, 'local_dash', 'programbg', 0, '', false
+                \context_system::instance()->id,
+                'local_dash',
+                'programbg',
+                0,
+                '',
+                false
             );
             if (!empty($files)) {
                 // Get the first file.

@@ -16,9 +16,10 @@
 
 /**
  * Logstore data source.
- * @package    dashaddon_logstore
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_logstore
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_logstore\local\block_dash;
@@ -48,7 +49,7 @@ use local_dash\data_grid\filter\enrollment_nonself_condition;
 use local_dash\data_grid\filter\enrollment_self_condition;
 use local_dash\data_grid\filter\enrollment_status_field_filter;
 use local_dash\data_grid\filter\my_enrolled_courses_condition;
-use local_dash\data_grid\filter\parent_role_condition;
+use local_dash\data_grid\filter\relations_role_condition;
 use local_dash\data_grid\filter\tags_field_filter;
 use dashaddon_categories\local\dash_framework\structure\course_category_table;
 use dashaddon_courses\local\dash_framework\structure\course_table;
@@ -59,7 +60,6 @@ use local_dash\data_grid\filter\event_condition;
  * Logstore data source.
  */
 class logstore_data_source extends abstract_data_source {
-
     /**
      * Constructor.
      *
@@ -76,6 +76,7 @@ class logstore_data_source extends abstract_data_source {
 
     /**
      * Return query template for retrieving user info.
+     *
      * @return builder
      */
     public function get_query_template(): builder {
@@ -86,7 +87,11 @@ class logstore_data_source extends abstract_data_source {
             ->join('user', 'u', 'id', 'sl.relateduserid')
             ->join('course', 'c', 'id', 'sl.courseid')
             ->join('course_categories', 'cc', 'id', 'c.category')
-            ->join('enrol', 'e', 'courseid', 'c.id');
+            ->join('enrol', 'e', 'courseid', 'c.id')
+            ->join('groups_members', 'gm', 'userid', 'u.id', join::TYPE_LEFT_JOIN)
+            ->join('groups', 'g', 'id', 'gm.groupid', join::TYPE_LEFT_JOIN)
+            ->join('user_enrolments', 'ue', 'userid', 'u.id', join::TYPE_LEFT_JOIN)
+            ->join_condition('ue', 'ue.enrolid = e.id');
 
         if (class_exists('\core_course\customfield\course_handler')) {
             $loghandler = \core_course\customfield\course_handler::create();
@@ -116,6 +121,7 @@ class logstore_data_source extends abstract_data_source {
 
     /**
      * Build and return filter collection.
+     *
      * @return filter_collection_interface
      */
     public function build_filter_collection() {
@@ -125,27 +131,35 @@ class logstore_data_source extends abstract_data_source {
 
         $logfiltercollection->add_filter(new course_field_filter('c_course', 'c.id'));
 
-        $filter = new date_filter('c_startdate', 'c.startdate', date_filter::DATE_FUNCTION_FLOOR,
-            get_string('startdate'));
+        $filter = new date_filter(
+            'c_startdate',
+            'c.startdate',
+            date_filter::DATE_FUNCTION_FLOOR,
+            get_string('startdate')
+        );
         $filter->set_operation(filter::OPERATION_GREATER_THAN_EQUAL);
         $logfiltercollection->add_filter($filter);
 
-        $filter = new date_filter('c_enddate', 'c.enddate', date_filter::DATE_FUNCTION_FLOOR,
-            get_string('enddate'));
+        $filter = new date_filter(
+            'c_enddate',
+            'c.enddate',
+            date_filter::DATE_FUNCTION_FLOOR,
+            get_string('enddate')
+        );
         $filter->set_operation(filter::OPERATION_GREATER_THAN_EQUAL);
         $logfiltercollection->add_filter($filter);
 
         $logfiltercollection->add_filter(new course_format_field_filter('c_format', 'c.format'));
 
-        $logfiltercollection->add_filter(new tags_field_filter('c_tags', 'c.id', 'core', 'course',
-            get_string('coursetags', 'tag')));
+        $logfiltercollection->add_filter(
+            new tags_field_filter('c_tags', 'c.id', 'core', 'course', get_string('coursetags', 'tag'))
+        );
 
-        $logfiltercollection->add_filter(new parent_role_condition('parentrole', 'u.id'));
+        $logfiltercollection->add_filter(new relations_role_condition('parentrole', 'u.id'));
 
         if (class_exists('\core_course\customfield\course_handler')) {
             $loghandler = \core_course\customfield\course_handler::create();
             foreach ($loghandler->get_fields() as $field) {
-
                 $alias = 'c_f_' . strtolower($field->get('shortname'));
                 $select = $alias . '.value';
 
@@ -154,14 +168,16 @@ class logstore_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->get_formatted_name());
                         break;
                     case 'date':
-                        $logfiltercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
-                            $field->get_formatted_name()));
+                        $logfiltercollection->add_filter(
+                            new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR, $field->get_formatted_name())
+                        );
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $logfiltercollection->add_filter(new customfield_filter($alias, $select, $field,
-                            $field->get_formatted_name()));
+                        $logfiltercollection->add_filter(
+                            new customfield_filter($alias, $select, $field, $field->get_formatted_name())
+                        );
                         break;
                 }
             }
@@ -169,7 +185,6 @@ class logstore_data_source extends abstract_data_source {
             global $DB;
 
             foreach ($DB->get_records('course_info_field') as $field) {
-
                 $alias = 'c_f_' . strtolower($field->shortname);
                 $select = $alias . '.data';
 
@@ -178,14 +193,16 @@ class logstore_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->fullname);
                         break;
                     case 'date':
-                        $logfiltercollection->add_filter(new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR,
-                            $field->fullname));
+                        $logfiltercollection->add_filter(
+                            new date_filter($alias, $select, date_filter::DATE_FUNCTION_FLOOR, $field->fullname)
+                        );
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $logfiltercollection->add_filter(new customfield_filter($alias, $select, $field,
-                            $field->fullname));
+                        $logfiltercollection->add_filter(
+                            new customfield_filter($alias, $select, $field, $field->fullname)
+                        );
                         break;
                 }
             }
@@ -197,13 +214,21 @@ class logstore_data_source extends abstract_data_source {
 
         $logfiltercollection->add_filter(new enrollment_status_field_filter('enrolment_status', 'ue.status'));
 
-        $filter = new date_filter('ue_timestart', 'ue.timestart', date_filter::DATE_FUNCTION_FLOOR,
-            get_string('enrollmenttimestart', 'block_dash'));
+        $filter = new date_filter(
+            'ue_timestart',
+            'ue.timestart',
+            date_filter::DATE_FUNCTION_FLOOR,
+            get_string('enrollmenttimestart', 'block_dash')
+        );
         $filter->set_operation(filter::OPERATION_GREATER_THAN_EQUAL);
         $logfiltercollection->add_filter($filter);
 
-        $filter = new date_filter('ue_timeend', 'ue.timeend', date_filter::DATE_FUNCTION_FLOOR,
-            get_string('enrollmenttimeend', 'block_dash'));
+        $filter = new date_filter(
+            'ue_timeend',
+            'ue.timeend',
+            date_filter::DATE_FUNCTION_FLOOR,
+            get_string('enrollmenttimeend', 'block_dash')
+        );
         $filter->set_operation(filter::OPERATION_GREATER_THAN_EQUAL);
         $logfiltercollection->add_filter($filter);
 
@@ -230,7 +255,7 @@ class logstore_data_source extends abstract_data_source {
     /**
      * Set the default preferences of the Course datasource, force the set the default settings.
      *
-     * @param array $data
+     * @param  array $data
      * @return array
      */
     public function set_default_preferences(&$data) {

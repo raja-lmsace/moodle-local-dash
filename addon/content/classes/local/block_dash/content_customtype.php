@@ -17,9 +17,9 @@
 /**
  * Dash content widget - Datasource defined.
  *
- * @package    dashaddon_content
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_content
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_content\local\block_dash;
@@ -35,45 +35,51 @@ use html_writer;
  * Datasource and method of the dash content widget definitions.
  */
 class content_customtype extends abstract_custom_type {
-
     /**
      * Represets the layout width is full width.
+     *
      * @var int
      */
     public const LAYOUTFULL = 1;
 
     /**
      * Represets the layout width is double, both are equal width.
+     *
      * @var int
      */
     public const LAYOUTDOUBLEEQUAL = 2;
 
     /**
      * Represets the layout width is double layout, left layout is 3/2 .
+     *
      * @var int
      */
     public const LAYOUTDOUBLELEFT = 3;
 
     /**
      * Represets the layout width is double layout, right layout is 3/2.
+     *
      * @var int
      */
     public const LAYOUTDOUBLERIGHT = 4;
 
     /**
      * Represets the layout width is triple layout.
+     *
      * @var int
      */
     public const LAYOUTTRIPLE = 5;
 
     /**
      * Represets the content display state to display on all pages.
+     *
      * @var int
      */
     public const DISPLAYALL = 0;
 
     /**
      * Represets the content display state to display only on section pages.
+     *
      * @var int
      */
     public const DISPLAYSECTION = 1;
@@ -81,17 +87,17 @@ class content_customtype extends abstract_custom_type {
     /**
      * Get template file name to renderer.
      */
-    public function get_mustache_template_name() :string {
+    public function get_mustache_template_name(): string {
         return 'dashaddon_content/content';
     }
 
     /**
      * Check the custom type has capability.
      *
-     * @param \context $context
+     * @param  \context $context
      * @return bool
      */
-    public static function has_capbility($context) : bool {
+    public static function has_capbility($context): bool {
         global $COURSE;
 
         // Content is only available for the users with this capability and only for course pages not system pages.
@@ -115,8 +121,10 @@ class content_customtype extends abstract_custom_type {
             self::LAYOUTTRIPLE => get_string('layouttriple', 'block_dash'),
         ];
 
-        $customoptions[] = $mform->createElement('html', html_writer::tag('p',
-            get_string('dashaddoncontentdesc', 'block_dash'), ['class' => 'dash-source-desc']));
+        $customoptions[] = $mform->createElement(
+            'html',
+            html_writer::tag('p', get_string('dashaddoncontentdesc', 'block_dash'), ['class' => 'dash-source-desc'])
+        );
         $customoptions[] = $mform->createElement('html', html_writer::start_div('custom-addon'));
         $customoptions[] = $mform->createElement('html', html_writer::start_div('custom-addon-item'));
         $customoptions[] = $mform->createElement('html', html_writer::start_div('addon-config hide'));
@@ -129,8 +137,10 @@ class content_customtype extends abstract_custom_type {
         }
 
         foreach ($layouts as $key => $value) {
-            $customoptions[] = $mform->createElement('html', \html_writer::start_div('content-layout-item addon-suboptions',
-                ['data-target' => 'subsource-config']));
+            $customoptions[] = $mform->createElement(
+                'html',
+                \html_writer::start_div('content-layout-item addon-suboptions', ['data-target' => 'subsource-config'])
+            );
             $customoptions[] = $mform->createElement('radio', 'config_preferences[contentlayout]', '', $value, $key);
             $customoptions[] = $mform->createElement('html', \html_writer::end_div());
         }
@@ -192,16 +202,15 @@ class content_customtype extends abstract_custom_type {
             'contextid' => $this->get_block_instance()->context->id,
             'uniqueid' => $this->get_block_instance()->instance->id,
         ];
-
     }
 
     /**
      * Generate the layout contents.
      *
-     * @param stdclass $content
+     * @param  stdclass $content
      * @return array
      */
-    protected function generate_layouts($content) : array {
+    protected function generate_layouts($content): array {
         global $PAGE;
 
         // Find this layout is available to display on this page.
@@ -223,8 +232,7 @@ class content_customtype extends abstract_custom_type {
 
         $layouts = [];
         for ($i = 1; $i <= $count; $i++) {
-
-            $layoutname = 'layout'.$i;
+            $layoutname = 'layout' . $i;
             $layoutoptions = $content->$layoutname ?? [];
 
             $layoutdata = $this->generate_layout_content($layoutname, $layoutoptions, $blockid);
@@ -279,9 +287,9 @@ class content_customtype extends abstract_custom_type {
     /**
      * Generate the layout contents based on user preferences.
      *
-     * @param string $layoutid
-     * @param stdClass $content Layout preferences
-     * @param int $blockid
+     * @param  string   $layoutid
+     * @param  stdClass $content  Layout preferences
+     * @param  int      $blockid
      * @return array
      */
     protected function generate_layout_content($layoutid, $content, $blockid) {
@@ -293,13 +301,13 @@ class content_customtype extends abstract_custom_type {
         $context = \context_block::instance($this->get_block_instance()->instance->id);
 
         // Background image of the content.
-        $bgimage = $this->get_background_image('backgroundimage_'.$layoutid, 'dashaddon_content', $blockid);
+        $bgimage = $this->get_background_image('backgroundimage_' . $layoutid, 'dashaddon_content', $blockid);
         $bgimageurl = $bgimage ? $bgimage->out(false) : '';
 
         $contenttext = $content->content ?? '';
-        $bgstyle = $content->backgroundcolor ? "background-color:".$content->backgroundcolor.";" : '';
+        $bgstyle = $content->backgroundcolor ? "background-color:" . $content->backgroundcolor . ";" : '';
         // Text color.
-        $bgstyle .= isset($content->textcolor) && $content->textcolor ? "color:".$content->textcolor.";" : "";
+        $bgstyle .= isset($content->textcolor) && $content->textcolor ? "color:" . $content->textcolor . ";" : "";
 
         // Remove the empty p tags from content.
         $pattern = "/<p[^>]*><br><\\/p[^>]*>/";
@@ -316,19 +324,25 @@ class content_customtype extends abstract_custom_type {
 
         // Add the background image as background of block.
         if ($bgimage) {
-            $bgstyle .= !empty(html_to_text($contenttext)) ? "background-image: url(".$bgimage.");" : '';
+            $bgstyle .= !empty(html_to_text($contenttext)) ? "background-image: url(" . $bgimage . ");" : '';
         }
         $context = \context_block::instance($this->get_block_instance()->instance->id);
 
-        $contenttext = file_rewrite_pluginfile_urls($contenttext, 'pluginfile.php',
-            $context->id, 'dashaddon_content', 'content_'.$layoutid, $blockid);
+        $contenttext = file_rewrite_pluginfile_urls(
+            $contenttext,
+            'pluginfile.php',
+            $context->id,
+            'dashaddon_content',
+            'content_' . $layoutid,
+            $blockid
+        );
 
         return [
             'edit' => ($bgimageurl || $context) ? true : false, // Content added to the layout, show the edit icon.
             'style' => $bgstyle,
             'backgroundimage' => $bgimageurl,
             'content' => $contenttext
-                ? format_text($contenttext, $content->contentformat, ['overflow' => false, 'noclean' => true]) : '',
+                ? format_text($contenttext, $content->contentformat, ['overflowdiv' => false, 'noclean' => true]) : '',
             'showimage' => $contenttext ? false : true,
         ];
     }
@@ -336,9 +350,9 @@ class content_customtype extends abstract_custom_type {
     /**
      * Get background image.
      *
-     * @param string $filearea
-     * @param string $component
-     * @param int $itemid
+     * @param  string $filearea
+     * @param  string $component
+     * @param  int    $itemid
      * @return stdClass
      */
     protected function get_background_image($filearea, $component, $itemid) {
@@ -354,8 +368,13 @@ class content_customtype extends abstract_custom_type {
             $file = reset($files);
 
             $url = \moodle_url::make_pluginfile_url(
-                $file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
-                $file->get_filename(), false
+                $file->get_contextid(),
+                $file->get_component(),
+                $file->get_filearea(),
+                $file->get_itemid(),
+                $file->get_filepath(),
+                $file->get_filename(),
+                false
             );
         }
 
@@ -365,17 +384,21 @@ class content_customtype extends abstract_custom_type {
     /**
      * Set the default preferences of the content addon, force the content to sectiondisplay to the current section.
      *
-     * @param array $data
+     * @param  array $data
      * @return void
      */
     public function set_default_preferences(&$data) {
         // Set the section default for single section in dashaddon_content.
         if (get_config("local_dash", "restrictcurrentsection")) {
             $configpreferences = $data['config_preferences'];
-            if (isset($data['config_data_source_idnumber']) &&
-                $data['config_data_source_idnumber'] == 'dashaddon_content\local\block_dash\content_customtype') {
-                if (isset($configpreferences['singlesection'])
-                    && $configpreferences['singlesection'] && !isset($configpreferences['sectiondisplay'])) {
+            if (
+                isset($data['config_data_source_idnumber'])
+                && $data['config_data_source_idnumber'] == 'dashaddon_content\local\block_dash\content_customtype'
+            ) {
+                if (
+                    isset($configpreferences['singlesection'])
+                    && $configpreferences['singlesection'] && !isset($configpreferences['sectiondisplay'])
+                ) {
                     $configpreferences['filters']['sectiondisplay']['enabled'] = 1;
                     $configpreferences['filters']['sectiondisplay']['sections'] = [$configpreferences['singlesection']];
                 }
@@ -387,8 +410,8 @@ class content_customtype extends abstract_custom_type {
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -396,7 +419,6 @@ class content_customtype extends abstract_custom_type {
 
         // Add content layout selector on General tab.
         if ($form->get_tab() == preferences_form::TAB_GENERAL) {
-
             parent::build_preferences_form($form, $mform);
 
             $layouts = [
@@ -407,7 +429,6 @@ class content_customtype extends abstract_custom_type {
                 self::LAYOUTTRIPLE => get_string('layouttriple', 'block_dash'),
             ];
             $mform->addElement('select', 'config_preferences[contentlayout]', get_string('contentlayout', 'block_dash'), $layouts);
-
         }
 
         if ($layout = $this->get_layout()) {
@@ -467,7 +488,7 @@ class content_customtype extends abstract_custom_type {
     /**
      * Copy any block-specific data when copying to a new block instance.
      *
-     * @param int $frominstanceid the id number of the block instance to copy from.
+     * @param int $frominstanceid   the id number of the block instance to copy from.
      * @param int $currentcontextid
      *
      * @return bool
@@ -490,7 +511,7 @@ class content_customtype extends abstract_custom_type {
         for ($i = 1; $i <= $count; $i++) {
             $fileareas = ['backgroundimage_', 'content_'];
             foreach ($fileareas as $filearea) {
-                $filearea = $filearea . 'layout'.$i; // Filearea name.
+                $filearea = $filearea . 'layout' . $i; // Filearea name.
 
                 $files = $fs->get_area_files($fromcontext->id, 'dashaddon_content', $filearea, $frominstanceid, 'id ASC', false);
 
@@ -504,4 +525,42 @@ class content_customtype extends abstract_custom_type {
         return true;
     }
 
+    /**
+     * Include the flag to confirm this block is show on this page.
+     *
+     * @param  array $data
+     * @return void
+     */
+    public function update_data_before_render(&$data) {
+        $data['showcollapseblock'] = $this->is_section_expand_content_addon($data);
+    }
+
+    /**
+     * Determines if the section content should be expanded based on the provided data.
+     *
+     * This function checks if the 'collapseaction' key in the provided data is set to true.
+     * If so, it retrieves the current section parameter and checks if the section is restricted
+     * based on the block instance's configuration preferences and filter collection.
+     *
+     * @param  array $data The data array containing the 'collapseaction' key.
+     * @return bool Returns true if the section content should be expanded, false otherwise.
+     */
+    public function is_section_expand_content_addon($data) {
+
+        if (isset($data['collapseaction']) && $data['collapseaction'] === true) {
+            $currentsection = optional_param('section', 0, PARAM_INT);
+
+            if (isset($this->get_block_instance()->config->preferences)) {
+                if ($this->get_filter_collection()->get_filter('sectiondisplay') === null) {
+                    return false;
+                }
+                $restrictedsections = $this->get_filter_collection()->get_filter('sectiondisplay')->get_values();
+                if (in_array((int)$currentsection, $restrictedsections)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

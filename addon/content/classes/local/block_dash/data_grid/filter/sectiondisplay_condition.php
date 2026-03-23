@@ -17,9 +17,9 @@
 /**
  * Filters results to specific sections.
  *
- * @package    dashaddon_content
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_content
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_content\local\block_dash\data_grid\filter;
@@ -38,7 +38,6 @@ use dashaddon_content\local\block_dash\content_customtype;
  * @package dashaddon_content
  */
 class sectiondisplay_condition extends condition {
-
     /**
      * Get filter SQL operation.
      *
@@ -86,7 +85,6 @@ class sectiondisplay_condition extends condition {
 
         // Section based display enabled, sections should be configured and this current page in the sections list.
         if (isset($this->get_preferences()['enabled']) && $this->get_preferences()['enabled']) {
-
             $sections = $this->get_values();
 
             $params = $PAGE->url->params();
@@ -107,14 +105,15 @@ class sectiondisplay_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
-        $fieldnameformat = 'filters[%s]'): void {
+        $fieldnameformat = 'filters[%s]'
+    ): void {
         global $PAGE;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
@@ -123,7 +122,6 @@ class sectiondisplay_condition extends condition {
 
         $courseid = $PAGE->course->id;
         if ($courseid != SITEID) {
-
             $modinfo = \course_modinfo::instance($courseid);
             $sectionsinfo = $modinfo->get_section_info_all();
 
@@ -132,8 +130,12 @@ class sectiondisplay_condition extends condition {
             foreach ($sectionsinfo as $sectionid => $info) {
                 $options[$sectionid] = $format->get_section_name($info);
             }
-            $sections = $mform->addElement('autocomplete', $fieldname . '[sections]',
-                get_string('contentsections', 'block_dash'), $options);
+            $sections = $mform->addElement(
+                'autocomplete',
+                $fieldname . '[sections]',
+                get_string('contentsections', 'block_dash'),
+                $options
+            );
             $sections->setMultiple(true);
 
             $mform->hideIf($fieldname . '[sections]', $fieldname . '[enabled]');

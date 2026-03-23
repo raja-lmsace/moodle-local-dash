@@ -47,11 +47,13 @@ Feature: Add conditions to the datasource in dash block
 
   Scenario: Self enrolment options.
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I create dash "Courses" datasource
-    And I open the "New Dash" block preference
-    Then I click on "Fields" "link"
+    And I wait until the page is ready
+    And I click on "#action-menu-toggle-0" "css_element"
+    And I click on "Preferences" "link" in the "New Dash" "block"
+    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I set the field "Course: Full name" to "1"
     Then I click on "Conditions" "link"
     And I set the field "Enrollment options" to "1"
@@ -66,11 +68,13 @@ Feature: Add conditions to the datasource in dash block
 
   Scenario: Custom field conditions check.
     Given I log in as "admin"
-    And I navigate to "Appearance > Default Dashboard page" in site administration
+    And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I create dash "Courses" datasource
-    And I open the "New Dash" block preference
-    Then I click on "Fields" "link"
+    And I wait until the page is ready
+    And I click on "#action-menu-toggle-0" "css_element"
+    And I click on "Preferences" "link" in the "New Dash" "block"
+    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I set the field "Course: Full name" to "1"
     Then I click on "Conditions" "link"
     And I should see "Field 1"
@@ -81,14 +85,14 @@ Feature: Add conditions to the datasource in dash block
     And I follow dashboard
     And I should not see "Course 4" in the "New Dash" "block"
     And I am on "Course 4" course homepage
-    And I navigate to settings in current page administration
+    And I navigate to "Settings" in current page administration
+    And I expand all fieldsets
     And I set the following fields to these values:
       | Field 1 | test |
     And I press "Save and display"
     And I follow dashboard
     And I should see "Course 4" in the "New Dash" "block"
 
-  @javascript
   Scenario Outline: Condition the courses list based on course start and end dates
     Given the following "courses" exist:
       | fullname       | shortname | category | startdate          | enddate              |
@@ -100,8 +104,11 @@ Feature: Add conditions to the datasource in dash block
       | Course 6       | CD6       | CAT4     | ##tomorrow +1day## | ##tomorrow +15days## |
     And I log in as "admin"
     And I create dash "Courses" datasource
-    And I open the "New Dash" block preference
-    Then I click on "Fields" "link"
+    And I wait until the page is ready
+    And I click on "#action-menu-toggle-0" "css_element"
+    And I click on "Preferences" "link" in the "New Dash" "block"
+    And I wait "3" seconds
+    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
     And I click on "#id_config_preferences_available_fields_c_shortname_visible" "css_element"
     And I click on "#id_config_preferences_available_fields_c_fullname_visible" "css_element"
     And I click on "#id_config_preferences_available_fields_c_startdate_visible" "css_element"
@@ -125,7 +132,6 @@ Feature: Add conditions to the datasource in dash block
       | should not         | should              | should not       | Present               |
       | should not         | should not          | should           | Past                  |
 
-  @javascript
   Scenario: Filter the courses list based on course start and end dates
 
     Given the following "courses" exist:
@@ -138,7 +144,9 @@ Feature: Add conditions to the datasource in dash block
       | Course 6       | CD6       | CAT4     | ##tomorrow +1day## | ##tomorrow +15days## |
     And I log in as "admin"
     And I create dash "Courses" datasource
-    And I open the "New Dash" block preference
+    And I wait until the page is ready
+    And I click on "#action-menu-toggle-0" "css_element"
+    And I click on "Preferences" "link" in the "New Dash" "block"
     And I click on "Fields" "link"
     And I click on "#id_config_preferences_available_fields_c_shortname_visible" "css_element"
     And I click on "#id_config_preferences_available_fields_c_fullname_visible" "css_element"

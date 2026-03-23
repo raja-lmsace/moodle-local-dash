@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course completion status
  *
- * @package    dashaddon_course_enrols
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_enrols
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
  namespace dashaddon_course_enrols\local\block_dash\data_grid\filter;
@@ -32,12 +32,10 @@
  * Filters results to specific course completion status
  */
 class completion_filter extends select_filter {
-
     use filter_element;
 
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
-     *
      */
     public function init() {
         global $DB;
@@ -63,7 +61,7 @@ class completion_filter extends select_filter {
     public function get_sql_and_params() {
         global $USER, $DB;
 
-        list($sql, $params) = parent::get_sql_and_params();
+        [$sql, $params] = parent::get_sql_and_params();
         $inparams = [];
         if ($sql) {
             $params['fueuserid'] = $USER->id;
@@ -88,11 +86,12 @@ class completion_filter extends select_filter {
                         WHERE mc.completionstate > 0 GROUP BY mc.userid, cm.course
                     ) mcm ON mcm.course = e.courseid AND mcm.userid = ue.userid
                 WHERE ue.userid = :fueuserid
-                ) ue WHERE '.$sql, $params
+                ) ue WHERE ' . $sql,
+                $params
             );
 
             $courses = array_column((array) $courses, 'courseid');
-            list($insql, $inparams) = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'f', true, true);
+            [$insql, $inparams] = $DB->get_in_or_equal($courses, SQL_PARAMS_NAMED, 'f', true, true);
             $sql = ' c.id ' . $insql;
         }
         return [$sql, $params + $inparams];
@@ -101,13 +100,15 @@ class completion_filter extends select_filter {
     /**
      * Override this method and call it after creating a form element.
      *
-     * @param filter_collection_interface $filtercollection
-     * @param string $elementnameprefix
+     * @param  filter_collection_interface $filtercollection
+     * @param  string                      $elementnameprefix
      * @throws \Exception
      * @return string
      */
-    public function create_form_element(filter_collection_interface $filtercollection,
-                                        $elementnameprefix = '') {
+    public function create_form_element(
+        filter_collection_interface $filtercollection,
+        $elementnameprefix = ''
+    ) {
         $filter = $filtercollection->get_filter('c_status')->get_preferences();
         if (!empty($filter) && $filter['enabled']) {
             return $this->create_filter_element($filtercollection, $elementnameprefix);
