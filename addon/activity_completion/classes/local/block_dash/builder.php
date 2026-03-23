@@ -17,9 +17,9 @@
 /**
  * Builds a query.
  *
- * @package    dashaddon_activity_completion
- * @copyright  2025 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activity_completion
+ * @copyright 2025 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace local\dash\addon\activity_completion\local\block_dash;
 
@@ -30,7 +30,7 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
     /**
      * Get number of records this query will return.
      *
-     * @param int $isunique Counted by unique id.
+     * @param  int $isunique Counted by unique id.
      * @return int
      * @throws dml_exception
      * @throws exception\invalid_operator_exception
@@ -92,8 +92,9 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         }
 
         if ($isunique) {
-            $builder->set_selects([
-                'count' => 'COUNT(' . $DB->sql_concat_join("'-'", ['cm.id', 'ue.userid']) . ')']);
+            $builder->set_selects(
+                ['count' => 'COUNT(' . $DB->sql_concat_join("'-'", ['cm.id', 'ue.userid']) . ')']
+            );
         } else {
             $builder->set_selects(['count' => 'COUNT(DISTINCT ' . $this->tablealias . '.id)']);
         }
@@ -127,7 +128,7 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
     /**
      * Remove a join by alias.
      *
-     * @param string $alias
+     * @param  string $alias
      * @return ?join
      */
     public function remove_join(string $alias) {

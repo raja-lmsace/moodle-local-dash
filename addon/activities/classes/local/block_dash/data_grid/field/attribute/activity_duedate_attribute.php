@@ -17,9 +17,9 @@
 /**
  * Transform activity data into activity duedate.
  *
- * @package    dashaddon_activities
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activities
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash\data_grid\field\attribute;
@@ -41,8 +41,8 @@ class activity_duedate_attribute extends abstract_field_attribute {
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param \stdClass $data
-     * @param \stdClass $record Entire row
+     * @param  \stdClass $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
@@ -52,8 +52,8 @@ class activity_duedate_attribute extends abstract_field_attribute {
         $duedate = "";
         // When the course complete the duedate attribute return empty string.
         if (
-            ($record->cm_modcompletionstatus == COMPLETION_COMPLETE ||
-            $record->cm_modcompletionstatus == COMPLETION_COMPLETE_PASS)
+            ($record->cm_modcompletionstatus == COMPLETION_COMPLETE
+            || $record->cm_modcompletionstatus == COMPLETION_COMPLETE_PASS)
         ) {
                 return $duedate;
         }

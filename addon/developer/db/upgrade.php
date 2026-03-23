@@ -25,7 +25,7 @@
 /**
  * Function to upgrade db.
  *
- * @param int $oldversion the version we are upgrading from
+ * @param  int $oldversion the version we are upgrading from
  * @return bool result
  */
 function xmldb_dashaddon_developer_upgrade($oldversion) {

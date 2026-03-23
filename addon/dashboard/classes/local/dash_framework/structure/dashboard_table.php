@@ -17,9 +17,9 @@
 /**
  * Class dashboard_table.
  *
- * @package    dashaddon_dashboard
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_dashboard
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_dashboard\local\dash_framework\structure;
@@ -65,47 +65,72 @@ class dashboard_table extends table {
 
     /**
      * Define the fields available in the reports for this table data source.
+     *
      * @return field_interface[]
      * @throws \moodle_exception
      */
     public function get_fields(): array {
         return [
-            new field('id', new lang_string('dashboard', 'block_dash'), $this, null, [
-                new identifier_attribute(),
-            ]),
-            new field('contextid', new lang_string('contextid', 'block_dash'), $this, null, [
-                new context_attribute(),
-            ]),
+            new field('id', new lang_string('dashboard', 'block_dash'), $this, null, [new identifier_attribute()]),
+
+            new field(
+                'contextid',
+                new lang_string('contextid', 'block_dash'),
+                $this,
+                null,
+                [new context_attribute()]
+            ),
             new field('name', new lang_string('name'), $this),
-            new field('description', new lang_string('description'), $this, 'dd.description', [
-                new dashboard_dash_description(),
-            ]),
-            new field('link', new lang_string('dashboardlink', 'block_dash'), $this, 'dd.id', [
-                new dash_dashboardlink_attribute(),
-                new link_attribute(['label_field' => 'dd_name']),
-            ]),
-            new field('dashicon', new lang_string('dashicon', 'block_dash'), $this, 'dd.dashicon', [
-                new dashboard_dash_icon_attribute(),
-            ]),
-            new field('dashthumbnailimg', new lang_string('dashthumbnailimg', 'block_dash'), $this, 'dd.id', [
-                new dashboard_dash_thumbnail_image_attribute(),
-                new image_attribute(),
-                new linked_data_attribute([
-                    'url' => new moodle_url(
-                        '/local/dash/addon/dashboard/dashboard.php',
-                        ['id' => 'dd_id']
+            new field('description', new lang_string('description'), $this, 'dd.description', [new dashboard_dash_description()]),
+
+            new field(
+                'link',
+                new lang_string('dashboardlink', 'block_dash'),
+                $this,
+                'dd.id',
+                [new dash_dashboardlink_attribute(), new link_attribute(['label_field' => 'dd_name'])]
+            ),
+            new field(
+                'dashicon',
+                new lang_string('dashicon', 'block_dash'),
+                $this,
+                'dd.dashicon',
+                [new dashboard_dash_icon_attribute()]
+            ),
+            new field(
+                'dashthumbnailimg',
+                new lang_string('dashthumbnailimg', 'block_dash'),
+                $this,
+                'dd.id',
+                [
+                    new dashboard_dash_thumbnail_image_attribute(),
+                    new image_attribute(),
+                    new linked_data_attribute(
+                        ['url' => new moodle_url('/local/dash/addon/dashboard/dashboard.php', ['id' => 'dd_id'])]
                     ),
-                ]),
-            ]),
-            new field('dashthumbnailimgurl', new lang_string('dashthumbnailimgurl', 'block_dash'), $this, 'dd.id', [
-                new dashboard_dash_thumbnail_image_attribute(), new image_url_attribute(),
-            ]),
-            new field('dashbgimage', new lang_string('backgroundimage', 'block_dash'), $this, 'dd.id', [
-                new dashboard_dash_background_image_attribute(), new image_attribute(),
-            ]),
-            new field('dashbgimageurl', new lang_string('backgroundimageurl', 'block_dash'), $this, 'dd.id', [
-                new dashboard_dash_background_image_attribute(), new image_url_attribute(),
-            ]),
+                ]
+            ),
+            new field(
+                'dashthumbnailimgurl',
+                new lang_string('dashthumbnailimgurl', 'block_dash'),
+                $this,
+                'dd.id',
+                [new dashboard_dash_thumbnail_image_attribute(), new image_url_attribute()]
+            ),
+            new field(
+                'dashbgimage',
+                new lang_string('backgroundimage', 'block_dash'),
+                $this,
+                'dd.id',
+                [new dashboard_dash_background_image_attribute(), new image_attribute()]
+            ),
+            new field(
+                'dashbgimageurl',
+                new lang_string('backgroundimageurl', 'block_dash'),
+                $this,
+                'dd.id',
+                [new dashboard_dash_background_image_attribute(), new image_url_attribute()]
+            ),
         ];
     }
 }

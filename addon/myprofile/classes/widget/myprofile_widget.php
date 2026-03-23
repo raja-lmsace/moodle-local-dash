@@ -17,9 +17,9 @@
 /**
  * My profile - dashaddon widget, display the user key performance indicators and users basic information.
  *
- * @package    dashaddon_myprofile
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_myprofile
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_myprofile\widget;
@@ -168,8 +168,8 @@ class myprofile_widget extends abstract_widget {
      * Add the kpi result as array.
      *
      * @param string $name
-     * @param mixed $result
-     * @param array $attrs
+     * @param mixed  $result
+     * @param array  $attrs
      * @param string $label
      *
      * @return array
@@ -191,9 +191,12 @@ class myprofile_widget extends abstract_widget {
     public function build_widget() {
         global $USER, $DB, $CFG;
 
-        $kpifields = array_map(function ($i) {
-            return $this->get_preferences("kpi$i");
-        }, range(1, self::KPIFIELDCOUNT));
+        $kpifields = array_map(
+            function ($i) {
+                return $this->get_preferences("kpi$i");
+            },
+            range(1, self::KPIFIELDCOUNT)
+        );
 
         // Current userid.
         $userid = $this->get_current_userid();
@@ -235,7 +238,7 @@ class myprofile_widget extends abstract_widget {
                     // Transform the completed courses progress.
                     $transforms['enrolledprogress'] = function ($courses) use ($transforms) {
                         return $transforms['completedcourses']($courses)
-                            . \html_writer::tag('span', '/' . count($courses), ['class' => 'progress-divide']);
+                        . \html_writer::tag('span', '/' . count($courses), ['class' => 'progress-divide']);
                     };
 
                     // Courses in progress - tranform data to string.
@@ -248,14 +251,16 @@ class myprofile_widget extends abstract_widget {
                 case 'currentcoursescount':
                     // Number of current courses - tranform data to string.
                     $transforms['currentcoursescount'] = function ($courses) {
+                        $activecourses = array_filter(
+                            $courses,
+                            function ($course) {
+                                $startdate = $course->startdate;
+                                $enddate = $course->enddate;
+                                $now = time();
 
-                        $activecourses = array_filter($courses, function ($course) {
-                            $startdate = $course->startdate;
-                            $enddate = $course->enddate;
-                            $now = time();
-
-                            return (!$startdate || $startdate < $now) && (!$enddate || $enddate > $now);
-                        });
+                                return (!$startdate || $startdate < $now) && (!$enddate || $enddate > $now);
+                            }
+                        );
                         return count($activecourses);
                     };
 
@@ -264,11 +269,14 @@ class myprofile_widget extends abstract_widget {
                 case 'futurecoursescount':
                     // Number of future courses - tranform data to string.
                     $transforms['futurecoursescount'] = function ($courses) {
-                        $futurecourses = array_filter($courses, function ($course) {
-                            $startdate = $course->startdate;
-                            $now = time();
-                            return $startdate && $startdate > $now;
-                        });
+                        $futurecourses = array_filter(
+                            $courses,
+                            function ($course) {
+                                $startdate = $course->startdate;
+                                $now = time();
+                                return $startdate && $startdate > $now;
+                            }
+                        );
                         return count($futurecourses);
                     };
                     break;
@@ -276,11 +284,14 @@ class myprofile_widget extends abstract_widget {
                 case 'pastcoursescount':
                     // Number of past courses - tranform data to string.
                     $transforms['pastcoursescount'] = function ($courses) {
-                        $pastcourses = array_filter($courses, function ($course) {
-                            $enddate = $course->enddate;
-                            $now = time();
-                            return $enddate && $enddate < $now;
-                        });
+                        $pastcourses = array_filter(
+                            $courses,
+                            function ($course) {
+                                $enddate = $course->enddate;
+                                $now = time();
+                                return $enddate && $enddate < $now;
+                            }
+                        );
                         return count($pastcourses);
                     };
                     break;
@@ -343,14 +354,21 @@ class myprofile_widget extends abstract_widget {
                 case 'loginsthisweek':
                     $lastweek = strtotime('this week'); // Timestamp of the last week.
                     $joparams = [
-                        'jolsluserid' => $userid,
-                        'jolsleventname' => '\core\event\user_loggedin',
-                        'jolastweek' => $lastweek,
+                    'jolsluserid' => $userid,
+                    'jolsleventname' => '\core\event\user_loggedin',
+                    'jolastweek' => $lastweek,
                     ];
                     // Join the log store and get the login events created after the last week.
-                    $rawjoin = new join_raw("SELECT DISTINCT userid, count(*) AS loginsthisweek FROM {logstore_standard_log}
+                    $rawjoin = new join_raw(
+                        "SELECT DISTINCT userid, count(*) AS loginsthisweek FROM {logstore_standard_log}
                                         WHERE timecreated >= :jolastweek AND userid = :jolsluserid AND eventname = :jolsleventname
-                                        GROUP BY userid", 'lsl', 'userid', 'u.id', join_raw::TYPE_LEFT_JOIN, $joparams);
+                                        GROUP BY userid",
+                        'lsl',
+                        'userid',
+                        'u.id',
+                        join_raw::TYPE_LEFT_JOIN,
+                        $joparams
+                    );
 
                     $query->join_raw($rawjoin);
                     $query->select('lsl.loginsthisweek', 'loginsthisweek');
@@ -390,10 +408,17 @@ class myprofile_widget extends abstract_widget {
                     $lastweek = strtotime('this week');
                     $ccparams = ['ccuserid' => $userid, 'cclastweek' => $lastweek];
 
-                    $sql = new join_raw("
-                        SELECT DISTINCT userid, count(*) AS completions FROM {course_completions}
-                        WHERE timecompleted >= :cclastweek AND userid = :ccuserid
-                        GROUP BY userid", 'cc', 'userid', 'u.id', join::TYPE_LEFT_JOIN, $ccparams);
+                    $sql = new join_raw(
+                        "
+                          SELECT DISTINCT userid, count(*) AS completions FROM {course_completions}
+                           WHERE timecompleted >= :cclastweek AND userid = :ccuserid
+                        GROUP BY userid",
+                        'cc',
+                        'userid',
+                        'u.id',
+                        join::TYPE_LEFT_JOIN,
+                        $ccparams
+                    );
 
                     $query->join_raw($sql);
                     $query->select('cc.completions', 'completedcoursesinweek');
@@ -406,9 +431,9 @@ class myprofile_widget extends abstract_widget {
                     $cmcparams = ['cmcuserid' => $userid, 'cmclastweek' => $lastweek];
 
                     $sql = new join_raw(
-                        "SELECT DISTINCT userid, count(*) AS completedactivitiesinweek FROM {course_modules_completion}
-                            WHERE timemodified >= :cmclastweek AND userid = :cmcuserid AND completionstate >= 1
-                            GROUP BY userid",
+                        " SELECT DISTINCT userid, count(*) AS completedactivitiesinweek FROM {course_modules_completion}
+                           WHERE timemodified >= :cmclastweek AND userid = :cmcuserid AND completionstate >= 1
+                        GROUP BY userid",
                         'cmc',
                         'userid',
                         'u.id',
@@ -456,7 +481,7 @@ class myprofile_widget extends abstract_widget {
                         }
 
                         return $transforms['earnedskillpoints']($courses, $userdata)
-                            . \html_writer::tag('span', '/' . $skillpoints, ['class' => 'progress-divide']);
+                        . \html_writer::tag('span', '/' . $skillpoints, ['class' => 'progress-divide']);
                     };
                     // Intentional fall-through to also set up earnedskillpoints transform.
 
@@ -466,13 +491,15 @@ class myprofile_widget extends abstract_widget {
                     }
                     if (!isset($transforms['earnedskillpoints'])) {
                         $query->select('tsup.points', 'earnedskillpoints');
-                        $query->join_raw(new join_raw(
-                            'SELECT DISTINCT userid, SUM(points) AS points FROM {tool_skills_userpoints} GROUP BY userid',
-                            'tsup',
-                            "userid",
-                            'u.id',
-                            join::TYPE_LEFT_JOIN
-                        ));
+                        $query->join_raw(
+                            new join_raw(
+                                'SELECT DISTINCT userid, SUM(points) AS points FROM {tool_skills_userpoints} GROUP BY userid',
+                                'tsup',
+                                "userid",
+                                'u.id',
+                                join::TYPE_LEFT_JOIN
+                            )
+                        );
 
                         $transforms['earnedskillpoints'] = fn($courses, $userdata) => $userdata->earnedskillpoints ?: 0;
                     }
@@ -557,9 +584,13 @@ class myprofile_widget extends abstract_widget {
             // Flip the kpi fields values to keys, and replace the values of keys with result.
             $result = array_replace(array_flip(array_filter($kpifields)), $result);
             // Remove unselected kpi from list. Due activities are added if overdue is selected.
-            $result = array_filter($result, function ($key) use ($kpifields) {
-                return in_array($key, array_values($kpifields));
-            }, ARRAY_FILTER_USE_KEY);
+            $result = array_filter(
+                $result,
+                function ($key) use ($kpifields) {
+                    return in_array($key, array_values($kpifields));
+                },
+                ARRAY_FILTER_USE_KEY
+            );
         }
 
         // Transform the records to user readable format based the fields attribute.
@@ -614,10 +645,10 @@ class myprofile_widget extends abstract_widget {
      *
      * @copyright 2010 Petr Skoda {@link http://skodak.org}
      *
-     * @param int $userid User whose courses are returned, defaults to the current user.
-     * @param string|array $fields Extra fields to be returned (array or comma-separated list).
-     * @param [type] $joins Additional tables to be joined.
-     * @param [type] $params Extra parameters helps to defined the joins conditions.
+     * @param  int          $userid User whose courses are returned, defaults to the current user.
+     * @param  string|array $fields Extra fields to be returned (array or comma-separated list).
+     * @param  [type]       $joins  Additional tables to be joined.
+     * @param  [type]       $params Extra parameters helps to defined the joins conditions.
      * @return array
      */
     public function enrol_get_all_users_courses($userid, $fields = null, $joins = null, $params = null) {
@@ -686,7 +717,7 @@ class myprofile_widget extends abstract_widget {
     /**
      * Get the user picuture from the game block.
      *
-     * @param int $userid
+     * @param  int $userid
      * @return string
      */
     protected function get_user_gamepic(int $userid) {
@@ -718,7 +749,7 @@ class myprofile_widget extends abstract_widget {
     /**
      * Get the current online users count, based on online_users block.
      *
-     * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+     * @copyright 1999 onwards Martin Dougiamas (http://dougiamas.com)
      *
      * @return void
      */
@@ -763,8 +794,8 @@ class myprofile_widget extends abstract_widget {
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {

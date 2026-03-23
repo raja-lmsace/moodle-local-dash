@@ -17,9 +17,9 @@
 /**
  * Library functions defined for dashaddon activity completion.
  *
- * @package    dashaddon_activity_completion
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activity_completion
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use dashaddon_activity_completion\local\block_dash\data_grid\field\attribute\activity_grade_attribute;
@@ -76,7 +76,7 @@ function dashaddon_activity_completion_is_timetable_installed() {
 /**
  * Display the activity grade form to the fragment.
  *
- * @param array $args
+ * @param  array $args
  * @return string $gradeform.
  */
 function dashaddon_activity_completion_output_fragment_grade_activity_form($args) {

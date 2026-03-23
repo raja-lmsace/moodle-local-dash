@@ -1,4 +1,4 @@
-define(['jquery', 'core/modal_factory', 'core/str', 'core_form/modalform'], function ($, ModalFactory, Str, ModalForm) {
+define(['jquery', 'core/str', 'core_form/modalform'], function ($, Str, ModalForm) {
 
     const SELECTORS = {
         dashBlock: '.block[data-block="dash"]',

@@ -17,9 +17,9 @@
 /**
  * Library functions defined for skill graph widget.
  *
- * @package    dashaddon_learningpath
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_learningpath
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use core_course\external\course_summary_exporter;
@@ -42,13 +42,13 @@ function dashaddon_learningpath_register_widget(): array {
 /**
  * Learningpath plugin file definitions, List of fileareas used in local_dash plugin.
  *
- * @param stdclass $course
- * @param stdclass $cm
- * @param stdclass $context
- * @param string $filearea
- * @param array $args
- * @param bool $forcedownload
- * @param array $options
+ * @param  stdclass $course
+ * @param  stdclass $cm
+ * @param  stdclass $context
+ * @param  string   $filearea
+ * @param  array    $args
+ * @param  bool     $forcedownload
+ * @param  array    $options
  * @return void
  */
 function dashaddon_learningpath_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
@@ -90,7 +90,7 @@ function dashaddon_learningpath_pluginfile($course, $cm, $context, $filearea, $a
 /**
  * Get the course details to display in the details area modal.
  *
- * @param array $args
+ * @param  array $args
  * @return string
  */
 function dashaddon_learningpath_output_fragment_course_details_area($args) {
@@ -325,7 +325,7 @@ function dashaddon_learningpath_format_assignment_data($override) {
  * Generate the course completion report.
  *
  * @param int $courseid Course id
- * @param int $userid User id
+ * @param int $userid   User id
  *
  * @return array course completion report.
  */
@@ -454,7 +454,7 @@ function dashaddon_learningpath_is_possible_failed($course, $userid) {
 /**
  * Get course image.
  *
- * @param int $courseid
+ * @param  int $courseid
  * @return mixed
  * @throws \moodle_exception
  */

@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course completion status
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -32,7 +32,6 @@ use block_dash\local\data_grid\filter\select_filter;
 class completion_status_filter extends select_filter {
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
-     *
      */
     public function init() {
         global $DB;

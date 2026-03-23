@@ -17,9 +17,9 @@
 /**
  * Activities table.
  *
- * @package    dashaddon_activities
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activities
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\dash_framework\structure;
@@ -106,9 +106,13 @@ class activities_table extends table {
         $activitymodifiydatesql = 'mds.timemodified';
 
         $fields = [
-            new field('id', new lang_string('activity'), $this, 'cm.id', [
-                new identifier_attribute(),
-            ]),
+            new field(
+                'id',
+                new lang_string('activity'),
+                $this,
+                'cm.id',
+                [new identifier_attribute()]
+            ),
             new field(
                 'name',
                 new lang_string('activity_name', 'dashaddon_activities'),
@@ -118,83 +122,150 @@ class activities_table extends table {
                 field_interface::VISIBILITY_VISIBLE,
                 ''
             ),
-            new field('link', new lang_string('activitylink', 'dashaddon_activities'), $this, 'cm.id', [
-                new activity_link_attribute(),
-            ]),
-            new field('intro', new lang_string('description'), $this, 'cm.id', [
-                new activity_description_attribute(),
-            ]),
+            new field(
+                'link',
+                new lang_string('activitylink', 'dashaddon_activities'),
+                $this,
+                'cm.id',
+                [new activity_link_attribute()]
+            ),
+            new field(
+                'intro',
+                new lang_string('description'),
+                $this,
+                'cm.id',
+                [new activity_description_attribute()]
+            ),
             new field('idnumber', new lang_string('idnumber'), $this, 'cm.idnumber'),
-            new field('tags', new lang_string('activitytags', 'dashaddon_activities'), $this, 'cm.id', [
-                new tags_attribute(['component' => 'core', 'itemtype' => 'course_modules']),
-            ]),
-            new field('type', new lang_string('activitytype', 'dashaddon_activities'), $this, 'cm.id', [
-                new activity_type_attribute(),
-            ]),
-            new field('modulename', new lang_string('modname', 'dashaddon_activities'), $this, 'm.name', [
-                new activity_modname_attribute(),
-            ], ['supports_sorting' => false]),
-            new field('modicon', new lang_string('modicon', 'dashaddon_activities'), $this, 'cm.id', [
-                new activity_icon_attribute(),
-            ]),
-            new field('modulepurpose', new lang_string('modulepurpose', 'dashaddon_activities'), $this, 'cm.id', [
-                new activity_purpose_attribute(),
-            ], ['supports_sorting' => false]),
+            new field(
+                'tags',
+                new lang_string('activitytags', 'dashaddon_activities'),
+                $this,
+                'cm.id',
+                [new tags_attribute(['component' => 'core', 'itemtype' => 'course_modules'])]
+            ),
+            new field(
+                'type',
+                new lang_string('activitytype', 'dashaddon_activities'),
+                $this,
+                'cm.id',
+                [new activity_type_attribute()]
+            ),
+            new field(
+                'modulename',
+                new lang_string('modname', 'dashaddon_activities'),
+                $this,
+                'm.name',
+                [new activity_modname_attribute()],
+                ['supports_sorting' => false]
+            ),
+            new field(
+                'modicon',
+                new lang_string('modicon', 'dashaddon_activities'),
+                $this,
+                'cm.id',
+                [new activity_icon_attribute()]
+            ),
+            new field(
+                'modulepurpose',
+                new lang_string('modulepurpose', 'dashaddon_activities'),
+                $this,
+                'cm.id',
+                [new activity_purpose_attribute()],
+                ['supports_sorting' => false]
+            ),
             new field(
                 'modcompletionstatus',
                 new lang_string('modcompletionstatus', 'dashaddon_activities'),
                 $this,
                 'cmc.completionstate',
+                [new activity_completion_status_attribute()]
+            ),
+            new field(
+                'modcompletiondate',
+                new lang_string('completiondate', 'dashaddon_activities'),
+                $this,
+                'cmc.timemodified',
+                [new activity_completion_date_attribute()]
+            ),
+            new field(
+                'moduleduedate',
+                new lang_string('duedate', 'block_dash'),
+                $this,
+                'cm.completionexpected',
+                [new activity_duedate_attribute()]
+            ),
+            new field(
+                'modsection',
+                new lang_string('section'),
+                $this,
+                'cs.name',
+                [new activity_section_attribute()]
+            ),
+            new field(
+                'modsectionlink',
+                new lang_string('sectionlink', 'dashaddon_activities'),
+                $this,
+                'cs.name',
+                [new activity_sectionlink_attribute()]
+            ),
+            new field(
+                'modulepath',
+                new lang_string('path'),
+                $this,
+                'cm.id',
+                [new activity_path_attribute()],
+                ['supports_sorting' => false]
+            ),
+            new field(
+                'createdat',
+                new lang_string('createddate', 'block_dash'),
+                $this,
+                'cm.added',
+                [new date_attribute()]
+            ),
+            new field(
+                'modifiedat',
+                new lang_string('modifieddate', 'block_dash'),
+                $this,
+                $activitymodifiydatesql,
+                [new date_attribute()]
+            ),
+            new field(
+                'button',
+                new lang_string('activitybutton', 'block_dash'),
+                $this,
+                'cmc.id',
                 [
-                new activity_completion_status_attribute(),
+                    new activity_url_attribute(['mod' => 'cm_modulename', 'cmid' => 'cm_id']),
+                    new button_attribute(['label' => new lang_string('viewactivity', 'block_dash'), 'aria-label' => 'cm_name']),
                 ]
             ),
-            new field('modcompletiondate', new lang_string('completiondate', 'dashaddon_activities'), $this, 'cmc.timemodified', [
-                new activity_completion_date_attribute(),
-            ]),
-            new field('moduleduedate', new lang_string('duedate', 'block_dash'), $this, 'cm.completionexpected', [
-                new activity_duedate_attribute(),
-            ]),
-            new field('modsection', new lang_string('section'), $this, 'cs.name', [
-                new activity_section_attribute(),
-            ]),
-            new field('modsectionlink', new lang_string('sectionlink', 'dashaddon_activities'), $this, 'cs.name', [
-                new activity_sectionlink_attribute(),
-            ]),
-            new field('modulepath', new lang_string('path'), $this, 'cm.id', [
-                new activity_path_attribute(),
-            ], ['supports_sorting' => false]),
-            new field('createdat', new lang_string('createddate', 'block_dash'), $this, 'cm.added', [
-                new date_attribute(),
-            ]),
-            new field('modifiedat', new lang_string('modifieddate', 'block_dash'), $this, $activitymodifiydatesql, [
-                new date_attribute(),
-            ]),
-            new field('button', new lang_string('activitybutton', 'block_dash'), $this, 'cmc.id', [
-                new activity_url_attribute(['mod' => 'cm_modulename', 'cmid' => 'cm_id']),
-                new button_attribute(['label' => new lang_string('viewactivity', 'block_dash'), 'aria-label' => 'cm_name']),
-            ]),
         ];
 
         if (dashaddon_activities_is_designer_pro_installed()) {
-            $fields[] = new field('modulebgimage', new lang_string('modulebgimage', 'dashaddon_activities'), $this, 'cm.id', [
-                new activity_background_attribute(),
-                new image_attribute(),
-            ]);
+            $fields[] = new field(
+                'modulebgimage',
+                new lang_string('modulebgimage', 'dashaddon_activities'),
+                $this,
+                'cm.id',
+                [new activity_background_attribute(), new image_attribute()]
+            );
 
-            $fields[] = new field('modulebgimageurl', new lang_string('modulebgimageurl', 'dashaddon_activities'), $this, 'cm.id', [
-                new image_url_attribute(),
-                new activity_background_attribute(),
-            ]);
+            $fields[] = new field(
+                'modulebgimageurl',
+                new lang_string('modulebgimageurl', 'dashaddon_activities'),
+                $this,
+                'cm.id',
+                [new image_url_attribute(), new activity_background_attribute()]
+            );
 
             $fields[] = new field(
                 'modulebgimagelink',
                 new lang_string('modulebgimagelink', 'dashaddon_activities'),
                 $this,
                 'cm.id',
-                [
-                new activity_background_attribute(), new image_attribute(), new activity_link_attribute(),
-                ]
+                [new activity_background_attribute(), new image_attribute(), new activity_link_attribute()]
             );
         }
 

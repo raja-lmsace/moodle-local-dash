@@ -16,9 +16,10 @@
 
 /**
  * Modal class for dashboard report.
- * @package    dashaddon_dashboard
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_dashboard
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_dashboard\model;
@@ -172,7 +173,7 @@ class dashboard extends persistent {
      * with `redirecttodashboard` set to `true` and `permission` set to `public`. If these
      * conditions are not met, the function returns `false`.
      *
-     * @param bool $create Optional. Whether to recreate the cache after clearing it. Default is `false`.
+     * @param  bool $create Optional. Whether to recreate the cache after clearing it. Default is `false`.
      * @return bool Returns `false` if the cache is not recreated, otherwise no return value.
      */
     public function clear_hook_cache($create = false) {
@@ -182,6 +183,7 @@ class dashboard extends persistent {
 
     /**
      * Summary of get_context_instance.
+     *
      * @return \context
      */
     public function get_context_instance() {
@@ -197,7 +199,7 @@ class dashboard extends persistent {
     /**
      * Check if user can view dashboard.
      *
-     * @param \stdClass $user
+     * @param  \stdClass $user
      * @return bool
      * @throws \coding_exception
      * @throws \dml_exception
@@ -209,7 +211,7 @@ class dashboard extends persistent {
         $contexttype = $this->get('contexttype');
         $context = $this->get_context_instance();
 
-        require_once("$CFG->dirroot/cohort/lib.php");
+        include_once("$CFG->dirroot/cohort/lib.php");
 
         $course = null;
         $coursecategory = null;
@@ -266,9 +268,9 @@ class dashboard extends persistent {
                         (SELECT userid FROM {role_assignments} WHERE roleid $insql AND userid=:rluserid $contextsql)";
 
                 $params = [
-                    'userid' => $user->id,
-                    'rluserid' => $user->id,
-                    'systemcontext' => \context_system::instance()->id,
+                'userid' => $user->id,
+                'rluserid' => $user->id,
+                'systemcontext' => \context_system::instance()->id,
                 ];
                 $mainparms = array_merge($params, $inparam);
 
@@ -304,9 +306,12 @@ class dashboard extends persistent {
         $positionmap = array_flip(array_keys($blocksoptions));
 
         // Sort $includeblocks based on positions in $blocksoptions.
-        usort($inculdeblocks, function ($a, $b) use ($positionmap) {
-            return ($positionmap[$a] ?? PHP_INT_MAX) - ($positionmap[$b] ?? PHP_INT_MAX);
-        });
+        usort(
+            $inculdeblocks,
+            function ($a, $b) use ($positionmap) {
+                return ($positionmap[$a] ?? PHP_INT_MAX) - ($positionmap[$b] ?? PHP_INT_MAX);
+            }
+        );
         $blocknamelist = [];
         $template = [];
         $nodes = [];
@@ -404,7 +409,7 @@ class dashboard extends persistent {
     /**
      * Validate the shortname.
      *
-     * @param int $value The value.
+     * @param  int $value The value.
      * @return true|\lang_string
      */
     protected function validate_shortname($value) {
@@ -435,7 +440,7 @@ class dashboard extends persistent {
                 'dashaddon_dashboard',
                 $field,
                 $dashboard->id,
-                self::get_filemanager_options(),
+                self::get_filemanager_options()
             );
             $upd->{$field} = $dashboard->{$field};
         }
@@ -712,8 +717,8 @@ class dashboard extends persistent {
     /**
      * Migrate block positions when dashboard context changes.
      *
-     * @param int $oldcontextid The old context ID.
-     * @param int $newcontextid The new context ID.
+     * @param  int $oldcontextid The old context ID.
+     * @param  int $newcontextid The new context ID.
      * @return void
      */
     protected function migrate_block_positions($oldcontextid, $newcontextid) {
@@ -728,16 +733,22 @@ class dashboard extends persistent {
                 WHERE parentcontextid = :oldcontextid
                 AND pagetypepattern = :pagetype";
 
-        $DB->execute($sql, [
+        $DB->execute(
+            $sql,
+            [
             'oldcontextid' => $oldcontextid,
             'newcontextid' => $newcontextid,
             'pagetype' => $pagetypepattern,
-        ]);
+            ]
+        );
 
         // Clean up any orphaned block_instances records for the old context.
-        $DB->delete_records('block_instances', [
+        $DB->delete_records(
+            'block_instances',
+            [
             'parentcontextid' => $oldcontextid,
             'pagetypepattern' => $pagetypepattern,
-        ]);
+            ]
+        );
     }
 }

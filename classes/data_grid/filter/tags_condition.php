@@ -16,9 +16,10 @@
 
 /**
  * Filter items based on tags in a certain component and itemtype.
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -92,9 +93,9 @@ class tags_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
@@ -117,9 +118,15 @@ class tags_condition extends condition {
             $options[$tag->name] = $tag->name;
         }
 
-        $mform->addElement('autocomplete', $fieldname . '[tags]', get_string('tags', 'block_dash'), $options, [
+        $mform->addElement(
+            'autocomplete',
+            $fieldname . '[tags]',
+            get_string('tags', 'block_dash'),
+            $options,
+            [
             'multiple' => true,
-        ]);
+            ]
+        );
         $mform->hideIf($fieldname . '[tags]', $fieldname . '[enabled]');
     }
 }

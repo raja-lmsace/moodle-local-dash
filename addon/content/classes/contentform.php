@@ -17,9 +17,9 @@
 /**
  * Dash content widget form to add content
  *
- * @package    dashaddon_content
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_content
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace dashaddon_content;
 
@@ -347,7 +347,7 @@ class contentform extends \core_form\dynamic_form {
     /**
      * Editor form element options.
      *
-     * @param context $context
+     * @param  context $context
      * @return array
      */
     protected function get_editor_options($context = null) {

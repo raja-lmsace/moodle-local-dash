@@ -17,9 +17,9 @@
 /**
  * Learning path widget.
  *
- * @package    dashaddon_learningpath
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_learningpath
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_learningpath\widget;
@@ -140,7 +140,7 @@ class learningpath_widget extends abstract_widget {
     /**
      * Get available list of all activity mask images (SVGs) from block config and global settings.
      *
-     * @param string $filearea
+     * @param  string $filearea
      * @return array $results List of mask images.
      */
     public function get_all_learning_paths($filearea): array {
@@ -799,70 +799,74 @@ class learningpath_widget extends abstract_widget {
         $updatenextstartcourse = false;
         $coursesinfo = array_values($courses);
         $i = 0;
-        array_walk($courses, function (&$course) use (&$completedcourses, &$updatenextstartcourse, &$i, $coursesinfo) {
-            global $OUTPUT;
-            $report = dashaddon_learningpath_generate_completion_stats($course['info']['id'], $this->get_current_userid());
-            $course['report'] = $report;
-            if ($report['completed']) {
-                $completedcourses += 1;
-            } else {
-                if (!$updatenextstartcourse) {
-                    $course['nextstartcourse'] = true;
-                    $updatenextstartcourse = $course['info']['id'];
+        array_walk(
+            $courses,
+            function (&$course) use (&$completedcourses, &$updatenextstartcourse, &$i, $coursesinfo) {
+                global $OUTPUT;
+                $report = dashaddon_learningpath_generate_completion_stats($course['info']['id'], $this->get_current_userid());
+                $course['report'] = $report;
+                if ($report['completed']) {
+                    $completedcourses += 1;
+                } else {
+                    if (!$updatenextstartcourse) {
+                        $course['nextstartcourse'] = true;
+                        $updatenextstartcourse = $course['info']['id'];
+                    }
                 }
+
+                // Current status.
+                if (!empty($report['unavailable'])) {
+                    $completionstatus = 'unavailable';
+                } else if (!empty($report['available'])) {
+                    $completionstatus = 'available';
+                } else if (!empty($report['failed'])) {
+                    $completionstatus = 'failed';
+                } else if (!empty($report['completed'])) {
+                    $completionstatus = 'completed';
+                } else if (!empty($report['inprogress'])) {
+                    $completionstatus = 'inprogress';
+                } else {
+                    $completionstatus = 'notstarted';
+                }
+
+                $statuses = [
+                    'completed'   => '#11b56a',
+                    'inprogress'  => '#00b2ff',
+                    'unavailable' => '#CBCBCB',
+                    'notstarted'  => '#00008b',
+                    'available'   => '#808080',
+                    'failed'      => '#ff0000',
+                ];
+
+                $course['completionstatus'] = $completionstatus;
+                $course['completionpercentage'] = isset($report['completionpercentage'])
+                    ? (int) $report['completionpercentage'] : 0;
+                $course['img'] = dashaddon_learningpath_courseimage($course['info']['id']);
+                $course['shape'] = $this->get_course_shape($course['info']['id']);
+                $course['iconclass'] = $this->get_course_iconclass($course['info']['id']);
+                if (!empty($course['iconclass'])) {
+                    $course['icon'] = $this->get_course_icon($course['iconclass']);
+                }
+
+                $widgetcolor = $this->get_preferences($completionstatus . 'circlecolor');
+                $generalcolor = get_config('dashaddon_learningpath', $completionstatus . 'circlecolor');
+
+                $course['statuscolor'] = $widgetcolor ?: $generalcolor ?: $statuses[$completionstatus];
+                // Make the enrollments empty to prevent the data limit reach issue for JS.
+                $course['enrollments'] = [];
+                // Set the nextcourse and prevcourse.
+                $course['prevnavcourse'] = 0;
+                if ($i > 0) {
+                    $course['prevnavcourse'] = $coursesinfo[$i - 1]['info']['id'];
+                }
+
+                $course['nextnavcourse'] = 0;
+                if ($i < count($coursesinfo) - 1) {
+                    $course['nextnavcourse'] = $coursesinfo[$i + 1]['info']['id'];
+                }
+                $i++;
             }
-
-            // Current status.
-            if (!empty($report['unavailable'])) {
-                $completionstatus = 'unavailable';
-            } else if (!empty($report['available'])) {
-                $completionstatus = 'available';
-            } else if (!empty($report['failed'])) {
-                $completionstatus = 'failed';
-            } else if (!empty($report['completed'])) {
-                $completionstatus = 'completed';
-            } else if (!empty($report['inprogress'])) {
-                $completionstatus = 'inprogress';
-            } else {
-                $completionstatus = 'notstarted';
-            }
-
-            $statuses = [
-                'completed'   => '#11b56a',
-                'inprogress'  => '#00b2ff',
-                'unavailable' => '#CBCBCB',
-                'notstarted'  => '#00008b',
-                'available'   => '#808080',
-                'failed'      => '#ff0000',
-            ];
-
-            $course['completionstatus'] = $completionstatus;
-            $course['completionpercentage'] = isset($report['completionpercentage']) ? (int) $report['completionpercentage'] : 0;
-            $course['img'] = dashaddon_learningpath_courseimage($course['info']['id']);
-            $course['shape'] = $this->get_course_shape($course['info']['id']);
-            $course['iconclass'] = $this->get_course_iconclass($course['info']['id']);
-            if (!empty($course['iconclass'])) {
-                $course['icon'] = $this->get_course_icon($course['iconclass']);
-            }
-
-            $widgetcolor = $this->get_preferences($completionstatus . 'circlecolor');
-            $generalcolor = get_config('dashaddon_learningpath', $completionstatus . 'circlecolor');
-
-            $course['statuscolor'] = $widgetcolor ?: $generalcolor ?: $statuses[$completionstatus];
-            // Make the enrollments empty to prevent the data limit reach issue for JS.
-            $course['enrollments'] = [];
-            // Set the nextcourse and prevcourse.
-            $course['prevnavcourse'] = 0;
-            if ($i > 0) {
-                $course['prevnavcourse'] = $coursesinfo[$i - 1]['info']['id'];
-            }
-
-            $course['nextnavcourse'] = 0;
-            if ($i < count($coursesinfo) - 1) {
-                $course['nextnavcourse'] = $coursesinfo[$i + 1]['info']['id'];
-            }
-            $i++;
-        });
+        );
 
         // Course order number.
         $order = 1;
@@ -896,7 +900,7 @@ class learningpath_widget extends abstract_widget {
     /**
      * Set the default configurations of the learning path, Make the infoarea, startelements, detailsarea are enabled by default.
      *
-     * @param array $data
+     * @param  array $data
      * @return void
      */
     public function set_default_preferences(&$data) {
@@ -908,8 +912,8 @@ class learningpath_widget extends abstract_widget {
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {

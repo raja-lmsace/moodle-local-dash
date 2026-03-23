@@ -17,11 +17,11 @@
 /**
  * Course completion widget language strings placed.
  *
- * @package    dashaddon_course_completions
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_completions
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['course_completions:reportuser'] = 'Caluculate In report';
+$string['course_completions:reportuser'] = 'Calculate In report';
 $string['pluginname'] = 'Widget: Course completions';
 $string['upgradeplugin'] = 'This plugin requires installation of <b> {$a} </b> to enable.';

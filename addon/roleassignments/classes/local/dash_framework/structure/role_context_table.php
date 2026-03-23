@@ -16,9 +16,10 @@
 
 /**
  * Logstore data source.
- * @package    dashaddon_roleassignments
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_roleassignments
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_roleassignments\local\dash_framework\structure;

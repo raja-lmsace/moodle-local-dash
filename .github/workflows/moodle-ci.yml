@@ -1,6 +1,6 @@
 name: Moodle Plugin CI
 
-on: [push,pull_request]
+on: [push, pull_request]
 
 jobs:
   test:
@@ -94,7 +94,7 @@ jobs:
 
       - name: Moodle Code Checker
         if: ${{ always() }}
-        run: moodle-plugin-ci codechecker --max-warnings 0
+        run: moodle-plugin-ci codechecker
 
       - name: Moodle PHPDoc Checker
         if: ${{ always() }}

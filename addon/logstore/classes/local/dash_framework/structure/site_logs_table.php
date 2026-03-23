@@ -17,9 +17,9 @@
 /**
  * Class site_logs_table.
  *
- * @package    dashaddon_logstore
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_logstore
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_logstore\local\dash_framework\structure;
@@ -67,42 +67,103 @@ class site_logs_table extends table {
 
     /**
      * Define the fields available in the reports for this table data source.
+     *
      * @return field_interface[]
      */
     public function get_fields(): array {
         return [
-            new field('id', new lang_string('logs'), $this, null, [
+            new field(
+                'id',
+                new lang_string('logs'),
+                $this,
+                null,
+                [
                 new identifier_attribute(),
-            ]),
-            new field('eventname', new lang_string('eventname'), $this, 'sl.id', [
+                ]
+            ),
+            new field(
+                'eventname',
+                new lang_string('eventname'),
+                $this,
+                'sl.id',
+                [
                 new event_name_attribute(),
-            ]),
-            new field('eventicon', new lang_string('eventicon', 'block_dash'), $this, 'sl.id', [
+                ]
+            ),
+            new field(
+                'eventicon',
+                new lang_string('eventicon', 'block_dash'),
+                $this,
+                'sl.id',
+                [
                 new event_icon_attribute(),
-            ]),
-            new field('eventcolor', new lang_string('eventcolor', 'block_dash'), $this, 'sl.id', [
+                ]
+            ),
+            new field(
+                'eventcolor',
+                new lang_string('eventcolor', 'block_dash'),
+                $this,
+                'sl.id',
+                [
                 new event_color_attribute(),
-            ]),
-            new field('eventdescription', new lang_string('eventdescription', 'block_dash'), $this, 'sl.id', [
+                ]
+            ),
+            new field(
+                'eventdescription',
+                new lang_string('eventdescription', 'block_dash'),
+                $this,
+                'sl.id',
+                [
                 new event_description_attribute(),
-            ]),
+                ]
+            ),
             new field('eventclass', new lang_string('eventclass', 'block_dash'), $this, 'sl.eventname'),
-            new field('eventurl', new lang_string('eventurl', 'block_dash'), $this, 'sl.id', [
+            new field(
+                'eventurl',
+                new lang_string('eventurl', 'block_dash'),
+                $this,
+                'sl.id',
+                [
                 new event_url_attribute(),
-            ]),
-            new field('eventlink', new lang_string('eventlink', 'block_dash'), $this, 'sl.id', [
+                ]
+            ),
+            new field(
+                'eventlink',
+                new lang_string('eventlink', 'block_dash'),
+                $this,
+                'sl.id',
+                [
                 new event_link_attribute(),
-            ]),
-            new field('eventbutton', new lang_string('eventbutton', 'block_dash'), $this, 'sl.id', [
+                ]
+            ),
+            new field(
+                'eventbutton',
+                new lang_string('eventbutton', 'block_dash'),
+                $this,
+                'sl.id',
+                [
                 new event_url_attribute(),
                 new button_attribute(['label' => get_string('gotoevent', 'block_dash')]),
-            ]),
-            new field('timecreated', new lang_string('eventtime', 'block_dash'), $this, 'sl.timecreated', [
+                ]
+            ),
+            new field(
+                'timecreated',
+                new lang_string('eventtime', 'block_dash'),
+                $this,
+                'sl.timecreated',
+                [
                 new date_attribute(),
-            ]),
-            new field('timeago', new lang_string('timesinceevent', 'block_dash'), $this, 'sl.timecreated', [
+                ]
+            ),
+            new field(
+                'timeago',
+                new lang_string('timesinceevent', 'block_dash'),
+                $this,
+                'sl.timecreated',
+                [
                 new timeago_attribute(),
-            ]),
+                ]
+            ),
         ];
     }
 }

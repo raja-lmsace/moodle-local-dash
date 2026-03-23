@@ -16,9 +16,10 @@
 
 /**
  * Logstore data source.
- * @package    dashaddon_roleassignments
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_roleassignments
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_roleassignments\local\block_dash;
@@ -96,7 +97,6 @@ class roleassignments_data_source extends abstract_data_source {
 
     /**
      * Builds and returns a filter collection for role assignments data source.
-     *
      *
      * @return filter_collection The constructed filter collection.
      */

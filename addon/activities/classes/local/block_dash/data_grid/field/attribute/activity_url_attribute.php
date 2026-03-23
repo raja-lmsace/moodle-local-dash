@@ -17,9 +17,9 @@
 /**
  * Transforms data to activity url.
  *
- * @package    dashaddon_activities
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activities
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash\data_grid\field\attribute;
@@ -37,8 +37,8 @@ class activity_url_attribute extends abstract_field_attribute {
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param mixed $data Raw data associated with this field definition.
-     * @param \stdClass $record Full record from database.
+     * @param  mixed     $data   Raw data associated with this field definition.
+     * @param  \stdClass $record Full record from database.
      * @return mixed
      * @throws \coding_exception
      */
@@ -64,8 +64,8 @@ class activity_url_attribute extends abstract_field_attribute {
     /**
      * Set the options before transform the data. this will usefull for dynamic field setup.
      *
-     * @param string $field
-     * @param string $customvalue
+     * @param  string $field
+     * @param  string $customvalue
      * @return void
      */
     public function set_transform_field($field, $customvalue = null) {

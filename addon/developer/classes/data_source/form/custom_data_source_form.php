@@ -467,7 +467,6 @@ class custom_data_source_form extends persistent_form {
         ');
     }
 
-
     /**
      * Load in existing data as form defaults. Usually new entry defaults are stored directly in
      * form definition (new entry form); this function is used to load in data where values
@@ -503,8 +502,8 @@ class custom_data_source_form extends persistent_form {
     /**
      * Method to add a repeating group of elements to a form.
      *
-     * Modified version of the original method in moodleform to make the field attribute and field values
-     * in array format for the loop in field definition.
+     * Modified version of the original method in moodleform to make the field attribute and
+     * field values in array format for the loop in field definition.
      *
      * @param array $elementobjs Array of elements or groups of elements that are to be repeated
      * @param int $repeats no of times to repeat elements initially

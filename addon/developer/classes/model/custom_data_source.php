@@ -17,9 +17,9 @@
 /**
  * Represents a user created data source.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_developer\model;
@@ -136,7 +136,7 @@ class custom_data_source extends persistent {
     /**
      * Update properties format
      *
-     * @param mixed $data
+     * @param  mixed $data
      * @return void
      */
     public function update_properties_format(&$data) {
@@ -148,8 +148,8 @@ class custom_data_source extends persistent {
             if (is_null($value)) {
                 continue;
             }
-            $data->$property = in_array($property, ['fieldattribute', 'attributevalue']) ?
-                $this->revise_fieldattr($value) : json_decode($value);
+            $data->$property = in_array($property, ['fieldattribute', 'attributevalue'])
+                ? $this->revise_fieldattr($value) : json_decode($value);
         }
     }
 
@@ -160,7 +160,6 @@ class custom_data_source extends persistent {
      * @return array
      */
     public function revise_fieldattr($value) {
-
         $value = json_decode($value) ?: [];
         array_walk($value, function (&$item) {
             if (!is_array($item)) {
@@ -214,7 +213,7 @@ class custom_data_source extends persistent {
     /**
      * Validate the idnumber
      *
-     * @param int $value The value.
+     * @param  int $value The value.
      * @return true|\lang_string
      * @throws \coding_exception
      */
@@ -266,7 +265,7 @@ class custom_data_source extends persistent {
     /**
      * Update the placeholders tables with its alias.
      *
-     * @param string $field
+     * @param  string $field
      * @return string
      */
     public function update_field_alias($field) {

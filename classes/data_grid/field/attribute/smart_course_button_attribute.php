@@ -17,9 +17,9 @@
 /**
  * Smart course button.
  *
- * @package    local_dash
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\field\attribute;
@@ -39,8 +39,8 @@ class smart_course_button_attribute extends abstract_field_attribute {
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param \int $data
-     * @param \stdClass $record Entire row
+     * @param  \int      $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
@@ -98,7 +98,7 @@ class smart_course_button_attribute extends abstract_field_attribute {
     /**
      * Fetch the configured shop url from the course customfield. cusotmfield will mentioned in the general settings.
      *
-     * @param int $courseid
+     * @param  int $courseid
      * @return bool
      */
     public function get_shopurl($courseid) {
@@ -127,7 +127,7 @@ class smart_course_button_attribute extends abstract_field_attribute {
     /**
      * Check the course has guest access enabled.
      *
-     * @param int $courseid
+     * @param  int $courseid
      * @return bool
      */
     public function is_guestaccess($courseid) {
@@ -143,7 +143,7 @@ class smart_course_button_attribute extends abstract_field_attribute {
     /**
      * Verify the course has enabled enrollment method to enrol by self.
      *
-     * @param int $courseid
+     * @param  int $courseid
      * @return bool
      */
     public function can_selfenrol($courseid) {

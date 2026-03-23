@@ -17,9 +17,9 @@
 /**
  * Strings for component 'dashaddon_activity_completion', language 'en'
  *
- * @package    dashaddon_activity_completion
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activity_completion
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['activity'] = 'Activity';

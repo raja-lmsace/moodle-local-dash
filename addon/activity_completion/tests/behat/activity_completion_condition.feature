@@ -10,13 +10,13 @@ Feature: Add activity completion condition datasource in dash block
       | Category 02 | 0        | CAT2     |
       | Category 03 | 0        | CAT3     |
     And the following "courses" exist:
-      | fullname | shortname | category | enablecompletion | numsections | startdate                                   | enddate                                            |
-      | Course 1 | C1        | CAT1     | 1                | 3           | ## 1 August 2024 08:00 ##  | ## 1 August 2025 08:00 ##      |
-      | Course 2 | C2        | CAT2     | 1                | 2           | ## 1 July 2024 10.00 ##      | ## 5 September 2024 08.00 ## |
-      | Course 3 | C3        | CAT3     | 1                | 3           | ## 1 July 2024 10.00 ##    | ## 7 August 2024 08.00 ##      |
-      | Course 4 | C4        | CAT1     | 1                | 4           | ## 8 August 2024 08.00 ##  | ## 8 August 2024 12.00 ##      |
+      | fullname | shortname | category | enablecompletion | numsections | startdate                  | enddate                      |
+      | Course 1 | C1        | CAT1     | 1                | 3           | ## 1 August 2024 08:00 ##  | ## 1 August 2025 08:00 ##    |
+      | Course 2 | C2        | CAT2     | 1                | 2           | ## 1 July 2024 10.00 ##    | ## 5 September 2024 08.00 ## |
+      | Course 3 | C3        | CAT3     | 1                | 3           | ## 1 July 2024 10.00 ##    | ## 7 August 2024 08.00 ##    |
+      | Course 4 | C4        | CAT1     | 1                | 4           | ## 8 August 2024 08.00 ##  | ## 8 August 2024 12.00 ##    |
       | Course 5 | C5        | CAT2     | 1                | 5           | ## 12 August 2024 08.00 ## | ## 12 August 2024 12.00 ##   |
-      | Course 6 | C6        | CAT3     | 1                | 4           | ## 18 August 2024 08.00 ## | ## 30 August 2024 08.00 ##     |
+      | Course 6 | C6        | CAT3     | 1                | 4           | ## 18 August 2024 08.00 ## | ## 30 August 2024 08.00 ##   |
     And the following "activities" exist:
       | activity | name         | course  | idnumber       | intro                   | section | submissiondrafts | assignsubmission_onlinetext_enabled | grade[modgrade_type] | modgrade_scale  | grade[modgrade_point] | gradepass | completion | completionsubmit | completionusegrade | completionpassgrade |
       | assign   | Assignment 1 | C1      | Assignment 1   | Welcome to Assignment 1 | 1       | 0                | 1                                   |                      |                 | 100                   |           | 0          |                  |                    |                     |
@@ -100,8 +100,8 @@ Feature: Add activity completion condition datasource in dash block
     And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(2)" "css_element"
     And I should see "<course>" in the ".dash-table tbody tr:nth-child(<Crow>) td:nth-child(5)" "css_element"
     Examples:
-      | coursedate | name      | Nrow | activity      | Arow | course | Crow |
-      | past       | Student 2 | 21   | Assignment 5  | 21   | C4     | 21   |
+      | coursedate | name 		 | Nrow | activity 		 | Arow | course | Crow |
+      | past 		 	 | Student 2 | 21		| Assignment 5 | 21 	| C4 		 | 21 	|
 
   Scenario Outline: Activity completion: Course future date
     #---Admin login---#

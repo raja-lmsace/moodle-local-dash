@@ -17,9 +17,9 @@
 /**
  * Event icon attribute - Dash attribute to convert the data of calendar events into icon/image.
  *
- * @package    dashaddon_calendar_events
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_calendar_events
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_calendar_events\local\block_dash\data_grid\field\attribute;
@@ -34,8 +34,8 @@ class event_icon_attribute extends image_attribute {
     /**
      * List the cohorts assigned to the programs
      *
-     * @param array $data
-     * @param stdClass $record
+     * @param  array    $data
+     * @param  stdClass $record
      * @return string
      */
     public function transform_data($data, stdClass $record) {

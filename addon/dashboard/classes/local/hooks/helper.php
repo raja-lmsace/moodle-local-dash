@@ -103,8 +103,8 @@ class helper {
     /**
      * Store all relevant data in the cache.
      *
-     * Extend from core\hook\manager to be able to set the cache directly if the methods are available,
-     * otherwise write to the file cache.
+     * Extend from core\hook\manager to be able to set the cache directly if the methods are available.
+     * Otherwise write to the file cache.
      *
      * @param array $callbacks
      * @param array $deprecations

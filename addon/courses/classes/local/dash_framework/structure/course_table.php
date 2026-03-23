@@ -17,9 +17,9 @@
 /**
  * Class course_table.
  *
- * @package    dashaddon_courses
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_courses
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_courses\local\dash_framework\structure;
@@ -73,55 +73,122 @@ class course_table extends table {
 
     /**
      * Define the fields available in the reports for this table data source.
+     *
      * @return field_interface[]
      */
     public function get_fields(): array {
         global $USER;
 
         $fields = [
-            new field('id', new lang_string('course'), $this, null, [
+            new field(
+                'id',
+                new lang_string('course'),
+                $this,
+                null,
+                [
                 new identifier_attribute(),
-            ]),
+                ]
+            ),
             new field('shortname', new lang_string('shortname'), $this),
             new field('fullname', new lang_string('fullname'), $this),
-            new field('startdate', new lang_string('startdate'), $this, null, [
+            new field(
+                'startdate',
+                new lang_string('startdate'),
+                $this,
+                null,
+                [
                 new date_attribute(),
-            ]),
+                ]
+            ),
             new field('idnumber', new lang_string('idnumber'), $this),
-            new field('summary', new lang_string('summary'), $this, 'c.id', [
+            new field(
+                'summary',
+                new lang_string('summary'),
+                $this,
+                'c.id',
+                [
                 new course_summary_attribute(),
-            ]),
-            new field('url', new lang_string('courseurl', 'block_dash'), $this, 'c.id', [
+                ]
+            ),
+            new field(
+                'url',
+                new lang_string('courseurl', 'block_dash'),
+                $this,
+                'c.id',
+                [
                 new moodle_url_attribute(['url' => new moodle_url('/course/view.php', ['id' => 'c_id'])]),
-            ]),
-            new field('button', new lang_string('coursebutton', 'block_dash'), $this, 'c.id', [
+                ]
+            ),
+            new field(
+                'button',
+                new lang_string('coursebutton', 'block_dash'),
+                $this,
+                'c.id',
+                [
                 new moodle_url_attribute(['url' => new moodle_url('/course/view.php', ['id' => 'c_id'])]),
                 new button_attribute(['label' => new lang_string('viewcourse', 'block_dash'), 'aria-label' => 'c_fullname']),
-            ]),
-            new field('image_url', new lang_string('courseoverviewfilesurl', 'block_dash'), $this, 'c.id', [
+                ]
+            ),
+            new field(
+                'image_url',
+                new lang_string('courseoverviewfilesurl', 'block_dash'),
+                $this,
+                'c.id',
+                [
                 new image_url_attribute(),
                 new course_image_url_attribute(),
-            ]),
-            new field('image', new lang_string('courseoverviewfiles'), $this, 'c.id', [
+                ]
+            ),
+            new field(
+                'image',
+                new lang_string('courseoverviewfiles'),
+                $this,
+                'c.id',
+                [
                 new course_image_url_attribute(),
                 new image_attribute(['title' => 'c_fullname']),
-            ]),
+                ]
+            ),
             // Course image link.
-            new field('image_link', new lang_string('courseimagelink', 'block_dash'), $this, 'c.id', [
+            new field(
+                'image_link',
+                new lang_string('courseimagelink', 'block_dash'),
+                $this,
+                'c.id',
+                [
                 new course_image_url_attribute(), new image_attribute(['title' => 'c_fullname']),
                 new linked_data_attribute(['url' => new moodle_url('/course/view.php', ['id' => 'c_id'])]),
-            ]),
+                ]
+            ),
 
-            new field('format', new lang_string('format'), $this, null, [
+            new field(
+                'format',
+                new lang_string('format'),
+                $this,
+                null,
+                [
                 new course_format_attribute(),
-            ]),
+                ]
+            ),
 
-            new field('enablecompletion', new lang_string('enablecompletion', 'completion'), $this, null, [
+            new field(
+                'enablecompletion',
+                new lang_string('enablecompletion', 'completion'),
+                $this,
+                null,
+                [
                 new bool_attribute(),
-            ]),
-            new field('tags', new lang_string('coursetags', 'tag'), $this, 'c.id', [
+                ]
+            ),
+            new field(
+                'tags',
+                new lang_string('coursetags', 'tag'),
+                $this,
+                'c.id',
+                [
                 new tags_attribute(['component' => 'core', 'itemtype' => 'course']),
-            ]),
+                ]
+            ),
 
             new field(
                 'total_activities',
@@ -132,10 +199,16 @@ class course_table extends table {
                 ['supports_sorting' => false],
                 '',
                 null,
-                new join_raw('SELECT cm.course, COUNT(*) AS totalactivities
+                new join_raw(
+                    'SELECT cm.course, COUNT(*) AS totalactivities
                     FROM {course_modules} cm
                     WHERE cm.visible = 1
-                    GROUP BY cm.course', 'cm100', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN)
+                    GROUP BY cm.course',
+                    'cm100',
+                    'course',
+                    'c.id',
+                    join_raw::TYPE_LEFT_JOIN
+                )
             ),
             new field(
                 'users_completed',
@@ -146,10 +219,16 @@ class course_table extends table {
                 ['supports_sorting' => false],
                 '',
                 null,
-                new join_raw('SELECT ccp.course, COUNT(*) AS userscompleted
-                    FROM {course_completions} ccp
-                    WHERE ccp.timecompleted > 0
-                    GROUP BY ccp.course', 'ccp100_count', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN)
+                new join_raw(
+                    ' SELECT ccp.course, COUNT(*) AS userscompleted
+                        FROM {course_completions} ccp
+                       WHERE ccp.timecompleted > 0
+                    GROUP BY ccp.course',
+                    'ccp100_count',
+                    'course',
+                    'c.id',
+                    join_raw::TYPE_LEFT_JOIN
+                )
             ),
             new field(
                 'users_not_completed',
@@ -160,10 +239,16 @@ class course_table extends table {
                 ['supports_sorting' => false],
                 '',
                 null,
-                new join_raw('SELECT ccp.course, COUNT(*) AS usersnotcompleted
-                    FROM {course_completions} ccp
-                    WHERE ccp.timecompleted IS NULL
-                    GROUP BY ccp.course', 'ccp200_count', 'course', 'c.id', join_raw::TYPE_LEFT_JOIN)
+                new join_raw(
+                    ' SELECT ccp.course, COUNT(*) AS usersnotcompleted
+                        FROM {course_completions} ccp
+                       WHERE ccp.timecompleted IS NULL
+                    GROUP BY ccp.course',
+                    'ccp200_count',
+                    'course',
+                    'c.id',
+                    join_raw::TYPE_LEFT_JOIN
+                )
             ),
 
             new field(
@@ -191,17 +276,35 @@ class course_table extends table {
                 field_interface::VISIBILITY_VISIBLE,
                 ''
             ),
-            new field('enrollment_options', new lang_string('enrollment_options', 'block_dash'), $this, 'c.id', [
+            new field(
+                'enrollment_options',
+                new lang_string('enrollment_options', 'block_dash'),
+                $this,
+                'c.id',
+                [
                 new enrollment_options_attribute(),
-            ]),
-            new field('smart_course_button', new lang_string('smart_coursebutton', 'block_dash'), $this, 'c.id', [
+                ]
+            ),
+            new field(
+                'smart_course_button',
+                new lang_string('smart_coursebutton', 'block_dash'),
+                $this,
+                'c.id',
+                [
                 new smart_course_button_attribute(),
-            ]),
+                ]
+            ),
 
-            new field('courseinformation', new lang_string('courseinformation', 'block_dash'), $this, 'c.id', [
+            new field(
+                'courseinformation',
+                new lang_string('courseinformation', 'block_dash'),
+                $this,
+                'c.id',
+                [
                 new course_information_url_attribute(),
                 new button_attribute(['label' => new lang_string('courseinformation', 'block_dash')]),
-            ]),
+                ]
+            ),
         ];
 
         if (class_exists('\core_course\customfield\course_handler')) {

@@ -410,7 +410,7 @@ function local_dash_output_fragment_icons_list($args) {
  * @return bool
  */
 function local_dash_upgrade_blocks_data_source_idnumber() {
-    global $DB;
+    global $DB, $CFG;
     $changedatasources = [
         'local_dash\local\block_dash\logstore_data_source' => 'dashaddon_logstore\local\block_dash\logstore_data_source',
         'block_dash\local\data_source\categories_data_source' => 'dashaddon_categories\local\block_dash\categories_data_source',
@@ -425,6 +425,7 @@ function local_dash_upgrade_blocks_data_source_idnumber() {
         if (!empty($block->config)) {
             $config = clone($block->config);
             $datasource = $config->data_source_idnumber;
+
             if (isset($changedatasources[$datasource])) {
                 $config->data_source_idnumber = $changedatasources[$datasource];
                 // Save the content preference to block instance config.
@@ -432,7 +433,29 @@ function local_dash_upgrade_blocks_data_source_idnumber() {
             }
         }
     }
-    return true;
+    if (function_exists('dashaddon_dashboard_change_pagetypepattern')) {
+        require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
+        dashaddon_dashboard_change_pagetypepattern();
+    } else {
+        $likepattern = $DB->sql_like('pagetypepattern', ':pattern');
+        $sql = "SELECT *
+                FROM {block_instances}
+                WHERE {$likepattern}";
+        $params = [
+            'pattern' => 'local-dash-dashboard%',
+        ];
+
+        $records = $DB->get_records_sql($sql, $params);
+
+        foreach ($records as $record) {
+            $pagetypepattern = $record->pagetypepattern;
+            $prefix = 'local-dash';
+            $replacement = 'dashaddon';
+            $modifiypattern = str_replace($prefix, $replacement, $pagetypepattern);
+            $record->pagetypepattern = $modifiypattern;
+            $DB->update_record('block_instances', $record);
+        }
+    }
 }
 
 

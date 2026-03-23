@@ -16,9 +16,10 @@
 
 /**
  * Modulename based filter option.
- * @package    dashaddon_activities
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_activities
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash\data_grid\filter;
@@ -35,11 +36,16 @@ class module_field_filter extends select_filter {
      */
     public function init() {
         global $DB;
-        $options = $DB->get_records_sql_menu("SELECT DISTINCT id, name
-        FROM {modules} WHERE visible = 1");
-        $options = array_map(function ($value) {
-            return get_string('pluginname', $value);
-        }, $options);
+        $options = $DB->get_records_sql_menu(
+            "SELECT DISTINCT id, name
+            FROM {modules} WHERE visible = 1"
+        );
+        $options = array_map(
+            function ($value) {
+                return get_string('pluginname', $value);
+            },
+            $options
+        );
         $this->add_options($options);
 
         parent::init();

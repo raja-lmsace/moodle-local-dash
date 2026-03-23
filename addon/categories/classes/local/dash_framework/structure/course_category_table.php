@@ -17,9 +17,9 @@
 /**
  * Class course category table.
  *
- * @package    dashaddon_categories
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_categories
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_categories\local\dash_framework\structure;
@@ -68,71 +68,115 @@ class course_category_table extends table {
      */
     public function get_fields(): array {
         return [
-            new field('id', new lang_string('category'), $this, null, [
+            new field(
+                'id',
+                new lang_string('category'),
+                $this,
+                null,
+                [
                 new identifier_attribute(),
-            ]),
+                ]
+            ),
 
             // Category name.
             new field('name', new lang_string('categoryname'), $this, 'cc.name'),
 
             // Category name linked.
-            new field('categoryurl', new lang_string('categoryurl', 'block_dash'), $this, 'cc.name', [
+            new field(
+                'categoryurl',
+                new lang_string('categoryurl', 'block_dash'),
+                $this,
+                'cc.name',
+                [
                 new moodle_url_attribute(['url' => new moodle_url('/course/management.php', ['categoryid' => 'cc_id'])]),
                 new link_attribute(['label_field' => 'cc_name']),
-            ]),
+                ]
+            ),
 
             // Category ID number.
             new field('idnumber', new lang_string('idnumber'), $this),
 
             // Description.
-            new field('description', new lang_string('summary'), $this, 'cc.description, cc.descriptionformat', [
-                new widget_attribute([
-                    'callback' => function ($coursecat, $data) {
-                        if (!isset($coursecat->cc_descriptionformat)) {
-                            $descriptionformat = FORMAT_MOODLE;
-                        } else {
-                            $descriptionformat = $coursecat->cc_descriptionformat;
-                        }
+            new field(
+                'description',
+                new lang_string('summary'),
+                $this,
+                'cc.description, cc.descriptionformat',
+                [
+                    new widget_attribute(
+                        [
+                        'callback' => function ($coursecat, $data) {
+                            if (!isset($coursecat->cc_descriptionformat)) {
+                                $descriptionformat = FORMAT_MOODLE;
+                            } else {
+                                $descriptionformat = $coursecat->cc_descriptionformat;
+                            }
 
-                        $options = ['noclean' => true, 'overflowdiv' => true];
-                        $context = \context_coursecat::instance($coursecat->cc_id);
-                        $options['context'] = $context;
-                        $text = file_rewrite_pluginfile_urls(
-                            $coursecat->description,
-                            'pluginfile.php',
-                            $context->id,
-                            'coursecat',
-                            'description',
-                            null
-                        );
-                        return format_text($text, $descriptionformat, $options);
-                    },
-                ]),
-            ]),
+                            $options = ['noclean' => true, 'overflowdiv' => true];
+                            $context = \context_coursecat::instance($coursecat->cc_id);
+                            $options['context'] = $context;
+                            $text = file_rewrite_pluginfile_urls(
+                                $coursecat->description,
+                                'pluginfile.php',
+                                $context->id,
+                                'coursecat',
+                                'description',
+                                null
+                            );
+                            return format_text($text, $descriptionformat, $options);
+                        },
+                        ]
+                    ),
+                ]
+            ),
 
             // Category image linked.
-            new field('image_link', new lang_string('categoryimagelink', 'block_dash'), $this, 'cc.id', [
+            new field(
+                'image_link',
+                new lang_string('categoryimagelink', 'block_dash'),
+                $this,
+                'cc.id',
+                [
                 new category_image_url_attribute(), new image_attribute(),
                 new linked_data_attribute(['url' => new moodle_url('/course/management.php', ['categoryid' => 'cc_id'])]),
-            ]),
+                ]
+            ),
 
             // Category image.
-            new field('image', new lang_string('categoryimage', 'block_dash'), $this, 'cc.id', [
+            new field(
+                'image',
+                new lang_string('categoryimage', 'block_dash'),
+                $this,
+                'cc.id',
+                [
                 new category_image_url_attribute(), new image_attribute(),
-            ]),
+                ]
+            ),
 
             // Category image.
-            new field('imageurl', new lang_string('categoryimageurl', 'block_dash'), $this, 'cc.id', [
+            new field(
+                'imageurl',
+                new lang_string('categoryimageurl', 'block_dash'),
+                $this,
+                'cc.id',
+                [
                 new category_image_url_attribute(), new image_url_attribute(),
-            ]),
+                ]
+            ),
 
             // Number of courses.
             new field('coursecount', new lang_string('categorycoursecount', 'block_dash'), $this, null),
 
             // Most recent course name (by created date).
-            new field('mostrecentcourse', new lang_string('recentcoursename', 'block_dash'), $this, 'cc.id', [
+            new field(
+                'mostrecentcourse',
+                new lang_string('recentcoursename', 'block_dash'),
+                $this,
+                'cc.id',
+                [
                 new category_recent_course_attribute(),
-            ]),
+                ]
+            ),
 
         ];
     }

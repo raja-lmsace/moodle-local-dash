@@ -115,7 +115,7 @@ Feature: User profile with stats
     And I click on "Settings" "link" in the ".secondary-navigation" "css_element"
     And I expand all fieldsets
     And I set the following fields to these values:
-        | Course start date | ##tomorrow## |
+        | Course start date |  ##tomorrow +1day## |
     And I press "Save and display"
     And I log out
     And I am on the "Course 1" course page logged in as student1

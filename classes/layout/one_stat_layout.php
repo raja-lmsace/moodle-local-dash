@@ -16,9 +16,10 @@
 
 /**
  * One state layout for reports visual.
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\layout;
@@ -35,6 +36,7 @@ use block_dash\local\layout\abstract_layout;
 class one_stat_layout extends abstract_layout {
     /**
      * Get layout template filename.
+     *
      * @return string
      */
     public function get_mustache_template_name() {
@@ -76,8 +78,8 @@ class one_stat_layout extends abstract_layout {
      *
      * Be sure to call parent::build_preferences_form() if you override this method.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return mixed
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -110,9 +112,12 @@ class one_stat_layout extends abstract_layout {
      */
     public function after_data(data_collection_interface $datacollection) {
         foreach ($datacollection->get_child_collections('rows') as $childcollection) {
-            $this->map_data([
+            $this->map_data(
+                [
                 'stat' => $this->get_data_source()->get_preferences('stat_field_definition'),
-            ], $childcollection);
+                ],
+                $childcollection
+            );
         }
     }
 }

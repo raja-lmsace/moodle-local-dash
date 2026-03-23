@@ -16,9 +16,10 @@
 
 /**
  * Module type based filter option.
- * @package    dashaddon_activities
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_activities
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activities\local\block_dash\data_grid\filter;
@@ -45,6 +46,7 @@ class activity_type_field_filter extends select_filter {
 
     /**
      * Get the enrolment status filter label.
+     *
      * @return string
      */
     public function get_label() {

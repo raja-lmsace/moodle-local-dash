@@ -66,8 +66,8 @@ class custom_data_source_table extends \table_sql {
      * You can override this method in a child class. See the description of
      * build_table which calls this method.
      *
-     * @param string $column
-     * @param custom_data_source $row
+     * @param  string             $column
+     * @param  custom_data_source $row
      * @return string
      * @throws \coding_exception
      */
@@ -78,7 +78,7 @@ class custom_data_source_table extends \table_sql {
     /**
      * Actions for tags.
      *
-     * @param custom_data_source $data
+     * @param  custom_data_source $data
      * @return string
      * @throws \coding_exception
      * @throws \moodle_exception
@@ -107,8 +107,8 @@ class custom_data_source_table extends \table_sql {
     /**
      * Fetch the records from the DB based on the querys defined in this datasource.
      *
-     * @param int $pagesize
-     * @param bool $useinitialsbar
+     * @param  int  $pagesize
+     * @param  bool $useinitialsbar
      * @throws \dml_exception
      */
     public function query_db($pagesize, $useinitialsbar = true) {

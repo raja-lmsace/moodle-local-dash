@@ -17,9 +17,9 @@
 /**
  * Class course_category_table.
  *
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\local\dash_framework\events;
@@ -46,6 +46,7 @@ class events_info {
 
     /**
      * This events_info class instance object.
+     *
      * @var events_info
      */
     private static $instance = null;
@@ -93,7 +94,7 @@ class events_info {
     /**
      * Get color for event.
      *
-     * @param base_event $event
+     * @param  base_event $event
      * @return string Color identifier (primary, danger, success, info, warning, dark, etc).
      */
     public function get_event_color(base_event $event) {
@@ -110,7 +111,7 @@ class events_info {
     /**
      * Get icon for given event.
      *
-     * @param base_event $event
+     * @param  base_event $event
      * @return string HTML of icon.
      */
     public function get_event_icon(base_event $event) {

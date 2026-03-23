@@ -17,9 +17,9 @@
 /**
  * Unit test cases to test the accordion layout.
  *
- * @package    dashaddon_course_enrols
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_enrols
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_enrols;
@@ -107,9 +107,11 @@ final class course_enrols_test extends \advanced_testcase {
         $this->studentrole = $DB->get_record('role', ['shortname' => 'student']);
         $this->resetAfterTest(true);
         $this->user = $this->getDataGenerator()->create_user();
-        $this->course1 = $this->getDataGenerator()->create_course([
+        $this->course1 = $this->getDataGenerator()->create_course(
+            [
             'name' => 'Course 1',
-        ]);
+            ]
+        );
         $this->coursecontext1 = \context_course::instance($this->course1->id);
         $this->getDataGenerator()->enrol_user(
             $this->user->id,
@@ -120,15 +122,15 @@ final class course_enrols_test extends \advanced_testcase {
             strtotime("+10 days"),
             ENROL_USER_ACTIVE
         );
-        $this->course2 = $this->getDataGenerator()->create_course([
-            'name' => 'Course 2',
-        ]);
+        $this->course2 = $this->getDataGenerator()->create_course(['name' => 'Course 2']);
         $this->coursecontext2 = \context_course::instance($this->course2->id);
         $this->getDataGenerator()->enrol_user($this->user->id, $this->course2->id, 'student');
 
-        $this->course3 = $this->getDataGenerator()->create_course([
+        $this->course3 = $this->getDataGenerator()->create_course(
+            [
             'name' => 'Course 3',
-        ]);
+            ]
+        );
         $this->coursecontext3 = \context_course::instance($this->course3->id);
         $this->getDataGenerator()->enrol_user($this->user->id, $this->course3->id, 'student');
         $this->dashenrolmanager = new \dash_course_enrolments($PAGE, $this->course1);
@@ -136,14 +138,11 @@ final class course_enrols_test extends \advanced_testcase {
 
     /**
      * Test dashaddon_enrolments_get_all_users_courses.
+     *
      * @covers ::dashaddon_enrolments_get_all_users_courses
      */
     public function test_dashaddon_enrolments_get_all_users_courses(): void {
-
-        [$courses, $count] = dashaddon_enrolments_get_all_users_courses(
-            $this->user->id,
-            false
-        );
+        [$courses, $count] = dashaddon_enrolments_get_all_users_courses($this->user->id, false);
         $this->assertTrue(isset($courses[$this->course1->id]));
         $this->assertTrue(isset($courses[$this->course2->id]));
         $this->assertTrue(isset($courses[$this->course3->id]));
@@ -152,6 +151,7 @@ final class course_enrols_test extends \advanced_testcase {
 
     /**
      * Test edit_enrolment.
+     *
      * @covers ::edit_enrolment
      */
     public function test_edit_enrolment(): void {
@@ -159,12 +159,9 @@ final class course_enrols_test extends \advanced_testcase {
         $enrol = $DB->get_record('enrol', ['courseid' => $this->course1->id, 'enrol' => 'manual'], '*', MUST_EXIST);
         $userenrolment = $DB->get_record(
             'user_enrolments',
-            [
-                'enrolid' => $enrol->id,
-                'userid' => $this->user->id,
-            ],
+            ['enrolid' => $enrol->id, 'userid' => $this->user->id],
             '*',
-            MUST_EXIST
+            MUST_EXIST,
         );
         $data = new stdClass();
         $timestart = strtotime("+2days");
@@ -180,7 +177,7 @@ final class course_enrols_test extends \advanced_testcase {
                 'userid' => $this->user->id,
             ],
             '*',
-            MUST_EXIST
+            MUST_EXIST,
         );
         $this->assertEquals($result->timestart, $timestart);
         $this->assertEquals($result->timeend, $timeend);
@@ -189,6 +186,7 @@ final class course_enrols_test extends \advanced_testcase {
 
     /**
      * Test course_enrols_unenrol_user
+     *
      * @covers ::course_enrols_unenrol_user
      */
     public function test_course_enrols_unenrol_user(): void {
@@ -201,7 +199,7 @@ final class course_enrols_test extends \advanced_testcase {
                 'userid' => $this->user->id,
             ],
             '*',
-            MUST_EXIST
+            MUST_EXIST,
         );
         $this->assertTrue(!empty($userenrolment));
         $this->dashenrolmanager->unenrol_user($userenrolment);
@@ -211,6 +209,7 @@ final class course_enrols_test extends \advanced_testcase {
 
     /**
      * Test get_mentess_user
+     *
      * @covers ::get_mentess_user
      */
     public function test_get_mentess_user(): void {
@@ -232,6 +231,7 @@ final class course_enrols_test extends \advanced_testcase {
 
     /**
      * Test get_course_criteria
+     *
      * @covers ::get_course_criteria
      */
     public function test_get_course_criteria(): void {
@@ -256,6 +256,7 @@ final class course_enrols_test extends \advanced_testcase {
 
     /**
      * Test course_enrols_get_sections
+     *
      * @covers ::course_enrols_get_sections
      */
     public function test_course_enrols_get_sections(): void {
@@ -270,7 +271,7 @@ final class course_enrols_test extends \advanced_testcase {
                 'section' => 1,
                 'name' => 'Test 1',
             ],
-            ['completion' => 1]
+            ['completion' => 1],
         );
         $assign2 = $this->getDataGenerator()->create_module(
             'assign',
@@ -279,7 +280,7 @@ final class course_enrols_test extends \advanced_testcase {
                 'section' => 1,
                 'name' => 'Test 2',
             ],
-            ['completion' => 1]
+            ['completion' => 1],
         );
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $this->studentrole->id);
         $section = $DB->get_record('course_sections', ['course' => $course->id, 'section' => 1]);

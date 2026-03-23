@@ -17,9 +17,9 @@
 /**
  * A widget layout contains information on how to display data.
  *
- * @package    dashaddon_myprofile
- * @copyright  2022 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_myprofile
+ * @copyright 2022 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_myprofile\widget;
@@ -117,8 +117,8 @@ class myprofile_layout extends abstract_layout {
      *
      * Be sure to call parent::build_preferences_form() if you override this method.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @throws \coding_exception
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -203,13 +203,16 @@ class myprofile_layout extends abstract_layout {
      */
     public function after_data(data_collection_interface $datacollection) {
         foreach ($datacollection->get_child_collections('rows') as $childcollection) {
-            $this->map_data([
+            $this->map_data(
+                [
                 'bgimageurl' => $this->get_data_source()->get_preferences('backgroundimagefield'),
                 'userinfo1' => $this->get_data_source()->get_preferences('userinfo1'),
                 'userinfo2' => $this->get_data_source()->get_preferences('userinfo2'),
                 'userinfo3' => $this->get_data_source()->get_preferences('userinfo3'),
                 'fullname' => 'u_fullname_linked',
-            ], $childcollection);
+                ],
+                $childcollection
+            );
         }
     }
 }

@@ -17,9 +17,9 @@
 /**
  * Filters results to specific calendar events days.
  *
- * @package    dashaddon_calendar_events
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_calendar_events
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_calendar_events\local\block_dash\data_grid\filter;

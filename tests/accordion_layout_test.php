@@ -68,6 +68,11 @@ final class accordion_layout_test extends \advanced_testcase {
         $datasource->set_layout($layout);
 
         $datasource->set_preferences([
+            'available_fields' => [
+                'c_id' => ['visible' => true],
+                'c_shortname' => ['visible' => true],
+                'c_fullname' => ['visible' => true],
+            ],
             'groupby_field_definition' => 'c_id',
             'group_label_field_definition' => 'c_shortname',
         ]);

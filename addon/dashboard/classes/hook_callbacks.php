@@ -24,11 +24,12 @@ use context_course;
 /**
  * Callbacks for hooks.
  *
- * @package    dashaddon_dashboard
- * @copyright  bdecent gmbh 2023 <info@bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_dashboard
+ * @copyright bdecent gmbh 2023 <info@bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class hook_callbacks {
+class hook_callbacks
+{
     /**
      * Listener for the after_config hook.
      *
@@ -48,8 +49,13 @@ class hook_callbacks {
                 $courseid = optional_param('id', 0, PARAM_INT);
                 $coursecontext = context_course::instance($courseid);
                 if (!is_enrolled($coursecontext)) {
-                    $coursedashboard = $DB->get_record('dashaddon_dashboard_dash', ['courseid' => $courseid,
-                        'redirecttodashboard' => true, 'permission' => 'public'], '*', IGNORE_MULTIPLE);
+                    $coursedashboard = $DB->get_record(
+                        'dashaddon_dashboard_dash',
+                        ['courseid' => $courseid,
+                        'redirecttodashboard' => true, 'permission' => 'public'],
+                        '*',
+                        IGNORE_MULTIPLE
+                    );
                     if ($coursedashboard) {
                         redirect(new moodle_url('/local/dash/addon/dashboard/dashboard.php', ['id' => $coursedashboard->id]));
                     }

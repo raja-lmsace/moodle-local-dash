@@ -56,21 +56,32 @@ $modules = [];
 foreach ($list as $key => $value) {
     $data = [];
     $editurl = new moodle_url('/local/dash/addon/skill_graph/competencylist.php', ['id' => $value->get('id'), 'action' => 'setup']);
-    $reports = new moodle_url('/admin/tool/lp/editcompetency.php', [
+    $reports = new moodle_url(
+        '/admin/tool/lp/editcompetency.php',
+        [
         'competencyframeworkid' => $value->get('competencyframeworkid'),
         'id' => $value->get('id'),
         'parentid' => $value->get('parentid'),
         'pagecontextid' => \context_system::instance()->id,
-    ]);
+        ]
+    );
 
-    $data[] = html_writer::link($reports, format_string($value->get('shortname')), [
+    $data[] = html_writer::link(
+        $reports,
+        format_string($value->get('shortname')),
+        [
         'class' => 'competency-instance-name',
-    ]);
+        ]
+    );
 
-    $data[] = html_writer::link($editurl, get_string('setup', 'block_dash'), [
+    $data[] = html_writer::link(
+        $editurl,
+        get_string('setup', 'block_dash'),
+        [
         'data-competency-id' => $value->get('id'), 'data-target' => 'competency-setup',
         'class' => 'competency-setup',
-    ]);
+        ]
+    );
 
     $table->data[] = $data;
 }

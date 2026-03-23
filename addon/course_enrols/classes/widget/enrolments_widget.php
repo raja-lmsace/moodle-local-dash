@@ -17,9 +17,9 @@
 /**
  * Enrolments widget class contains the layout information and generate the data for widget.
  *
- * @package    dashaddon_course_enrols
- * @copyright  2022 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_enrols
+ * @copyright 2022 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_enrols\widget;
@@ -43,6 +43,7 @@ use dashaddon_course_enrols\info;
 class enrolments_widget extends abstract_widget {
     /**
      * Enrolment sort method.
+     *
      * @var string
      */
     protected $enrolmentsort;
@@ -174,6 +175,7 @@ class enrolments_widget extends abstract_widget {
 
     /**
      * Get table pagination class.
+     *
      * @return paginator
      */
     public function widget_data_count() {
