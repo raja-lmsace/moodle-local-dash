@@ -93,7 +93,7 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
 
         if ($isunique) {
             $builder->set_selects(
-                ['count' => 'COUNT(' . $DB->sql_concat_join("'-'", ['cm.id', 'ue.userid']) . ')']
+                ['count' => 'COUNT(DISTINCT ' . $DB->sql_concat_join("'-'", ['cm.id', 'ue.userid']) . ')']
             );
         } else {
             $builder->set_selects(['count' => 'COUNT(DISTINCT ' . $this->tablealias . '.id)']);
@@ -101,6 +101,7 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
 
         $builder->limitfrom(0)->limitnum(0)->remove_orderby();
         [$sql, $params] = $builder->get_sql_and_params();
+        $sql = (string) $sql;
 
         $countcachekey = md5($sql . serialize($params));
 
@@ -115,9 +116,9 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         $count = 0;
         $courses = $DB->get_fieldset_select('course', 'id', 'id > 0');
         foreach ($courses as $courseid) {
-            $params['courseid'] = $courseid;
-            $coursesql = $sql . ' AND cm.course = :courseid';
-            $count += $DB->count_records_sql($coursesql, $params);
+            $courseparams = $params;
+            $courseparams['cm_course_id'] = $courseid;
+            $count += $DB->count_records_sql($sql . ' AND cm.course = :cm_course_id', $courseparams);
         }
 
         self::$lastcount = $count;
@@ -153,18 +154,7 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
     /**
      * Execute the query and return the results.
      *
-     * Modified to do a two step query to get around the issue of large data sets with
-     * group by and joins causing memory issues.
-     *
-     * Removed the joins and selects which are not needed to conditions and order by.
-     * Then find the requested page of results.
-     *
-     * In the second query, the full selects and joins are restored and the results are queried
-     * by the cmid and userid found in the first query.
-     *
      * @return array
-     * @throws dml_exception
-     * @throws exception\invalid_operator_exception
      */
     public function query() {
         global $DB;
@@ -177,8 +167,6 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         $originalselects = $this->selects;
         $joins = $this->joins;
         $rawjoins = $this->rawjoins;
-
-        // Remove the joins and selects which are not used in the where clause.
         foreach ($this->rawjoins as $key => $join) {
             if (strpos($wheres, $join->get_alias()) === false && strpos($orderby, $join->get_alias() . '.') === false) {
                 unset($this->rawjoins[$key]);
@@ -230,40 +218,54 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
             $this->remove_join('mds');
         }
 
-        // ... Query 1: Get the cmid, userid for the requested page with order by.
         [$sql, $params] = $this->get_sql_and_params();
-        $results = $DB->get_records_sql($sql, $params, $this->get_limitfrom(), $this->get_limitnum());
+        $pairs = [];
+        $all = [];
+        $recordset = $DB->get_recordset_sql($sql, $params);
+        foreach ($recordset as $row) {
+            $key = $row->cm_id . '-' . $row->ue_userid;
+            if (!isset($pairs[$key])) {
+                $pairs[$key] = true;
+                $all[] = $row;
+            }
+        }
+        $recordset->close();
+
+        $limitnum = $this->get_limitnum();
+        $results = array_slice($all, $this->get_limitfrom(), $limitnum ?: null);
+        unset($all, $pairs);
 
         if (empty($results)) {
-            return $results;
+            return [];
         }
 
         // Restore the selects and joins.
         $this->selects = $originalselects;
+        $this->selects['unique_id'] = $DB->sql_concat_join("'-'", ['cm.id', 'ue.userid']);
         $this->joins = $joins;
         $this->rawjoins = $rawjoins;
-
-        // Convert the results to a list of cmid, userid.
         $conditions = [];
         $inparams = [];
-        $i = 0;
-        foreach ($results as $row) {
-            if (isset($row->cm_id) && isset($row->ue_userid)) {
-                $conditions[] = '(cm.id = :sqcmid' . $i . ' AND u.id = :squserid' . $i . ')';
-                $inparams['sqcmid' . $i] = (int) $row->cm_id;
-                $inparams['squserid' . $i] = (int) $row->ue_userid;
-                $i++;
-            }
+        foreach ($results as $i => $row) {
+            $conditions[] = '(cm.id = :sqcmid' . $i . ' AND u.id = :squserid' . $i . ')';
+            $inparams['sqcmid' . $i] = (int) $row->cm_id;
+            $inparams['squserid' . $i] = (int) $row->ue_userid;
         }
-        if (!empty($conditions)) {
-            $this->rawwhere[] = '(' .  implode(' OR ', $conditions) . ')';
-        }
-
-        // ... Query 2: Get the full results for the requested page.
+        $this->rawwhere[] = '(' . implode(' OR ', $conditions) . ')';
         [$sql, $params] = $this->get_sql_and_params();
         $params = array_merge($params, $inparams);
-        $results = $DB->get_records_sql($sql, $params, 0, $this->get_limitnum());
+        $visited = [];
+        $pagerows = [];
+        $recordset = $DB->get_recordset_sql($sql, $params);
+        foreach ($recordset as $row) {
+            $key = $row->cm_id . '-' . $row->u_id;
+            if (!isset($visited[$key])) {
+                $visited[$key] = true;
+                $pagerows[] = $row;
+            }
+        }
+        $recordset->close();
 
-        return $results;
+        return $pagerows;
     }
 }
