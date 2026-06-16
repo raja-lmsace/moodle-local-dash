@@ -17,9 +17,9 @@
 /**
  * Represents a user created layout.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_developer\model;
@@ -50,6 +50,11 @@ class custom_layout extends persistent {
         return [
             'name' => [
                 'type' => PARAM_TEXT,
+            ],
+            'type' => [
+                'type' => PARAM_ALPHA,
+                'null' => NULL_NOT_ALLOWED,
+                'default' => 'block',
             ],
             'mustache_template' => [
                 'type' => PARAM_RAW,

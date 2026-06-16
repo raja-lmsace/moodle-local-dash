@@ -17,9 +17,9 @@
 /**
  * Dashaddon content - Form element for color picker
  *
- * @package    dashaddon_content
- * @copyright  2023 bdecent GmbH <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_content
+ * @copyright 2023 bdecent GmbH <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -43,9 +43,9 @@ class moodlequickform_dashaddon_content_colorpicker extends MoodleQuickForm_text
     /**
      * Constructor.
      *
-     * @param string $elementname (optional) Name of the text field.
+     * @param string $elementname  (optional) Name of the text field.
      * @param string $elementlabel (optional) Text field label.
-     * @param string $attributes (optional) Either a typical HTML attribute string or an associative array.
+     * @param string $attributes   (optional) Either a typical HTML attribute string or an associative array.
      */
     public function __construct($elementname = null, $elementlabel = null, $attributes = null) {
         parent::__construct($elementname, $elementlabel, $attributes);
@@ -62,7 +62,7 @@ class moodlequickform_dashaddon_content_colorpicker extends MoodleQuickForm_text
     /**
      * Export for template.
      *
-     * @param renderer_base $output
+     * @param  renderer_base $output
      * @return array|stdClass
      */
     public function export_for_template(renderer_base $output) {
@@ -80,7 +80,8 @@ class moodlequickform_dashaddon_content_colorpicker extends MoodleQuickForm_text
         $id = $this->getAttribute('id');
 
         // Add JS to append the color picker div before the element and initiate the color picker utility method.
-        $PAGE->requires->js_amd_inline("
+        $PAGE->requires->js_amd_inline(
+            "
             var element = document.getElementById('$id');
             var pickerDiv = document.createElement('div');
             pickerDiv.classList.add('admin_colourpicker', 'clearfix');
@@ -88,8 +89,8 @@ class moodlequickform_dashaddon_content_colorpicker extends MoodleQuickForm_text
             element.parentNode.prepend(pickerDiv);
             element.parentNode.style.flexDirection = 'column';
             // Init color picker utility.
-            M.util.init_colour_picker(Y, '$id');
-        ");
+            M.util.init_colour_picker(Y, '$id');"
+        );
 
         return $context;
     }

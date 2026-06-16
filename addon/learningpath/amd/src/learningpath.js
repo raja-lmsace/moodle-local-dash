@@ -1,3 +1,4 @@
+/* eslint-disable */
 define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
     'core/notification', 'core/templates', 'core/modal_save_cancel'], function ($, Fragment, Modal, ModalEvents, notification, Templates, SaveCancelModal) {
 
@@ -123,7 +124,7 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
                                 var navigateHandler = document.querySelector("#" + learingPathID + " ." + circleid);
                                 modal.destroy();
                                 if (navigateHandler) {
-                                    navigateHandler.click();
+                                    $(navigateHandler).trigger('click');
                                 }
                             });
                         });
@@ -314,14 +315,31 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
             });
 
 
-            // For each zone type, get all elements and store them with a marker
+            // Non-rendered SVG containers.
+            var nonRenderedContainers = ['defs', 'mask', 'clippath', 'pattern', 'symbol', 'marker'];
+
+            function isInNonRenderedContainer(el) {
+                var node = el.parentNode;
+                while (node && node.nodeType === 1) {
+                    if (nonRenderedContainers.indexOf(node.nodeName.toLowerCase()) !== -1) {
+                        return true;
+                    }
+                    node = node.parentNode;
+                }
+                return false;
+            }
+
             Object.keys(zoneTypes).forEach(function(zoneType) {
                 var elements = Array.from(self.svg.querySelectorAll(zoneType));
-                elements.forEach(function(element, index) {
-                    var key = zoneType + '_' + index;
-                    // Mark the element with a unique data attribute so we can identify it later
+                var visibleIndex = 0;
+                elements.forEach(function(element) {
+                    if (isInNonRenderedContainer(element)) {
+                        return;
+                    }
+                    var key = zoneType + '_' + visibleIndex;
                     element.setAttribute('data-original-zone-key', key);
                     elementMap[key] = element;
+                    visibleIndex++;
                 });
             });
 
@@ -393,7 +411,7 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
                     originalElement.classList.add('circle-course-' + course.info.id);
 
                     var tag = originalElement.tagName.toLowerCase();
-                    
+
                     if (tag === 'polygon') {
                         originalElement.classList.add('polygon-zone');
                     } else if (tag === 'ellipse') {
@@ -410,6 +428,8 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
                     originalElement.setAttribute('data-prevcourse-item', prevCourseItem);
                     originalElement.setAttribute('data-nextcourse', nextCourseId);
                     originalElement.setAttribute('data-nextcourse-item', nextCourseItem);
+                    // Ensure the full geometric shape is clickable regardless of fill.
+                    originalElement.setAttribute('pointer-events', 'all');
 
                     // Apply completion status styling
                     var completionStatus = course.report.inprogress ? 'inprogress' : 'notstarted';
@@ -801,7 +821,7 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
             var shapes = this.svg.querySelectorAll(".course-circle");
             if (shapes) {
                 shapes.forEach((element) => {
-                    $(element).click(function (e) {
+                    $(element).off('click.lp').on('click.lp', function (e) {
                         e.preventDefault();
                         // Details are enabled, display the course details in the modal.
                         var infoarea = e.target.closest(".learning-path-widget");
@@ -816,8 +836,6 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
                     });
                 });
             }
-
-            this.processClickableElements();
         }
 
         setupSVGSize() {

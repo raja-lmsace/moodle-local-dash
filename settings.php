@@ -261,7 +261,6 @@ if ($hassiteconfig) {
         new moodle_url('/local/dash/addon/dashboard/dashboard_list.php')
     ));
 
-
     foreach (core_plugin_manager::instance()->get_plugins_of_type('dashaddon') as $plugin) {
         // Load all the dashaddon plugins settings pages.
         $plugin->load_settings($ADMIN, 'localdashsettings', $hassiteconfig);

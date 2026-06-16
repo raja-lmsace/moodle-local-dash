@@ -17,9 +17,9 @@
 /**
  * Convert the event type into event icon classname.
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\field\attribute\event;
@@ -36,13 +36,14 @@ use logstore_standard\log\store;
  *
  * @package local_dash
  */
-class event_icon_attribute extends event_object_attribute {
+class event_icon_attribute extends event_object_attribute
+{
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param string $data
-     * @param \stdClass $record Entire row
+     * @param  string    $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      */
     public function transform_data($data, \stdClass $record) {

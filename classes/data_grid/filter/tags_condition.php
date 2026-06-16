@@ -16,9 +16,10 @@
 
 /**
  * Filter items based on tags in a certain component and itemtype.
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -92,9 +93,9 @@ class tags_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
@@ -102,7 +103,7 @@ class tags_condition extends condition {
         $fieldnameformat = 'filters[%s]'
     ): void {
 
-        global $OUTPUT;
+        global $DB, $OUTPUT;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
 
@@ -113,13 +114,41 @@ class tags_condition extends condition {
         $tags = \core_tag_collection::get_tag_cloud($collectionid);
         $data = $tags->export_for_template($OUTPUT);
 
-        foreach ($data->tags as $tag) {
-            $options[$tag->name] = $tag->name;
+        $assignmenttags = [];
+        if ($DB->get_manager()->table_exists('tool_timetable_course_overrides')) {
+            $rows = $DB->get_fieldset_select(
+                'tool_timetable_course_overrides',
+                'tags',
+                'tags IS NOT NULL AND tags <> \'\'',
+                []
+            );
+            foreach ($rows as $tagjson) {
+                $tagdata = json_decode($tagjson, true);
+                if (is_array($tagdata)) {
+                    foreach ($tagdata as $t) {
+                        if (!empty($t)) {
+                            $assignmenttags[] = strtolower(trim($t));
+                        }
+                    }
+                }
+            }
         }
 
-        $mform->addElement('autocomplete', $fieldname . '[tags]', get_string('tags', 'block_dash'), $options, [
+        foreach ($data->tags as $tag) {
+            if (!in_array(strtolower($tag->name), $assignmenttags)) {
+                $options[$tag->name] = $tag->name;
+            }
+        }
+
+        $mform->addElement(
+            'autocomplete',
+            $fieldname . '[tags]',
+            $this->get_label(),
+            $options,
+            [
             'multiple' => true,
-        ]);
+            ]
+        );
         $mform->hideIf($fieldname . '[tags]', $fieldname . '[enabled]');
     }
 }

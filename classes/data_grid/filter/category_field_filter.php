@@ -15,10 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Category filter – shows only categories present in the current result set.
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Category name based filter option.
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -281,8 +282,8 @@ class category_field_filter extends select_filter {
     /**
      * Restrict options to categories present in the result set, in tree order.
      *
-     * @param filter_collection_interface $filtercollection filter collection
-     * @return bool|array
+     * @param filter_collection_interface $filtercollection
+     * @return array|null
      */
     protected function get_active_option_values(filter_collection_interface $filtercollection): ?array {
         $resultcategoryids = $this->get_result_category_ids($filtercollection);

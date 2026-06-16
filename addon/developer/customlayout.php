@@ -17,9 +17,9 @@
 /**
  * Manage custom layouts.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use block_dash\output\renderer;
@@ -39,7 +39,6 @@ $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/dash/addon/developer/customlayout.php', ['action' => $action]));
 $PAGE->navbar->add(get_string('managelayouts', 'block_dash'), new moodle_url('/local/dash/addon/developer/customlayouts.php'));
 
-/** @var renderer $renderer */
 $renderer = $PAGE->get_renderer('block_dash');
 
 require_login();
@@ -63,20 +62,21 @@ switch ($action) {
         $PAGE->set_heading(get_string('createcustomlayout', 'block_dash'));
         $PAGE->navbar->add(get_string('createcustomlayout', 'block_dash'));
 
-        $form = new custom_layout_form($PAGE->url, [
+        $form = new custom_layout_form(
+            $PAGE->url,
+            [
             'persistent' => null,
             'userid' => $USER->id,
-        ]);
+            ]
+        );
 
         if ($data = $form->get_data()) {
             $customlayout = new custom_layout(0, $data);
             $customlayout->create();
 
-            \core\notification::success(get_string(
-                'customlayoutcreated',
-                'block_dash',
-                $customlayout->to_record()
-            ));
+            \core\notification::success(
+                get_string('customlayoutcreated', 'block_dash', $customlayout->to_record())
+            );
             redirect(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
         } else if ($form->is_cancelled()) {
             redirect(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
@@ -99,19 +99,20 @@ switch ($action) {
 
         $customlayout = new custom_layout($id);
 
-        $form = new custom_layout_form($PAGE->url, [
+        $form = new custom_layout_form(
+            $PAGE->url,
+            [
             'persistent' => $customlayout,
-        ]);
+            ]
+        );
 
         if ($data = $form->get_data()) {
             $customlayout->from_record($data);
             $customlayout->update();
 
-            \core\notification::success(get_string(
-                'customlayoutedited',
-                'block_dash',
-                $customlayout->to_record()
-            ));
+            \core\notification::success(
+                get_string('customlayoutedited', 'block_dash', $customlayout->to_record())
+            );
             redirect(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
         } else if ($form->is_cancelled()) {
             redirect(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
@@ -136,11 +137,9 @@ switch ($action) {
 
         if ($confirm = optional_param('confirm', 0, PARAM_BOOL)) {
             $customlayout->delete();
-            \core\notification::success(get_string(
-                'customlayoutdeleted',
-                'block_dash',
-                $customlayout->to_record()
-            ));
+            \core\notification::success(
+                get_string('customlayoutdeleted', 'block_dash', $customlayout->to_record())
+            );
             redirect(new moodle_url('/local/dash/addon/developer/customlayouts.php'));
         }
 

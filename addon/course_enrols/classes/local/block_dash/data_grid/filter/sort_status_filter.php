@@ -17,9 +17,9 @@
 /**
  * Filters results in order of different methods.
  *
- * @package    dashaddon_course_enrols
- * @copyright  2022 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_enrols
+ * @copyright 2022 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_enrols\local\block_dash\data_grid\filter;
@@ -30,7 +30,8 @@ use block_dash\local\data_grid\filter\filter_collection_interface;
 /**
  * Filters results in order of different methods.
  */
-class sort_status_filter extends select_filter {
+class sort_status_filter extends select_filter
+{
     use filter_element;
 
     /**
@@ -60,8 +61,8 @@ class sort_status_filter extends select_filter {
     /**
      * Override this method and call it after creating a form element.
      *
-     * @param filter_collection_interface $filtercollection
-     * @param string $elementnameprefix
+     * @param  filter_collection_interface $filtercollection
+     * @param  string                      $elementnameprefix
      * @throws \Exception
      * @return string
      */

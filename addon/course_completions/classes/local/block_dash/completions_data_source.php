@@ -16,9 +16,10 @@
 
 /**
  * Completions data source.
- * @package    dashaddon_course_completions
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_course_completions
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_completions\local\block_dash;
@@ -90,6 +91,7 @@ class completions_data_source extends abstract_data_source {
 
     /**
      * Return query template for retrieving user info.
+     *
      * @return string
      */
     public function get_query_template(): builder {
@@ -98,8 +100,6 @@ class completions_data_source extends abstract_data_source {
             ->select('ccp.id', 'ccp_id')
             ->from('course_completions', 'ccp')
             ->join('user', 'u', 'id', 'ccp.userid')
-            ->join('groups_members', 'gm', 'userid', 'u.id', join::TYPE_LEFT_JOIN)
-            ->join('groups', 'g', 'id', 'gm.groupid', join::TYPE_LEFT_JOIN)
             ->join('course', 'c', 'id', 'ccp.course')
             ->join('course_categories', 'cc', 'id', 'c.category')
             ->join('enrol', 'e', 'courseid', 'c.id')
@@ -138,6 +138,7 @@ class completions_data_source extends abstract_data_source {
 
     /**
      * Build and return filter collection
+     *
      * @return filter_collection_interface
      */
     public function build_filter_collection() {
@@ -169,13 +170,15 @@ class completions_data_source extends abstract_data_source {
 
         $compfiltercollection->add_filter(new course_format_field_filter('c_format', 'c.format'));
 
-        $compfiltercollection->add_filter(new tags_field_filter(
-            'c_tags',
-            'c.id',
-            'core',
-            'course',
-            get_string('coursetags', 'tag')
-        ));
+        $compfiltercollection->add_filter(
+            new tags_field_filter(
+                'c_tags',
+                'c.id',
+                'core',
+                'course',
+                get_string('coursetags', 'tag')
+            )
+        );
 
         $compfiltercollection->add_filter(new relations_role_condition('parentrole', 'u.id'));
 
@@ -195,12 +198,14 @@ class completions_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->get_formatted_name());
                         break;
                     case 'date':
-                        $compfiltercollection->add_filter(new date_filter(
-                            $alias,
-                            $select,
-                            date_filter::DATE_FUNCTION_FLOOR,
-                            $field->get_formatted_name()
-                        ));
+                        $compfiltercollection->add_filter(
+                            new date_filter(
+                                $alias,
+                                $select,
+                                date_filter::DATE_FUNCTION_FLOOR,
+                                $field->get_formatted_name()
+                            )
+                        );
                         break;
                     case 'textarea':
                         break;
@@ -211,12 +216,14 @@ class completions_data_source extends abstract_data_source {
                         ) {
                             break;
                         }
-                        $compfiltercollection->add_filter(new customfield_filter(
-                            $alias,
-                            $select,
-                            $field,
-                            $field->get_formatted_name()
-                        ));
+                        $compfiltercollection->add_filter(
+                            new customfield_filter(
+                                $alias,
+                                $select,
+                                $field,
+                                $field->get_formatted_name()
+                            )
+                        );
                         break;
                 }
             }
@@ -230,22 +237,26 @@ class completions_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->fullname);
                         break;
                     case 'date':
-                        $compfiltercollection->add_filter(new date_filter(
-                            $alias,
-                            $select,
-                            date_filter::DATE_FUNCTION_FLOOR,
-                            $field->fullname
-                        ));
+                        $compfiltercollection->add_filter(
+                            new date_filter(
+                                $alias,
+                                $select,
+                                date_filter::DATE_FUNCTION_FLOOR,
+                                $field->fullname
+                            )
+                        );
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $compfiltercollection->add_filter(new customfield_filter(
-                            $alias,
-                            $select,
-                            $field,
-                            $field->fullname
-                        ));
+                        $compfiltercollection->add_filter(
+                            new customfield_filter(
+                                $alias,
+                                $select,
+                                $field,
+                                $field->fullname
+                            )
+                        );
                         break;
                 }
             }
@@ -314,15 +325,62 @@ class completions_data_source extends abstract_data_source {
     /**
      * Set the default preferences of the course completion datasource, force the set the default settings.
      *
-     * @param array $data
+     * @param  array $data
      * @return array
      */
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
+
+        // Grid/Table and Accordion layout defaults (available_fields visibility).
         $configpreferences['available_fields']['ccp_progressbar']['visible'] = true;
         $configpreferences['available_fields']['u_fullname']['visible'] = true;
         $configpreferences['available_fields']['c_fullname']['visible'] = true;
         $configpreferences['available_fields']['e_enrol']['visible'] = true;
+
+        // Cards layout defaults.
+        if (empty($configpreferences['headingfield'])) {
+            $configpreferences['headingfield'] = 'c_fullname';
+        }
+        if (empty($configpreferences['subheadingfield'])) {
+            $configpreferences['subheadingfield'] = 'u_fullname';
+        }
+        if (empty($configpreferences['bodyfield'])) {
+            $configpreferences['bodyfield'] = 'ccp_progressbar';
+        }
+        if (empty($configpreferences['imageurlfield'])) {
+            $configpreferences['imageurlfield'] = 'c_image_url';
+        }
+        if (empty($configpreferences['footerfield'])) {
+            $configpreferences['footerfield'] = 'ccp_timecompleted';
+        }
+
+        // One stat layout defaults.
+        if (empty($configpreferences['stat_field_definition'])) {
+            $configpreferences['stat_field_definition'] = 'ccp_progressbar';
+        }
+
+        // Accordion layout defaults.
+        if (empty($configpreferences['groupby_field_definition'])) {
+            $configpreferences['groupby_field_definition'] = 'c_fullname';
+        }
+        if (empty($configpreferences['group_label_field_definition'])) {
+            $configpreferences['group_label_field_definition'] = 'c_fullname';
+        }
+
+        // Accordion2 layout defaults (card-based accordion with field mapping).
+        if (empty($configpreferences['field1'])) {
+            $configpreferences['field1'] = 'u_fullname';
+        }
+        if (empty($configpreferences['field2'])) {
+            $configpreferences['field2'] = 'c_fullname';
+        }
+        if (empty($configpreferences['field3'])) {
+            $configpreferences['field3'] = 'ccp_progressbar';
+        }
+        if (empty($configpreferences['field4'])) {
+            $configpreferences['field4'] = 'e_enrol';
+        }
+
         $data['config_preferences'] = $configpreferences;
     }
 }

@@ -17,9 +17,9 @@
 /**
  * Activity completion widget.
  *
- * @package    dashaddon_activitycompletion
- * @copyright  2025 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activitycompletion
+ * @copyright 2025 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activitycompletion\widget;
@@ -149,8 +149,8 @@ class activitycompletion_widget extends abstract_widget {
     /**
      * Preference form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -197,11 +197,13 @@ class activitycompletion_widget extends abstract_widget {
 
         $filtercollection->add_filter(new cohort_condition('cohort', 'u.id'));
 
-        $filtercollection->add_filter(new course_sections_filter(
-            'c_sections',
-            'cs.id',
-            get_string('widget:course_sections', 'block_dash')
-        ));
+        $filtercollection->add_filter(
+            new course_sections_filter(
+                'c_sections',
+                'cs.id',
+                get_string('widget:course_sections', 'block_dash')
+            )
+        );
 
         $filtercollection->add_filter(new mygroups_filter('my_groups', 'gm300.groupid', get_string('groups')));
 
@@ -323,7 +325,7 @@ class activitycompletion_widget extends abstract_widget {
     /**
      * Generate the activity completion progress chart data.
      *
-     * @param array $coursemodules course modules data
+     * @param  array $coursemodules course modules data
      * @return string
      */
     public function generate_activity_completion_progress_chart($coursemodules) {
@@ -465,12 +467,26 @@ class activitycompletion_widget extends abstract_widget {
     /**
      * Set the default preferences of the activity completion widget, force the set the default settings.
      *
-     * @param array $data
+     * @param  array $data
      * @return array
      */
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
         $configpreferences['filters']['current_course']['enabled'] = 1;
         $data['config_preferences'] = $configpreferences;
+    }
+
+    /**
+     * Hide Fields and Details area tabs.
+     * fields and has no details area configuration.
+     *
+     * @return array
+     */
+    public function get_preferences_form_tabs(): array {
+        return [
+            \block_dash\local\data_source\form\preferences_form::TAB_GENERAL,
+            \block_dash\local\data_source\form\preferences_form::TAB_FILTERS,
+            \block_dash\local\data_source\form\preferences_form::TAB_CONDITIONS,
+        ];
     }
 }

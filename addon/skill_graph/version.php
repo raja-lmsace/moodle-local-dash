@@ -17,9 +17,9 @@
 /**
  * Plugin version info
  *
- * @package    dashaddon_skill_graph
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_skill_graph
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 $plugin->component = 'dashaddon_skill_graph';
 $plugin->version = 2024042501;
 $plugin->requires  = 2017051509;
-$plugin->maturity  = MATURITY_ALPHA;
+$plugin->maturity  = MATURITY_STABLE;
 $plugin->release = '2.0';
 $plugin->dependencies = [
     'local_dash' => 2022110300,

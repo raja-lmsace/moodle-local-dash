@@ -120,7 +120,7 @@ class zone_config_form extends \moodleform {
         $html .= '<div class="row">';
 
         // SVG Display Column.
-        $html .= '<div class="col-md-8">';
+        $html .= '<div class="col-md-7">';
         $html .= '<div class="svg-container border p-3">';
         $html .= '<h5>' . $svg['displayname'] . ' ' . get_string('preview', 'core') . '</h5>';
         $html .= '<div class="svg-wrapper">';
@@ -128,7 +128,7 @@ class zone_config_form extends \moodleform {
         $html .= '</div></div></div>';
 
         // Zone List Column.
-        $html .= '<div class="col-md-4">';
+        $html .= '<div class="col-md-5">';
         $html .= '<div class="zone-list border p-3">';
         $html .= '<h5>' . get_string('zones_found', 'block_dash') . ' (' . count($svg['zones']) . ')</h5>';
 

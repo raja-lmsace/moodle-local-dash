@@ -16,9 +16,10 @@
 
 /**
  * Logstore data source.
- * @package    dashaddon_roleassignments
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   dashaddon_roleassignments
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_roleassignments\local\block_dash;
@@ -97,7 +98,6 @@ class roleassignments_data_source extends abstract_data_source {
     /**
      * Builds and returns a filter collection for role assignments data source.
      *
-     *
      * @return filter_collection The constructed filter collection.
      */
     public function build_filter_collection() {
@@ -127,6 +127,8 @@ class roleassignments_data_source extends abstract_data_source {
      */
     public function set_default_preferences(&$data) {
         $preferences = $data['config_preferences'];
+
+        // Grid/Table and Accordion layout defaults (available_fields visibility).
         $preferences['available_fields'] = [
             'r_rolename' => ['visible' => true],
             'r_shortname' => ['visible' => true],
@@ -135,6 +137,48 @@ class roleassignments_data_source extends abstract_data_source {
             'ctx_contextlevel' => ['visible' => true],
             'ctx_context_name' => ['visible' => true],
         ];
+
+        // Cards layout defaults.
+        if (empty($preferences['headingfield'])) {
+            $preferences['headingfield'] = 'r_rolename';
+        }
+        if (empty($preferences['subheadingfield'])) {
+            $preferences['subheadingfield'] = 'ctx_contextname';
+        }
+        if (empty($preferences['bodyfield'])) {
+            $preferences['bodyfield'] = 'r_description';
+        }
+        if (empty($preferences['footerfield'])) {
+            $preferences['footerfield'] = 'ctx_contextlevel';
+        }
+
+        // One stat layout defaults.
+        if (empty($preferences['stat_field_definition'])) {
+            $preferences['stat_field_definition'] = 'r_rolename';
+        }
+
+        // Accordion layout defaults.
+        if (empty($preferences['groupby_field_definition'])) {
+            $preferences['groupby_field_definition'] = 'r_rolename';
+        }
+        if (empty($preferences['group_label_field_definition'])) {
+            $preferences['group_label_field_definition'] = 'r_rolename';
+        }
+
+        // Accordion2 layout defaults (card-based accordion with field mapping).
+        if (empty($preferences['field1'])) {
+            $preferences['field1'] = 'r_rolename';
+        }
+        if (empty($preferences['field2'])) {
+            $preferences['field2'] = 'ctx_contextname';
+        }
+        if (empty($preferences['field3'])) {
+            $preferences['field3'] = 'ctx_contextlevel';
+        }
+        if (empty($preferences['field4'])) {
+            $preferences['field4'] = 'r_shortname';
+        }
+
         $data['config_preferences'] = $preferences;
     }
 }

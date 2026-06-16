@@ -17,9 +17,9 @@
 /**
  * Calendar events report source defined.
  *
- * @package    dashaddon_calendar_events
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_calendar_events
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_calendar_events\local\block_dash;
@@ -43,6 +43,7 @@ use dashaddon_calendar_events\local\block_dash\data_grid\filter\event_date_condi
 use dashaddon_calendar_events\local\block_dash\data_grid\filter\event_day_condition;
 use dashaddon_calendar_events\local\block_dash\data_grid\filter\event_status_condition;
 use dashaddon_calendar_events\local\block_dash\data_grid\filter\event_filter;
+use dashaddon_calendar_events\local\block_dash\data_grid\filter\current_course_with_subcourses_condition;
 use block_dash\local\dash_framework\structure\field_interface;
 use local_dash\data_grid\field\attribute\color_attribute;
 
@@ -73,7 +74,8 @@ class events_data_source extends abstract_data_source {
         $builder = new builder();
 
         $builder
-            ->set_selects([
+            ->set_selects(
+                [
                 'ce_id' => 'ce.id',
                 'ce_categoryid' => 'ce.categoryid',
                 'ce_courseid' => 'ce.courseid',
@@ -84,7 +86,8 @@ class events_data_source extends abstract_data_source {
                 'ce_instance' => 'ce.instance',
                 'ce_eventtype' => 'ce.eventtype',
                 'ce_cmid' => 'cm.id',
-            ])
+                ]
+            )
             ->select('g.name', 'g_name')
             ->select('g.courseid', 'g_courseid')
             ->select('c.fullname', 'c_fullname')
@@ -107,8 +110,7 @@ class events_data_source extends abstract_data_source {
         foreach ($actionevents as $event) {
             if (
                 $event->modulename && $event->instance > 0 && $event->courseid > 0
-                && $DB->record_exists('modules', ['name' => $event->modulename,
-                'visible' => 1])
+                && $DB->record_exists('modules', ['name' => $event->modulename, 'visible' => 1])
             ) {
                 $calendarevent = new calendar_event($event);
                 $eventvisible = component_callback(
@@ -164,6 +166,14 @@ class events_data_source extends abstract_data_source {
         // Course condition.
         $filtercollection->add_filter(new course_condition('c_course', 'ce.courseid'));
 
+        // Current course condition. When mod_subcourse is installed, also exposes a "scope"
+        // picker so events from current course and/or its subcourses can be OR-combined in a
+        // single condition (block_dash AND's separate conditions, so two course-scope
+        // conditions cannot combine across rows).
+        $filtercollection->add_filter(
+            new current_course_with_subcourses_condition('current_course', 'ce.courseid')
+        );
+
         // Course categories condition (Selected category/subcategory based).
         $filtercollection->add_filter(new course_category_condition('c_course_categories_condition', 'ce.categoryid'));
 
@@ -198,7 +208,7 @@ class events_data_source extends abstract_data_source {
     /**
      * Get field by name. Returns null if not found.
      *
-     * @param string $alias Field alias.
+     * @param  string $alias Field alias.
      * @return ?field_interface
      */
     public function get_field(string $alias): ?field_interface {
@@ -221,15 +231,64 @@ class events_data_source extends abstract_data_source {
     /**
      * Set the default preferences of the Calendar event datasource, force the set the default settings.
      *
-     * @param array $data
+     * @param  array $data
      * @return array
      */
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
+
+        // Grid/Table and Accordion layout defaults (available_fields visibility).
         $configpreferences['available_fields']['ce_name']['visible'] = true;
         $configpreferences['available_fields']['ce_contextevent']['visible'] = true;
         $configpreferences['available_fields']['ce_startdate']['visible'] = true;
         $configpreferences['available_fields']['ce_starttime']['visible'] = true;
+
+        // Cards layout defaults.
+        if (empty($configpreferences['headingfield'])) {
+            $configpreferences['headingfield'] = 'ce_name';
+        }
+        if (empty($configpreferences['subheadingfield'])) {
+            $configpreferences['subheadingfield'] = 'ce_startdate';
+        }
+        if (empty($configpreferences['bodyfield'])) {
+            $configpreferences['bodyfield'] = 'ce_description';
+        }
+        if (empty($configpreferences['footerfield'])) {
+            $configpreferences['footerfield'] = 'ce_starttime';
+        }
+
+        // Timeline layout defaults.
+        if (empty($configpreferences['iconfield'])) {
+            $configpreferences['iconfield'] = 'ce_icon';
+        }
+
+        // One stat layout defaults.
+        if (empty($configpreferences['stat_field_definition'])) {
+            $configpreferences['stat_field_definition'] = 'ce_name';
+        }
+
+        // Accordion layout defaults.
+        if (empty($configpreferences['groupby_field_definition'])) {
+            $configpreferences['groupby_field_definition'] = 'ce_name';
+        }
+        if (empty($configpreferences['group_label_field_definition'])) {
+            $configpreferences['group_label_field_definition'] = 'ce_name';
+        }
+
+        // Accordion2 layout defaults (card-based accordion with field mapping).
+        if (empty($configpreferences['field1'])) {
+            $configpreferences['field1'] = 'ce_name';
+        }
+        if (empty($configpreferences['field2'])) {
+            $configpreferences['field2'] = 'ce_startdate';
+        }
+        if (empty($configpreferences['field3'])) {
+            $configpreferences['field3'] = 'ce_description';
+        }
+        if (empty($configpreferences['field4'])) {
+            $configpreferences['field4'] = 'ce_starttime';
+        }
+
         $data['config_preferences'] = $configpreferences;
     }
 }

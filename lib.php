@@ -22,12 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_dash\layout\accordion_layout;
-use local_dash\layout\accordion_layout2;
-use local_dash\layout\one_stat_layout;
-use local_dash\layout\timeline_layout;
-use local_dash\layout\two_stat_layout;
-use local_dash\layout\cards_layout;
 use local_dash\data_grid\filter\course_customfield_condition;
 
 
@@ -61,32 +55,10 @@ function local_dash_register_field_definitions() {
  * @return array List of layouts.
  */
 function local_dash_register_layouts() {
-    return [
-        [
-            'name' => get_string('layoutcards', 'block_dash'),
-            'identifier' => cards_layout::class,
-        ],
-        [
-            'name' => get_string('layoutaccordion', 'block_dash'),
-            'identifier' => accordion_layout::class,
-        ],
-        [
-            'name' => get_string('layoutaccordion2', 'block_dash'),
-            'identifier' => accordion_layout2::class,
-        ],
-        [
-            'name' => get_string('layoutonestat', 'block_dash'),
-            'identifier' => one_stat_layout::class,
-        ],
-        [
-            'name' => get_string('layouttwostat', 'block_dash'),
-            'identifier' => two_stat_layout::class,
-        ],
-        [
-            'name' => get_string('layouttimeline', 'block_dash'),
-            'identifier' => timeline_layout::class,
-        ],
-    ];
+    // Layouts have been moved to block_dash. This function returns an empty array
+    // to avoid duplicate registration. The local_dash layout classes are now thin
+    // wrappers that extend the block_dash versions for backward compatibility.
+    return [];
 }
 
 /**
@@ -178,6 +150,7 @@ function local_dash_extend_settings_navigation($settingsnav, $context) {
             }
         }
     }
+
     $hidecategory = get_config('local_dash', 'hidecoursecategory');
     if ($hidecategory && !is_siteadmin() && !has_capability('moodle/category:manage', context_system::instance())) {
         $redirecturl = new moodle_url('/my');
@@ -411,7 +384,7 @@ function local_dash_output_fragment_icons_list($args) {
  * @return bool
  */
 function local_dash_upgrade_blocks_data_source_idnumber() {
-    global $DB;
+    global $DB, $CFG;
     $changedatasources = [
         'local_dash\local\block_dash\logstore_data_source' => 'dashaddon_logstore\local\block_dash\logstore_data_source',
         'block_dash\local\data_source\categories_data_source' => 'dashaddon_categories\local\block_dash\categories_data_source',
@@ -426,6 +399,7 @@ function local_dash_upgrade_blocks_data_source_idnumber() {
         if (!empty($block->config)) {
             $config = clone($block->config);
             $datasource = $config->data_source_idnumber;
+
             if (isset($changedatasources[$datasource])) {
                 $config->data_source_idnumber = $changedatasources[$datasource];
                 // Save the content preference to block instance config.
@@ -433,7 +407,29 @@ function local_dash_upgrade_blocks_data_source_idnumber() {
             }
         }
     }
-    return true;
+    if (function_exists('dashaddon_dashboard_change_pagetypepattern')) {
+        require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
+        dashaddon_dashboard_change_pagetypepattern();
+    } else {
+        $likepattern = $DB->sql_like('pagetypepattern', ':pattern');
+        $sql = "SELECT *
+                FROM {block_instances}
+                WHERE {$likepattern}";
+        $params = [
+            'pattern' => 'local-dash-dashboard%',
+        ];
+
+        $records = $DB->get_records_sql($sql, $params);
+
+        foreach ($records as $record) {
+            $pagetypepattern = $record->pagetypepattern;
+            $prefix = 'local-dash';
+            $replacement = 'dashaddon';
+            $modifiypattern = str_replace($prefix, $replacement, $pagetypepattern);
+            $record->pagetypepattern = $modifiypattern;
+            $DB->update_record('block_instances', $record);
+        }
+    }
 }
 
 

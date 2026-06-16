@@ -17,21 +17,21 @@
 /**
  * Library functions defined for dashaddon content widget.
  *
- * @package    dashaddon_content
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_content
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * Dash plugin file definitions, List of fileareas used in local_dash plugin.
  *
- * @param stdclass $course
- * @param stdclass $cm
- * @param stdclass $context
- * @param string $filearea
- * @param array $args
- * @param bool $forcedownload
- * @param array $options
+ * @param  stdclass $course
+ * @param  stdclass $cm
+ * @param  stdclass $context
+ * @param  string   $filearea
+ * @param  array    $args
+ * @param  bool     $forcedownload
+ * @param  array    $options
  * @return void
  */
 function dashaddon_content_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {

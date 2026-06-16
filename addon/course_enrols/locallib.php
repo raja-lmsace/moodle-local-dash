@@ -17,9 +17,9 @@
 /**
  * Course enrolment manager.
  *
- * @package    dashaddon_course_enrols
- * @copyright  2022 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_enrols
+ * @copyright 2022 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -33,8 +33,8 @@ class dash_course_enrolments extends course_enrolment_manager {
     /**
      * Edits an enrolment
      *
-     * @param stdClass $userenrolment
-     * @param stdClass $data
+     * @param  stdClass $userenrolment
+     * @param  stdClass $data
      * @return bool
      */
     public function edit_enrolment($userenrolment, $data) {
@@ -60,7 +60,7 @@ class dash_course_enrolments extends course_enrolment_manager {
     /**
      * Unenrols a user from the course given the users ue entry
      *
-     * @param stdClass $ue
+     * @param  stdClass $ue
      * @return bool
      */
     public function unenrol_user($ue) {

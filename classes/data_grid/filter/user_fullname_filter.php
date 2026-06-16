@@ -16,9 +16,10 @@
 
 /**
  * Users based filter option.
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -36,10 +37,15 @@ class user_fullname_filter extends select_filter {
     public function init() {
         global $DB;
 
-        $users = $DB->get_records_sql("SELECT id, firstname FROM {user} WHERE deleted != 1 AND suspended != 1");
+        // Select all name fields up front so fullname() can be built from each row,
+        // instead of issuing a core_user::get_user() query per user.
+        $namefields = \core_user\fields::for_name()->get_sql('', false, '', '', false)->selects;
+        $users = $DB->get_records_sql(
+            "SELECT id, {$namefields} FROM {user} WHERE deleted != 1 AND suspended != 1"
+        );
         $data = [];
         foreach ($users as $user) {
-            $data[$user->id] = fullname(\core_user::get_user($user->id));
+            $data[$user->id] = fullname($user);
         }
         $this->add_options($data);
 

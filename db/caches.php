@@ -26,9 +26,9 @@ defined('MOODLE_INTERNAL') || die();
 
 $definitions = [
     'fontawesomeicons' => [
-                'mode' => \core_cache\store::MODE_APPLICATION,
-                'simplekeys' => true,
-                'simpledata' => false,
-                'canuselocalstore' => true,
+        'mode' => \core_cache\store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => false,
+        'canuselocalstore' => true,
     ],
 ];

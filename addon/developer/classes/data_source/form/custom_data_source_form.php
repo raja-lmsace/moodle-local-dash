@@ -162,7 +162,7 @@ class custom_data_source_form extends persistent_form {
                 'text',
                 'tablejoinsalias',
                 get_string('tablejoinsalias', 'block_dash'),
-                ['placeholder' => 'table AS alias (course AS c)', 'size' => 40]
+                ['size' => 40]
             ),
 
             $mform->createElement(
@@ -190,6 +190,7 @@ class custom_data_source_form extends persistent_form {
                 'type' => PARAM_ALPHANUMEXT,
                 'hideif' => ['enablejoins', 'notchecked'],
                 'disabledif' => ['enablejoins', 'notchecked'],
+                'helpbutton' => ['tablejoinsalias', 'block_dash', '', true],
             ],
             'tablejoinon' => [
                 'type' => PARAM_NOTAGS,
@@ -467,7 +468,6 @@ class custom_data_source_form extends persistent_form {
         ');
     }
 
-
     /**
      * Load in existing data as form defaults. Usually new entry defaults are stored directly in
      * form definition (new entry form); this function is used to load in data where values
@@ -503,8 +503,8 @@ class custom_data_source_form extends persistent_form {
     /**
      * Method to add a repeating group of elements to a form.
      *
-     * Modified version of the original method in moodleform to make the field attribute and field values
-     * in array format for the loop in field definition.
+     * Modified version of the original method in moodleform to make the field attribute and
+     * field values in array format for the loop in field definition.
      *
      * @param array $elementobjs Array of elements or groups of elements that are to be repeated
      * @param int $repeats no of times to repeat elements initially
@@ -752,6 +752,26 @@ class custom_data_source_form extends persistent_form {
         // Update the elements of the group with the new created elements.
         // Without this elements are not updated correctly. and the data will not export during the form submission.
         $element->setElements($element->_elements);
+    }
+
+    /**
+     * Validate that every active join with a table selected also has an alias.
+     *
+     * @param \stdClass $data
+     * @param array $files
+     * @param array $errors
+     * @return array
+     */
+    protected function extra_validation($data, $files, array &$errors) {
+        if (!empty($data->enablejoins) && !empty($data->tablejoins)) {
+            foreach ($data->tablejoins as $i => $table) {
+                if (!empty($table) && empty($data->tablejoinsalias[$i])) {
+                    $errors["tablejoinsalias[$i]"] = get_string('required');
+                }
+            }
+        }
+
+        return $errors;
     }
 
     /**

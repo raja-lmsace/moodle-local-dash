@@ -17,9 +17,9 @@
 /**
  * Activity completion report source defined.
  *
- * @package    dashaddon_activity_completion
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activity_completion
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activity_completion\local\block_dash;
@@ -202,13 +202,15 @@ class activity_completion_data_source extends abstract_data_source {
         $cmfiltercollection->add_filter(new module_field_filter('m_id', 'm.id', get_string('modulename', 'block_dash')));
 
         // Activity tag filter.
-        $cmfiltercollection->add_filter(new tags_field_filter(
-            'cm_tags',
-            'cm.id',
-            'core',
-            'course_modules',
-            get_string('activitytags', 'dashaddon_activities')
-        ));
+        $cmfiltercollection->add_filter(
+            new tags_field_filter(
+                'cm_tags',
+                'cm.id',
+                'core',
+                'course_modules',
+                get_string('activitytags', 'dashaddon_activities')
+            )
+        );
 
         // Activity type filter.
         $cmfiltercollection->add_filter(new activity_type_field_filter('cm_type', ''));
@@ -238,22 +240,26 @@ class activity_completion_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, format_string($field->name));
                         break;
                     case 'datetime':
-                        $cmfiltercollection->add_filter(new date_filter(
-                            $alias,
-                            $select,
-                            date_filter::DATE_FUNCTION_FLOOR,
-                            format_string($field->name)
-                        ));
+                        $cmfiltercollection->add_filter(
+                            new date_filter(
+                                $alias,
+                                $select,
+                                date_filter::DATE_FUNCTION_FLOOR,
+                                format_string($field->name)
+                            )
+                        );
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $cmfiltercollection->add_filter(new customfield_filter(
-                            $alias,
-                            $select,
-                            $field,
-                            format_string($field->name)
-                        ));
+                        $cmfiltercollection->add_filter(
+                            new customfield_filter(
+                                $alias,
+                                $select,
+                                $field,
+                                format_string($field->name)
+                            )
+                        );
                         break;
                 }
             }
@@ -270,12 +276,14 @@ class activity_completion_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->get_formatted_name());
                         break;
                     case 'date':
-                        $cmfiltercollection->add_filter(new date_filter(
-                            $alias,
-                            $select,
-                            date_filter::DATE_FUNCTION_FLOOR,
-                            $field->get_formatted_name()
-                        ));
+                        $cmfiltercollection->add_filter(
+                            new date_filter(
+                                $alias,
+                                $select,
+                                date_filter::DATE_FUNCTION_FLOOR,
+                                $field->get_formatted_name()
+                            )
+                        );
                         break;
                     case 'textarea':
                         break;
@@ -286,12 +294,14 @@ class activity_completion_data_source extends abstract_data_source {
                         ) {
                             break;
                         }
-                        $cmfiltercollection->add_filter(new customfield_filter(
-                            $alias,
-                            $select,
-                            $field,
-                            $field->get_formatted_name()
-                        ));
+                        $cmfiltercollection->add_filter(
+                            new customfield_filter(
+                                $alias,
+                                $select,
+                                $field,
+                                $field->get_formatted_name()
+                            )
+                        );
                         break;
                 }
             }
@@ -307,22 +317,26 @@ class activity_completion_data_source extends abstract_data_source {
                         $definitions[] = new bool_filter($alias, $select, $field->fullname);
                         break;
                     case 'date':
-                        $cmfiltercollection->add_filter(new date_filter(
-                            $alias,
-                            $select,
-                            date_filter::DATE_FUNCTION_FLOOR,
-                            $field->fullname
-                        ));
+                        $cmfiltercollection->add_filter(
+                            new date_filter(
+                                $alias,
+                                $select,
+                                date_filter::DATE_FUNCTION_FLOOR,
+                                $field->fullname
+                            )
+                        );
                         break;
                     case 'textarea':
                         break;
                     default:
-                        $cmfiltercollection->add_filter(new customfield_filter(
-                            $alias,
-                            $select,
-                            $field,
-                            $field->fullname
-                        ));
+                        $cmfiltercollection->add_filter(
+                            new customfield_filter(
+                                $alias,
+                                $select,
+                                $field,
+                                $field->fullname
+                            )
+                        );
                         break;
                 }
             }
@@ -338,13 +352,15 @@ class activity_completion_data_source extends abstract_data_source {
         $cmfiltercollection->add_filter(new course_condition('c_course', 'c.id'));
 
         // Activity tag condition.
-        $cmfiltercollection->add_filter(new tags_condition(
-            'activity_tags',
-            'cm.id',
-            'core',
-            'course_modules',
-            get_string('activitytags', 'dashaddon_activities')
-        ));
+        $cmfiltercollection->add_filter(
+            new tags_condition(
+                'activity_tags',
+                'cm.id',
+                'core',
+                'course_modules',
+                get_string('activitytags', 'dashaddon_activities')
+            )
+        );
 
         // Course dates condition - past, present, future.
         $cmfiltercollection->add_filter(new course_dates_condition('c_coursedates', 'c.id'));
@@ -362,10 +378,12 @@ class activity_completion_data_source extends abstract_data_source {
         $cmfiltercollection->add_filter(new users_mycohort_condition('users_mycohort', 'u.id'));
 
         // Activity completion status.
-        $cmfiltercollection->add_filter(new activity_completion_status_condition(
-            'activitycompletion_status',
-            'cmc.completionstate'
-        ));
+        $cmfiltercollection->add_filter(
+            new activity_completion_status_condition(
+                'activitycompletion_status',
+                'cmc.completionstate'
+            )
+        );
 
         // Module name condition.
         $cmfiltercollection->add_filter(new activity_modulename_condition('modulename', 'm.id'));
@@ -384,15 +402,64 @@ class activity_completion_data_source extends abstract_data_source {
     /**
      * Set the default preferences of the activity completion datasource, force the set the default settings.
      *
-     * @param array $data
+     * @param  array $data
      * @return array
      */
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
+
+        // Grid/Table and Accordion layout defaults (available_fields visibility).
         $configpreferences['available_fields']['cm_modicon']['visible'] = true;
         $configpreferences['available_fields']['u_firstname']['visible'] = true;
         $configpreferences['available_fields']['cm_name']['visible'] = true;
         $configpreferences['available_fields']['cm_modsection']['visible'] = true;
+
+        // Cards layout defaults.
+        if (empty($configpreferences['headingfield'])) {
+            $configpreferences['headingfield'] = 'cm_name';
+        }
+        if (empty($configpreferences['subheadingfield'])) {
+            $configpreferences['subheadingfield'] = 'u_fullname';
+        }
+        if (empty($configpreferences['bodyfield'])) {
+            $configpreferences['bodyfield'] = 'cm_modcompletionstatus';
+        }
+        if (empty($configpreferences['footerfield'])) {
+            $configpreferences['footerfield'] = 'cm_modsection';
+        }
+
+        // Timeline layout defaults.
+        if (empty($configpreferences['iconfield'])) {
+            $configpreferences['iconfield'] = 'cm_modicon';
+        }
+
+        // One stat layout defaults.
+        if (empty($configpreferences['stat_field_definition'])) {
+            $configpreferences['stat_field_definition'] = 'cm_name';
+        }
+
+        // Accordion layout defaults.
+        if (empty($configpreferences['groupby_field_definition'])) {
+            $configpreferences['groupby_field_definition'] = 'c_fullname';
+        }
+        if (empty($configpreferences['group_label_field_definition'])) {
+            $configpreferences['group_label_field_definition'] = 'c_fullname';
+        }
+
+        // Accordion2 layout defaults (card-based accordion with field mapping).
+        if (empty($configpreferences['field1'])) {
+            $configpreferences['field1'] = 'cm_name';
+        }
+        if (empty($configpreferences['field2'])) {
+            $configpreferences['field2'] = 'u_fullname';
+        }
+        if (empty($configpreferences['field3'])) {
+            $configpreferences['field3'] = 'cm_modcompletionstatus';
+        }
+        if (empty($configpreferences['field4'])) {
+            $configpreferences['field4'] = 'cm_modsection';
+        }
+
         $data['config_preferences'] = $configpreferences;
     }
 

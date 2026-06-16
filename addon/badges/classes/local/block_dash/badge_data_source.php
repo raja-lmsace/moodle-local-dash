@@ -17,9 +17,9 @@
 /**
  * Badges report source defined.
  *
- * @package    dashaddon_badges
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_badges
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_badges\local\block_dash;
@@ -64,7 +64,12 @@ class badge_data_source extends abstract_data_source {
             ->select('bd.courseid', 'courseid')
             ->select('bd.type', 'type')
             ->from('badge', 'bd')
-            ->join('user', 'u', 'id', ':userid1', join::TYPE_LEFT_JOIN, ["userid1" => $USER->id]);
+            ->join('user', 'u', 'id', ':userid1', join::TYPE_LEFT_JOIN, ["userid1" => $USER->id])
+            ->where_raw('bd.status IN (:badgestatus_active, :badgestatus_active_locked)', [
+                'badgestatus_active'        => 1,
+                'badgestatus_active_locked' => 3,
+            ]);
+
         // Any of the conditions or filters enabled then add relevent table queries.
         if ($conditions = $this->get_preferences('filters')) {
             $courseconditions = ['c_course', 'current_course', 'c_course_categories_condition', 'my_enrolled_courses'];
@@ -105,15 +110,59 @@ class badge_data_source extends abstract_data_source {
     /**
      * Set the default preferences of the Badge datasource, force the set the default settings.
      *
-     * @param array $data
+     * @param  array $data
      * @return array
      */
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
+
+        // Grid/Table and Accordion layout defaults (available_fields visibility).
         $configpreferences['available_fields']['bd_name']['visible'] = true;
         $configpreferences['available_fields']['bd_image']['visible'] = true;
         $configpreferences['available_fields']['bd_origin']['visible'] = true;
         $configpreferences['available_fields']['bd_dateissued']['visible'] = true;
+
+        // Cards layout defaults.
+        if (empty($configpreferences['headingfield'])) {
+            $configpreferences['headingfield'] = 'bd_name';
+        }
+        if (empty($configpreferences['subheadingfield'])) {
+            $configpreferences['subheadingfield'] = 'bd_origin';
+        }
+        if (empty($configpreferences['bodyfield'])) {
+            $configpreferences['bodyfield'] = 'bd_dateissued';
+        }
+        if (empty($configpreferences['imageurlfield'])) {
+            $configpreferences['imageurlfield'] = 'bd_imageurl';
+        }
+
+        // One stat layout defaults.
+        if (empty($configpreferences['stat_field_definition'])) {
+            $configpreferences['stat_field_definition'] = 'bd_name';
+        }
+
+        // Accordion layout defaults.
+        if (empty($configpreferences['groupby_field_definition'])) {
+            $configpreferences['groupby_field_definition'] = 'bd_name';
+        }
+        if (empty($configpreferences['group_label_field_definition'])) {
+            $configpreferences['group_label_field_definition'] = 'bd_name';
+        }
+
+        // Accordion2 layout defaults (card-based accordion with field mapping).
+        if (empty($configpreferences['field1'])) {
+            $configpreferences['field1'] = 'bd_name';
+        }
+        if (empty($configpreferences['field2'])) {
+            $configpreferences['field2'] = 'bd_image';
+        }
+        if (empty($configpreferences['field3'])) {
+            $configpreferences['field3'] = 'bd_origin';
+        }
+        if (empty($configpreferences['field4'])) {
+            $configpreferences['field4'] = 'bd_dateissued';
+        }
+
         $data['config_preferences'] = $configpreferences;
     }
 }

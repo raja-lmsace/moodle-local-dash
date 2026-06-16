@@ -23,12 +23,12 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
-$plugin->version   = 2026031000;
-$plugin->requires  = 2022112801;
+$plugin->version   = 2026061600;
+$plugin->requires  = 2024100700;
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release = '2.8';
-$plugin->supported = [401, 500];
+$plugin->supported = [405, 500];
 $plugin->component = 'local_dash';
 $plugin->dependencies = [
-    'block_dash' => 2026031000,
+    'block_dash' => 2026032400,
 ];

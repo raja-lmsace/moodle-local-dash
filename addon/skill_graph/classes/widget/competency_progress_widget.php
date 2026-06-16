@@ -17,9 +17,9 @@
 /**
  * SkillGraph progress widget class contains the layout information and generate the data for widget.
  *
- * @package    dashaddon_skill_graph
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_skill_graph
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_skill_graph\widget;
@@ -167,7 +167,7 @@ class competency_progress_widget extends abstract_widget {
      * Generate the competency frameword tree with competency proficied and grade, name.
      * It converts the normal data to dataset which is used in the chart.
      *
-     * @param int $frameworkid ID of the framework.
+     * @param  int $frameworkid ID of the framework.
      * @return void
      */
     public function generate_competency_framework_tree(int $frameworkid) {
@@ -205,7 +205,7 @@ class competency_progress_widget extends abstract_widget {
     /**
      * Build the competency data with image and color, also includes the childrens list.
      *
-     * @param stdclass $competencies
+     * @param  stdclass $competencies
      * @return array
      */
     protected function build_competency_data($competencies) {
@@ -236,7 +236,7 @@ class competency_progress_widget extends abstract_widget {
     /**
      * Get competency image.
      *
-     * @param int $itemid
+     * @param  int $itemid
      * @return stdClass
      */
     protected function get_background_image($itemid) {
@@ -269,8 +269,8 @@ class competency_progress_widget extends abstract_widget {
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -301,5 +301,18 @@ class competency_progress_widget extends abstract_widget {
         );
 
         return $filtercollection;
+    }
+
+    /**
+     * Hide Fields and Details area tabs — this widget manages its own
+     * fields and has no details area configuration.
+     *
+     * @return array
+     */
+    public function get_preferences_form_tabs(): array {
+        return [
+            \block_dash\local\data_source\form\preferences_form::TAB_GENERAL,
+            \block_dash\local\data_source\form\preferences_form::TAB_CONDITIONS,
+        ];
     }
 }

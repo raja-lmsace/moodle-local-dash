@@ -17,9 +17,9 @@
 /**
  * Common functions.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use dashaddon_developer\model\custom_data_source;
@@ -36,8 +36,7 @@ define('DASHADDON_DEVELOPER_MAIN_ALIAS', 'mnt');
  */
 function dashaddon_developer_register_field_definitions() {
     global $CFG;
-
-    return require("$CFG->dirroot/local/dash/addon/developer/field_definitions.php");
+    return include("$CFG->dirroot/local/dash/addon/developer/field_definitions.php");
 }
 
 /**
@@ -71,6 +70,7 @@ function dashaddon_developer_register_layouts() {
             'identifier' => 'custom_' . $customlayout->get('id'),
             'name' => $customlayout->get('name'),
             'factory' => persistent_layout_factory::class,
+            'type' => $customlayout->get('type'),
         ];
     }
 

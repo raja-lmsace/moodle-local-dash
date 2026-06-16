@@ -17,9 +17,9 @@
 /**
  * Dashaddon calendar events - Data widget helper.
  *
- * @package    dashaddon_calendar_events
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_calendar_events
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_calendar_events;
@@ -90,8 +90,8 @@ class events {
      *
      * This is a static factory method to instantiate the Event class.
      *
-     * @param mixed $data Data associated with the event.
-     * @param object $row Row data from the database.
+     * @param  mixed  $data Data associated with the event.
+     * @param  object $row  Row data from the database.
      * @return Event An instance of the Event class.
      */
     public static function instance($data, $row) {
@@ -101,8 +101,8 @@ class events {
     /**
      * Constructor to initialize the Event object.
      *
-     * @param mixed $data Data associated with the event.
-     * @param object $row Row data from the database.
+     * @param mixed  $data Data associated with the event.
+     * @param object $row  Row data from the database.
      */
     public function __construct($data, $row) {
         global $PAGE, $DB;
@@ -110,22 +110,44 @@ class events {
         $this->data = $data;
         $this->row = $row;
 
+        // Normalise stale courseid: if the event row points to a course that no longer
+        // exists, clear it so downstream code falls back to the "other"/"site" branches
+        // instead of querying a missing {course} record.
+        if (!empty($row->ce_courseid) && !$DB->record_exists('course', ['id' => $row->ce_courseid])) {
+            $row->ce_courseid = 0;
+            $this->row->ce_courseid = 0;
+        }
+
         if (empty(self::$events[$row->ce_id])) {
             $eventvault = event_container::get_event_vault();
+            // Skip events with invalid data that would crash the core calendar exporter:
+            // - timestart = 0:
+            // - courseid = 0 (with a non-site/user event): the course proxy tries to load a missing course.
+            $hasvalidcourse = !empty($row->ce_courseid)
+                || in_array($row->ce_eventtype, ['site', 'user'], true);
 
-            if ($event = $eventvault->get_event_by_id($row->ce_id)) {
-                $cache = new events_related_objects_cache([$event]);
-                $relatedobjects = [
-                    'context' => $cache->get_context($event),
-                    'course' => $cache->get_course($event),
-                ];
-
-                $exporter = new event_exporter($event, $relatedobjects);
-                $renderer = $PAGE->get_renderer('core_calendar');
-
-                self::$events[$row->ce_id] = $exporter->export($renderer);
-
-                $this->event = self::$events[$row->ce_id];
+            if (!empty($row->ce_timestart) && $hasvalidcourse) {
+                try {
+                    if ($event = $eventvault->get_event_by_id($row->ce_id)) {
+                        $cache = new events_related_objects_cache([$event]);
+                        $relatedobjects = [
+                            'context' => $cache->get_context($event),
+                            'course' => $cache->get_course($event),
+                        ];
+                        $exporter = new event_exporter($event, $relatedobjects);
+                        $renderer = $PAGE->get_renderer('core_calendar');
+                        self::$events[$row->ce_id] = $exporter->export($renderer);
+                        $this->event = self::$events[$row->ce_id];
+                    }
+                } catch (\Throwable $e) {
+                    // Safety net: an event record has data the core exporter can't handle.
+                    // Log and continue so the rest of the dashboard still renders.
+                    debugging(
+                        'dashaddon_calendar_events: failed to export event id ' . $row->ce_id . ': ' . $e->getMessage(),
+                        DEBUG_DEVELOPER
+                    );
+                    self::$events[$row->ce_id] = null;
+                }
             }
         } else {
             $this->event = self::$events[$row->ce_id];
@@ -160,8 +182,8 @@ class events {
         } else if ($row->ce_groupid != 0 && !empty($row->ce_groupid)) {
             $type = 'group';
         } else if (
-            $row->ce_courseid && ($this->rowdata->eventtype == 'course' ||
-            ($this->rowdata->modulename && $this->rowdata->instance))
+            $row->ce_courseid && ($this->rowdata->eventtype == 'course'
+            || ($this->rowdata->modulename && $this->rowdata->instance))
         ) {
             $type = 'course';
         } else if ($row->ce_categoryid) {
@@ -231,8 +253,8 @@ class events {
      *
      * Returns the end time of an event by adding the duration to the start date.
      *
-     * @param int $duration Duration of the event in seconds.
-     * @param object $row Data object containing the start date of the event.
+     * @param  int    $duration Duration of the event in seconds.
+     * @param  object $row      Data object containing the start date of the event.
      * @return int|string The end time as a Unix timestamp, or an empty string if no start date is available.
      */
     public function get_endtime($duration, $row) {
@@ -247,13 +269,113 @@ class events {
     }
 
     /**
+     * Get the formatted event date range (start date — end date).
+     *
+     * Omits the end date when it falls on the same calendar day as the start date,
+     * or when the event has no duration.
+     *
+     * @return string
+     */
+    public function get_event_dates() {
+        $start = $this->row->{self::$tablealias . '_startdate'} ?? null;
+        $duration = $this->row->{self::$tablealias . '_duration'} ?? 0;
+
+        if (empty($start)) {
+            return '';
+        }
+
+        $format = get_string('strftimedaydate', 'langconfig');
+        $startstr = userdate((int) $start, $format);
+
+        if ($duration > 0) {
+            $endstr = userdate((int) $start + (int) $duration, $format);
+            if ($endstr !== $startstr) {
+                return $startstr . ' – ' . $endstr;
+            }
+        }
+
+        return $startstr;
+    }
+
+    /**
+     * Get the formatted event time range (start time — end time).
+     *
+     * Omits the end time when it equals the start time or when the event has no duration.
+     *
+     * @return string
+     */
+    public function get_event_times() {
+        $start = $this->row->{self::$tablealias . '_startdate'} ?? null;
+        $duration = $this->row->{self::$tablealias . '_duration'} ?? 0;
+
+        if (empty($start)) {
+            return '';
+        }
+
+        $format = get_string('strftimetime', 'langconfig');
+        $startstr = userdate((int) $start, $format);
+
+        if ($duration > 0) {
+            $endstr = userdate((int) $start + (int) $duration, $format);
+            if ($endstr !== $startstr) {
+                return $startstr . ' – ' . $endstr;
+            }
+        }
+
+        return $startstr;
+    }
+
+    /**
+     * Get the formatted event date/time range, combining {@see get_event_dates}
+     * and {@see get_event_times}.
+     *
+     * Same date and same time -> "date, time".
+     * Same date, different times -> "date, starttime – endtime".
+     * Different dates -> "startdate, starttime – enddate, endtime".
+     *
+     * @return string
+     */
+    public function get_event_datetimes() {
+        $start = $this->row->{self::$tablealias . '_startdate'} ?? null;
+        $duration = $this->row->{self::$tablealias . '_duration'} ?? 0;
+
+        if (empty($start)) {
+            return '';
+        }
+
+        $dateformat = get_string('strftimedaydate', 'langconfig');
+        $timeformat = get_string('strftimetime', 'langconfig');
+
+        $startdatestr = userdate((int) $start, $dateformat);
+        $starttimestr = userdate((int) $start, $timeformat);
+
+        if ($duration > 0) {
+            $end = (int) $start + (int) $duration;
+            $enddatestr = userdate($end, $dateformat);
+            $endtimestr = userdate($end, $timeformat);
+
+            $samedate = ($enddatestr === $startdatestr);
+            $sametime = ($endtimestr === $starttimestr);
+
+            if (!$samedate) {
+                return $startdatestr . ', ' . $starttimestr . ' – ' . $enddatestr . ', ' . $endtimestr;
+            }
+            if (!$sametime) {
+                return $startdatestr . ', ' . $starttimestr . ' – ' . $endtimestr;
+            }
+        }
+
+        return $startdatestr . ', ' . $starttimestr;
+    }
+
+    /**
      * Get the status of an event based on start and duration times.
      *
      * Determines if the event is in the future, present, or past
      * based on its start date and duration, and returns the appropriate status string.
      *
-     * @param object $data Not used in the current implementation.
-     * @param object $row Data object containing the start date and duration of the event.
+     * @param  object $data Not used in the current implementation.
+     * @param  object $row  Data object containing the start date and duration of the event.
      * @return string The status of the event (future, present, or past).
      */
     public function get_status($data, $row) {
@@ -291,8 +413,8 @@ class events {
      * It checks if the event is associated with a specific module and instance,
      * retrieves the course module information, and then returns the URL.
      *
-     * @param array $data Not used in the current implementation.
-     * @param stdClass $row Not used in the current implementation.
+     * @param  array    $data Not used in the current implementation.
+     * @param  stdClass $row  Not used in the current implementation.
      * @return string|null The URL of the course module, or null if no module/instance is found.
      */
     public function get_activity_url($data, $row) {
@@ -302,10 +424,21 @@ class events {
             if (isset($this->event->url)) {
                 $url = $this->event->url;
             } else {
-                if ($DB->record_exists('modules', ['name' => $this->rowdata->modulename, 'visible' => 1])) {
-                    $module = new cm_info_proxy($this->rowdata->modulename, $this->rowdata->instance, $this->rowdata->courseid);
-                    $coursemodule = $module->get_proxied_instance();
-                    $url = $coursemodule->url;
+                // Require a valid courseid before attempting modinfo lookups.
+                $hascourse = !empty($this->rowdata->courseid)
+                    && $DB->record_exists('course', ['id' => $this->rowdata->courseid]);
+                if ($hascourse && $DB->record_exists('modules', ['name' => $this->rowdata->modulename, 'visible' => 1])) {
+                    try {
+                        $module = new cm_info_proxy(
+                            $this->rowdata->modulename,
+                            $this->rowdata->instance,
+                            $this->rowdata->courseid
+                        );
+                        $coursemodule = $module->get_proxied_instance();
+                        $url = $coursemodule->url;
+                    } catch (\Throwable $e) {
+                        $url = '';
+                    }
                 } else {
                     $url = '';
                 }
@@ -324,7 +457,7 @@ class events {
      * and returns the associated name and URL. If $linked is true, it returns both
      * the name and the URL as an array. Otherwise, it returns just the name.
      *
-     * @param bool $linked If true, returns an array with 'url' and 'label', otherwise just the label.
+     * @param  bool $linked If true, returns an array with 'url' and 'label', otherwise just the label.
      * @return string|array The context name or an array with 'url' and 'label' depending on $linked.
      */
     public function get_activity_context($linked = false) {
@@ -337,10 +470,13 @@ class events {
             case "group":
                 // Format the group name and construct the URL to the group page.
                 $contextname = $this->event->groupname ?? format_string($this->rowdata->g_name);
-                $linkurl = new moodle_url('/user/index.php', [
-                        'id' => $this->rowdata->g_courseid,
-                        'group' => $this->rowdata->groupid,
-                    ]);
+                $linkurl = new moodle_url(
+                    '/user/index.php',
+                    [
+                    'id' => $this->rowdata->g_courseid,
+                    'group' => $this->rowdata->groupid,
+                    ]
+                );
                 break;
 
             case "course":
@@ -357,7 +493,7 @@ class events {
             case "category":
                 // Get and format the course category name and construct the URL to the category page.
                 $contextname = $this->event->course->coursecategory ??
-                    \core_course_category::get($this->rowdata->categoryid, MUST_EXIST, true)->get_formatted_name();
+                \core_course_category::get($this->rowdata->categoryid, MUST_EXIST, true)->get_formatted_name();
                 $linkurl = new moodle_url('/course/index.php', ['categoryid' => $this->rowdata->categoryid]);
 
                 break;
@@ -365,7 +501,7 @@ class events {
             case "user":
                 // Build a user object with available user fields and format the user's full name.
                 $user = (object) [
-                    'id' => $this->rowdata->userid,
+                'id' => $this->rowdata->userid,
                 ];
 
                 foreach (\core_user\fields::get_name_fields() as $field) {
@@ -406,8 +542,8 @@ class events {
      * Determines the appropriate icon for a given event type,
      * constructs the necessary data structure for the icon, and returns it.
      *
-     * @param array $data The data related to the event.
-     * @param stdClass $row The row object containing event information.
+     * @param array    $data The data related to the event.
+     * @param stdClass $row  The row object containing event information.
      *
      * @return array An associative array containing the icon key, component, title, and custom URL.
      */
@@ -434,12 +570,23 @@ class events {
                     $alttext = $this->event->icon->alttext;
                 } else {
                     $key = 'monologo';
-                    if ($DB->record_exists('modules', ['name' => $this->rowdata->modulename, 'visible' => 1])) {
-                        $module = new cm_info_proxy($this->rowdata->modulename, $this->rowdata->instance, $this->rowdata->courseid);
-                        $coursemodule = $module->get_proxied_instance();
-                        $component = $coursemodule->modname;
-                        $iconurl = $coursemodule->get_icon_url();
-                        $iconurl = $iconurl->out(false);
+                    $hascourse = !empty($this->rowdata->courseid)
+                        && $DB->record_exists('course', ['id' => $this->rowdata->courseid]);
+                    if ($hascourse && $DB->record_exists('modules', ['name' => $this->rowdata->modulename, 'visible' => 1])) {
+                        try {
+                            $module = new cm_info_proxy(
+                                $this->rowdata->modulename,
+                                $this->rowdata->instance,
+                                $this->rowdata->courseid
+                            );
+                            $coursemodule = $module->get_proxied_instance();
+                            $component = $coursemodule->modname;
+                            $iconurl = $coursemodule->get_icon_url();
+                            $iconurl = $iconurl->out(false);
+                        } catch (\Throwable $e) {
+                            $iconurl = '';
+                            $component = $this->rowdata->modulename;
+                        }
                     } else {
                         $iconurl = '';
                         $component = $this->rowdata->modulename;
@@ -506,8 +653,8 @@ class events {
      * (component, group, course, category, user, etc.) and returns the URL of the image
      * associated with the event.
      *
-     * @param array $data Additional data for the event (not used in this method).
-     * @param stdClass $row Row of data corresponding to the event (not used in this method).
+     * @param array    $data Additional data for the event (not used in this method).
+     * @param stdClass $row  Row of data corresponding to the event (not used in this method).
      *
      * @return string The image URL for the event, or a default calendar image URL if no specific image is found.
      */
@@ -541,7 +688,7 @@ class events {
                 // For the user event, get the user profile image and convert the URL.
                 // Reduct the query, not used the dash "user_image_url_attribute" which runs additional query.
                 $user = (object) [
-                    'id' => $this->rowdata->userid,
+                'id' => $this->rowdata->userid,
                 ];
                 foreach (\core_user\fields::get_picture_fields() as $field) {
                     $user->$field = $this->rowdata->{"u_" . $field} ?? '';
@@ -600,8 +747,8 @@ class events {
      * This method creates a URL for different event types (group, course, course category, user)
      * and returns an array containing the label and the URL.
      *
-     * @param string $data Label text for the link.
-     * @param object $row Not used in the current implementation.
+     * @param  string $data Label text for the link.
+     * @param  object $row  Not used in the current implementation.
      * @return array Associative array containing the 'label' and 'url'.
      */
     public function get_image_link($data, $row) {

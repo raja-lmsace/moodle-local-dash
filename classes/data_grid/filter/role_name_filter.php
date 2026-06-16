@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course completion status
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -32,24 +32,19 @@ use block_dash\local\data_grid\filter\select_filter;
 class role_name_filter extends select_filter {
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
-     *
      */
     public function init() {
         global $DB;
-        $choices = [];
-        $records = $DB->get_records_select_menu('role_assignments', null, null, '', 'id,roleid');
-        foreach ($records as $id => $roleid) {
-            $role = $DB->get_record('role', ['id' => $roleid]);
-            $contextid = $DB->get_field('role_assignments', 'contextid', ['id' => $id]);
-            $context = \context::instance_by_id($contextid, IGNORE_MISSING);
-            if ($context && $DB->record_exists('role_names', ['roleid' => $roleid, 'contextid' => $context->id])) {
-                $this->add_option($roleid, $DB->get_field(
-                    'role_names',
-                    'name',
-                    ['roleid' => $roleid, 'contextid' => $context->id]
-                ));
-            } else {
-                $this->add_option($roleid, role_get_name($role, $context));
+
+        // Only the roles actually used in assignments are worth listing. A site has
+        // a handful of roles, so resolve their names from a single role lookup
+        // instead of iterating every role assignment.
+        $roleids = $DB->get_fieldset_sql('SELECT DISTINCT roleid FROM {role_assignments}');
+        if ($roleids) {
+            $systemcontext = \context_system::instance();
+            $roles = $DB->get_records_list('role', 'id', $roleids);
+            foreach ($roles as $role) {
+                $this->add_option($role->id, role_get_name($role, $systemcontext));
             }
         }
         parent::init();

@@ -227,7 +227,7 @@ class assignment_tags_condition extends condition {
         $mform->addElement('autocomplete', $fieldname . '[tags]', $this->get_label(), $taglist, [
             'multiple' => true,
         ]);
-        $mform->addHelpButton($fieldname . '[tags]', 'assignmenttags', 'dashaddon_learningpath');
+        $mform->addHelpButton($fieldname . '[tags]', 'assignmenttags', 'block_dash');
         $mform->hideIf($fieldname . '[tags]', $fieldname . '[enabled]');
     }
 }

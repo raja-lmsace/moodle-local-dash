@@ -17,9 +17,9 @@
 /**
  * Filters results to specific course completion status
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -32,14 +32,17 @@ use block_dash\local\data_grid\filter\select_filter;
 class context_name_filter extends select_filter {
     /**
      * Initialize the filter. It must be initialized before values are extracted or SQL generated.
-     *
      */
     public function init() {
         global $DB;
 
-        $contextids = $DB->get_records_select_menu('role_assignments', null, null, '', 'id,contextid');
+        // Use the distinct contexts only - role assignments share contexts heavily,
+        // so iterating every assignment repeats the same lookups. Preload the context
+        // records in a single query to avoid one query per context::instance_by_id().
+        $contextids = $DB->get_fieldset_sql('SELECT DISTINCT contextid FROM {role_assignments}');
+        \context_helper::preload_contexts_by_id($contextids);
         $choices = [];
-        foreach ($contextids as $id => $contextid) {
+        foreach ($contextids as $contextid) {
             if ($context = \context::instance_by_id($contextid, IGNORE_MISSING)) {
                 $choices[$contextid] = $context->get_context_name();
             }

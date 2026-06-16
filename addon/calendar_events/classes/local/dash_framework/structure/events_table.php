@@ -17,9 +17,9 @@
 /**
  * dashaddon_calendar_events table.
  *
- * @package    dashaddon_calendar_events
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_calendar_events
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_calendar_events\local\dash_framework\structure;
@@ -72,128 +72,291 @@ class events_table extends table {
 
         $fields = [
 
-            new field('id', new \lang_string('event', 'block_dash'), $this, null, [
+            new field(
+                'id',
+                new \lang_string('event', 'block_dash'),
+                $this,
+                null,
+                [
                 new identifier_attribute(),
-            ]),
+                ]
+            ),
 
             // Name of the event.
             new field('name', new \lang_string('event:title', 'block_dash'), $this),
 
             // Type of events.
-            new field('eventtype', new \lang_string('event:type', 'block_dash'), $this, null, [
+            new field(
+                'eventtype',
+                new \lang_string('event:type', 'block_dash'),
+                $this,
+                null,
+                [
                 new widget_attribute(['callback' => fn($row, $data) => events::instance($data, $row)->event_type_string()]),
-            ]),
+                ]
+            ),
 
             // Context of event.
-            new field('contextevent', new lang_string('event:contextevent', 'block_dash'), $this, 'ce.id', [
+            new field(
+                'contextevent',
+                new lang_string('event:contextevent', 'block_dash'),
+                $this,
+                'ce.id',
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_activity_context()]),
-            ]),
+                ]
+            ),
 
             // Context of event (linked).
-            new field('contextlinked', new lang_string('event:contextlinked', 'block_dash'), $this, 'ce.id', [
+            new field(
+                'contextlinked',
+                new lang_string('event:contextlinked', 'block_dash'),
+                $this,
+                'ce.id',
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_activity_context(true)]),
                 new event_linked_attribute(),
-            ]),
+                ]
+            ),
 
             // Description.
-            new field('description', new \lang_string('event:description', 'block_dash'), $this, 'ce.description', [
+            new field(
+                'description',
+                new \lang_string('event:description', 'block_dash'),
+                $this,
+                'ce.description',
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_description(true)]),
-            ]),
+                ]
+            ),
 
             // Go to activity.
-            new field('gotoactivity', new lang_string('event:gotoactivity', 'block_dash'), $this, 'ce.id', [
-                new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->
-                    get_activity_url($data, $row)]),
+            new field(
+                'gotoactivity',
+                new lang_string('event:gotoactivity', 'block_dash'),
+                $this,
+                'ce.id',
+                [
+                new widget_attribute(
+                    ['callback' => fn($row, $data)=> events::instance($data, $row)->
+                    get_activity_url($data, $row)]
+                ),
                 new link_attribute(['label' => new lang_string('event:gotoactivity', 'block_dash')]),
-            ]),
+                ]
+            ),
 
             // Location.
-            new field('location', new lang_string('event:location', 'block_dash'), $this, null, [
+            new field(
+                'location',
+                new lang_string('event:location', 'block_dash'),
+                $this,
+                null,
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> format_string($data ? ucfirst($data) : $data, false)]),
-            ]),
+                ]
+            ),
 
             // Start date.
-            new field('startdate', new lang_string('event:startdate', 'block_dash'), $this, 'ce.timestart', [
-                new date_attribute([
+            new field(
+                'startdate',
+                new lang_string('event:startdate', 'block_dash'),
+                $this,
+                'ce.timestart',
+                [
+                new date_attribute(
+                    [
                     'format' => get_string('strftimedaydate', 'langconfig'),
-                ]),
-            ]),
+                    ]
+                ),
+                ]
+            ),
 
             // Start time.
-            new field('starttime', new lang_string('event:starttime', 'block_dash'), $this, 'ce.timestart', [
-                new date_attribute([
+            new field(
+                'starttime',
+                new lang_string('event:starttime', 'block_dash'),
+                $this,
+                'ce.timestart',
+                [
+                new date_attribute(
+                    [
                     'format' => get_string('strftimetime', 'langconfig'),
-                ]),
-            ]),
+                    ]
+                ),
+                ]
+            ),
 
             // End date (calculated based upon the duration setting).
-            new field('enddate', new lang_string('event:enddate', 'block_dash'), $this, 'ce.timeduration', [
+            new field(
+                'enddate',
+                new lang_string('event:enddate', 'block_dash'),
+                $this,
+                'ce.timeduration',
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_endtime($data, $row)]),
-                new date_attribute([
+                new date_attribute(
+                    [
                     'format' => get_string('strftimedaydate', 'langconfig'),
-                ]),
-            ]),
+                    ]
+                ),
+                ]
+            ),
 
             // End time (calculated based upon the duration setting).
-            new field('endtime', new lang_string('event:endtime', 'block_dash'), $this, 'ce.timeduration', [
+            new field(
+                'endtime',
+                new lang_string('event:endtime', 'block_dash'),
+                $this,
+                'ce.timeduration',
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_endtime($data, $row)]),
-                new date_attribute([
+                new date_attribute(
+                    [
                     'format' => get_string('strftimetime', 'langconfig'),
-                ]),
-            ]),
+                    ]
+                ),
+                ]
+            ),
+
+            // Event dates (start date – end date, end date omitted when the same day).
+            new field(
+                'dates',
+                new lang_string('event:dates', 'dashaddon_calendar_events'),
+                $this,
+                'ce.timestart',
+                [
+                new widget_attribute(['callback' => fn($row, $data) => events::instance($data, $row)->get_event_dates()]),
+                ]
+            ),
+
+            // Event times (start time – end time, end time omitted when identical).
+            new field(
+                'times',
+                new lang_string('event:times', 'dashaddon_calendar_events'),
+                $this,
+                'ce.timestart',
+                [
+                new widget_attribute(['callback' => fn($row, $data) => events::instance($data, $row)->get_event_times()]),
+                ]
+            ),
+
+            // Event date/times (combined date and time range).
+            new field(
+                'datetimes',
+                new lang_string('event:datetimes', 'dashaddon_calendar_events'),
+                $this,
+                'ce.timestart',
+                [
+                new widget_attribute(['callback' => fn($row, $data) => events::instance($data, $row)->get_event_datetimes()]),
+                ]
+            ),
 
             // Event duration.
-            new field('duration', new lang_string('event:duration', 'block_dash'), $this, 'ce.timeduration', [
+            new field(
+                'duration',
+                new lang_string('event:duration', 'block_dash'),
+                $this,
+                'ce.timeduration',
+                [
                 new duration_attribute(),
-            ]),
+                ]
+            ),
 
             // Event duration in minutes.
-            new field('durationinminutes', new lang_string('event:durationinminutes', 'block_dash'), $this, 'ce.timeduration', [
+            new field(
+                'durationinminutes',
+                new lang_string('event:durationinminutes', 'block_dash'),
+                $this,
+                'ce.timeduration',
+                [
                 new minutes_attribute(),
-            ]),
+                ]
+            ),
 
             // Repeated event.
-            new field('repeated', new lang_string('event:repeated', 'block_dash'), $this, 'ce.repeatid', [
+            new field(
+                'repeated',
+                new lang_string('event:repeated', 'block_dash'),
+                $this,
+                'ce.repeatid',
+                [
                 new bool_attribute(),
-            ]),
+                ]
+            ),
 
             // Status.
-            new field('status', new lang_string('event:status', 'block_dash'), $this, 'ce.id', [
+            new field(
+                'status',
+                new lang_string('event:status', 'block_dash'),
+                $this,
+                'ce.id',
+                [
                 // Todo: Conver the duration in minutes as separate attribute.
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_status($data, $row)]),
-            ]),
+                ]
+            ),
 
             // Event color.
-            new field('color', new lang_string('event:color', 'block_dash'), $this, 'ce.type', [
+            new field(
+                'color',
+                new lang_string('event:color', 'block_dash'),
+                $this,
+                'ce.type',
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->event_type()]),
                 new color_attribute(['prefix' => 'calendar_event_']),
-            ]),
+                ]
+            ),
 
             // Event icon.
-            new field('icon', new lang_string('even:icon', 'block_dash'), $this, 'ce.id', [
+            new field(
+                'icon',
+                new lang_string('even:icon', 'block_dash'),
+                $this,
+                'ce.id',
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_icon($data, $row)]),
                 new event_icon_attribute(),
-            ]),
+                ]
+            ),
 
             // Event image URL for timeline.
-            new field('imageurl', new lang_string('event:imageurl', 'block_dash'), $this, 'ce.id', [
+            new field(
+                'imageurl',
+                new lang_string('event:imageurl', 'block_dash'),
+                $this,
+                'ce.id',
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_image($data, $row)]),
                 new image_url_attribute(),
-            ]),
+                ]
+            ),
 
             // Event image.
-            new field('image', new lang_string('event:image', 'block_dash'), $this, 'ce.id', [
+            new field(
+                'image',
+                new lang_string('event:image', 'block_dash'),
+                $this,
+                'ce.id',
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_image($data, $row)]),
                 new image_attribute(),
-            ]),
+                ]
+            ),
 
             // Event image (linked).
-            new field('imagelinked', new lang_string('event:imagelinked', 'block_dash'), $this, 'ce.id', [
+            new field(
+                'imagelinked',
+                new lang_string('event:imagelinked', 'block_dash'),
+                $this,
+                'ce.id',
+                [
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_image($data, $row)]),
                 new image_attribute(),
                 new widget_attribute(['callback' => fn($row, $data)=> events::instance($data, $row)->get_image_link($data, $row)]),
                 new event_linked_attribute(),
-            ]),
+                ]
+            ),
 
         ];
         return $fields;

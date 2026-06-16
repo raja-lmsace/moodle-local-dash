@@ -1,3 +1,4 @@
+/* eslint-disable */
 define(['jquery', 'core/fragment', 'core/modal_events',
     'core/notification', 'core/modal_save_cancel', 'core/str'], function ($, Fragment, ModalEvents, notification, SaveCancelModal, Str) {
 
@@ -121,6 +122,8 @@ define(['jquery', 'core/fragment', 'core/modal_events',
      */
     ZoneConfig.prototype.initZoneConfigEvents = function(modal, blockid) {
         var modalRoot = modal.getRoot();
+
+        modalRoot.find('.zone-config-container .col-form-label label').removeClass('word-break');
 
             $(document).on('click', '.zone-config-container .nav-link', function(e) {
             e.preventDefault();

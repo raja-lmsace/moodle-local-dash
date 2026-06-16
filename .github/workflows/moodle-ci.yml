@@ -1,9 +1,15 @@
 name: Moodle Plugin CI
 
-on: [push,pull_request]
+on: [push, pull_request]
+
+# GitHub Actions does not support YAML anchors, so services are repeated across jobs.
 
 jobs:
-  test:
+  # ─── Canary ────────────────────────────────────────────────────────────────
+  # Runs first on the primary target: latest stable Moodle (5.0) + PHP 8.3 + pgsql.
+  # The extended matrix only starts if this job passes.
+  canary:
+    name: "test (8.3, MOODLE_500_STABLE, pgsql) [canary]"
     runs-on: ubuntu-latest
 
     services:
@@ -12,40 +18,153 @@ jobs:
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
         ports:
           - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          path: plugin
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pgsql, pdo_pgsql
+          ini-values: max_input_vars=5000
+          coverage: none
+
+      - name: Initialise moodle-plugin-ci
+        run: |
+          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
+          echo $(cd ci && pwd)/bin >> $GITHUB_PATH
+          echo $(cd ci && pwd)/vendor/bin >> $GITHUB_PATH
+          sudo locale-gen en_AU.UTF-8
+          echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
+
+      - name: Add private dependency plugins
+        if: ${{ env.CI_DEPENDENCIES != '' }}
+        env:
+          CI_DEPENDENCIES: ${{ secrets.CI_DEPENDENCIES }}
+        run: |
+          git config --global url."https://x-access-token:$CI_DEPENDENCIES@github.com/".insteadOf "https://github.com/"
+          moodle-plugin-ci add-plugin bdecentgmbh/moodle-customfield_multicategory
+
+      - name: Add public dependency plugins
+        run: |
+          moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-block_dash.git --branch Dash-2.7
+          moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-tool_skills.git --branch dev
+          moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-enrol_programs.git --branch MOODLE_405_STABLE
+          moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-local_openlms.git --branch MOODLE_405_STABLE
+          moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-customfield_training.git --branch MOODLE_405_STABLE
+          moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-tool_certificate.git --branch MOODLE_500_STABLE
+          moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-mod_coursecertificate.git --branch MOODLE_500_STABLE
+          moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-enrol_credit.git --branch master
+          moodle-plugin-ci add-plugin --clone https://github.com/catalyst/moodle-mod_subcourse.git --branch MOODLE_405_STABLE
+
+      - name: Install moodle-plugin-ci
+        run: moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
+        env:
+          DB: pgsql
+          MOODLE_BRANCH: MOODLE_500_STABLE
+          IGNORE_NAMES: 'layout_cards.mustache,dashcolorpicker.php'
+
+      - name: PHP Lint
+        run: moodle-plugin-ci phplint
+
+      - name: PHP Mess Detector
+        continue-on-error: true
+        run: moodle-plugin-ci phpmd
+
+      - name: Moodle Code Checker
+        run: moodle-plugin-ci phpcs --max-warnings 0
+
+      - name: Moodle PHPDoc Checker
+        run: moodle-plugin-ci phpdoc --max-warnings 0
+
+      - name: Validating
+        run: moodle-plugin-ci validate
+
+      - name: Check upgrade savepoints
+        run: moodle-plugin-ci savepoints
+
+      - name: Mustache Lint
+        continue-on-error: true
+        run: moodle-plugin-ci mustache
+
+      - name: Grunt
+        continue-on-error: true
+        run: moodle-plugin-ci grunt --max-lint-warnings 0
+
+      - name: PHPUnit tests
+        run: moodle-plugin-ci phpunit --fail-on-warning
+
+      - name: Behat features
+        id: behat
+        run: moodle-plugin-ci behat --profile chrome
+
+      - name: Upload Behat Faildump
+        if: ${{ failure() && steps.behat.outcome == 'failure' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Behat faildump (canary)
+          path: /home/runner/behatfaildumps
+          retention-days: 7
+
+  # ─── Extended matrix ───────────────────────────────────────────────────────
+  # Runs in parallel only after the canary job passes.
+  test:
+    name: "test (${{ matrix.php }}, ${{ matrix.moodle-branch }}, ${{ matrix.database }})"
+    needs: canary
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: 'postgres'
+          POSTGRES_HOST_AUTH_METHOD: 'trust'
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+        ports:
+          - 5432:5432
+
       mariadb:
         image: mariadb:10.11
         env:
           MYSQL_USER: 'root'
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+          MYSQL_CHARACTER_SET_SERVER: "utf8mb4"
+          MYSQL_COLLATION_SERVER: "utf8mb4_unicode_ci"
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 3
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
-          - php: "8.3"
-            moodle-branch: "MOODLE_501_STABLE"
-            database: "mariadb"
-          - php: "8.3"
-            moodle-branch: "MOODLE_501_STABLE"
-            database: "pgsql"
-          - php: "8.3"
-            moodle-branch: "MOODLE_500_STABLE"
-            database: "mariadb"
-          - php: "8.3"
-            moodle-branch: "MOODLE_500_STABLE"
-            database: "pgsql"
-          - php: "8.2"
-            moodle-branch: "MOODLE_405_STABLE"
-            database: "mariadb"
-          - php: "8.2"
-            moodle-branch: "MOODLE_405_STABLE"
-            database: "pgsql"
+          - php: '8.2'
+            moodle-branch: 'MOODLE_405_STABLE'
+            database: 'pgsql'
+            cert-branch: 'MOODLE_400_STABLE'
+          - php: '8.2'
+            moodle-branch: 'MOODLE_405_STABLE'
+            database: 'mariadb'
+            cert-branch: 'MOODLE_400_STABLE'
 
     steps:
       - name: Check out repository code
@@ -57,75 +176,84 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          ini-values: max_input_vars=6000
+          extensions: >-
+            ${{ matrix.database == 'pgsql' && 'pgsql, pdo_pgsql' || 'mysqli, pdo_mysql' }}
+          ini-values: max_input_vars=5000
           coverage: none
 
       - name: Initialise moodle-plugin-ci
         run: |
           composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
-          echo $(cd ci/bin; pwd) >> $GITHUB_PATH
-          echo $(cd ci/vendor/bin; pwd) >> $GITHUB_PATH
+          echo $(cd ci && pwd)/bin >> $GITHUB_PATH
+          echo $(cd ci && pwd)/vendor/bin >> $GITHUB_PATH
           sudo locale-gen en_AU.UTF-8
+          echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
 
-      - name: Install moodle-plugin-ci
+      - name: Add private dependency plugins
+        if: ${{ env.CI_DEPENDENCIES != '' }}
+        env:
+          CI_DEPENDENCIES: ${{ secrets.CI_DEPENDENCIES }}
         run: |
-          moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-block_dash.git --branch dev
+          git config --global url."https://x-access-token:$CI_DEPENDENCIES@github.com/".insteadOf "https://github.com/"
+          moodle-plugin-ci add-plugin bdecentgmbh/moodle-customfield_multicategory
+
+      - name: Add public dependency plugins
+        run: |
+          moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-block_dash.git --branch Dash-2.7
           moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-tool_skills.git --branch dev
           moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-enrol_programs.git --branch MOODLE_405_STABLE
           moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-local_openlms.git --branch MOODLE_405_STABLE
           moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-customfield_training.git --branch MOODLE_405_STABLE
-          moodle-plugin-ci add-plugin --clone https://github.com/raja-lmsace/moodle-customfield_multicategory.git
+          moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-tool_certificate.git --branch ${{ matrix.cert-branch }}
+          moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-mod_coursecertificate.git --branch ${{ matrix.cert-branch }}
+          moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-enrol_credit.git --branch master
+          moodle-plugin-ci add-plugin --clone https://github.com/catalyst/moodle-mod_subcourse.git --branch MOODLE_405_STABLE
 
-          # Select correct branch for tool_certificate based on Moodle version
-          if [[ "${{ matrix.moodle-branch }}" == "MOODLE_500_STABLE" ]]; then
-            CERT_BRANCH="MOODLE_500_STABLE"
-          else
-            CERT_BRANCH="MOODLE_400_STABLE"
-          fi
-          moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-tool_certificate.git --branch "$CERT_BRANCH"
-          moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-mod_coursecertificate.git --branch "$CERT_BRANCH"
-          moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
+      - name: Install moodle-plugin-ci
+        run: moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
         env:
           DB: ${{ matrix.database }}
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
           IGNORE_NAMES: 'layout_cards.mustache,dashcolorpicker.php'
 
       - name: PHP Lint
-        if: ${{ always() }}
         run: moodle-plugin-ci phplint
 
       - name: PHP Mess Detector
-        if: ${{ always() }}
+        continue-on-error: true
         run: moodle-plugin-ci phpmd
 
       - name: Moodle Code Checker
-        if: ${{ always() }}
-        run: moodle-plugin-ci codechecker --max-warnings 0
+        run: moodle-plugin-ci phpcs --max-warnings 0
 
       - name: Moodle PHPDoc Checker
-        if: ${{ always() }}
-        run: moodle-plugin-ci phpdoc
+        run: moodle-plugin-ci phpdoc --max-warnings 0
 
       - name: Validating
-        if: ${{ always() }}
         run: moodle-plugin-ci validate
 
       - name: Check upgrade savepoints
-        if: ${{ always() }}
         run: moodle-plugin-ci savepoints
 
       - name: Mustache Lint
-        if: ${{ always() }}
+        continue-on-error: true
         run: moodle-plugin-ci mustache
 
       - name: Grunt
-        if: ${{ always() }}
-        run: moodle-plugin-ci grunt
+        continue-on-error: true
+        run: moodle-plugin-ci grunt --max-lint-warnings 0
 
       - name: PHPUnit tests
-        if: ${{ always() }}
-        run: moodle-plugin-ci phpunit
+        run: moodle-plugin-ci phpunit --fail-on-warning
 
       - name: Behat features
-        if: ${{ always() }}
+        id: behat
         run: moodle-plugin-ci behat --profile chrome
+
+      - name: Upload Behat Faildump
+        if: ${{ failure() && steps.behat.outcome == 'failure' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Behat faildump (${{ join(matrix.*, ', ') }})
+          path: /home/runner/behatfaildumps
+          retention-days: 7

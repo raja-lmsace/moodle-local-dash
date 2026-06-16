@@ -17,9 +17,9 @@
 /**
  * Enrolments widget class contains the layout information and generate the data for widget.
  *
- * @package    dashaddon_course_enrols
- * @copyright  2022 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_course_enrols
+ * @copyright 2022 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_course_enrols\widget;
@@ -43,6 +43,7 @@ use dashaddon_course_enrols\info;
 class enrolments_widget extends abstract_widget {
     /**
      * Enrolment sort method.
+     *
      * @var string
      */
     protected $enrolmentsort;
@@ -174,6 +175,7 @@ class enrolments_widget extends abstract_widget {
 
     /**
      * Get table pagination class.
+     *
      * @return paginator
      */
     public function widget_data_count() {
@@ -195,7 +197,7 @@ class enrolments_widget extends abstract_widget {
     /**
      * Get potential courses for enrol the user.
      *
-     * @param int $enrolled
+     * @param  int $enrolled
      * @return array $enrolcourses
      */
     public function get_available_courses_for_enrol($enrolled) {
@@ -252,7 +254,7 @@ class enrolments_widget extends abstract_widget {
                 }
             }
 
-            if ($filter->get_name() == 'c_status') {
+            if ($filter->get_name() == 'c_status' && $filter->should_initialise()) {
                 [$insql, $inparams] = $filter->get_sql_and_params();
                 $categorysql .= ($insql) ? " AND $insql " : '';
                 $params += $inparams;
@@ -290,8 +292,8 @@ class enrolments_widget extends abstract_widget {
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -405,5 +407,20 @@ class enrolments_widget extends abstract_widget {
         $filtercollection->add_filter(new sort_status_filter('c_sort', 'ue.sort', get_string('sort')));
 
         return $filtercollection;
+    }
+
+    /**
+     * Hide Fields and Details area tabs — this widget manages its own
+     * fields and has no details area configuration.
+     *
+     * @return array
+     */
+    public function get_preferences_form_tabs(): array {
+        return [
+            \block_dash\local\data_source\form\preferences_form::TAB_GENERAL,
+            \block_dash\local\data_source\form\preferences_form::TAB_FIELDS,
+            \block_dash\local\data_source\form\preferences_form::TAB_FILTERS,
+            \block_dash\local\data_source\form\preferences_form::TAB_CONDITIONS,
+        ];
     }
 }

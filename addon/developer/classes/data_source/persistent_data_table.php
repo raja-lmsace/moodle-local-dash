@@ -17,9 +17,9 @@
 /**
  * Class persistent_data_table.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_developer\data_source;
@@ -85,7 +85,7 @@ class persistent_data_table extends table {
     /**
      * Set the title for the field.
      *
-     * @param string $title
+     * @param  string $title
      * @return void
      */
     public function set_title(string $title) {
@@ -94,14 +94,21 @@ class persistent_data_table extends table {
 
     /**
      * Define the fields available in the reports for this table data source.
+     *
      * @return field_interface[]
      */
     public function get_fields(): array {
 
         $fields = [
-            new field('id', new lang_string('developerfieldid', 'block_dash'), $this, null, [
+            new field(
+                'id',
+                new lang_string('developerfieldid', 'block_dash'),
+                $this,
+                null,
+                [
                 new identifier_attribute(),
-            ]),
+                ]
+            ),
         ];
 
         // Field repeats.

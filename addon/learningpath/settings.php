@@ -17,9 +17,9 @@
 /**
  * Learning path widget administration settings.
  *
- * @package    dashaddon_learningpath
- * @copyright  2025 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_learningpath
+ * @copyright 2025 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -51,7 +51,7 @@ if ($hassiteconfig) {
         'dashaddon_learningpath/supported_zone_elements',
         get_string('supported_zone_elements', 'block_dash'),
         get_string('supported_zone_elements_desc', 'block_dash'),
-        'circle,rect,polygon,ellipse,g',
+        'circle,rect,polygon,ellipse,g,path,mask',
         PARAM_TEXT
     ));
 

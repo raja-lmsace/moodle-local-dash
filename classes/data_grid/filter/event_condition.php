@@ -17,9 +17,9 @@
 /**
  * Filters results to current course only.
  *
- * @package    local_dash
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -71,19 +71,18 @@ class event_condition extends condition {
     /**
      * Add form fields for this filter (and any settings related to this filter.)
      *
-     * @param moodleform $moodleform
+     * @param moodleform      $moodleform
      * @param MoodleQuickForm $mform
-     * @param string $fieldnameformat
+     * @param string          $fieldnameformat
      */
     public function build_settings_form_fields(
         moodleform $moodleform,
         MoodleQuickForm $mform,
         $fieldnameformat = 'filters[%s]'
     ): void {
-
         global $CFG;
 
-        require_once("$CFG->dirroot/report/eventlist/classes/list_generator.php");
+        include_once("$CFG->dirroot/report/eventlist/classes/list_generator.php");
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
 
@@ -96,10 +95,16 @@ class event_condition extends condition {
             $options[$event['eventname']] = $event['raweventname'];
         }
 
-        $mform->addElement('autocomplete', $fieldname . '[eventnames]', get_string('events', 'block_dash'), $options, [
+        $mform->addElement(
+            'autocomplete',
+            $fieldname . '[eventnames]',
+            get_string('events', 'block_dash'),
+            $options,
+            [
             'multiple' => true,
             'noselectionstring' => get_string('events', 'block_dash'),
-        ]);
+            ]
+        );
         $mform->hideIf($fieldname . '[eventnames]', $fieldname . '[enabled]');
     }
 }

@@ -15,7 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Boostrap accordian layout for course format.
+ * Backward-compatible wrapper — delegates to block_dash.
+ *
  * @package    local_dash
  * @copyright  2019 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -23,116 +24,8 @@
 
 namespace local_dash\layout;
 
-use block_dash\local\data_grid\data\data_collection_interface;
-use block_dash\local\data_grid\data\strategy\data_strategy_interface;
-use block_dash\local\data_grid\data\strategy\grouped_strategy;
-use block_dash\local\data_grid\data\strategy\standard_strategy;
-use block_dash\local\data_grid\field\attribute\identifier_attribute;
-use block_dash\local\data_grid\field\field_definition_factory;
-use block_dash\local\data_source\form\preferences_form;
-use block_dash\local\layout\abstract_layout;
 /**
- * Boostrap accordian layout for course format.
+ * Thin wrapper that extends the block_dash accordion layout for backward compatibility.
  */
-class accordion_layout extends abstract_layout {
-    /**
-     * Get layout template filename.
-     * @return string
-     */
-    public function get_mustache_template_name() {
-        return 'local_dash/layout_accordion';
-    }
-
-    /**
-     * If the template should display pagination links.
-     *
-     * @return bool
-     */
-    public function supports_pagination() {
-        return false;
-    }
-
-    /**
-     * If the template fields can be hidden or shown conditionally.
-     *
-     * @return bool
-     */
-    public function supports_field_visibility() {
-        return true;
-    }
-
-    /**
-     * If the template should display filters (does not affect conditions).
-     *
-     * @return bool
-     */
-    public function supports_filtering() {
-        return true;
-    }
-
-    /**
-     * Add form elements to the preferences form when a user is configuring a block.
-     *
-     * This extends the form built by the data source. When a user chooses a layout, specific form elements may be
-     * displayed after a quick refresh of the form.
-     *
-     * Be sure to call parent::build_preferences_form() if you override this method.
-     *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
-     * @throws \coding_exception
-     */
-    public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
-        if ($form->get_tab() == preferences_form::TAB_FIELDS) {
-            $groupbyfields = [];
-            $grouplabelfields = [];
-            foreach ($this->get_data_source()->get_available_fields() as $key => $fielddefinition) {
-                // Add secondary identifiers as choices to group results by. There's no point in grouping by the first
-                // identifier, there would be no effect.
-                if ($fielddefinition->has_attribute(identifier_attribute::class)) {
-                    $groupbyfields[] = $fielddefinition;
-                } else {
-                    $grouplabelfields[] = $fielddefinition;
-                }
-            }
-
-            $mform->addElement(
-                'select',
-                'config_preferences[groupby_field_definition]',
-                get_string('groupby', 'block_dash'),
-                field_definition_factory::get_field_definition_options($groupbyfields)
-            );
-
-            $mform->addElement(
-                'select',
-                'config_preferences[group_label_field_definition]',
-                get_string('grouplabel', 'block_dash'),
-                field_definition_factory::get_field_definition_options($grouplabelfields)
-            );
-        }
-
-        parent::build_preferences_form($form, $mform);
-    }
-
-    /**
-     * Get data filter conditions.z
-     * @return data_strategy_interface
-     */
-    public function get_data_strategy() {
-        if (!$groupbyfield = $this->get_data_source()->get_preferences('groupby_field_definition')) {
-            return null;
-        }
-        if (!$groupbyfielddefinition = $this->get_data_source()->get_field($groupbyfield)) {
-            return null;
-        }
-
-        if (!$grouplabelfield = $this->get_data_source()->get_preferences('group_label_field_definition')) {
-            return null;
-        }
-        if (!$grouplabelfielddefinition = $this->get_data_source()->get_field($grouplabelfield)) {
-            return null;
-        }
-
-        return new grouped_strategy($groupbyfielddefinition, $grouplabelfielddefinition);
-    }
+class accordion_layout extends \block_dash\local\layout\accordion_layout {
 }

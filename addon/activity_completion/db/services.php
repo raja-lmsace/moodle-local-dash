@@ -17,8 +17,8 @@
 /**
  * Activity completion plugin external functions and service definitions.
  *
- * @package dashaddon_activity_completion
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
+ * @package   dashaddon_activity_completion
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -16,9 +16,10 @@
 
 /**
  * Enrolment method based table filter.
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -36,7 +37,7 @@ class enrollment_method_field_filter extends select_filter {
     public function init() {
         global $CFG;
 
-        require_once("$CFG->dirroot/course/lib.php");
+        include_once("$CFG->dirroot/course/lib.php");
 
         $plugins = enrol_get_plugins(true);
 
@@ -49,6 +50,7 @@ class enrollment_method_field_filter extends select_filter {
 
     /**
      * Get the enrolment field filter label.
+     *
      * @return string
      */
     public function get_label() {

@@ -17,14 +17,15 @@
 /**
  * Form for editing block preferences.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_developer\layout\form;
 
 use core\form\persistent as persisten_form;
+use dashaddon_developer\layout\vars;
 use dashaddon_developer\model\custom_layout;
 
 defined('MOODLE_INTERNAL') || die();
@@ -35,9 +36,9 @@ require_once($CFG->dirroot . '/cohort/lib.php');
 /**
  * Form for editing block preferences.
  *
- * @package    dashaddon_developer
- * @copyright  2020 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_developer
+ * @copyright 2020 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class custom_layout_form extends persisten_form {
     /**
@@ -102,10 +103,51 @@ class custom_layout_form extends persisten_form {
         $mform->setType('supports_sorting', PARAM_INT);
         $mform->addHelpButton('supports_sorting', 'supportssorting', 'block_dash');
 
+        $typeoptions = [
+            'block' => get_string('customlayouttypeblock', 'block_dash'),
+            'detailsarea' => get_string('customlayouttypedetailsarea', 'block_dash'),
+            'both' => get_string('customlayouttypeboth', 'block_dash'),
+        ];
+        $mform->addElement('select', 'type', get_string('customlayouttype', 'block_dash'), $typeoptions);
+        $mform->setType('type', PARAM_ALPHA);
+        $mform->setDefault('type', 'block');
+        $mform->addHelpButton('type', 'customlayouttype', 'block_dash');
+
         $mform->addElement('textarea', 'mustache_template', get_string('mustachetemplate', 'block_dash'));
         $mform->setType('mustache_template', PARAM_RAW);
         $mform->addRule('mustache_template', get_string('required'), 'required');
+        $mform->addElement('html', $this->render_template_vars());
 
         $this->add_action_buttons();
+    }
+
+    /**
+     *  Placeholders for templates.
+     *
+     * @return string
+     */
+    protected function render_template_vars() {
+        global $OUTPUT;
+
+        $groups = [];
+
+        foreach (vars::get_vars() as $key => $placeholders) {
+            $groups[] = [
+                'key' => strtolower($key),
+                'name' => get_string($key . '_vars', 'block_dash'),
+                'vars' => array_values($placeholders),
+                'showmore' => count($placeholders) > 10 ? get_string('showmore', 'block_dash') : '',
+            ];
+        }
+
+        $context = [
+            'editor' => 'mustache-template',
+            'title' => get_string('templatevars', 'block_dash'),
+            'pretext' => '{{',
+            'posttext' => '}}',
+            'groups' => $groups,
+        ];
+
+        return $OUTPUT->render_from_template('dashaddon_developer/vars', $context);
     }
 }

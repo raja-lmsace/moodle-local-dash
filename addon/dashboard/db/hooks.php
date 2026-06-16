@@ -33,8 +33,8 @@ if (empty($DB)) {
 $dbman = $DB->get_manager();
 
 if (
-    $dbman->table_exists('dashaddon_dashboard_dash') &&
-    $dbman->field_exists('dashaddon_dashboard_dash', 'redirecttodashboard')
+    $dbman->table_exists('dashaddon_dashboard_dash')
+    && $dbman->field_exists('dashaddon_dashboard_dash', 'redirecttodashboard')
 ) {
     $callbacks = [
         [

@@ -1,5 +1,5 @@
-define(['jquery', 'core/modal_factory', 'core/modal_events', 'core/fragment', 'core/templates', 'core/str', 'core/ajax', 'core/notification', 'block_dash/dash_instance'],
-    function ($, Modal, ModalEvents, Fragment, Templates, Str, Ajax, Notification) {
+define(['jquery', 'core/modal', 'core/modal_save_cancel', 'core/modal_cancel', 'core/modal_events', 'core/fragment', 'core/templates', 'core/str', 'core/ajax', 'core/notification', 'block_dash/dash_instance'],
+    function ($, Modal, ModalSaveCancel, ModalCancel, ModalEvents, Fragment, Templates, Str, Ajax, Notification) {
 
         var contextid = null;
 
@@ -139,11 +139,11 @@ define(['jquery', 'core/modal_factory', 'core/modal_events', 'core/fragment', 'c
 
             const container = this.getStatusContainer(link);
             // var params = {widget: 'course_enrols', method: template, args: args};
-            Modal.create({
+            ModalSaveCancel.create({
                 title: Str.get_string('edituserenrolment', 'block_dash', container.dataset.fullname),
-                type: Modal.types.SAVE_CANCEL,
                 body: '',
                 large: true,
+                removeOnClose: true,
             }).then(modal => {
                 this.modal = modal;
 
@@ -195,11 +195,11 @@ define(['jquery', 'core/modal_factory', 'core/modal_events', 'core/fragment', 'c
                 ...container.dataset,
             };
 
-            Modal.create({
+            ModalCancel.create({
                 large: true,
-                type: Modal.types.CANCEL,
                 title: Str.get_string('enroldetails', 'block_dash'),
                 body: Templates.render('dashaddon_course_enrols/status_details', context),
+                removeOnClose: true,
             })
                 .then(modal => {
 
@@ -224,8 +224,8 @@ define(['jquery', 'core/modal_factory', 'core/modal_events', 'core/fragment', 'c
             const container = this.getStatusContainer(link);
             const userEnrolmentId = link.getAttribute('rel');
 
-            Modal.create({
-                type: Modal.types.SAVE_CANCEL,
+            ModalSaveCancel.create({
+                removeOnClose: true,
             })
                 .then(modal => {
                     // Handle confirm event.

@@ -28,17 +28,24 @@ global $CFG;
 require_once($CFG->dirroot . '/blocks/dash/lib.php');
 
 if (get_config('dashaddon_developer', 'enabled') && !(in_array('developer', block_dash_disabled_addons_list()))) {
-    $ADMIN->add('localdashsettings', new admin_externalpage(
+    $ADMIN->add('localdashsettings', new admin_category(
+        'dashaddon_developer',
+        get_string('pluginname', 'dashaddon_developer')
+    ));
+
+    $ADMIN->add('dashaddon_developer', new admin_externalpage(
         'localdashmanagedatasources',
         get_string('managedatasources', 'block_dash'),
         new moodle_url('/local/dash/datasources.php'),
         'dashaddon/developer:managecustomdatasources'
     ));
 
-    $ADMIN->add('localdashsettings', new admin_externalpage(
+    $ADMIN->add('dashaddon_developer', new admin_externalpage(
         'localdashmanagelayouts',
         get_string('managelayouts', 'block_dash'),
         new moodle_url('/local/dash/addon/developer/customlayouts.php'),
         'dashaddon/developer:managecustomlayouts'
     ));
 }
+
+$page = null;

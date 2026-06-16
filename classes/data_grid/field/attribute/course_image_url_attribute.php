@@ -16,9 +16,10 @@
 
 /**
  * Generate the course image url from the fetched record
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\field\attribute;
@@ -31,21 +32,22 @@ use moodle_url;
  *
  * @package local_dash
  */
-class course_image_url_attribute extends abstract_field_attribute {
+class course_image_url_attribute extends abstract_field_attribute
+{
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
      *
-     * @param \stdClass $data
-     * @param \stdClass $record Entire row
+     * @param  \stdClass $data
+     * @param  \stdClass $record Entire row
      * @return mixed
      * @throws \moodle_exception
      */
     public function transform_data($data, \stdClass $record) {
         global $DB, $CFG;
 
-        require_once("$CFG->dirroot/course/lib.php");
-        require_once("$CFG->dirroot/blocks/dash/lib.php");
+        include_once("$CFG->dirroot/course/lib.php");
+        include_once("$CFG->dirroot/blocks/dash/lib.php");
         if ($course = $DB->get_record('course', ['id' => $data])) {
             if (block_dash_is_totara()) {
                 $image = course_get_image($course->id)->out();

@@ -17,9 +17,9 @@
 /**
  * Dash addon skill graph widget form to setup color and image of competencies.
  *
- * @package    dashaddon_skill_graph
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_skill_graph
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace dashaddon_skill_graph;
 
@@ -230,7 +230,7 @@ class competencyform extends \core_form\dynamic_form {
     /**
      * Editor form element options.
      *
-     * @param context $context
+     * @param  context $context
      * @return array
      */
     protected function get_editor_options($context = null) {

@@ -17,9 +17,9 @@
 /**
  * Convert a duration in seconds into a human-readable format (days, hours, and minutes).
  *
- * @package    local_dash
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\field\attribute;
@@ -39,12 +39,11 @@ class duration_attribute extends abstract_field_attribute {
      * Takes a duration in seconds and converts it to a string format showing the
      * number of days, hours, and minutes.
      *
-     * @param mixed $data The duration in seconds.
-     * @param \stdClass $record The record object.
+     * @param  mixed     $data   The duration in seconds.
+     * @param  \stdClass $record The record object.
      * @return string|null The formatted duration as a human-readable string, or null if the duration is invalid.
      */
     public function transform_data($data, \stdClass $record) {
-
         if (is_numeric($data) && $data > 0) {
             // Define the number of seconds in a minute, hour, and day.
             $secondsinaminute = 60;

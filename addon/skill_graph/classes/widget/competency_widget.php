@@ -17,9 +17,9 @@
 /**
  * SkillGraph widget class contains the layout information and generate the data for widget.
  *
- * @package    dashaddon_skill_graph
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_skill_graph
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_skill_graph\widget;
@@ -208,7 +208,7 @@ class competency_widget extends abstract_widget {
      * Generate the competency frameword tree with competency proficied and grade, name.
      * It converts the normal data to dataset which is used in the chart.
      *
-     * @param int $frameworkid ID of the framework.
+     * @param  int $frameworkid ID of the framework.
      * @return void
      */
     public function generate_competency_framework_tree(int $frameworkid) {
@@ -232,8 +232,8 @@ class competency_widget extends abstract_widget {
     /**
      * Get the top level competencies and its child competencies. child levels are fetched upto the self::COMPETENCY_DEPTH.
      *
-     * @param array $data Record of the competency tree.
-     * @param int $level Level depth of competency tree.
+     * @param  array $data  Record of the competency tree.
+     * @param  int   $level Level depth of competency tree.
      * @return void
      */
     protected function get_top_level_competencies($data, $level = 0) {
@@ -257,9 +257,12 @@ class competency_widget extends abstract_widget {
                 $rangearr = array_combine(array_keys($rangearr), array_fill(0, count($rangearr), 0));
                 $updateddataset = array_replace($rangearr, $value['data']);
                 // Increase the data to setup the content.
-                array_walk($updateddataset, function (&$value) use ($count) {
-                    $value = $value * $count;
-                });
+                array_walk(
+                    $updateddataset,
+                    function (&$value) use ($count) {
+                        $value = $value * $count;
+                    }
+                );
                 $count = $count + 3;
                 $this->dataset[$key]['data'] = $updateddataset;
 
@@ -276,9 +279,9 @@ class competency_widget extends abstract_widget {
      * Generate the data which is used for chart like bgcolor, proficient status and more.
      * Insert the child dataset to the dataset global varaible upto the depth.
      *
-     * @param array $data Framework children tree with data.
-     * @param int $level Depth of the child.
-     * @param int $row It represets the index number of its parent in the dataset array.
+     * @param  array $data  Framework children tree with data.
+     * @param  int   $level Depth of the child.
+     * @param  int   $row   It represets the index number of its parent in the dataset array.
      * @return void
      */
     protected function insert_child_dataset($data, $level, $row) {
@@ -317,7 +320,7 @@ class competency_widget extends abstract_widget {
     /**
      * Competency colors based the user proficiency and grade values.
      *
-     * @param stdclass $competency competency data.
+     * @param  stdclass $competency competency data.
      * @return string
      */
     protected function competency_colors($competency) {
@@ -339,7 +342,7 @@ class competency_widget extends abstract_widget {
     /**
      * Merge the results of the competency into chart dataset.
      *
-     * @param array $data
+     * @param  array $data
      * @return void
      */
     protected function update_results_todata(&$data) {
@@ -361,7 +364,7 @@ class competency_widget extends abstract_widget {
     /**
      * Generate the competency proficient and grade levels from multiple courses the competency are added.
      *
-     * @param array $results
+     * @param  array $results
      * @return void
      */
     protected function generate_competency_data($results) {
@@ -392,11 +395,11 @@ class competency_widget extends abstract_widget {
     /**
      * Build the competency data from the record set.
      *
-     * @param stdclass $competencies
+     * @param  stdclass $competencies
      * @return void
      */
     protected function build_competency_data($competencies) {
-
+        $data = [];
         foreach ($competencies as $key => $value) {
             $competency = $value->competency;
             // Create seperate list of competencies and courses which is related to the user.
@@ -416,7 +419,7 @@ class competency_widget extends abstract_widget {
     /**
      * Find the users result in the given competency.
      *
-     * @param stdclass $competency
+     * @param  stdclass $competency
      * @return void
      */
     protected function find_user_competency_result($competency) {
@@ -437,8 +440,8 @@ class competency_widget extends abstract_widget {
     /**
      * Prefence form for widget. We make the fields disable other than the general.
      *
-     * @param \moodleform $form
-     * @param \MoodleQuickForm $mform
+     * @param  \moodleform      $form
+     * @param  \MoodleQuickForm $mform
      * @return void
      */
     public function build_preferences_form(\moodleform $form, \MoodleQuickForm $mform) {
@@ -469,5 +472,18 @@ class competency_widget extends abstract_widget {
         );
 
         return $filtercollection;
+    }
+
+    /**
+     * Hide Fields and Details area tabs � this widget manages its own
+     * fields and has no details area configuration.
+     *
+     * @return array
+     */
+    public function get_preferences_form_tabs(): array {
+        return [
+            \block_dash\local\data_source\form\preferences_form::TAB_GENERAL,
+            \block_dash\local\data_source\form\preferences_form::TAB_CONDITIONS,
+        ];
     }
 }

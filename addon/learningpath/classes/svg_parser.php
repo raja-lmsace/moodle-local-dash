@@ -107,12 +107,27 @@ class svg_parser {
     private static function get_all_nodes_in_order($element) {
         $nodes = [];
 
-        // Add current element if it's an element node.
-        if ($element->nodeType === XML_ELEMENT_NODE) {
-            $nodes[] = $element;
+        if ($element->nodeType !== XML_ELEMENT_NODE) {
+            return $nodes;
         }
 
-        // Traverse children.
+        $tagname = strtolower($element->nodeName);
+
+        $nonrendered = [
+            'defs',
+            'mask',
+            'clippath',
+            'pattern',
+            'symbol',
+            'marker',
+        ];
+        if (in_array($tagname, $nonrendered)) {
+            $nodes[] = $element;
+            return $nodes;
+        }
+
+        $nodes[] = $element;
+
         if ($element->hasChildNodes()) {
             foreach ($element->childNodes as $child) {
                 if ($child->nodeType === XML_ELEMENT_NODE) {
@@ -132,7 +147,7 @@ class svg_parser {
     public static function get_supported_elements() {
         $config = get_config('dashaddon_learningpath', 'supported_zone_elements');
         if (empty($config)) {
-            $config = 'circle,rect,polygon,ellipse,g';
+            $config = 'circle, rect, polygon, ellipse, g, path, mask';
         }
         return array_map('trim', explode(',', $config));
     }
@@ -149,6 +164,8 @@ class svg_parser {
             'polygon' => get_string('zone_type_polygon', 'block_dash'),
             'ellipse' => get_string('zone_type_ellipse', 'block_dash'),
             'g' => get_string('zone_type_group', 'block_dash'),
+            'path' => get_string('zone_type_path', 'block_dash'),
+            'mask' => get_string('zone_type_mask', 'block_dash'),
         ];
         return isset($names[$type]) ? $names[$type] : ucfirst($type);
     }
@@ -198,11 +215,24 @@ class svg_parser {
                 $points = $element->getAttribute('points');
                 $position = self::calculate_polygon_center($points);
                 break;
+            case 'path':
+                $d = $element->getAttribute('d');
+                $position = self::calculate_path_center($d);
+                break;
             case 'g':
-                // For groups, try to find a representative position.
                 $bbox = self::calculate_group_bbox($element);
                 $position['x'] = $bbox['x'] + ($bbox['width'] / 2);
                 $position['y'] = $bbox['y'] + ($bbox['height'] / 2);
+                break;
+            case 'mask':
+                $mx = $element->getAttribute('x');
+                $my = $element->getAttribute('y');
+                $mw = $element->getAttribute('width');
+                $mh = $element->getAttribute('height');
+                if (is_numeric($mx) && is_numeric($my) && is_numeric($mw) && is_numeric($mh)) {
+                    $position['x'] = (float)$mx + ((float)$mw / 2);
+                    $position['y'] = (float)$my + ((float)$mh / 2);
+                }
                 break;
         }
 
@@ -224,6 +254,34 @@ class svg_parser {
             if (isset($coords[$i + 1])) {
                 $x += (float)$coords[$i];
                 $y += (float)$coords[$i + 1];
+                $count++;
+            }
+        }
+
+        return [
+            'x' => $count > 0 ? $x / $count : 0,
+            'y' => $count > 0 ? $y / $count : 0,
+        ];
+    }
+
+    /**
+     * Calculate approximate center of a path element by averaging all coordinate pairs.
+     *
+     * @param string $d SVG path d attribute value
+     * @return array
+     */
+    private static function calculate_path_center($d) {
+        // Remove all path command letters, leaving only numbers and delimiters.
+        $stripped = preg_replace('/[MmZzLlHhVvCcSsQqTtAa]/', ' ', $d);
+        $tokens = preg_split('/[\s,]+/', trim($stripped), -1, PREG_SPLIT_NO_EMPTY);
+
+        $x = 0;
+        $y = 0;
+        $count = 0;
+        for ($i = 0; $i + 1 < count($tokens); $i += 2) {
+            if (is_numeric($tokens[$i]) && is_numeric($tokens[$i + 1])) {
+                $x += (float)$tokens[$i];
+                $y += (float)$tokens[$i + 1];
                 $count++;
             }
         }

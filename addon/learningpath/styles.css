@@ -593,6 +593,8 @@
     padding-top: 20px;
 }
 .zone-position.dash-learning-path .svg-block svg {
+    width: 100%;
+    height: 100%;
     overflow: visible;
 }
 
@@ -1348,4 +1350,13 @@
     .learningpath-course-completion .completion-details {
         padding: 15px;
     }
+}
+
+.modal .modal-body .zone-config-form .zone-config-container .tab-pane .svg-container .svg-wrapper svg {
+    width: 100%;
+    height: 100%;
+}
+.modal .modal-body .zone-config-form .zone-config-container .zone-item > div > strong {
+    min-width: 50px;
+    display: inline-block;
 }

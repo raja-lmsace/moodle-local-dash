@@ -16,9 +16,10 @@
 
 /**
  * Displays preconfigured dashboards.
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require(__DIR__ . '/../../config.php');
@@ -42,8 +43,8 @@ require_capability('local/dash:managedatasources', $context);
 echo $OUTPUT->header();
 
 if (
-    array_key_exists('developer', core_component::get_plugin_list('dashaddon')) &&
-    has_capability('dashaddon/developer:managecustomdatasources', \context_system::instance())
+    array_key_exists('developer', core_component::get_plugin_list('dashaddon'))
+    && has_capability('dashaddon/developer:managecustomdatasources', \context_system::instance())
 ) {
     echo $OUTPUT->single_button(
         new moodle_url('/local/dash/addon/developer/customdatasource.php', ['action' => 'create']),

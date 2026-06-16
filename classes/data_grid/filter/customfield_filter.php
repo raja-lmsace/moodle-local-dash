@@ -17,9 +17,9 @@
 /**
  * Course custom fields based filter to filter the records.
  *
- * @package    local_dash
- * @copyright  2019 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_dash
+ * @copyright 2019 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace local_dash\data_grid\filter;
@@ -37,10 +37,11 @@ class customfield_filter extends select_filter {
 
     /**
      * Contructor
-     * @param string $name
-     * @param string $select
+     *
+     * @param string                                       $name
+     * @param string                                       $select
      * @param \core_customfield\field_controller|\stdClass $field
-     * @param string $label
+     * @param string                                       $label
      */
     public function __construct($name, $select, $field, $label = '') {
         $this->field = $field;
@@ -70,14 +71,19 @@ class customfield_filter extends select_filter {
         if ($this->field instanceof \stdClass && dashaddon_activities_is_local_metadata_installed()) {
             $params['fieldid'] = $this->field->id;
             $metafield = $DB->get_record('local_metadata_field', ['id' => $this->field->id]);
-            $options = $DB->get_records_sql_menu("SELECT cd.data AS key1, cd.data AS key2 FROM {local_metadata} cd
+            $options = $DB->get_records_sql_menu(
+                "SELECT cd.data AS key1, cd.data AS key2 FROM {local_metadata} cd
                                               WHERE cd.fieldid = :fieldid
-                                              GROUP BY cd.data", $params);
+                                              GROUP BY cd.data",
+                $params
+            );
             if ($metafield->datatype == 'menu') {
-                $selectoptions = explode("\n", $metafield->param1);
-                foreach ($options as $key => $option) {
-                    if (in_array($option, $selectoptions)) {
-                        $this->add_option($key, format_string($option));
+                // Iterate over the configured options so the filter list keeps the order
+                // defined in the field, only adding options that are actually used by a record.
+                $selectoptions = array_map('trim', explode("\n", $metafield->param1));
+                foreach ($selectoptions as $option) {
+                    if (isset($options[$option])) {
+                        $this->add_option($options[$option], format_string($option));
                     }
                 }
             } else {
@@ -88,9 +94,12 @@ class customfield_filter extends select_filter {
         } else if (class_exists('\core_course\customfield\course_handler')) {
             $params['fieldid'] = $this->field->get('id');
 
-            $options = $DB->get_records_sql_menu("SELECT cd.value AS key1, cd.value AS key2 FROM {customfield_data} cd
+            $options = $DB->get_records_sql_menu(
+                "SELECT cd.value AS key1, cd.value AS key2 FROM {customfield_data} cd
                                               WHERE cd.fieldid = :fieldid
-                                              GROUP BY cd.value", $params);
+                                              GROUP BY cd.value",
+                $params
+            );
             if ($this->field instanceof \customfield_select\field_controller) {
                 if (method_exists($this->field, 'get_options')) {
                     // Moodle 3.10 and up.
@@ -99,9 +108,11 @@ class customfield_filter extends select_filter {
                     // Moodle 3.9 and earlier.
                     $selectoptions = \customfield_select\field_controller::get_options_array($this->field);
                 }
-                foreach ($options as $key => $option) {
-                    if (isset($selectoptions[$option])) {
-                        $this->add_option($key, format_string($selectoptions[$option]));
+                // Iterate over the configured options so the filter list keeps the order
+                // defined in the custom field, only adding options that are actually used by a course.
+                foreach ($selectoptions as $key => $option) {
+                    if (isset($options[$key])) {
+                        $this->add_option($key, format_string($option));
                     }
                 }
             } else {

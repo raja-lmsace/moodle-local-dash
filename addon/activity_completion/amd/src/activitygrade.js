@@ -20,8 +20,8 @@
  * @copyright  2023 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', "core/fragment", "core/modal_factory", "core/modal_events", "core/notification", "core/str", 'core/ajax'],
-    (function ($, Fragment, ModalFactory, ModalEvents, notification, String, Ajax) {
+define(['jquery', "core/fragment", "core/modal_save_cancel", "core/modal_events", "core/notification", "core/str", 'core/ajax'],
+    (function ($, Fragment, ModalSaveCancel, ModalEvents, notification, String, Ajax) {
 
         const SELECTORS = {
             dashBlock: '.block[data-block="dash"]',
@@ -65,11 +65,11 @@ define(['jquery', "core/fragment", "core/modal_factory", "core/modal_events", "c
                             gradeitemid: e.target.getAttribute("data-gradeitemid"),
                         };
 
-                        ModalFactory.create({
-                            type: ModalFactory.types.SAVE_CANCEL,
+                        ModalSaveCancel.create({
                             title: String.get_string('activitygrade', 'dashaddon_activity_completion'),
                             body: self.getgradebodycontent(params),
-                            large: false
+                            large: false,
+                            removeOnClose: true,
                         })
                             .then(function (modal) {
                                 modal.show();

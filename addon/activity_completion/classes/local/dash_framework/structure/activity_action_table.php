@@ -17,9 +17,9 @@
 /**
  * Activity action table.
  *
- * @package    dashaddon_activity_completion
- * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_activity_completion
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_activity_completion\local\dash_framework\structure;
@@ -64,18 +64,39 @@ class activity_action_table extends table {
         global $PAGE;
         $fields = [
 
-            new field('button', new lang_string('activitybutton', 'block_dash'), $this, 'cmc.id', [
+            new field(
+                'button',
+                new lang_string('activitybutton', 'block_dash'),
+                $this,
+                'cmc.id',
+                [
                 new activity_url_attribute(['mod' => 'cm_modulename', 'cmid' => 'cm_id']),
                 new button_attribute(['label' => new lang_string('viewactivity', 'block_dash'), 'aria-label' => 'cm_name']),
-            ], ['supports_sorting' => false]),
+                ],
+                ['supports_sorting' => false]
+            ),
 
-            new field('toggle', new lang_string('activityoverride', 'dashaddon_activity_completion'), $this, 'cmc.id', [
+            new field(
+                'toggle',
+                new lang_string('activityoverride', 'dashaddon_activity_completion'),
+                $this,
+                'cmc.id',
+                [
                 new activity_completion_toggle_attribute(),
-            ], ['supports_sorting' => false]),
+                ],
+                ['supports_sorting' => false]
+            ),
 
-            new field('grade', new lang_string('activitygrade', 'dashaddon_activity_completion'), $this, 'cm.id', [
+            new field(
+                'grade',
+                new lang_string('activitygrade', 'dashaddon_activity_completion'),
+                $this,
+                'cm.id',
+                [
                 new activity_grade_attribute(),
-            ], ['supports_sorting' => false]),
+                ],
+                ['supports_sorting' => false]
+            ),
 
         ];
         return $fields;

@@ -17,9 +17,9 @@
 /**
  * Event linked attribute - Dash attribute to link the data of calendar events in the view.
  *
- * @package    dashaddon_calendar_events
- * @copyright  2024 bdecent gmbh <https://bdecent.de>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dashaddon_calendar_events
+ * @copyright 2024 bdecent gmbh <https://bdecent.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace dashaddon_calendar_events\local\block_dash\data_grid\field\attribute;
@@ -35,8 +35,8 @@ class event_linked_attribute extends linked_data_attribute {
      * Transform the label in data to linked element using the URL from options add to this attribute.
      * Label field may contains data in any format like image tag or plain strings.
      *
-     * @param array $data [url => Link URL , label => Data/Image to link]
-     * @param stdClass $record
+     * @param  array    $data   [url => Link URL , label => Data/Image to link]
+     * @param  stdClass $record
      * @return string
      */
     public function transform_data($data, stdClass $record) {
