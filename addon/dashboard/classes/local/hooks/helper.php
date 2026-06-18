@@ -52,8 +52,12 @@ class helper {
         if (method_exists(\core\hook\manager::class, 'get_cache')) {
             $cache = $this->get_cache();
 
-            $callbacks = $cache['callbacks'] ?? null;
-            $deprecations = $cache['deprecations'] ?? null;
+            if (empty($cache['callbacks'])) {
+                return true;
+            }
+
+            $callbacks = $cache['callbacks'];
+            $deprecations = $cache['deprecations'] ?? [];
             $hash = $cache['overrideshash'] ?? null;
 
             clearstatcache(true, $this->get_cache_path());

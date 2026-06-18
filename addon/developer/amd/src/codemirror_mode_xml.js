@@ -355,12 +355,13 @@
                             tagName: null, tagStart: null,
                             context: null
                         }
-                        if (baseIndent != null) { state.baseIndent = baseIndent
-                            return state
-                        }
+                        if (baseIndent != null) { state.baseIndent = baseIndent }
+                        return state
                     },
 
                     token: function (stream, state) {
+                        if (!state.tokenize) { state.tokenize = inText; }
+                        if (typeof state.state !== "function") { state.state = baseState; }
                         if (!state.tagName && stream.sol()) {
                             state.indented = stream.indentation();
                         }
@@ -380,9 +381,10 @@
                     },
 
                     indent: function (state, textAfter, fullLine) {
+                        if (!state) { return CodeMirror.Pass; }
                         var context = state.context;
                         // Indent multi-line strings (e.g. css).
-                        if (state.tokenize.isInAttribute) {
+                        if (state.tokenize && state.tokenize.isInAttribute) {
                             if (state.tagStart == state.indented) {
                                 return state.stringStartCol + 1;
                             } else {

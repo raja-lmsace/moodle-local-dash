@@ -33,6 +33,8 @@ use block_dash\local\data_grid\field\attribute\abstract_field_attribute;
  */
 class role_description_attribute extends abstract_field_attribute
 {
+    use role_cache;
+
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -43,8 +45,10 @@ class role_description_attribute extends abstract_field_attribute
      * @throws \moodle_exception
      */
     public function transform_data($data, \stdClass $record) {
-        global $DB;
-        $role = $DB->get_record('role', ['id' => $data]);
+        $role = self::get_role((int) $data);
+        if (!$role) {
+            return '';
+        }
         return role_get_description($role);
     }
 }

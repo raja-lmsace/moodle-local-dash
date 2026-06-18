@@ -51,6 +51,11 @@ class custom_layout extends persistent {
             'name' => [
                 'type' => PARAM_TEXT,
             ],
+            'type' => [
+                'type' => PARAM_ALPHA,
+                'null' => NULL_NOT_ALLOWED,
+                'default' => 'block',
+            ],
             'mustache_template' => [
                 'type' => PARAM_RAW,
                 'null' => NULL_NOT_ALLOWED,

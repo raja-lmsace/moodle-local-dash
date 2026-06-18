@@ -24,5 +24,11 @@
 
 $string['datasource:events_data_source'] = 'Calendar events';
 $string['datasource:events_data_source_help'] = 'List of user calendar event details.';
+$string['event:dates'] = 'Event dates';
+$string['event:datetimes'] = 'Event date/times';
+$string['event:times'] = 'Event times';
 $string['pluginname'] = 'Data source: Calendar events';
+$string['scope'] = 'Scope';
+$string['scope:currentcourse'] = 'Current course';
+$string['scope:subcourses'] = 'Subcourses of current course';
 $string['tablealias_ce'] = 'Events';

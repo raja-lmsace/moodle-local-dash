@@ -243,15 +243,18 @@ class enrolments_widget extends abstract_widget {
                 $filter->get_name() == 'c_course_categories_condition'
                 && $filter->get_preferences('enabled') && $filter->get_preferences()
             ) {
-                $categories = $filter->get_values();
-                if (!$filter->get_preferences()['enabled'] || empty($categories)) {
+                if (!$filter->get_preferences()['enabled']) {
                     continue;
                 }
-                [$insql, $params] = $DB->get_in_or_equal($categories, SQL_PARAMS_NAMED, 'ctx');
-                $categorysql = "AND c.category $insql";
+
+                [$sql, $sqlparams] = $filter->get_sql_and_params();
+                if (!empty($sql)) {
+                    $categorysql = "AND ($sql)";
+                    $params = $sqlparams;
+                }
             }
 
-            if ($filter->get_name() == 'c_status') {
+            if ($filter->get_name() == 'c_status' && $filter->should_initialise()) {
                 [$insql, $inparams] = $filter->get_sql_and_params();
                 $categorysql .= ($insql) ? " AND $insql " : '';
                 $params += $inparams;
@@ -404,5 +407,20 @@ class enrolments_widget extends abstract_widget {
         $filtercollection->add_filter(new sort_status_filter('c_sort', 'ue.sort', get_string('sort')));
 
         return $filtercollection;
+    }
+
+    /**
+     * Hide Fields and Details area tabs — this widget manages its own
+     * fields and has no details area configuration.
+     *
+     * @return array
+     */
+    public function get_preferences_form_tabs(): array {
+        return [
+            \block_dash\local\data_source\form\preferences_form::TAB_GENERAL,
+            \block_dash\local\data_source\form\preferences_form::TAB_FIELDS,
+            \block_dash\local\data_source\form\preferences_form::TAB_FILTERS,
+            \block_dash\local\data_source\form\preferences_form::TAB_CONDITIONS,
+        ];
     }
 }

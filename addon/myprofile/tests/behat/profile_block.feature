@@ -47,23 +47,23 @@ Feature: User profile with stats
     And I create skill with the following fields to these values:
         | Skill name       | Beginner |
         | Key              | beginner |
-        | Number of levels | 2        |
-        | Base level name    | beginner |
-        | Base level point   | 10       |
-        | Level #1 name    | Level 1  |
-        | Level #1 point   | 20       |
-        | Level #2 name    | Level 2  |
-        | Level #2 point   | 30       |
+        | Number of levels | 3        |
+        | Level #1 name    | beginner |
+        | Level #1 point   | 10       |
+        | Level #2 name    | Level 1  |
+        | Level #2 point   | 20       |
+        | Level #3 name    | Level 2  |
+        | Level #3 point   | 30       |
     And I create skill with the following fields to these values:
         | Skill name       | Competence |
         | Key              | competence |
-        | Number of levels | 2          |
-        | Base level name    | beginner   |
-        | Base level point   | 10         |
-        | Level #1 name    | Level 1    |
-        | Level #1 point   | 20         |
-        | Level #2 name    | Level 2    |
-        | Level #2 point   | 30         |
+        | Number of levels | 3          |
+        | Level #1 name    | beginner |
+        | Level #1 point   | 10       |
+        | Level #2 name    | Level 1  |
+        | Level #2 point   | 20       |
+        | Level #3 name    | Level 2  |
+        | Level #3 point   | 30       |
     And I log out
 
   @javascript
@@ -72,7 +72,7 @@ Feature: User profile with stats
     And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I add the "Dash" block
-    And I click on "My profile" "radio"
+    And I create dash "My profile" datasource
     And I configure the "New Dash" block
     And I set the following fields to these values:
       | Block title | My profile |
@@ -149,8 +149,7 @@ Feature: User profile with stats
     Given I log in as "admin"
     And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
-    And I add the "Dash" block
-    And I click on "My profile" "radio"
+    And I create dash "My profile" datasource
     And I click on "Reset Dashboard for all users" "button"
     And I log out
     And I log in as "student1"
@@ -194,6 +193,8 @@ Feature: User profile with stats
     And I wait until "Done" "button" exists
     And I am on the "student1" "user > profile" page
     Then I should see "Earned: 45"
+    And I trigger cron
+    And I am on homepage
     And I follow "Dashboard"
     And I reload the page
     And I should see "45" in the ".dashboard-stats-block .dashboard-earnedskillpoints-stats p b" "css_element"
@@ -216,8 +217,7 @@ Feature: User profile with stats
     Given I log in as "admin"
     And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
-    And I add the "Dash" block
-    And I click on "My profile" "radio"
+    And I create dash "My profile" datasource
     And I click on "Reset Dashboard for all users" "button"
     And I log out
     And I log in as "student1"

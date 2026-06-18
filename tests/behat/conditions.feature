@@ -107,13 +107,15 @@ Feature: Add conditions to the datasource in dash block
     And I wait until the page is ready
     And I click on "#action-menu-toggle-0" "css_element"
     And I click on "Preferences" "link" in the "New Dash" "block"
-    And I wait "3" seconds
-    Then I click on "Fields" "link" in the "Edit preferences" "dialogue"
+    And I wait until the page is ready
+    # Sort direction has moved from the Fields tab to the Layout tab
+    Then I click on "Layout" "link" in the "Edit preferences" "dialogue"
+    And I set the field "Sort direction" to "DESC"
+    Then I click on "Fields" "link"
     And I click on "#id_config_preferences_available_fields_c_shortname_visible" "css_element"
     And I click on "#id_config_preferences_available_fields_c_fullname_visible" "css_element"
     And I click on "#id_config_preferences_available_fields_c_startdate_visible" "css_element"
     And I click on "#id_config_preferences_available_fields_c_status_visible" "css_element"
-    And I set the field "Sort direction" to "DESC"
     Then I click on "Conditions" "link"
     And I set the field "config_preferences[filters][c_coursedates][enabled]" to "1"
     And I set the field "id_config_preferences_filters_c_coursedates_coursedates" to "<Conditionvalue>"
@@ -133,7 +135,6 @@ Feature: Add conditions to the datasource in dash block
       | should not         | should not          | should           | Past                  |
 
   Scenario: Filter the courses list based on course start and end dates
-
     Given the following "courses" exist:
       | fullname       | shortname | category | startdate          | enddate              |
       | Course Past    | CD1       | CAT4     | ##1 year ago##     | ##1 month ago##      |
@@ -147,12 +148,14 @@ Feature: Add conditions to the datasource in dash block
     And I wait until the page is ready
     And I click on "#action-menu-toggle-0" "css_element"
     And I click on "Preferences" "link" in the "New Dash" "block"
+    # Sort direction has moved from the Fields tab to the Layout tab
+    And I click on "Layout" "link"
+    And I set the field "Sort direction" to "DESC"
     And I click on "Fields" "link"
     And I click on "#id_config_preferences_available_fields_c_shortname_visible" "css_element"
     And I click on "#id_config_preferences_available_fields_c_fullname_visible" "css_element"
     And I click on "#id_config_preferences_available_fields_c_startdate_visible" "css_element"
     And I click on "#id_config_preferences_available_fields_c_status_visible" "css_element"
-    And I set the field "Sort direction" to "DESC"
     Then I click on "Conditions" "link"
     And I set the field "config_preferences[filters][c_course_categories_condition][enabled]" to "1"
     And I set the field "id_config_preferences_filters_c_course_categories_condition_coursecategories" to "Category 4"

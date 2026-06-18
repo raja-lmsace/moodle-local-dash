@@ -332,6 +332,14 @@ class course_table extends table {
                         break;
                 }
 
+                $manager = \core_plugin_manager::instance();
+                $plugin = $manager->get_plugin_info('customfield_multicategory');
+                if ($plugin && $plugin->get_status() !== \core_plugin_manager::PLUGIN_STATUS_MISSING) {
+                    if ($field->get('type') === 'multicategory') {
+                        $attributes[] = new \customfield_multicategory\multicategory_attribute();
+                    }
+                }
+
                 $fields[] = new field(
                     $name,
                     new lang_string('customfield', 'block_dash', ['name' => format_string($field->get('name'))]),

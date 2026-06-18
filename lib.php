@@ -22,14 +22,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_dash\layout\accordion_layout;
-use local_dash\layout\accordion_layout2;
-use local_dash\layout\one_stat_layout;
-use local_dash\layout\timeline_layout;
-use local_dash\layout\two_stat_layout;
-use local_dash\layout\cards_layout;
 use local_dash\data_grid\filter\course_customfield_condition;
 
+
+/**
+ * Check if the customfield_multicategory plugin is installed.
+ *
+ * @return bool
+ */
+function local_dash_is_multicategory_installed() {
+    return array_key_exists('multicategory', core_component::get_plugin_list('customfield'));
+}
 
 /**
  * Register field definitions used in the layouts.
@@ -52,32 +55,10 @@ function local_dash_register_field_definitions() {
  * @return array List of layouts.
  */
 function local_dash_register_layouts() {
-    return [
-        [
-            'name' => get_string('layoutcards', 'block_dash'),
-            'identifier' => cards_layout::class,
-        ],
-        [
-            'name' => get_string('layoutaccordion', 'block_dash'),
-            'identifier' => accordion_layout::class,
-        ],
-        [
-            'name' => get_string('layoutaccordion2', 'block_dash'),
-            'identifier' => accordion_layout2::class,
-        ],
-        [
-            'name' => get_string('layoutonestat', 'block_dash'),
-            'identifier' => one_stat_layout::class,
-        ],
-        [
-            'name' => get_string('layouttwostat', 'block_dash'),
-            'identifier' => two_stat_layout::class,
-        ],
-        [
-            'name' => get_string('layouttimeline', 'block_dash'),
-            'identifier' => timeline_layout::class,
-        ],
-    ];
+    // Layouts have been moved to block_dash. This function returns an empty array
+    // to avoid duplicate registration. The local_dash layout classes are now thin
+    // wrappers that extend the block_dash versions for backward compatibility.
+    return [];
 }
 
 /**
@@ -155,16 +136,18 @@ function local_dash_extend_settings_navigation($settingsnav, $context) {
     if ($PAGE->pagetype == 'my-index' && array_key_exists('dashboard', core_component::get_plugin_list('dashaddon'))) {
         require_once($CFG->dirroot . "/local/dash/addon/dashboard/lib.php");
         $dashboard = $DB->get_record('dashaddon_dashboard_dash', ['shortname' => 'coredashboard']);
-        $dashbgimage = dashaddon_dashboard_get_dashboard_background($dashboard->id);
-        if ($dashbgimage) {
-            // Course background image style css content.
-            $style = "body {
-                        background-image: url('" . $dashbgimage . "');
-                        background-size: cover;
-                        background-repeat: no-repeat;
-                        background-position: center;
-                    }";
-            $CFG->additionalhtmltopofbody = html_writer::tag('style', $style);
+        if (isset($dashboard->id)) {
+            $dashbgimage = dashaddon_dashboard_get_dashboard_background($dashboard->id);
+            if ($dashbgimage) {
+                // Course background image style css content.
+                $style = "body {
+                            background-image: url('" . $dashbgimage . "');
+                            background-size: cover;
+                            background-repeat: no-repeat;
+                            background-position: center;
+                        }";
+                $CFG->additionalhtmltopofbody = html_writer::tag('style', $style);
+            }
         }
     }
 

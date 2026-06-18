@@ -159,5 +159,41 @@ function xmldb_dashaddon_developer_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024042500, 'dashaddon', 'developer');
     }
 
+    if ($oldversion < 2026020602) {
+        // Define field type to be added to dashaddon_developer_layout.
+        $table = new xmldb_table('dashaddon_developer_layout');
+        $field = new xmldb_field('type', XMLDB_TYPE_CHAR, '30', null, XMLDB_NOTNULL, null, 'block', 'name');
+
+        // Conditionally launch add field type.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Developer savepoint reached.
+        upgrade_plugin_savepoint(true, 2026020602, 'dashaddon', 'developer');
+    }
+
+    if ($oldversion < 2026032100) {
+        // Convert double-brace {{get_value}} to triple-brace {{{get_value}}} in
+        // all custom layout templates so that HTML fields (e.g. details button,
+        // details link) render correctly instead of being escaped.
+        $layouts = $DB->get_records('dashaddon_developer_layout');
+        foreach ($layouts as $layout) {
+            if (strpos($layout->mustache_template, '{{get_value}}') !== false) {
+                $updated = str_replace('{{get_value}}', '{{{get_value}}}', $layout->mustache_template);
+                $DB->set_field('dashaddon_developer_layout', 'mustache_template', $updated, ['id' => $layout->id]);
+            }
+        }
+
+        // Purge cached wrapped templates so they get regenerated with updated content.
+        $cachedir = $CFG->localcachedir . '/block_dash/templates';
+        if (is_dir($cachedir)) {
+            remove_dir($cachedir);
+        }
+
+        // Developer savepoint reached.
+        upgrade_plugin_savepoint(true, 2026032100, 'dashaddon', 'developer');
+    }
+
     return true;
 }

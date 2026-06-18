@@ -101,6 +101,7 @@ function dashaddon_learningpath_output_fragment_course_details_area($args) {
     $template = [];
     $template['coursename'] = format_string($course->fullname);
     $template['summary'] = $course->summary;
+    $template['hassummary'] = !empty(trim(strip_tags($course->summary)));
     $template['courseurl'] = new moodle_url('/course/view.php', ['id' => $course->id]);
     $template['courseimg'] = dashaddon_learningpath_courseimage($course->id);
     $template += dashaddon_learningpath_generate_completion_stats($course->id, $USER->id);
@@ -268,8 +269,10 @@ function dashaddon_learningpath_format_assignment_data($override) {
         $startdate = $usercourseenrollinfo[0]['timestart'] ?? 0;
         $enddate = $usercourseenrollinfo[0]['timeend'] ?? 0;
         $coursduedate = $timemanagement->get_user_course_due_date($startdate, $enddate, $USER->id);
-        $assignment['duedate'] = userdate($coursduedate, get_string('strftimedatefullshort', 'core_langconfig'));
-        $assignment['duedatetimestamp'] = $coursduedate;
+        if (!empty($coursduedate) && is_numeric($coursduedate)) {
+            $assignment['duedate'] = userdate($coursduedate, get_string('strftimedatefullshort', 'core_langconfig'));
+            $assignment['duedatetimestamp'] = $coursduedate;
+        }
     }
 
     // Assignment end date.
@@ -371,18 +374,15 @@ function dashaddon_learningpath_generate_completion_stats($courseid, $userid) {
 
             // Self enrol plugin (may be null if not installed).
             $selfplugin = enrol_get_plugin('self');
-
             foreach ($instances as $instance) {
                 // Self enrolment: use can_self_enrol() to respect dates, limits, keys, etc.
                 if ($instance->enrol === 'self' && $selfplugin) {
                     $result = $selfplugin->can_self_enrol($instance); // No $userid here.
-
                     // Only treat it as available if it *really* returns boolean true.
                     if ($result === true) {
                         $canselfenrol = true;
                     }
                 }
-
                 // Guest access: enabled guest enrol instance.
                 if ($instance->enrol === 'guest' && $instance->status == ENROL_INSTANCE_ENABLED) {
                     $guestaccess = true;

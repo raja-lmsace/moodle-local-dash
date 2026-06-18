@@ -162,7 +162,7 @@ class custom_data_source_form extends persistent_form {
                 'text',
                 'tablejoinsalias',
                 get_string('tablejoinsalias', 'block_dash'),
-                ['placeholder' => 'table AS alias (course AS c)', 'size' => 40]
+                ['size' => 40]
             ),
 
             $mform->createElement(
@@ -190,6 +190,7 @@ class custom_data_source_form extends persistent_form {
                 'type' => PARAM_ALPHANUMEXT,
                 'hideif' => ['enablejoins', 'notchecked'],
                 'disabledif' => ['enablejoins', 'notchecked'],
+                'helpbutton' => ['tablejoinsalias', 'block_dash', '', true],
             ],
             'tablejoinon' => [
                 'type' => PARAM_NOTAGS,
@@ -667,13 +668,14 @@ class custom_data_source_form extends persistent_form {
     }
 
     /**
-     * Create field attribute and value elements for the cloned field based on the counts of exising attributes
-     * in the submitted data.
+     * Create field attribute and value elements for the cloned field based on the counts of
+     * exising attributes in the submitted data.
      *
      * When user clicks the add attribute button,
-     * it creates a new select element for the field attributes and a new text element for the attribute value, and it appends
-     * to the field group. But when the form is submitted, we need to recreate those elements based on the
-     * submitted data to make sure the form validation works and the submitted data is mapped correctly to the persistent.
+     * it creates a new select element for the field attributes and a new text element for the attribute value, and it
+     * appends to the field group. But when the form is submitted, we need to recreate those elements based on the submitted data
+     * to make sure the form validation works
+     * and the submitted data is mapped correctly to the persistent.
      *
      * @param mixed $element
      * @param int $index
@@ -750,6 +752,26 @@ class custom_data_source_form extends persistent_form {
         // Update the elements of the group with the new created elements.
         // Without this elements are not updated correctly. and the data will not export during the form submission.
         $element->setElements($element->_elements);
+    }
+
+    /**
+     * Validate that every active join with a table selected also has an alias.
+     *
+     * @param \stdClass $data
+     * @param array $files
+     * @param array $errors
+     * @return array
+     */
+    protected function extra_validation($data, $files, array &$errors) {
+        if (!empty($data->enablejoins) && !empty($data->tablejoins)) {
+            foreach ($data->tablejoins as $i => $table) {
+                if (!empty($table) && empty($data->tablejoinsalias[$i])) {
+                    $errors["tablejoinsalias[$i]"] = get_string('required');
+                }
+            }
+        }
+
+        return $errors;
     }
 
     /**

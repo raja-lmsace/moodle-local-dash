@@ -180,6 +180,12 @@ class courses_data_source extends abstract_data_source {
                     case 'textarea':
                         break;
                     default:
+                        if (
+                            class_exists('\customfield_multicategory\condition_helper') &&
+                            \customfield_multicategory\condition_helper::should_skip_default_filter($field->get('type'))
+                        ) {
+                            break;
+                        }
                         $coursefilter->add_filter(
                             new customfield_filter($alias, $select, $field, $field->get_formatted_name())
                         );
@@ -245,10 +251,62 @@ class courses_data_source extends abstract_data_source {
      */
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
+
+        // Grid/Table and Accordion layout defaults (available_fields visibility).
         $configpreferences['available_fields']['c_fullname']['visible'] = true;
         $configpreferences['available_fields']['c_startdate']['visible'] = true;
         $configpreferences['available_fields']['cc_name']['visible'] = true;
         $configpreferences['available_fields']['c_button']['visible'] = true;
+
+        // Cards layout defaults.
+        if (empty($configpreferences['headingfield'])) {
+            $configpreferences['headingfield'] = 'c_fullname';
+        }
+        if (empty($configpreferences['subheadingfield'])) {
+            $configpreferences['subheadingfield'] = 'cc_name';
+        }
+        if (empty($configpreferences['bodyfield'])) {
+            $configpreferences['bodyfield'] = 'c_summary';
+        }
+        if (empty($configpreferences['imageurlfield'])) {
+            $configpreferences['imageurlfield'] = 'c_image_url';
+        }
+        if (empty($configpreferences['footerfield'])) {
+            $configpreferences['footerfield'] = 'c_startdate';
+        }
+
+        // Timeline layout defaults.
+        if (empty($configpreferences['iconfield'])) {
+            $configpreferences['iconfield'] = 'c_image';
+        }
+
+        // One stat layout defaults.
+        if (empty($configpreferences['stat_field_definition'])) {
+            $configpreferences['stat_field_definition'] = 'c_fullname';
+        }
+
+        // Accordion layout defaults.
+        if (empty($configpreferences['groupby_field_definition'])) {
+            $configpreferences['groupby_field_definition'] = 'cc_name';
+        }
+        if (empty($configpreferences['group_label_field_definition'])) {
+            $configpreferences['group_label_field_definition'] = 'cc_name';
+        }
+
+        // Accordion2 layout defaults (card-based accordion with field mapping).
+        if (empty($configpreferences['field1'])) {
+            $configpreferences['field1'] = 'c_fullname';
+        }
+        if (empty($configpreferences['field2'])) {
+            $configpreferences['field2'] = 'c_startdate';
+        }
+        if (empty($configpreferences['field3'])) {
+            $configpreferences['field3'] = 'cc_name';
+        }
+        if (empty($configpreferences['field4'])) {
+            $configpreferences['field4'] = 'c_button';
+        }
+
         $data['config_preferences'] = $configpreferences;
     }
 }

@@ -150,6 +150,7 @@ class dashboard_form extends persisten_form {
 
             // Redirct to course dashboard.
             $mform->addElement('advcheckbox', 'redirecttodashboard', get_string('redirecttodashboard', 'block_dash'));
+            $mform->addHelpButton('redirecttodashboard', 'redirecttodashboard', 'block_dash');
             $mform->hideIf('redirecttodashboard', 'contexttype', 'neq', 'course');
             $mform->setDefault('redirecttodashboard', 0);
         } else {

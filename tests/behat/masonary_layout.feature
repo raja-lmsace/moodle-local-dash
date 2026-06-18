@@ -27,13 +27,10 @@ Feature: Enable the masonry layout in dash block on the dashboard page and view 
     And I press "Save changes"
     And I wait until the page is ready
     And I open the "Course datasource" block preference
-    And I wait "2" seconds
-    Then I click on "Fields" "link"
-    Then I click on "General" "link"
-    And I set the field "Layout" to "Grid layout"
-    Then I click on "Fields" "link"
-    Then I should see "Layout mode"
-    And I set the field "Layout mode" to "masonry"
+    And I wait until the page is ready
+    # Layout is now selected directly on the Layout tab — "Layout mode" field removed
+    And I click on "Layout" "link"
+    And I set the field "Layout" to "Masonry"
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
     And I press "Continue"
@@ -65,12 +62,14 @@ Feature: Enable the masonry layout in dash block on the dashboard page and view 
     And I turn dash block editing mode on
     And I wait until the page is ready
     And I open the "Course datasource" block preference
-    And I wait "2" seconds
-    Then I click on "Fields" "link"
-    And I set the field "Layout mode" to "Masonry"
-    Then I set the field "Search box" to "1"
-    Then I set the field "Sorting" to "1"
+    And I wait until the page is ready
+    # Layout, Search box and Styling options are now on the Layout tab
+    And I click on "Layout" "link"
+    And I set the field "Layout" to "Masonry"
+    And I set the field "Search box" to "1"
     And I set the field "Styling options" to "c_f_gridsize, c_f_promotion"
+    # Heading field remains on the Fields tab
+    And I click on "Fields" "link"
     And I set the field "Heading field" to "course: Full name"
     Then I press "Save changes"
     And I am on the "C1" "course editing" page

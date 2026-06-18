@@ -25,7 +25,9 @@
 namespace local_dash\data_grid\field\attribute;
 
 use block_dash\local\data_grid\field\attribute\abstract_field_attribute;
+use block_dash\local\data_grid\field\attribute\details_link_attribute;
 use block_dash\local\data_grid\filter\course_condition;
+use local_dash\util\enrolment_state;
 use html_writer;
 use moodle_url;
 
@@ -49,57 +51,103 @@ class smart_course_button_attribute extends abstract_field_attribute {
         if (!$data) {
             return '';
         }
-        $coursecontext = \context_course::instance($data);
+        $courseid = $data;
+        $coursecontext = \context_course::instance($courseid);
         $enrolled = is_enrolled($coursecontext, $USER, false, false);
         $isactiveenrolment = is_enrolled($coursecontext, $USER, false, true);
-        $canselfenrol = $this->can_selfenrol($data);
+        $canselfenrol = $this->can_selfenrol($courseid);
 
         // Check if user is site admin or has category manage capability.
         $canmanagecategory = is_siteadmin() || has_capability('moodle/category:manage', \context_system::instance());
 
-        // Get shop url.
-        $shopurl = $this->get_shopurl($data);
+        // Determine granular enrolment state.
+        $state = enrolment_state::get_user_enrolment_state($courseid, $USER->id);
 
-        if ($isactiveenrolment || $this->is_guestaccess($data) || $canmanagecategory) {
-            $url = new \moodle_url('/course/view.php', ['id' => $data]);
-            return \html_writer::link(
-                $url,
-                get_string('viewcourse', 'block_dash'),
-                ['class' => 'btn btn-primary',
-                'label' => get_string('viewcourse', 'block_dash'),
-                'aria-label' => get_string('smart_coursebutton', 'block_dash')]
-            );
-        } else if ($shopurl && !$enrolled && !$canselfenrol) {
-            // Buy now.
-            return html_writer::link(
-                $shopurl,
-                get_string('buynow', 'block_dash'),
-                ['class' => 'btn btn-primary',
-                'label' => get_string('buynow', 'block_dash'),
-                'aria-label' => get_string('smart_coursebutton', 'block_dash')]
-            );
-        } else if (!$enrolled && $canselfenrol) {
-            // Enrol Now.
-            $url = new \moodle_url('/enrol/index.php', ['id' => $data]);
-            return html_writer::link(
-                $url,
-                get_string('enrolnow', 'block_dash'),
-                ['class' => 'btn btn-primary',
-                'label' => get_string('enrolnow', 'block_dash'),
-                'aria-label' => get_string('smart_coursebutton', 'block_dash')]
-            );
-        } else if (!$isactiveenrolment || !$canselfenrol) {
-            // Not available.
-            return \html_writer::span(get_string('notavailable', 'block_dash'));
+        // Enrolled users.
+        if ($state !== enrolment_state::STATE_NOT_ENROLLED) {
+            $url = new \moodle_url('/course/view.php', ['id' => $courseid]);
+            $label = get_string('viewcourse', 'block_dash');
+
+            if ($state === enrolment_state::STATE_ACTIVE) {
+                // Active enrolment -> btn-primary.
+                $btnclass = 'btn btn-primary';
+            } else {
+                // Suspended/Future/Expired -> btn-secondary (muted).
+                $btnclass = 'btn btn-secondary text-muted';
+            }
+
+            return \html_writer::link($url, $label, [
+                'class' => $btnclass,
+                'aria-label' => get_string('smart_coursebutton', 'block_dash'),
+            ]);
         }
-        return '';
+
+        // Not enrolled - check guest access.
+        if ($this->is_guestaccess($courseid)) {
+            $url = new \moodle_url('/course/view.php', ['id' => $courseid]);
+            return \html_writer::link($url, get_string('viewcourse', 'block_dash'), [
+                'class' => 'btn btn-primary',
+                'aria-label' => get_string('smart_coursebutton', 'block_dash'),
+            ]);
+        }
+
+        // Not enrolled, no guest - determine available enrolment methods.
+        $canselfenrol = $this->can_selfenrol($courseid);
+
+        if ($canselfenrol) {
+            // Any self-enrolment method available.
+            if ($this->is_only_autoenrol($courseid)) {
+                // Auto enrolment only -> Course page redirect.
+                $url = new \moodle_url('/course/view.php', ['id' => $courseid]);
+            } else {
+                // Enrolment options page.
+                $url = new \moodle_url('/course/view.php', ['id' => $courseid]);
+            }
+            return \html_writer::link($url, get_string('enrolnow', 'block_dash'), [
+                'class' => 'btn btn-primary',
+                'aria-label' => get_string('smart_coursebutton', 'block_dash'),
+            ]);
+        }
+
+        // No self-enrolment available - check external purchase options.
+        $shopurl = $this->get_shopurl($courseid);
+        if ($shopurl) {
+            // Shop URL -> "Buy now".
+            return \html_writer::link($shopurl, get_string('buynow', 'block_dash'), [
+                'class' => 'btn btn-primary',
+                'aria-label' => get_string('smart_coursebutton', 'block_dash'),
+            ]);
+        }
+
+        if ($this->has_custom_content_booking()) {
+            // Block has details area custom content -> "Book now" (opens details area).
+            $blockinstanceid = (int) $this->get_option('blockinstanceid');
+            $detailid = details_link_attribute::build_detail_id($record, $blockinstanceid);
+            return \html_writer::link('#' . $detailid, get_string('booknow', 'block_dash'), [
+                'class' => 'btn btn-primary dash-details-open-link',
+                'data-action' => 'open-details-modal',
+                'data-detail-id' => $detailid,
+                'aria-label' => get_string('smart_coursebutton', 'block_dash'),
+            ]);
+        }
+
+        // No methods, no shop URL, no custom content -> "View course" (muted), redirects to enrolment options.
+        if (is_viewing($coursecontext, $USER)) {
+             $url = new \moodle_url('/course/view.php', ['id' => $courseid]);
+        } else {
+            $url = new \moodle_url('/enrol/index.php', ['id' => $courseid]);
+        }
+        return \html_writer::link($url, get_string('viewcourse', 'block_dash'), [
+            'class' => 'btn btn-secondary text-muted',
+            'aria-label' => get_string('smart_coursebutton', 'block_dash'),
+        ]);
     }
 
     /**
-     * Fetch the configured shop url from the course customfield. cusotmfield will mentioned in the general settings.
+     * Fetch the configured shop url from the course customfield. customfield will mentioned in the general settings.
      *
-     * @param  int $courseid
-     * @return bool
+     * @param int $courseid
+     * @return string|false
      */
     public function get_shopurl($courseid) {
         global $DB;
@@ -122,6 +170,19 @@ class smart_course_button_attribute extends abstract_field_attribute {
             }
         }
         return false;
+    }
+
+    /**
+     * Check whether the block instance has details area custom content configured.
+     *
+     * This replaces the old per-course custom field check with a per-block-instance
+     * check so that "Book now" / "Available for booking" is determined by whether
+     * the block's details area has custom content, not by a global admin setting.
+     *
+     * @return bool True if the block has details area custom content configured.
+     */
+    public function has_custom_content_booking(): bool {
+        return !empty($this->get_option('has_details_custom_content'));
     }
 
     /**
@@ -148,21 +209,55 @@ class smart_course_button_attribute extends abstract_field_attribute {
      */
     public function can_selfenrol($courseid) {
         $enrolinstances = enrol_get_instances($courseid, true);
-        // Filter the instance basecd on the availability.
         global $USER;
         foreach ($enrolinstances as $instance) {
-            if (!in_array($instance->enrol, ['self', 'credit', 'autoenrol'])) {
+            if (!in_array($instance->enrol, ['self', 'credit', 'autoenrol', 'fee'])) {
+                continue;
+            }
+            $enrol = enrol_get_plugin($instance->enrol);
+            $selfenrolstatus = ($instance->enrol === 'self' && $enrol->can_self_enrol($instance) === true);
+            $autoenrol = ($instance->enrol === 'autoenrol' && $enrol->enrol_allowed($instance, $USER));
+            $creditenrolstatus = ($instance->enrol === 'credit');
+            $feeenrol = ($instance->enrol === 'fee' && $instance->cost > 0
+                && (!$instance->enrolstartdate || $instance->enrolstartdate < time())
+                && (!$instance->enrolenddate || $instance->enrolenddate > time()));
+
+            if ($selfenrolstatus || $autoenrol || $creditenrolstatus || $feeenrol) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if the only available self-enrolment method for the course is autoenrol.
+     *
+     * @param int $courseid
+     * @return bool True if autoenrol is the only available self-enrol method.
+     */
+    public function is_only_autoenrol($courseid) {
+        $enrolinstances = enrol_get_instances($courseid, true);
+        $availablemethods = [];
+        global $USER;
+        foreach ($enrolinstances as $instance) {
+            if (!in_array($instance->enrol, ['self', 'credit', 'autoenrol', 'fee'])) {
                 continue;
             }
             $enrol = enrol_get_plugin($instance->enrol);
             $selfenrolstatus = ($instance->enrol === 'self' && $enrol->can_self_enrol($instance) === true);
             $autoenrol = ($instance->enrol === 'autoenrol' && $enrol->enrol_allowed($instance, $USER));
             $creditenrolstatus = ($instance->enrol === 'credit' && $enrol->can_self_enrol($instance) === true);
+            $feeenrol = ($instance->enrol === 'fee' && $instance->cost > 0
+                && (!$instance->enrolstartdate || $instance->enrolstartdate < time())
+                && (!$instance->enrolenddate || $instance->enrolenddate > time()));
 
-            if ($selfenrolstatus || $autoenrol || $creditenrolstatus) {
-                return true;
+            if ($selfenrolstatus || $creditenrolstatus || $feeenrol) {
+                return false; // There are non-autoenrol methods.
+            }
+            if ($autoenrol) {
+                $availablemethods[] = 'autoenrol';
             }
         }
-        return false;
+        return !empty($availablemethods);
     }
 }

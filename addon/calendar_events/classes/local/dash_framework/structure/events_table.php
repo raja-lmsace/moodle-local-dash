@@ -218,6 +218,39 @@ class events_table extends table {
                 ]
             ),
 
+            // Event dates (start date – end date, end date omitted when the same day).
+            new field(
+                'dates',
+                new lang_string('event:dates', 'dashaddon_calendar_events'),
+                $this,
+                'ce.timestart',
+                [
+                new widget_attribute(['callback' => fn($row, $data) => events::instance($data, $row)->get_event_dates()]),
+                ]
+            ),
+
+            // Event times (start time – end time, end time omitted when identical).
+            new field(
+                'times',
+                new lang_string('event:times', 'dashaddon_calendar_events'),
+                $this,
+                'ce.timestart',
+                [
+                new widget_attribute(['callback' => fn($row, $data) => events::instance($data, $row)->get_event_times()]),
+                ]
+            ),
+
+            // Event date/times (combined date and time range).
+            new field(
+                'datetimes',
+                new lang_string('event:datetimes', 'dashaddon_calendar_events'),
+                $this,
+                'ce.timestart',
+                [
+                new widget_attribute(['callback' => fn($row, $data) => events::instance($data, $row)->get_event_datetimes()]),
+                ]
+            ),
+
             // Event duration.
             new field(
                 'duration',

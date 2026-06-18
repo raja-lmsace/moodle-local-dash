@@ -163,7 +163,6 @@ class builder extends \block_dash\local\dash_framework\query_builder\builder {
         [$wheres, $whereparams] = $this->get_where_sql_and_params();
         $orderby = implode(' ', array_keys($this->orderby));
 
-        // Copy the selects.
         $originalselects = $this->selects;
         $joins = $this->joins;
         $rawjoins = $this->rawjoins;

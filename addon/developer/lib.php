@@ -70,6 +70,7 @@ function dashaddon_developer_register_layouts() {
             'identifier' => 'custom_' . $customlayout->get('id'),
             'name' => $customlayout->get('name'),
             'factory' => persistent_layout_factory::class,
+            'type' => $customlayout->get('type'),
         ];
     }
 

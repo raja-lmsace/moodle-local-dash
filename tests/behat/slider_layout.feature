@@ -21,21 +21,15 @@ Feature: Enable the slider layout in dash block on the dashboard page and view i
     And I log in as "admin"
     And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
-    # And I add the "Dash" block
     And I create dash "Courses" datasource
     And I configure the "New Dash" block
     And I set the field "Block title" to "Course datasource"
-    # And I click on "#id_config_data_source_idnumber_local_dashlocalblock_dashcourses_data_source" "css_element"
     And I press "Save changes"
-    # And I click on "Preferences" "button" in the "Course datasource" "block"
     And I wait until the page is ready
     And I open the "Course datasource" block preference
-    Then I click on "Fields" "link"
-    Then I click on "General" "link"
-    And I set the field "Layout" to "Grid layout"
-    Then I click on "Fields" "link"
-    Then I should see "Layout mode"
-    And I set the field "Layout mode" to "Slider"
+    # Layout is now selected directly on the Layout tab — "Layout mode" field removed
+    And I click on "Layout" "link"
+    And I set the field "Layout" to "Slider"
     And I press "Save changes"
     And I click on "Reset Dashboard for all users" "button"
     And I press "Continue"
@@ -63,21 +57,25 @@ Feature: Enable the slider layout in dash block on the dashboard page and view i
     Then ".dash-block-content .card_layout_slider .slick-prev" "css_element" should exist
     And I wait until the page is ready
     And I open the "Course datasource" block preference
-    Then I click on "Fields" "link"
-    And I set the field "Layout mode" to "Slider"
-    And I set the field "Heading field" to "course: Full name"
+    # Layout and slider-specific settings are now on the Layout tab
+    And I click on "Layout" "link"
+    And I set the field "Layout" to "Slider"
     Then I should see "Autoplay"
     Then I should see "Autoplay speed (ms)"
     Then I should see "Show arrows"
     Then I should see "Center mode"
     Then I should see "Center padding (px)"
-    Then I set the field "Show arrows" to "0"
+    And I set the field "Show arrows" to "0"
+    # Heading field remains on the Fields tab
+    And I click on "Fields" "link"
+    And I set the field "Heading field" to "course: Full name"
     And I press "Save changes"
     Then ".dash-block-content .card_layout_slider .slick-next" "css_element" should not exist
     Then ".dash-block-content .card_layout_slider .slick-prev" "css_element" should not exist
     And I wait until the page is ready
     And I open the "Course datasource" block preference
-    Then I click on "Fields" "link"
+    # Slides to show is a layout-level setting, now on the Layout tab
+    And I click on "Layout" "link"
     And I set the field "Slides to show" to "2"
     And I press "Save changes"
     Then ".slick-slide.slick-current.slick-active" "css_element" should be visible

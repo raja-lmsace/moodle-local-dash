@@ -61,16 +61,69 @@ class persistent_layout extends abstract_layout {
      */
     public function get_mustache_template_name() {
         global $CFG;
-
         if ($mustachetemplate = $this->customlayout->get('mustache_template')) {
             make_localcache_directory('block_dash/templates');
 
+            // Auto-inject detail data attributes into the first HTML element
+            // inside each {{#data.rows}} iteration so the details_area.js
+            // module can locate rows and read their detail context.
+            //
+            // We inject directly into the existing element (e.g. <tr>, <div>,
+            // <li>) instead of wrapping in a new <div>, because wrapping
+            // creates invalid HTML when the row element is a <tr> inside a
+            // <table> — the browser hoists the <div> out of the table and
+            // breaks the ancestor relationship that findRow() relies on.
+            $detailattrs = ' data-detailheader="{{detailheader}}"'
+                . ' data-detailheading="{{detailheading}}"'
+                . ' data-detailbody="{{detailbody}}"'
+                . ' data-detailbody2="{{detailbody2}}"'
+                . ' data-detailbody3="{{detailbody3}}"'
+                . ' data-detailfooter="{{detailfooter}}"'
+                . ' data-detailfooterright="{{detailfooterright}}"'
+                . ' data-customcontent="{{customcontent}}"';
+
+            // Find the first HTML opening tag after {{#data.rows}} (allowing
+            // optional whitespace and Mustache comments in between) and inject
+            // the data attributes into that tag.
+            $mustachetemplate = preg_replace(
+                '/(\{\{\s*#\s*data\.rows\s*\}\})((?:\s*\{\{![^}]*\}\})*\s*)<(\w+)/s',
+                '$1$2<$3' . $detailattrs,
+                $mustachetemplate
+            );
+
+            // Wrap the user template in a container div with a unique ID so the
+            // details area JS can target it, and auto-append the JS initialisation
+            // block.  The Mustache conditionals ensure the JS only runs when the
+            // details area is actually enabled for this block instance.
+            $wrappedtemplate = '<div id="dash-custom-{{uniqueid}}" class="dash-custom-layout'
+                . '{{#preferences.detailareaexpand}} expand-block{{/preferences.detailareaexpand}}'
+                . '{{#preferences.detailareafloating}} floating-block{{/preferences.detailareafloating}}'
+                . '{{#preferences.detailareamodal}} modal-block{{/preferences.detailareamodal}}'
+                . '{{#preferences.fitcontentdetailsarea}} fit-content{{/preferences.fitcontentdetailsarea}}'
+                . '{{#preferences.fitcarddetailsarea}} fit-card{{/preferences.fitcarddetailsarea}}'
+                . '">' . "\n"
+                . $mustachetemplate . "\n"
+                . '</div>' . "\n"
+                . '{{#preferences.showdetailsarea}}' . "\n"
+                . '{{#js}}' . "\n"
+                . "require(['block_dash/details_area'], function(DetailsArea) {" . "\n"
+                . "    DetailsArea.init('#dash-custom-{{uniqueid}}', {" . "\n"
+                . "        detailsBgColor: '{{preferences.details_bg_color}}'," . "\n"
+                . "        detailsTextColor: '{{preferences.details_text_color}}'," . "\n"
+                . "        rowSelector: '[data-detailheader]'," . "\n"
+                . "        mode: '{{preferences.details_area_mode}}'," . "\n"
+                . "        detailsAreaSize: '{{preferences.details_area_size}}'," . "\n"
+                . "        customContentHeight: '{{preferences.details_custom_content_height}}'" . "\n"
+                . "    });" . "\n"
+                . "});" . "\n"
+                . '{{/js}}' . "\n"
+                . '{{/preferences.showdetailsarea}}';
+
             $path = "$CFG->localcachedir/block_dash/templates/" . $this->customlayout->get('id');
 
-            if (!file_exists($path) || md5(file_get_contents($path)) != md5($mustachetemplate)) {
-                file_put_contents($path, $mustachetemplate);
+            if (!file_exists($path) || md5(file_get_contents($path)) != md5($wrappedtemplate)) {
+                file_put_contents($path, $wrappedtemplate);
             }
-
             return '_custom/' . $this->customlayout->get('id');
         }
 

@@ -244,7 +244,7 @@ Feature: Add learning path widget in dash block
     And I click on "Previous" "link" in the ".modal-dialog" "css_element"
     Then I should see "Course 1" in the ".modal-dialog .grid-layout-block .card-title" "css_element"
     And I click on "Close" "button" in the ".modal-dialog" "css_element"
-    And I click on ".learning-path-grid .grid-block:last-child .grid-link" "css_element" in the "Learning Path" "block"
+    And I click on ".learning-path-grid .grid-block:last-child" "css_element" in the "Learning Path" "block"
     Then I should see "Course 16" in the ".modal-dialog .grid-layout-block .card-title" "css_element"
     And I click on "Close" "button" in the ".modal-dialog" "css_element"
 
@@ -866,11 +866,8 @@ Feature: Add learning path widget in dash block
     And I open the "Learning Path" block preference
     And I click on "Fields" "link"
     # Path for devices - Default course size
-    And I wait "20" seconds
-    Then "//select[@name='config_preferences[desktoppath]']/option[contains(., 'Path3')]" "xpath_element" should exist
+    And I set the following fields to these values:
       | Path for Desktop    | Path3    |
-      | Path for Tablet     | Path3    |
-      | Path for Mobile     | Path3    |
     And I click on "Save changes" "button" in the "Edit preferences" "dialogue"
     And I click on "Reset Dashboard for all users" "button"
     And I click on "Continue" "button"

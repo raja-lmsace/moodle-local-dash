@@ -68,7 +68,23 @@ class behat_local_dash extends behat_base {
      * @param TableNode $table Enrolment details
      */
     public function i_add_enrolment_method_for_dashwith(string $enrolmethod, string $courseidentifier, TableNode $table): void {
-        global $CFG;
+        global $CFG, $DB;
+
+        // Guest access only allows one instance per course and Moodle creates a
+        // default (disabled) instance automatically.  Edit it instead of adding.
+        if (strtolower($enrolmethod) === 'guest access') {
+            $courseid = $DB->get_field('course', 'id', ['fullname' => $courseidentifier]);
+            if ($courseid && $DB->record_exists('enrol', ['courseid' => $courseid, 'enrol' => 'guest'])) {
+                $this->execute('behat_navigation::i_am_on_page_instance', [$courseidentifier, 'enrolment methods']);
+                $this->execute('behat_general::i_click_on_in_the', ['Edit', 'link', 'Guest access', 'table_row']);
+                $this->execute('behat_forms::i_set_the_following_fields_to_these_values', [
+                    new TableNode([['Allow guest access', 'Yes']]),
+                ]);
+                $this->execute('behat_forms::i_set_the_following_fields_to_these_values', [$table]);
+                $this->execute('behat_forms::press_button', [get_string('savechanges')]);
+                return;
+            }
+        }
 
         if ($CFG->branch >= "400") {
             $this->execute('behat_enrol::i_add_enrolment_method_for_with', [$enrolmethod, $courseidentifier, $table]);

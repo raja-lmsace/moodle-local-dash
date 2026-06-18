@@ -78,10 +78,12 @@ class customfield_filter extends select_filter {
                 $params
             );
             if ($metafield->datatype == 'menu') {
-                $selectoptions = explode("\n", $metafield->param1);
-                foreach ($options as $key => $option) {
-                    if (in_array($option, $selectoptions)) {
-                        $this->add_option($key, format_string($option));
+                // Iterate over the configured options so the filter list keeps the order
+                // defined in the field, only adding options that are actually used by a record.
+                $selectoptions = array_map('trim', explode("\n", $metafield->param1));
+                foreach ($selectoptions as $option) {
+                    if (isset($options[$option])) {
+                        $this->add_option($options[$option], format_string($option));
                     }
                 }
             } else {
@@ -106,9 +108,11 @@ class customfield_filter extends select_filter {
                     // Moodle 3.9 and earlier.
                     $selectoptions = \customfield_select\field_controller::get_options_array($this->field);
                 }
-                foreach ($options as $key => $option) {
-                    if (isset($selectoptions[$option])) {
-                        $this->add_option($key, format_string($selectoptions[$option]));
+                // Iterate over the configured options so the filter list keeps the order
+                // defined in the custom field, only adding options that are actually used by a course.
+                foreach ($selectoptions as $key => $option) {
+                    if (isset($options[$key])) {
+                        $this->add_option($key, format_string($option));
                     }
                 }
             } else {

@@ -214,5 +214,7 @@ class myprofile_layout extends abstract_layout {
                 $childcollection
             );
         }
+        // Map details area fields + custom content (handled by parent).
+        parent::after_data($datacollection);
     }
 }

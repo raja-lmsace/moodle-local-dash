@@ -210,6 +210,12 @@ class completions_data_source extends abstract_data_source {
                     case 'textarea':
                         break;
                     default:
+                        if (
+                            class_exists('\customfield_multicategory\condition_helper') &&
+                            \customfield_multicategory\condition_helper::should_skip_default_filter($field->get('type'))
+                        ) {
+                            break;
+                        }
                         $compfiltercollection->add_filter(
                             new customfield_filter(
                                 $alias,
@@ -324,10 +330,57 @@ class completions_data_source extends abstract_data_source {
      */
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
+
+        // Grid/Table and Accordion layout defaults (available_fields visibility).
         $configpreferences['available_fields']['ccp_progressbar']['visible'] = true;
         $configpreferences['available_fields']['u_fullname']['visible'] = true;
         $configpreferences['available_fields']['c_fullname']['visible'] = true;
         $configpreferences['available_fields']['e_enrol']['visible'] = true;
+
+        // Cards layout defaults.
+        if (empty($configpreferences['headingfield'])) {
+            $configpreferences['headingfield'] = 'c_fullname';
+        }
+        if (empty($configpreferences['subheadingfield'])) {
+            $configpreferences['subheadingfield'] = 'u_fullname';
+        }
+        if (empty($configpreferences['bodyfield'])) {
+            $configpreferences['bodyfield'] = 'ccp_progressbar';
+        }
+        if (empty($configpreferences['imageurlfield'])) {
+            $configpreferences['imageurlfield'] = 'c_image_url';
+        }
+        if (empty($configpreferences['footerfield'])) {
+            $configpreferences['footerfield'] = 'ccp_timecompleted';
+        }
+
+        // One stat layout defaults.
+        if (empty($configpreferences['stat_field_definition'])) {
+            $configpreferences['stat_field_definition'] = 'ccp_progressbar';
+        }
+
+        // Accordion layout defaults.
+        if (empty($configpreferences['groupby_field_definition'])) {
+            $configpreferences['groupby_field_definition'] = 'c_fullname';
+        }
+        if (empty($configpreferences['group_label_field_definition'])) {
+            $configpreferences['group_label_field_definition'] = 'c_fullname';
+        }
+
+        // Accordion2 layout defaults (card-based accordion with field mapping).
+        if (empty($configpreferences['field1'])) {
+            $configpreferences['field1'] = 'u_fullname';
+        }
+        if (empty($configpreferences['field2'])) {
+            $configpreferences['field2'] = 'c_fullname';
+        }
+        if (empty($configpreferences['field3'])) {
+            $configpreferences['field3'] = 'ccp_progressbar';
+        }
+        if (empty($configpreferences['field4'])) {
+            $configpreferences['field4'] = 'e_enrol';
+        }
+
         $data['config_preferences'] = $configpreferences;
     }
 }

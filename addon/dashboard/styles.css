@@ -26,6 +26,12 @@ body.path-dashaddon-dashboard:not(.editing) .dash-block-width-20,
 body.path-dashaddon-dashboard:not(.editing) .dash-block-width-16 {
     margin: 0.5rem;
 }
+/* Hero-width outside regions are meant to be edge-to-edge; undo the grid
+   margin so blocks in them cover the full page width. */
+body.path-dashaddon-dashboard:not(.editing) .theme-block-region-outside-herowidth .block_dash {
+    margin: 0;
+    width: 100%;
+}
 
 .path-dashaddon-dashboard .header-maxwidth,
 .path-dashaddon-dashboard .secondary-navigation {
@@ -94,8 +100,10 @@ body.path-dashaddon-dashboard div#page .main-inner {
     right: 0;
 }
 .path-dashaddon-dashboard .block-region .block {
-    width: 100%;
     scroll-margin-top: 180px;
+}
+.path-dashaddon-dashboard .block-region .block:not(.block_dash) {
+    width: 100%;
 }
 
 .path-dashaddon-dashboard .onpage-navigation {

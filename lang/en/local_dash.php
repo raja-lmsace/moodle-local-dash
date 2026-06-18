@@ -23,6 +23,7 @@
  */
 
 $string['choose'] = 'Choose...';
+$string['clearfilter'] = 'Clear filter';
 $string['courseshape'] = 'Select course shape';
 $string['courseshape_desc'] = 'Choose the default shape to use for the course on the learning path.';
 $string['customselectfield'] = 'Select course field for shape';

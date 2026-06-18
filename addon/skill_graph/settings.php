@@ -38,3 +38,4 @@ if (get_config('dashaddon_skill_graph', 'enabled') && !(in_array('skill_graph', 
         )
     );
 }
+$page = null;

@@ -90,18 +90,19 @@ Feature: Add activity completion condition datasource in dash block
     And I set the field "config_preferences[filters][c_coursedates][coursedates][]" to "<coursedate>"
     And I click on "Fields" "link"
     And I set the field "Course: Short name" to "1"
+    And I click on "Layout" "link"
     And I set the field "Per page" to "30"
     And I press "Save changes"
     And I press "Reset Dashboard for all users"
     #---Check Activities course dates---#
     And I follow "Dashboard"
     And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-    And I should see "<name>" in the ".dash-table tbody tr:nth-child(<Nrow>) td:nth-child(4)" "css_element"
-    And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(2)" "css_element"
-    And I should see "<course>" in the ".dash-table tbody tr:nth-child(<Crow>) td:nth-child(5)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Fullname linked | Activity name | Short name |
+      | <name>          | <activity>    | <course>   |
     Examples:
-      | coursedate | name 		 | Nrow | activity 		 | Arow | course | Crow |
-      | past 		 	 | Student 2 | 21		| Assignment 5 | 21 	| C4 		 | 21 	|
+      | coursedate | name      | activity     | course |
+      | past       | Student 2 | Assignment 5 | C4     |
 
   Scenario Outline: Activity completion: Course future date
     #---Admin login---#
@@ -127,12 +128,12 @@ Feature: Add activity completion condition datasource in dash block
     And I press "Save and display"
     And I follow "Dashboard"
     And I should see "Activity completion" in the ".block_dash-local-layout-grid_layout" "css_element"
-    And I should see "<name>" in the ".dash-table tbody tr:nth-child(<Nrow>) td:nth-child(4)" "css_element"
-    And I should see "<activity>" in the ".dash-table tbody tr:nth-child(<Arow>) td:nth-child(2)" "css_element"
-    And I should see "<course>" in the ".dash-table tbody tr:nth-child(<Crow>) td:nth-child(5)" "css_element"
+    And the following should exist in the "dash-table" table:
+      | Fullname linked | Activity name | Short name |
+      | <name>          | <activity>    | <course>   |
     Examples:
-      | coursedate | name      | Nrow | activity     | Arow | course | Crow |
-      | future     | Student 3 | 8    | Assignment 2 | 8    | C1     | 8    |
+      | coursedate | name      | activity     | course |
+      | future     | Student 3 | Assignment 2 | C1     |
 
   Scenario Outline: Activity completion datasource: activity completion status
     #---Admin login---#

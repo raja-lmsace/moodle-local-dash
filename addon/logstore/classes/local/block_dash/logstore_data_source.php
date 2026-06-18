@@ -175,6 +175,12 @@ class logstore_data_source extends abstract_data_source {
                     case 'textarea':
                         break;
                     default:
+                        if (
+                            class_exists('\customfield_multicategory\condition_helper') &&
+                            \customfield_multicategory\condition_helper::should_skip_default_filter($field->get('type'))
+                        ) {
+                            break;
+                        }
                         $logfiltercollection->add_filter(
                             new customfield_filter($alias, $select, $field, $field->get_formatted_name())
                         );
@@ -260,10 +266,54 @@ class logstore_data_source extends abstract_data_source {
      */
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
+
+        // Grid/Table and Accordion layout defaults (available_fields visibility).
         $configpreferences['available_fields']['sl_eventname']['visible'] = true;
         $configpreferences['available_fields']['sl_eventdescription']['visible'] = true;
         $configpreferences['available_fields']['sl_timecreated']['visible'] = true;
         $configpreferences['available_fields']['sl_timeago']['visible'] = true;
+
+        // Cards layout defaults.
+        if (empty($configpreferences['headingfield'])) {
+            $configpreferences['headingfield'] = 'sl_eventname';
+        }
+        if (empty($configpreferences['subheadingfield'])) {
+            $configpreferences['subheadingfield'] = 'sl_timecreated';
+        }
+        if (empty($configpreferences['bodyfield'])) {
+            $configpreferences['bodyfield'] = 'sl_eventdescription';
+        }
+        if (empty($configpreferences['footerfield'])) {
+            $configpreferences['footerfield'] = 'sl_timeago';
+        }
+
+        // One stat layout defaults.
+        if (empty($configpreferences['stat_field_definition'])) {
+            $configpreferences['stat_field_definition'] = 'sl_eventname';
+        }
+
+        // Accordion layout defaults.
+        if (empty($configpreferences['groupby_field_definition'])) {
+            $configpreferences['groupby_field_definition'] = 'sl_eventname';
+        }
+        if (empty($configpreferences['group_label_field_definition'])) {
+            $configpreferences['group_label_field_definition'] = 'sl_eventname';
+        }
+
+        // Accordion2 layout defaults (card-based accordion with field mapping).
+        if (empty($configpreferences['field1'])) {
+            $configpreferences['field1'] = 'sl_eventname';
+        }
+        if (empty($configpreferences['field2'])) {
+            $configpreferences['field2'] = 'sl_eventdescription';
+        }
+        if (empty($configpreferences['field3'])) {
+            $configpreferences['field3'] = 'sl_timecreated';
+        }
+        if (empty($configpreferences['field4'])) {
+            $configpreferences['field4'] = 'sl_timeago';
+        }
+
         $data['config_preferences'] = $configpreferences;
     }
 }

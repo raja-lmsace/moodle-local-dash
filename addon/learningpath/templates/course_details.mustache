@@ -54,9 +54,11 @@
 
         <div class="content-block card-body">
             <h2 class="card-title">{{{coursename}}}</h2>
+            {{#hassummary}}
             <div class="summary-block card-text">
                 <p>{{{summary}}}</p>
             </div>
+            {{/hassummary}}
 
             {{#hasassignment}}
             <div class="assignment-info-block">

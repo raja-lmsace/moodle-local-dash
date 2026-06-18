@@ -89,8 +89,46 @@ class dashboard_data_source extends abstract_data_source {
      */
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
+
+        // Grid/Table and Accordion layout defaults (available_fields visibility).
         $configpreferences['available_fields']['dd_name']['visible'] = true;
         $configpreferences['available_fields']['dd_link']['visible'] = true;
+
+        // Cards layout defaults.
+        if (empty($configpreferences['headingfield'])) {
+            $configpreferences['headingfield'] = 'dd_name';
+        }
+        if (empty($configpreferences['bodyfield'])) {
+            $configpreferences['bodyfield'] = 'dd_description';
+        }
+        if (empty($configpreferences['imageurlfield'])) {
+            $configpreferences['imageurlfield'] = 'dd_dashthumbnailimgurl';
+        }
+        if (empty($configpreferences['footerfield'])) {
+            $configpreferences['footerfield'] = 'dd_link';
+        }
+
+        // One stat layout defaults.
+        if (empty($configpreferences['stat_field_definition'])) {
+            $configpreferences['stat_field_definition'] = 'dd_name';
+        }
+
+        // Accordion layout defaults.
+        if (empty($configpreferences['groupby_field_definition'])) {
+            $configpreferences['groupby_field_definition'] = 'dd_name';
+        }
+        if (empty($configpreferences['group_label_field_definition'])) {
+            $configpreferences['group_label_field_definition'] = 'dd_name';
+        }
+
+        // Accordion2 layout defaults (card-based accordion with field mapping).
+        if (empty($configpreferences['field1'])) {
+            $configpreferences['field1'] = 'dd_name';
+        }
+        if (empty($configpreferences['field2'])) {
+            $configpreferences['field2'] = 'dd_link';
+        }
+
         $data['config_preferences'] = $configpreferences;
     }
 }

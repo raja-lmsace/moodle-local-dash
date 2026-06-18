@@ -352,7 +352,7 @@ class myprofile_widget extends abstract_widget {
 
                 // Number of logins created by the user in this week.
                 case 'loginsthisweek':
-                    $lastweek = strtotime('this week'); // Timestamp of the last week.
+                    $lastweek = mktime(0, 0, 0, (int)date('n'), (int)date('j') - (int)date('w'));
                     $joparams = [
                     'jolsluserid' => $userid,
                     'jolsleventname' => '\core\event\user_loggedin',
@@ -405,7 +405,7 @@ class myprofile_widget extends abstract_widget {
                     break;
 
                 case 'completedcoursesinweek':
-                    $lastweek = strtotime('this week');
+                    $lastweek = mktime(0, 0, 0, (int)date('n'), (int)date('j') - (int)date('w'));
                     $ccparams = ['ccuserid' => $userid, 'cclastweek' => $lastweek];
 
                     $sql = new join_raw(
@@ -427,7 +427,7 @@ class myprofile_widget extends abstract_widget {
                     break;
 
                 case 'completedactivitiesinweek':
-                    $lastweek = strtotime('this week');
+                    $lastweek = mktime(0, 0, 0, (int)date('n'), (int)date('j') - (int)date('w'));
                     $cmcparams = ['cmcuserid' => $userid, 'cmclastweek' => $lastweek];
 
                     $sql = new join_raw(
@@ -821,5 +821,18 @@ class myprofile_widget extends abstract_widget {
         $filtercollection = new filter_collection(get_class($this), $this->get_context());
 
         return $filtercollection;
+    }
+
+    /**
+     * Hide Fields and Details area tabs — this widget manages its own
+     * fields and has no details area configuration.
+     *
+     * @return array
+     */
+    public function get_preferences_form_tabs(): array {
+        return [
+            \block_dash\local\data_source\form\preferences_form::TAB_GENERAL,
+            \block_dash\local\data_source\form\preferences_form::TAB_FIELDS,
+        ];
     }
 }

@@ -25,9 +25,9 @@
 defined('MOODLE_INTERNAL') || die('No direct access');
 
 $plugin->component = 'dashaddon_course_completions';
-$plugin->version = 2024042501;
+$plugin->version = 2024123008;
 $plugin->requires  = 2017051509;
-$plugin->maturity  = MATURITY_ALPHA;
+$plugin->maturity  = MATURITY_STABLE;
 $plugin->release = '1.0';
 $plugin->dependencies = [
     'local_dash' => 2022110300,

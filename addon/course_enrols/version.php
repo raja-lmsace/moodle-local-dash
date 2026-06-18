@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 $plugin->component = 'dashaddon_course_enrols';
 $plugin->version = 2024042500;
 $plugin->requires  = 2017051509;
-$plugin->maturity  = MATURITY_ALPHA;
+$plugin->maturity  = MATURITY_STABLE;
 $plugin->release = '1.0';
 $plugin->dependencies = [
     'local_dash' => 2022110300,

@@ -1,4 +1,4 @@
-define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
+define(['jquery', 'core/fragment', 'core/modal', 'core/modal_events',
     'core/notification', 'core/templates', 'core/modal_save_cancel'], function ($, Fragment, Modal, ModalEvents, notification, Templates, SaveCancelModal) {
 
     // Todo: Add padding on SVG;
@@ -109,9 +109,8 @@ define(['jquery', 'core/fragment', 'core/modal_factory', 'core/modal_events',
             // Display details in modal (original behavior for top position)
             Modal.create({
                 title: "",
-                type: "",
                 body: this.getCourseDetails(event.currentTarget),
-                large: false
+                removeOnClose: true
             }).then(function (modal) {
                 modal.show();
                 modal.getRoot().on(ModalEvents.bodyRendered, function () {

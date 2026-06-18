@@ -21,7 +21,8 @@
  * @copyright 2023 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+$string['assignmenttags'] = 'Assignment tags';
+$string['assignmenttags_help'] = 'Assignment tags configured with Timetable Pro';
 $string['learningpath:reportuser'] = 'Calculate In report';
 $string['pluginname'] = 'Widget: Learning path';
 $string['widget:learningpath'] = 'Learning path widget';

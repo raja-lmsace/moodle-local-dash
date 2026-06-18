@@ -50,6 +50,11 @@ $dashboard = new dashboard($dashboardid);
 
 $dashbgimage = dashaddon_dashboard_get_dashboard_background($dashboard->get('id'));
 
+// Default to empty CSS so the response is always a valid string — otherwise
+// css_send_cached_css_content() calls strlen($csscontent) and fatals on PHP 8+
+// when the dashboard has no custom background image.
+$style = '';
+
 if ($dashbgimage) {
     // Course background image style css content.
     $style = "body.path-dashaddon-dashboard {

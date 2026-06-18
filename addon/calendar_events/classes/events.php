@@ -110,22 +110,44 @@ class events {
         $this->data = $data;
         $this->row = $row;
 
+        // Normalise stale courseid: if the event row points to a course that no longer
+        // exists, clear it so downstream code falls back to the "other"/"site" branches
+        // instead of querying a missing {course} record.
+        if (!empty($row->ce_courseid) && !$DB->record_exists('course', ['id' => $row->ce_courseid])) {
+            $row->ce_courseid = 0;
+            $this->row->ce_courseid = 0;
+        }
+
         if (empty(self::$events[$row->ce_id])) {
             $eventvault = event_container::get_event_vault();
+            // Skip events with invalid data that would crash the core calendar exporter:
+            // - timestart = 0:
+            // - courseid = 0 (with a non-site/user event): the course proxy tries to load a missing course.
+            $hasvalidcourse = !empty($row->ce_courseid)
+                || in_array($row->ce_eventtype, ['site', 'user'], true);
 
-            if ($event = $eventvault->get_event_by_id($row->ce_id)) {
-                $cache = new events_related_objects_cache([$event]);
-                $relatedobjects = [
-                    'context' => $cache->get_context($event),
-                    'course' => $cache->get_course($event),
-                ];
-
-                $exporter = new event_exporter($event, $relatedobjects);
-                $renderer = $PAGE->get_renderer('core_calendar');
-
-                self::$events[$row->ce_id] = $exporter->export($renderer);
-
-                $this->event = self::$events[$row->ce_id];
+            if (!empty($row->ce_timestart) && $hasvalidcourse) {
+                try {
+                    if ($event = $eventvault->get_event_by_id($row->ce_id)) {
+                        $cache = new events_related_objects_cache([$event]);
+                        $relatedobjects = [
+                            'context' => $cache->get_context($event),
+                            'course' => $cache->get_course($event),
+                        ];
+                        $exporter = new event_exporter($event, $relatedobjects);
+                        $renderer = $PAGE->get_renderer('core_calendar');
+                        self::$events[$row->ce_id] = $exporter->export($renderer);
+                        $this->event = self::$events[$row->ce_id];
+                    }
+                } catch (\Throwable $e) {
+                    // Safety net: an event record has data the core exporter can't handle.
+                    // Log and continue so the rest of the dashboard still renders.
+                    debugging(
+                        'dashaddon_calendar_events: failed to export event id ' . $row->ce_id . ': ' . $e->getMessage(),
+                        DEBUG_DEVELOPER
+                    );
+                    self::$events[$row->ce_id] = null;
+                }
             }
         } else {
             $this->event = self::$events[$row->ce_id];
@@ -247,6 +269,106 @@ class events {
     }
 
     /**
+     * Get the formatted event date range (start date — end date).
+     *
+     * Omits the end date when it falls on the same calendar day as the start date,
+     * or when the event has no duration.
+     *
+     * @return string
+     */
+    public function get_event_dates() {
+        $start = $this->row->{self::$tablealias . '_startdate'} ?? null;
+        $duration = $this->row->{self::$tablealias . '_duration'} ?? 0;
+
+        if (empty($start)) {
+            return '';
+        }
+
+        $format = get_string('strftimedaydate', 'langconfig');
+        $startstr = userdate((int) $start, $format);
+
+        if ($duration > 0) {
+            $endstr = userdate((int) $start + (int) $duration, $format);
+            if ($endstr !== $startstr) {
+                return $startstr . ' – ' . $endstr;
+            }
+        }
+
+        return $startstr;
+    }
+
+    /**
+     * Get the formatted event time range (start time — end time).
+     *
+     * Omits the end time when it equals the start time or when the event has no duration.
+     *
+     * @return string
+     */
+    public function get_event_times() {
+        $start = $this->row->{self::$tablealias . '_startdate'} ?? null;
+        $duration = $this->row->{self::$tablealias . '_duration'} ?? 0;
+
+        if (empty($start)) {
+            return '';
+        }
+
+        $format = get_string('strftimetime', 'langconfig');
+        $startstr = userdate((int) $start, $format);
+
+        if ($duration > 0) {
+            $endstr = userdate((int) $start + (int) $duration, $format);
+            if ($endstr !== $startstr) {
+                return $startstr . ' – ' . $endstr;
+            }
+        }
+
+        return $startstr;
+    }
+
+    /**
+     * Get the formatted event date/time range, combining {@see get_event_dates}
+     * and {@see get_event_times}.
+     *
+     * Same date and same time -> "date, time".
+     * Same date, different times -> "date, starttime – endtime".
+     * Different dates -> "startdate, starttime – enddate, endtime".
+     *
+     * @return string
+     */
+    public function get_event_datetimes() {
+        $start = $this->row->{self::$tablealias . '_startdate'} ?? null;
+        $duration = $this->row->{self::$tablealias . '_duration'} ?? 0;
+
+        if (empty($start)) {
+            return '';
+        }
+
+        $dateformat = get_string('strftimedaydate', 'langconfig');
+        $timeformat = get_string('strftimetime', 'langconfig');
+
+        $startdatestr = userdate((int) $start, $dateformat);
+        $starttimestr = userdate((int) $start, $timeformat);
+
+        if ($duration > 0) {
+            $end = (int) $start + (int) $duration;
+            $enddatestr = userdate($end, $dateformat);
+            $endtimestr = userdate($end, $timeformat);
+
+            $samedate = ($enddatestr === $startdatestr);
+            $sametime = ($endtimestr === $starttimestr);
+
+            if (!$samedate) {
+                return $startdatestr . ', ' . $starttimestr . ' – ' . $enddatestr . ', ' . $endtimestr;
+            }
+            if (!$sametime) {
+                return $startdatestr . ', ' . $starttimestr . ' – ' . $endtimestr;
+            }
+        }
+
+        return $startdatestr . ', ' . $starttimestr;
+    }
+
+    /**
      * Get the status of an event based on start and duration times.
      *
      * Determines if the event is in the future, present, or past
@@ -302,10 +424,21 @@ class events {
             if (isset($this->event->url)) {
                 $url = $this->event->url;
             } else {
-                if ($DB->record_exists('modules', ['name' => $this->rowdata->modulename, 'visible' => 1])) {
-                    $module = new cm_info_proxy($this->rowdata->modulename, $this->rowdata->instance, $this->rowdata->courseid);
-                    $coursemodule = $module->get_proxied_instance();
-                    $url = $coursemodule->url;
+                // Require a valid courseid before attempting modinfo lookups.
+                $hascourse = !empty($this->rowdata->courseid)
+                    && $DB->record_exists('course', ['id' => $this->rowdata->courseid]);
+                if ($hascourse && $DB->record_exists('modules', ['name' => $this->rowdata->modulename, 'visible' => 1])) {
+                    try {
+                        $module = new cm_info_proxy(
+                            $this->rowdata->modulename,
+                            $this->rowdata->instance,
+                            $this->rowdata->courseid
+                        );
+                        $coursemodule = $module->get_proxied_instance();
+                        $url = $coursemodule->url;
+                    } catch (\Throwable $e) {
+                        $url = '';
+                    }
                 } else {
                     $url = '';
                 }
@@ -437,12 +570,23 @@ class events {
                     $alttext = $this->event->icon->alttext;
                 } else {
                     $key = 'monologo';
-                    if ($DB->record_exists('modules', ['name' => $this->rowdata->modulename, 'visible' => 1])) {
-                        $module = new cm_info_proxy($this->rowdata->modulename, $this->rowdata->instance, $this->rowdata->courseid);
-                        $coursemodule = $module->get_proxied_instance();
-                        $component = $coursemodule->modname;
-                        $iconurl = $coursemodule->get_icon_url();
-                        $iconurl = $iconurl->out(false);
+                    $hascourse = !empty($this->rowdata->courseid)
+                        && $DB->record_exists('course', ['id' => $this->rowdata->courseid]);
+                    if ($hascourse && $DB->record_exists('modules', ['name' => $this->rowdata->modulename, 'visible' => 1])) {
+                        try {
+                            $module = new cm_info_proxy(
+                                $this->rowdata->modulename,
+                                $this->rowdata->instance,
+                                $this->rowdata->courseid
+                            );
+                            $coursemodule = $module->get_proxied_instance();
+                            $component = $coursemodule->modname;
+                            $iconurl = $coursemodule->get_icon_url();
+                            $iconurl = $iconurl->out(false);
+                        } catch (\Throwable $e) {
+                            $iconurl = '';
+                            $component = $this->rowdata->modulename;
+                        }
                     } else {
                         $iconurl = '';
                         $component = $this->rowdata->modulename;

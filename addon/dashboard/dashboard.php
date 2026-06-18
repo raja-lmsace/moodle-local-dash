@@ -134,6 +134,10 @@ $PAGE->requires->js_amd_inline(
     "
     require(['jquery'], function($) {
         var element = $('.block-region section:nth-of-type(1)');
+        if (!element.length) {
+            // Nothing to anchor the sticky-tab threshold to; skip the scroll handler.
+            return;
+        }
         var elementBottom = element.offset().top + element.outerHeight();
         $(window).on('scroll', function() {
             if ($(this).scrollTop() > elementBottom) {

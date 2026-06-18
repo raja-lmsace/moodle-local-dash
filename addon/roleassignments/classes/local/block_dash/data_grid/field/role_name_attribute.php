@@ -37,6 +37,8 @@ use local_designer\options;
  */
 class role_name_attribute extends abstract_field_attribute
 {
+    use role_cache;
+
     /**
      * After records are relieved from database each field has a chance to transform the data.
      * Example: Convert unix timestamp into a human readable date format
@@ -47,13 +49,12 @@ class role_name_attribute extends abstract_field_attribute
      * @throws \moodle_exception
      */
     public function transform_data($data, \stdClass $record) {
-        global $DB;
-        $role = $DB->get_record('role', ['id' => $data]);
-        $context = \context::instance_by_id($record->context_id);
-        if ($DB->record_exists('role_names', ['roleid' => $data, 'contextid' => $record->context_id])) {
-            return $DB->get_field('role_names', 'name', ['roleid' => $data, 'contextid' => $record->context_id]);
-        } else {
-            return role_get_name($role, $context);
+        $role = self::get_role((int) $data);
+        if (!$role) {
+            return '';
         }
+        $context = \context::instance_by_id($record->context_id);
+        // ROLENAME_ALIAS applies the context-specific role_names override and format_string().
+        return role_get_name($role, $context);
     }
 }

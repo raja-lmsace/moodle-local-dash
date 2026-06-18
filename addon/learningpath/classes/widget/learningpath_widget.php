@@ -1329,4 +1329,18 @@ class learningpath_widget extends abstract_widget {
 
         return true;
     }
+
+    /**
+     * Hide Fields and Details area tabs — this widget manages its own
+     * fields and has no details area configuration.
+     *
+     * @return array
+     */
+    public function get_preferences_form_tabs(): array {
+        return [
+            \block_dash\local\data_source\form\preferences_form::TAB_GENERAL,
+            \block_dash\local\data_source\form\preferences_form::TAB_FIELDS,
+            \block_dash\local\data_source\form\preferences_form::TAB_CONDITIONS,
+        ];
+    }
 }

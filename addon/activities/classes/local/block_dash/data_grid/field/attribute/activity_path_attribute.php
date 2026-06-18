@@ -46,8 +46,8 @@ class activity_path_attribute extends abstract_field_attribute {
     public function transform_data($data, \stdClass $record) {
         global $DB;
         // Get category path.
-        $category = core_course_category::get($record->cm_category);
-        $categorypath = $category->get_nested_name(false);
+        $category = core_course_category::get($record->cm_category, IGNORE_MISSING);
+        $categorypath = $category ? $category->get_nested_name(false) : '';
 
         // Get course path.
         $course = get_course($record->cm_course);

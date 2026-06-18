@@ -103,7 +103,7 @@ class tags_condition extends condition {
         $fieldnameformat = 'filters[%s]'
     ): void {
 
-        global $OUTPUT;
+        global $DB, $OUTPUT;
 
         parent::build_settings_form_fields($moodleform, $mform, $fieldnameformat); // Always call parent.
 
@@ -114,14 +114,36 @@ class tags_condition extends condition {
         $tags = \core_tag_collection::get_tag_cloud($collectionid);
         $data = $tags->export_for_template($OUTPUT);
 
+        $assignmenttags = [];
+        if ($DB->get_manager()->table_exists('tool_timetable_course_overrides')) {
+            $rows = $DB->get_fieldset_select(
+                'tool_timetable_course_overrides',
+                'tags',
+                'tags IS NOT NULL AND tags <> \'\'',
+                []
+            );
+            foreach ($rows as $tagjson) {
+                $tagdata = json_decode($tagjson, true);
+                if (is_array($tagdata)) {
+                    foreach ($tagdata as $t) {
+                        if (!empty($t)) {
+                            $assignmenttags[] = strtolower(trim($t));
+                        }
+                    }
+                }
+            }
+        }
+
         foreach ($data->tags as $tag) {
-            $options[$tag->name] = $tag->name;
+            if (!in_array(strtolower($tag->name), $assignmenttags)) {
+                $options[$tag->name] = $tag->name;
+            }
         }
 
         $mform->addElement(
             'autocomplete',
             $fieldname . '[tags]',
-            get_string('tags', 'block_dash'),
+            $this->get_label(),
             $options,
             [
             'multiple' => true,

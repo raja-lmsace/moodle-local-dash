@@ -77,8 +77,9 @@ class certificates_data_source extends abstract_data_source {
             ->join('user', 'u', 'id', 'tci.userid')
             ->join('course', 'c', 'id', 'tci.courseid', join::TYPE_LEFT_JOIN)
             ->join('course_categories', 'cc', 'id', 'c.category', join::TYPE_LEFT_JOIN)
-            ->join('course_completions', 'ccp', 'id', 'u.id', join::TYPE_LEFT_JOIN)
-            ->join_condition('ccp', 'ccp.course=tci.courseid');
+            ->join('course_completions', 'ccp', 'userid', 'u.id', join::TYPE_LEFT_JOIN)
+            ->join_condition('ccp', 'ccp.course = tci.courseid')
+            ->where_raw('c.id IS NOT NULL'); // Fix: exclude certificates whose course was deleted.
 
         return $builder;
     }

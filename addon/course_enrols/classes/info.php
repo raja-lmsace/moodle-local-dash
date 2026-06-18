@@ -313,9 +313,9 @@ class info {
             $course->sections = array_merge($course->sections, $courseinfo->get_course_criteria($endsection));
 
             $category = (class_exists('\core_course_category'))
-            ? \core_course_category::get($course->category) : \coursecat::get($course->category);
+            ? \core_course_category::get($course->category, IGNORE_MISSING) : \coursecat::get($course->category, IGNORE_MISSING);
             $course->courseimage = $courseinfo->courseimage();
-            $course->categoryname = (isset($category->name) ? format_string($category->name) : '');
+            $course->categoryname = ($category && isset($category->name)) ? format_string($category->name) : '';
             $courseelement = (class_exists('\core_course_list_element'))
             ? new \core_course_list_element($course) : new \course_in_list($course);
             $summary = (new \coursecat_helper($course))->get_course_formatted_summary($courseelement);

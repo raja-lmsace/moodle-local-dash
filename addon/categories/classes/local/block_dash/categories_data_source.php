@@ -99,10 +99,57 @@ class categories_data_source extends abstract_data_source {
      */
     public function set_default_preferences(&$data) {
         $configpreferences = $data['config_preferences'];
+
+        // Grid/Table and Accordion layout defaults (available_fields visibility).
         $configpreferences['available_fields']['cc_name']['visible'] = true;
         $configpreferences['available_fields']['cc_idnumber']['visible'] = true;
         $configpreferences['available_fields']['cc_description']['visible'] = true;
         $configpreferences['available_fields']['cc_coursecount']['visible'] = true;
+
+        // Cards layout defaults.
+        if (empty($configpreferences['headingfield'])) {
+            $configpreferences['headingfield'] = 'cc_name';
+        }
+        if (empty($configpreferences['subheadingfield'])) {
+            $configpreferences['subheadingfield'] = 'cc_coursecount';
+        }
+        if (empty($configpreferences['bodyfield'])) {
+            $configpreferences['bodyfield'] = 'cc_description';
+        }
+        if (empty($configpreferences['imageurlfield'])) {
+            $configpreferences['imageurlfield'] = 'cc_imageurl';
+        }
+        if (empty($configpreferences['footerfield'])) {
+            $configpreferences['footerfield'] = 'cc_idnumber';
+        }
+
+        // One stat layout defaults.
+        if (empty($configpreferences['stat_field_definition'])) {
+            $configpreferences['stat_field_definition'] = 'cc_coursecount';
+        }
+
+        // Accordion layout defaults.
+        if (empty($configpreferences['groupby_field_definition'])) {
+            $configpreferences['groupby_field_definition'] = 'cc_name';
+        }
+        if (empty($configpreferences['group_label_field_definition'])) {
+            $configpreferences['group_label_field_definition'] = 'cc_name';
+        }
+
+        // Accordion2 layout defaults (card-based accordion with field mapping).
+        if (empty($configpreferences['field1'])) {
+            $configpreferences['field1'] = 'cc_name';
+        }
+        if (empty($configpreferences['field2'])) {
+            $configpreferences['field2'] = 'cc_coursecount';
+        }
+        if (empty($configpreferences['field3'])) {
+            $configpreferences['field3'] = 'cc_description';
+        }
+        if (empty($configpreferences['field4'])) {
+            $configpreferences['field4'] = 'cc_idnumber';
+        }
+
         $data['config_preferences'] = $configpreferences;
     }
 }

@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 $plugin->component = 'dashaddon_activities';
 $plugin->version = 2024042503;
 $plugin->requires  = 2017051509;
-$plugin->maturity  = MATURITY_ALPHA;
+$plugin->maturity  = MATURITY_STABLE;
 $plugin->release = '1.1';
 $plugin->dependencies = [
     'local_dash' => 2021022300,
