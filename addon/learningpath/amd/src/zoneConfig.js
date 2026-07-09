@@ -1,4 +1,3 @@
-/* eslint-disable */
 define(['jquery', 'core/fragment', 'core/modal_events',
     'core/notification', 'core/modal_save_cancel', 'core/str'], function ($, Fragment, ModalEvents, notification, SaveCancelModal, Str) {
 

@@ -674,9 +674,6 @@ class events {
                 // For the course and group events get the valid image from the determined course and make the file url.
                 // Use the course icon if course doesn't have any valid image.
                 $imageurl = (new course_image_url_attribute())->transform_data($this->rowdata->courseid, $row);
-                if (empty($imageurl)) {
-                    $imageurl = $OUTPUT->image_url('courses', 'block_myoverview');
-                }
                 break;
 
             case "category":
@@ -703,6 +700,10 @@ class events {
             default:
                 // For the site event or other events use the sites fall back image, available in the dash global configuration.
                 $imageurl = $this->get_siteimage();
+        }
+
+        if (empty($imageurl)) {
+            $imageurl = $this->get_siteimage();
         }
 
         return $imageurl ?: $OUTPUT->image_url('i/calendar', 'core');

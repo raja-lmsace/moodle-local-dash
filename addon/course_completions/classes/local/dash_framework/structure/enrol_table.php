@@ -98,11 +98,15 @@ class enrol_table extends table {
                 ['supports_sorting' => false],
                 '',
                 null,
-                'LEFT JOIN (
-                    SELECT ue.enrolid, COUNT(ue.id) AS enrolledusers
-                    FROM {user_enrolments} ue
-                    GROUP BY ue.enrolid
-                ) ue100 ON ue100.enrolid = e.id',
+                new join_raw(
+                    'SELECT ue.enrolid, COUNT(ue.id) AS enrolledusers
+                        FROM {user_enrolments} ue
+                        GROUP BY ue.enrolid',
+                    'ue100',
+                    'enrolid',
+                    'e.id',
+                    join_raw::TYPE_LEFT_JOIN
+                ),
             ),
         ];
 

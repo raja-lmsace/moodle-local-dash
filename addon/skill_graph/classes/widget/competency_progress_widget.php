@@ -135,7 +135,7 @@ class competency_progress_widget extends abstract_widget {
         $totalproficientcount = array_sum(array_column($this->dataset, 'progress'));
         $totalchildcount = count($this->dataset);
         // Total progress.
-        $totalprogress = round(($totalproficientcount / $totalchildcount));
+        $totalprogress = $totalchildcount > 0 ? round(($totalproficientcount / $totalchildcount)) : 0;
         $totalprogress = $totalprogress > 100 ? 100 : $totalprogress;
 
         // Calculate the dasharray level for the svg progress bar circle.
@@ -304,7 +304,7 @@ class competency_progress_widget extends abstract_widget {
     }
 
     /**
-     * Hide Fields and Details area tabs — this widget manages its own
+     * Hide Fields and Details area tabs â€” this widget manages its own
      * fields and has no details area configuration.
      *
      * @return array

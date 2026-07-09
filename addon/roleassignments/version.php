@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'dashaddon_roleassignments';
-$plugin->version = 2024042500;
+$plugin->version = 2024042501;
 $plugin->requires  = 2017051509;
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release = '1.1';

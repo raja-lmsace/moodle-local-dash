@@ -157,6 +157,14 @@ jobs:
       fail-fast: true
       matrix:
         include:
+          - php: '8.4'
+            moodle-branch: 'MOODLE_502_STABLE'
+            database: 'pgsql'
+            cert-branch: 'MOODLE_501_STABLE'
+          - php: '8.4'
+            moodle-branch: 'MOODLE_502_STABLE'
+            database: 'mariadb'
+            cert-branch: 'MOODLE_501_STABLE'
           - php: '8.2'
             moodle-branch: 'MOODLE_405_STABLE'
             database: 'pgsql'

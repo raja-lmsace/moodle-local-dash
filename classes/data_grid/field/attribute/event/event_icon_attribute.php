@@ -54,28 +54,40 @@ class event_icon_attribute extends event_object_attribute
 
             switch ($event->crud) {
                 case 'c':
-                    $icon = ['local_dash', 'completed'];
+                    $icon = ['core', 't/add'];
                     break;
                 case 'r':
-                    $icon = ['local_dash', 'viewed'];
+                    $icon = ['core', 'i/hide'];
                     break;
                 case 'u':
-                    $icon = ['local_dash', 'updated'];
+                    $icon = ['core', 'i/edit'];
                     break;
                 case 'd':
-                    $icon = ['local_dash', 'deleted'];
+                    $icon = ['core', 't/delete'];
                     break;
             }
 
             switch ($event->action) {
+                case 'created':
+                case 'enrolled':
+                    $icon = ['core', 'i/enrolusers'];
+                    break;
                 case 'completed':
-                    $icon = ['local_dash', 'completed'];
+                    $icon = ['core', 'i/completion_self'];
                     break;
                 case 'viewed':
-                    $icon = ['local_dash', 'viewed'];
+                    $icon = ['core', 'i/hide'];
                     break;
                 case 'assigned':
-                    $icon = ['local_dash', 'updated'];
+                    $icon = ['core', 'i/assignroles'];
+                    break;
+                case 'unassigned':
+                case 'deleted':
+                case 'unenrolled':
+                    $icon = ['core', 't/delete'];
+                    break;
+                case 'updated':
+                    $icon = ['core', 'i/edit'];
                     break;
             }
 

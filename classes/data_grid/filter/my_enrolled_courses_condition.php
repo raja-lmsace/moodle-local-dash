@@ -72,12 +72,19 @@ class my_enrolled_courses_condition extends condition {
         // Get the current userid, based on current page and datasource supports current page user.
         $userid = $this->get_userid();
 
+        $now = time();
+
         $sql = "$select IN(SELECT ctx.instanceid
                            FROM {role_assignments} ra
                            JOIN {context} ctx ON ctx.id = ra.contextid AND ctx.contextlevel = " . CONTEXT_COURSE . "
-                           WHERE ra.userid = :enrolleduserid";
+                           WHERE ra.userid = :enrolleduserid
+                           AND EXISTS (SELECT 1 FROM {user_enrolments} ue
+                                       JOIN {enrol} e ON e.id = ue.enrolid AND e.courseid = ctx.instanceid
+                                       WHERE ue.userid = ra.userid AND ue.status = 0
+                                       AND (ue.timestart = 0 OR ue.timestart <= :enrolltimestart)
+                                       AND (ue.timeend = 0 OR ue.timeend > :enrolltimeend))";
 
-        $params = ['enrolleduserid' => $userid];
+        $params = ['enrolleduserid' => $userid, 'enrolltimestart' => $now, 'enrolltimeend' => $now];
         if (
             isset($this->get_preferences()['roleids'])
             && is_array($this->get_preferences()['roleids'])
