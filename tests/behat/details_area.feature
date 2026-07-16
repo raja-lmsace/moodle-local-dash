@@ -24,6 +24,8 @@ Feature: Enable the layout in dash block on the dashboard page and view it's con
     And I create dash "Courses" datasource
     And I configure the "New Dash" block
     And I set the field "Block title" to "Course datasource"
+    And I set the following fields to these values:
+      | Region | content |
     And I press "Save changes"
     And I wait until the page is ready
     And I open the "Course datasource" block preference
