@@ -1,0 +1,55 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    @template dashaddon_activity_completion/upgrade
+
+    This template for text track tab
+
+    Variables optional for this template:
+
+    Example context (json):
+    {
+    }
+
+}}
+
+<div class="d-flex flex-column h-100" data-collapse="content">
+    <div class="d-flex">
+        <div class="d-flex flex-grow-1">
+
+            {{#iseditable}}
+                {{#scale}}
+                    {{{label}}}{{{select}}}
+                {{/scale}}
+                {{^scale}}
+                    <label for="{{id}}" class="accesshide">{{{label}}}</label>
+                    <input id="{{id}}" name="{{name}}" type="{{#isnumeric}}number{{/isnumeric}}{{^isnumeric}}text{{/isnumeric}}" value="{{value}}" title="{{title}}" class="{{extraclasses}}" {{!
+                        }} {{#minvalue}}min="{{.}}" {{/minvalue}} {{#maxvalue}}max="{{.}}" {{/maxvalue}} {{#isnumeric}}step="any"{{/isnumeric}}>
+                {{/scale}}
+            {{/iseditable}}
+
+            {{^iseditable}}
+                <div class="header">
+                    {{{gradepassicon}}}
+                    <span class="{{extraclasses}}">{{{text}}}</span>
+                </div>
+            {{/iseditable}}
+
+        </div>
+    </div>
+</div>

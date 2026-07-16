@@ -1,0 +1,335 @@
+/*Course enrol block*/
+.course-enrol-block h2 {
+    font-size: 36px;
+    color: #000;
+}
+.dash-block-content .dash-filters form.filter-form > * {
+    margin: 10px;
+}
+.dash-block-content .dash-filters form.filter-form > select {
+    font-size: 16px;
+    font-weight: bold;
+    color: #8c8c8c;
+    border-color: #8c8c8c;
+}
+.dash-block-content .dash-filters form.filter-form > .form-control:last-child {
+    border: 0;
+    float: right;
+}
+.dash-block-content .course-enrol-block .dash-filters form.filter-form .course-select-block {
+    margin: 10px 0;
+}
+.course-enrol-block .course-select-block .form-group {
+    display: inline-block;
+}
+.course-enrol-block .course-select-block .form-group select {
+    max-width: 230px;
+    width: 100%;
+    height: 36px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #121212;
+    border: 1px solid #8c8c8c;
+    border-radius: 4px;
+    padding: 0 8px;
+    opacity: .5;
+}
+.course-enrol-block .course-select-block .course-status select {
+    max-width: 120px;
+    width: 100%;
+}
+.course-enrol-block .course-select-block .sort-block {
+    float: right;
+}
+.course-enrol-block .widget-course_enrols {
+    clear: both;
+}
+.course-enrol-block .course-select-block .sort-block select {
+    max-width: none;
+    border: 0;
+}
+.course-enrol-block .add-course-block {
+    padding: 25px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.course-enrol-block .add-course-block .add-icon,
+.course-enrol-block .add-course-block .add-icon a {
+    display: inline-block;
+    vertical-align: middle;
+}
+.course-enrol-block .add-course-block .add-icon a:before {
+    content: '\f055';
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
+    font-weight: var(--fa-style, 900);
+    font-size: 26px;
+    color: #121212;
+    opacity: .2;
+}
+.course-enrol-block .add-course-block .form-group {
+    display: inline-block;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 0;
+}
+.course-enrol-block .add-course-block .form-group select {
+    max-width: 200px;
+    display: inline-block;
+}
+.course-enrol-block .add-course-block .form-group select.form-control + span.select2 {
+    max-width: 500px;
+}
+.course-enrol-block .add-course-block .btn-block {
+    width: auto;
+    margin-top: 2px;
+    float: right;
+}
+.course-enrol-block .add-course-block .btn-block a {
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    padding: 8px 50px;
+    display: inline-block;
+    border-radius: 10px;
+    background-color: #007bff;
+}
+.block_dash .dash-container .course-enrol-block .section-element-block .card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    z-index: auto;
+}
+.course-enrol-block .section-element-block .card .card-header {
+    padding: 0;
+    border: 0;
+    background: none;
+}
+.course-enrol-block .section-element-block .course-section-block {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+}
+.course-enrol-block .section-element-block .course-section-list {
+    width: 90%;
+    margin: 0 auto;
+}
+.course-enrol-block .section-element-block .course-section-list .list-item {
+    background-color: #f1f1f1;
+    border-radius: 35px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+.course-enrol-block .section-element-block .course-section-list .list-item span {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    text-align: center;
+    display: inline-block;
+    background-color: #6c757d;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.course-enrol-block .section-element-block .course-section-list .list-item span.completed {
+    background-color: #28a745;
+}
+.course-enrol-block .section-element-block .course-section-list .list-item span.restricted {
+    background-color: #6c757d;
+}
+.course-enrol-block .section-element-block .course-section-list .list-item p {
+    width: 60%;
+    margin-bottom: 0;
+    display: inline-flex;
+    align-items: center;
+}
+.course-enrol-block .section-element-block .course-section-list .list-item ul {
+    width: 40%;
+    text-align: right;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.course-enrol-block .section-element-block .course-section-list .list-item ul li {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    list-style: none;
+    display: inline-block;
+    margin-right: 3px;
+    border-radius: 50%;
+    background-color: #6c757d;
+}
+.course-enrol-block .section-element-block .course-section-list .list-item ul li.completed {
+    background-color: #28a745;
+}
+.course-enrol-block .section-element-block .course-section-list .list-item ul li.restricted {
+    background-color: #6c757d;
+}
+.course-enrol-block .section-element-block .course-section-block .left-block {
+    width: 36%;
+    display: inline-flex;
+}
+.course-enrol-block .section-element-block .course-section-block .left-block .img-block {
+    max-width: 95px;
+    width: 100%;
+    height: 70px;
+    margin-right: 15px;
+    border-radius: 10px;
+    display: inline-block;
+}
+.course-enrol-block .section-element-block .course-section-block .left-block .img-block img {
+    width: 95px;
+    height: 100%;
+    object-fit: cover;
+    vertical-align: middle;
+    border-radius: 10px;
+}
+.course-enrol-block .section-element-block .course-section-block .left-block .course-category-element {
+    width: 80%;
+    display: inline-block;
+    vertical-align: middle;
+}
+.course-enrol-block .section-element-block .course-section-block .left-block .course-category-element a {
+    font-size: 12px;
+    color: #00132e;
+}
+.course-enrol-block .section-element-block .course-section-block .left-block .course-category-element .category-element a {
+    font-size: 12px;
+    color: #00132e;
+    opacity: .5;
+}
+.course-enrol-block .section-element-block .course-section-block .left-block .course-category-element .course-element a {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00132e;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block {
+    width: 64%;
+    text-align: right;
+    float: right;
+    margin-top: 15px;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .section-element {
+    width: 70%;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .section-element,
+.course-enrol-block .section-element-block .course-section-block .right-block h5,
+.course-enrol-block .section-element-block .course-section-block .right-block .edit-option-block {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .section-element ul {
+    margin-bottom: 0;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .section-element ul li {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    background-color: #6c757d;
+    border-radius: 50%;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .section-element ul li.completed {
+    background-color: #28a745;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .section-element ul li.restricted {
+    background-color: #6c757d;
+    opacity: .5;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .section-element ul li.restricted > span {
+    display: none;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .section-element ul li.restricted .align-self-center {
+    line-height: 35px;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block h5 button,
+.course-enrol-block .section-element-block .course-section-block .right-block .edit-option-block .dropdown button {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+    line-height: 30px;
+    color: #121212;
+    text-decoration: none;
+    background: none;
+    border: 0;
+    border-radius: 50%;
+    padding: 0;
+    display: inline-block;
+    box-shadow: none;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block h5 button:after {
+    content: '\f103';
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
+    font-weight: var(--fa-style, 900);
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .edit-option-block .dropdown
+.course-enrol-actionmenu {
+    padding: 0;
+    left: auto;
+    right: 0;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .edit-option-block .dropdown
+.course-enrol-actionmenu a {
+    display: block;
+    padding: 5px 10px;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block .edit-option-block .dropdown button:after {
+    content: '\f142';
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
+    font-weight: var(--fa-style, 900);
+    border: 0;
+    margin: 0;
+}
+.course-enrol-block .section-element-block .course-section-block .right-block h5 button:hover,
+.course-enrol-block .section-element-block .course-section-block .right-block .edit-option-block .dropdown button:hover {
+    background-color: #eee;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .course-enrol-block .section-element-block .course-section-block .left-block {
+        width: 40%;
+    }
+    .course-enrol-block .section-element-block .course-section-block .right-block {
+        width: 60%;
+    }
+    .course-enrol-block .add-course-block .form-group select.form-control + span.select2 {
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 767px) {
+    .course-enrol-block .section-element-block .course-section-list .list-item p {
+        width: 50%;
+    }
+    .course-enrol-block .add-course-block .form-group select.form-control + span.select2 {
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 575px) {
+    .course-enrol-block .section-element-block .course-section-block .left-block {
+        width: auto;
+    }
+    .course-enrol-block .section-element-block .course-section-block .right-block {
+        width: auto;
+        float: none;
+    }
+    .course-enrol-block .add-course-block .form-group select.form-control + span.select2 {
+        max-width: 180px;
+    }
+    .course-enrol-block .add-course-block .btn-block {
+        margin-top: 10px;
+        float: none;
+    }
+}
+
+#page-totara-dashboard-1.path-totara-dashboard #page #region-main {
+    overflow: visible;
+}

@@ -1,0 +1,124 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template dashaddon_course_enrols/coursecontent
+
+    Example context (json):
+    {
+        "sitefullname": "Moodle - 311",
+		"courseurl": "https://localhost/moodle/course/view.php?id=2"
+    }
+}}
+
+{{#data.abovecourseform}}
+    {{#data.hascapenrol}}
+    {{> dashaddon_course_enrols/addcourseform}}
+    {{/data.hascapenrol}}
+{{/data.abovecourseform}}
+
+<div id="accordion" class="section-element-block">
+    <div class="courses-list">
+        {{^data.courses}}
+            {{#noresult}}{{{noresult}}}{{/noresult}}
+        {{/data.courses}}
+        {{#data.courses}}
+            <div class="card">
+                <div class="card-header" id="course-section-{{id}}">
+                    <div class="course-section-block course-item" data-course="{{id}}" data-contextid="{{context}}">
+                        <div class="left-block">
+                            <div class="img-block">
+                                <img src="{{{courseimage}}}" alt="">
+                            </div>
+                            <div class="course-category-element">
+                                <div class="category-element">
+                                    <a href="#">{{{categoryname}}}</a>
+                                </div>
+                                <div class="course-element">
+                                    <a href="{{courseurl}}">{{{fullname}}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-block">
+                            {{#data.progress}}
+                            <div class="section-element">
+                                <ul>
+                                    {{#sections}}
+                                    <li class="section-item
+                                        {{#availableinfo}} restriction-lock restricted {{/availableinfo}}
+                                        {{#iscompleted}} section-completed completed {{/iscompleted}}
+                                        {{^availableinfo}}{{^iscompleted}} inprogress {{/iscompleted}}{{/availableinfo}}
+                                        " id="section-{{num}}" title="{{name}}" data-toggle="tooltip" data-html="true">
+                                        <span>{{sectionnum}}</span>
+
+                                        {{#availableinfo}}
+                                        <div class="align-self-center ml-2" data-toggle="tooltip" data-html="true" title="{{availableinfo}}" >
+                                            {{#pix}}t/unlock, core{{/pix}}
+                                        </div>
+                                        {{/availableinfo}}
+                                    </li>
+                                    {{/sections}}
+                                </ul>
+                            </div>
+                            {{/data.progress}}
+                            {{#data.expandable}}
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" {{data.datatoggle}}="collapse" {{data.datatarget}}="#course-collapse-{{id}}" aria-expanded="true" aria-controls="course-collapse-{{id}}">
+                                </button>
+                            </h5>
+                            {{/data.expandable}}
+                            <div class="edit-option-block" data-table-uniqueid="{{data.uniqueid}}" data-region="core_table/dynamic">
+                                {{{menu}}}
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                {{#data.expandable}}
+                <div id="course-collapse-{{id}}" class="collapse " aria-labelledby="course-section-{{id}}" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="course-section-list">
+                            {{#sections}}
+                            <div class="list-item">
+                                <span class="{{#availableinfo}} restriction-lock restricted {{/availableinfo}}
+                                {{#iscompleted}} section-completed completed {{/iscompleted}}
+                                " id="section-{{num}}" title="{{name}}" data-toggle="tooltip" data-html="true">{{sectionnum}}</span>
+                                <p>{{{name}}}</p>
+                                <ul>
+                                    {{#cms}}
+                                        <li class="
+                                            {{#cm.availableinfo}} restriction-lock restricted {{/cm.availableinfo}}
+                                            {{#iscompleted}} section-completed completed {{/iscompleted}}"
+                                            title="{{cmname}}" data-toggle="tooltip" data-html="true"
+                                        ></li>
+                                    {{/cms}}
+                                </ul>
+                            </div>
+                            {{/sections}}
+                        </div>
+                    </div>
+                </div>
+                {{/data.expandable}}
+            </div>
+        {{/data.courses}}
+    </div>
+</div>
+
+{{#data.belowcourseform}}
+    {{#data.hascapenrol}}
+        {{> dashaddon_course_enrols/addcourseform}}
+    {{/data.hascapenrol}}
+{{/data.belowcourseform}}
