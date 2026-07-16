@@ -58,7 +58,7 @@ jobs:
 
       - name: Add public dependency plugins
         run: |
-          moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-block_dash.git --branch Dash-2.7
+          moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-block_dash.git --branch DASH-1262
           moodle-plugin-ci add-plugin --clone https://github.com/bdecentgmbh/moodle-tool_skills.git --branch dev
           moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-enrol_programs.git --branch MOODLE_405_STABLE
           moodle-plugin-ci add-plugin --clone https://github.com/open-lms-open-source/moodle-local_openlms.git --branch MOODLE_405_STABLE
@@ -73,7 +73,7 @@ jobs:
         run: moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
         env:
           DB: pgsql
-          MOODLE_BRANCH: MOODLE_500_STABLE
+          MOODLE_BRANCH: MOODLE_502_STABLE
           IGNORE_NAMES: 'layout_cards.mustache,dashcolorpicker.php'
 
       - name: PHP Lint
