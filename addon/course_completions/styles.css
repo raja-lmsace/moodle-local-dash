@@ -1,0 +1,47 @@
+/* Center the legend for the widget */
+.dash-widget.completion-widget .legend-list {
+    display: inline-flex;
+    width: 100%;
+    justify-content: center;
+}
+
+/* Style the list of the legend */
+.dash-widget.completion-widget .legend-item {
+    list-style: none;
+    margin-right: 15px;
+}
+
+/* Style the list items of the legend */
+.dash-widget.completion-widget .legend-item span {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    border-radius: 50px;
+}
+
+/* Center the donuts within the widget */
+.dash-widget.completion-widget .courses-list {
+    text-align: center;
+}
+
+/* Use flexbox for the layout of the donuts */
+.dash-widget.completion-widget .course-item {
+    display: inline-flex;
+    margin: 5px;
+}
+
+/* Define the donut size */
+.dash-widget.completion-widget .course-item .chart-image {
+    width: 300px;
+    height: 330px;
+}
+
+/* We don't want a chart table */
+.dash-widget.completion-widget.hide-chart-data .datatable {
+    display: none;
+}
+
+/* Make the course name bold */
+.completion-widget label.course-title {
+    font-weight: bold;
+}

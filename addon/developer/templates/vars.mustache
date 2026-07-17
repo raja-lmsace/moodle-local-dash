@@ -1,0 +1,98 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    @template dashaddon_developer/vars
+
+    Template placeholders helper for custom layouts.
+
+    Example context (json):
+    {
+        "editor": "mustache-template",
+        "title": "Placeholders",
+        "groups": [
+            {
+                "key": "user",
+                "name": "Current user",
+                "vars": [
+                    "user_id",
+                    "user_firstname"
+                ]
+            }
+        ]
+    }
+}}
+
+<div id="layoutvars" class="dash-layout-vars-toggle">
+    <div class="form-group row fitem">
+        <div class="col-md-3"></div>
+        <div class="col-md-9">
+            <div class="layoutvars-body">
+                <div class="layoutvars-head">
+                    <a id="{{editor}}-layout-vars-button"
+                        class="layout-vars-button"
+                        role="button"
+                        aria-expanded="false"
+                        href="#{{editor}}-layoutvarsbody">
+                        {{title}} <i class="fa fa-fw fa-angle-double-down"></i>
+                    </a>
+                </div>
+
+                <div class="layoutvars-content collapse" id="{{editor}}-layoutvarsbody">
+                    <div class="card card-body">
+                        <ul class="dash-layout-placeholders" role="tablist">
+                            {{#groups}}
+                                <li class="{{key}}-layout-placeholders row" role="presentation">
+                                    <div class="col-md-3">
+                                        <div class="placeholder-head">
+                                            <div class="title"><h6>{{name}}</h6></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-9">
+                                        <div class="placeholder-body">
+                                            <div class="placeholders less" id="{{editor}}-{{key}}-morebutton">
+                                                {{#vars}}
+                                                    <a href="#"
+                                                        class="dash-layout-placeholder"
+                                                        data-text="{{pretext}}{{.}}{{posttext}}"
+                                                        id="{{.}}">
+                                                        <span title="{{pretext}}{{.}}{{posttext}}">{{.}}</span>
+                                                    </a>
+                                                {{/vars}}
+                                            </div>
+
+                                            {{#showmore}}
+                                                <div class="showmore">
+                                                    <a class="button-show-more"
+                                                        role="button"
+                                                        href="#{{editor}}-{{key}}-morebutton">
+                                                        {{showmore}}
+                                                    </a>
+                                                </div>
+                                            {{/showmore}}
+                                        </div>
+                                    </div>
+                                </li>
+                            {{/groups}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

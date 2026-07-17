@@ -1,0 +1,375 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    @template dashaddon_learningpath/widget_learningpath
+
+    This template for text track tab
+
+    Variables optional for this template:
+
+    Example context (json):
+    {
+    }
+
+}}
+{{#data.showlearningpath}}
+<div class="learning-path-widget dash-learning-path {{#data.showinfosidebar}}sidebar{{/data.showinfosidebar}} {{#data.zoneposition}}zone-position{{/data.zoneposition}} {{^data.zoneposition}}in-path{{/data.zoneposition}}" data-blockid="{{blockid}}" data-infoarea="{{data.infoarea}}">
+
+    {{#data.showinfotop}}
+        <div class="learning-path-header alert {{#data.completedlearingpath}} alert-success{{/data.completedlearingpath}}{{^data.completedlearingpath}} alert-secondary{{/data.completedlearingpath}}">
+            {{#data.infocontent}}
+            <div class="learningpath-info-block">
+                <p> {{{data.infocontent}}} </p>
+            </div>
+            {{/data.infocontent}}
+            {{#data.infobutton}}
+                <div class="learningpath-info-btn">
+                    <a href="{{{data.nextcourseurl}}}" class="btn btn-primary">{{data.infobutton}}</a>
+                </div>
+            {{/data.infobutton}}
+        </div>
+    {{/data.showinfotop}}
+
+    {{#data.showinfosidebar}}
+        <button class="btn btn-link sidebar-toggle collapsed learningpath-sidebar-{{uniqueid}}" type="button"
+            {{#data.use_bs5}}data-bs-toggle="collapse" data-bs-target="#learningpath-sidebar-{{uniqueid}}"{{/data.use_bs5}}
+            {{^data.use_bs5}}data-toggle="collapse" data-target="#learningpath-sidebar-{{uniqueid}}"{{/data.use_bs5}} aria-expanded="false"
+            aria-controls="learningpath-sidebar-{{uniqueid}}">
+
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="learningpath-sidebar collapse" id="learningpath-sidebar-{{uniqueid}}">
+            <div class="sidebar-content">
+                {{! Info area - KPIs, progress, faculty, badges }}
+                <div class="learningpath-info-area" id="learningpath-info-area-{{uniqueid}}">
+                    {{> dashaddon_learningpath/info_area}}
+                </div>
+
+                {{! Course details area - replaces info area when a course is selected }}
+                <div class="learningpath-course-details" id="learningpath-course-details-{{uniqueid}}" style="display: none;">
+                    <div class="details-header">
+                        <button class="btn btn-sm btn-link details-back" type="button" title="{{#str}}backtoinfoarea, block_dash{{/str}}">
+                            <i class="fa fa-arrow-left"></i>
+                        </button>
+                        <h5>{{#str}}coursedetails, block_dash{{/str}}</h5>
+                        <button class="btn btn-sm btn-link details-close" type="button" title="{{#str}}closesidebar, block_dash{{/str}}">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="details-content" id="learningpath-details-content-{{uniqueid}}">
+                        {{! Course details will be loaded here dynamically }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/data.showinfosidebar}}
+
+    {{#data.pathdesktop}}
+        <div class="learning-path-block svg-block learningpath-block-{{uniqueid}} d-lg-flex d-xl-flex d-none"
+            id="learningpath-svg-{{uniqueid}}"
+            data-svg-index="0"
+            data-viewport="desktop">
+            {{{data.pathdesktop}}}
+        </div>
+    {{/data.pathdesktop}}
+
+    {{#data.pathtablet}}
+        <div class="learning-path-block svg-block learningpath-block-{{uniqueid}} d-md-flex d-none d-lg-none d-xl-none"
+            id="learningpath-svg-tab-{{uniqueid}}"
+            data-svg-index="1"
+            data-viewport="tablet">
+            {{{data.pathtablet}}}
+        </div>
+    {{/data.pathtablet}}
+
+    {{#data.pathmobile}}
+        <div class="learning-path-block svg-block learningpath-block-{{uniqueid}} d-flex d-sm-flex d-md-none d-lg-none d-xl-none"
+            id="learningpath-svg-mob-{{uniqueid}}"
+            data-svg-index="2"
+            data-viewport="mobile">
+            {{{data.pathmobile}}}
+        </div>
+    {{/data.pathmobile}}
+
+    {{#data}}
+        <style>
+            #learningpath-svg-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-{{uniqueid}} path[mask],
+            #learningpath-svg-tab-{{uniqueid}} path[mask],
+            #learningpath-svg-mob-{{uniqueid}} path[mask] {
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{completedcirclecolor}}) drop-shadow(0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 {{completedcirclecolor}})
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-{{uniqueid}} .course-circle.inprogress-flag,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress-flag,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress-flag {
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}})
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.notstarted{
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}})
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.unavailable{
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}})
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-{{uniqueid}} .course-circle.available-flag,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.available-flag,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.available-flag{
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}})
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-{{uniqueid}} .course-circle.failed-flag,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.failed-flag,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.failed-flag {
+                stroke: #fff;
+                stroke-width: 2px;
+                filter: drop-shadow(0 0 .07rem {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}})
+            }
+
+
+            {{! Zones }}
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.completed,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.completed,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.completed,
+            .zone-position #learningpath-svg-{{uniqueid}} path[mask],
+            .zone-position #learningpath-svg-tab-{{uniqueid}} path[mask],
+            .zone-position #learningpath-svg-mob-{{uniqueid}} path[mask] {
+                filter: drop-shadow(0 0 .04rem 0 {{completedcirclecolor}}) drop-shadow(0 0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 0 {{completedcirclecolor}}) drop-shadow(0 0 0 {{completedcirclecolor}})
+            }
+
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.inprogress,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress,
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.inprogress-flag,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress-flag,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress-flag {
+                filter: drop-shadow(0 0 .04rem {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}}) drop-shadow(0 0 0 {{inprogresscirclecolor}})
+            }
+
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.notstarted,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.notstarted,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.notstarted{
+                filter: drop-shadow(0 0 .04rem {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}}) drop-shadow(0 0 0 {{notstartedcirclecolor}})
+            }
+
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.unavailable,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.unavailable,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.unavailable{
+                filter: drop-shadow(0 0 .04rem {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}}) drop-shadow(0 0 0 {{unavailablecirclecolor}})
+            }
+
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.available,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.available,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.available,
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.available-flag,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.available-flag,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.available-flag{
+                filter: drop-shadow(0 0 .04rem {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}}) drop-shadow(0 0 0 {{availablecirclecolor}})
+            }
+
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.failed,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.failed,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.failed,
+            .zone-position #learningpath-svg-{{uniqueid}} .course-circle.failed-flag,
+            .zone-position #learningpath-svg-tab-{{uniqueid}} .course-circle.failed-flag,
+            .zone-position #learningpath-svg-mob-{{uniqueid}} .course-circle.failed-flag {
+                filter: drop-shadow(0 0 .04rem {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}}) drop-shadow(0 0 0 {{failedcirclecolor}})
+            }
+
+            .learning-path-grid .grid-block .grid-item.completed .grid-link {
+                background: {{completedcirclecolor}};
+            }
+
+            .learning-path-grid .grid-block .grid-item.inprogress .grid-link {
+                background: {{inprogresscirclecolor}};
+            }
+
+            .learning-path-grid .grid-block .grid-item.notstarted .grid-link {
+                background: {{notstartedcirclecolor}};
+            }
+
+            .learning-path-grid .grid-block .grid-item.unavailable .grid-link {
+                background: {{unavailablecirclecolor}};
+            }
+
+            .learning-path-grid .grid-block .grid-item.available .grid-link {
+                background: {{availablecirclecolor}};
+            }
+
+            .learning-path-grid .grid-block .grid-item.failed .grid-link {
+                background: {{failedcirclecolor}};
+            }
+        </style>
+    {{/data}}
+
+
+    {{#data}}
+    {{#data.isvisualnone}}
+        <style>
+
+            #learningpath-svg-{{uniqueid}} .course-circle {
+                fill: {{completedcirclecolor}};
+                stroke: #fff;
+                border-radius: 50%;
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.completed {
+                fill: {{completedcirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress {
+                fill: {{inprogresscirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.notstarted {
+                fill: {{notstartedcirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.available {
+                fill: {{availablecirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.unavailable {
+                fill: {{unavailablecirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.failed {
+                fill: {{failedcirclecolor}};
+            }
+        </style>
+    {{/data.isvisualnone}}
+
+    {{#data.isvisualnumber}}
+        <style>
+            #learningpath-svg-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.completed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.completed {
+                fill: {{completedcirclecolor}};
+            }
+
+            #learningpath-svg-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.inprogress,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.inprogress {
+                fill: {{inprogresscirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.notstarted,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.notstarted {
+                fill: {{notstartedcirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.available,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.available {
+                fill: {{availablecirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.unavailable,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.unavailable{
+                fill: {{unavailablecirclecolor}};
+            }
+            #learningpath-svg-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-tab-{{uniqueid}} .course-circle.failed,
+            #learningpath-svg-mob-{{uniqueid}} .course-circle.failed {
+                fill: {{failedcirclecolor}};
+            }
+        </style>
+    {{/data.isvisualnumber}}
+    {{/data}}
+
+        {{#data.showinfo}}
+        <div class="learning-path-header alert {{#data.completedlearingpath}} alert-success{{/data.completedlearingpath}}{{^data.completedlearingpath}} alert-secondary{{/data.completedlearingpath}}">
+            {{#data.infocontent}}
+            <div class="learningpath-info-block">
+                <p> {{{data.infocontent}}} </p>
+            </div>
+            {{/data.infocontent}}
+            {{#data.infobutton}}
+                <div class="learningpath-info-btn">
+                    <a href="{{{data.nextcourseurl}}}" class="btn btn-primary">{{data.infobutton}}</a>
+                </div>
+            {{/data.infobutton}}
+
+            {{#data.showinfo}}
+            <div class="kpi-display">
+                {{#data.selectedkpi}}
+                <p><b>{{data.kpivalue}}</b> <span>{{data.kpilabel}}</span></p>
+                {{/data.selectedkpi}}
+            </div>
+            {{/data.showinfo}}
+
+
+
+        </div>
+        {{/data.showinfo}}
+
+    <div id="learningpath-grid-{{uniqueid}}" class="learning-path-grid learning-path-block {{^data.pathdesktop}} desktop-show {{/data.pathdesktop}} {{^data.pathtablet}} tablet-show {{/data.pathtablet}} {{^data.pathmobile}} mobile-show {{/data.pathmobile}}">
+        {{> dashaddon_learningpath/grid_layout}}
+    </div>
+
+</div>
+
+{{#js}}
+
+require(['jquery', 'dashaddon_learningpath/learningpath'], function($, LearnigPath) {
+    LearnigPath.init('{{uniqueid}}', {{{data.dataset}}}, {{data.pagecontextid}}, {{data.isgrid}});
+});
+
+{{/js}}
+
+
+{{/data.showlearningpath}}
+
+
+{{^data.showlearningpath}}
+    {{#noresult}}{{{noresult}}}{{/noresult}}
+{{/data.showlearningpath}}

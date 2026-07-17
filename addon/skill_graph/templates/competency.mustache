@@ -1,0 +1,55 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template dashaddon_skill_graph/competency
+
+    Example context (json):
+    {
+        "uniqueid": "63e200b"
+    }
+
+}}
+
+{{#data.progressgraph}}
+{{> dashaddon_skill_graph/competency_progress}}
+{{/data.progressgraph}}
+
+{{^data.progressgraph}}
+    {{#data.datasetcount}}
+    <div style="position:relative;height:100%;width:100%">
+        <canvas id="skill-graph-{{uniqueid}}"></canvas>
+        <div class="skill-graph-legend" id="skill-graph-legend-{{uniqueid}}">
+            <ul>
+                <li><span style="background-color:{{data.colors.proficient}}"></span><label>{{#str}} proficient, block_dash {{/str}} </label></li>
+                <li><span style="background-color:{{data.colors.achieved}}"></span><label>{{#str}} achieved, block_dash {{/str}}</label></li>
+                <li><span style="background-color:{{data.colors.notachieved}}"></span><label>{{#str}} notachieved, block_dash {{/str}} </label></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    {{/data.datasetcount}}
+    {{^data.datasetcount}}
+        {{#noresult}}{{{noresult}}}{{/noresult}}
+    {{/data.datasetcount}}
+{{#js}}
+{{#data.datalabels}}
+require(['jquery', 'dashaddon_skill_graph/skill_graph'], function($, skillGraph) {
+    skillGraph.init('{{uniqueid}}', {{{data.datalabels}}}, {{{data.dataset}}});
+});
+{{/data.datalabels}}
+{{/js}}
+{{/data.progressgraph}}

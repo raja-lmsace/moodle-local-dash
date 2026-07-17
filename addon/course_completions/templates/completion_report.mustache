@@ -1,0 +1,154 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template dashaddon_course_enrols/enrolments
+
+    Example context (json):
+    {
+        "error": "",
+        "paginator": "",
+        "data": {
+          "contextid": 2247,
+          "uniqueid": 371,
+          "dataset": "[]",
+          "courses": [
+            {
+              "info": {
+                "id": "2",
+                "fullname": "Title test course"
+              },
+              "enrollments": [
+                {
+                  "id": "9",
+                  "status": "0",
+                  "enrolid": "1",
+                  "userid": "4",
+                  "timestart": "1664430999",
+                  "timeend": "0",
+                  "modifierid": "2",
+                  "timecreated": "1664431061",
+                  "timemodified": "1664431061",
+                  "courseid": "2",
+                  "timeenrolled": null,
+                  "timecompleted": null,
+                  "timestarted": null,
+                  "fullname": "Title test course",
+                  "user": "4"
+                }
+              ],
+              "report": {
+                "enrolled": 4,
+                "completed": 1,
+                "completionpercentage": 25,
+                "inprogress": 0,
+                "notyetstarted": 3
+              },
+              "completionpercentage": 25,
+              "chart": ""
+            }
+          ],
+          "coursecount": 1,
+          "istesting": false,
+          "colors": {
+            "fontcolor": "#929292",
+            "inprogress": "#00a1ff",
+            "completed": "#60d837",
+            "notstarted": "#929292",
+            "white": "#FFFFFF"
+          }
+        },
+        "uniqueid": "63e200b",
+        "is_totara": false,
+        "bootstrap3": false,
+        "bootstrap4": true,
+        "noresult": "<p dir=\"ltr\" style=\"text-align:left;\"><br /></p>",
+        "filter_form_html": "",
+        "supports_filtering": false,
+        "supports_pagination": false,
+        "preferences": {
+          "default_sort": "alpha",
+          "filters": {
+            "c_course_categories_condition": {
+              "enabled": "1",
+              "competencyframework": "2"
+            },
+            "competencyframeworks": {
+              "enabled": "1",
+              "competencyframework": "2"
+            }
+          }
+        }
+    }
+}}
+
+{{#data.coursecount}}
+    <div class="dash-widget completion-widget {{^data.istesting}}hide-chart-data{{/data.istesting}} {{data.branch}}">
+        <div class="completion-widget-wrapper">
+            <div class="legend">
+                <ul class="legend-list">
+                    <li class="legend-item">
+                        <span style="background-color:{{data.colors.inprogress}};"></span>
+                        <label class="dataset-name">{{#str}}completion:inprogress, block_dash{{/str}}</label>
+                    </li>
+                    <li class="legend-item">
+                        <span style="background-color:{{data.colors.completed}};"></span>
+                        <label class="dataset-name">{{#str}}completion:completed, block_dash{{/str}}</label>
+                    </li>
+                    <li class="legend-item">
+                        <span style="background-color:{{data.colors.notstarted}};"></span>
+                        <label class="dataset-name">{{#str}}completion:notstarted, block_dash{{/str}}</label>
+                    </li>
+                </ul>
+            </div>
+            <div class="courses-list">
+                {{#data.courses}}
+                {{#report.enrolled}}
+                <div class="course-item completion-stat">
+                    <div class="chart-area">
+                        <div class="chart-image">
+                            <div class="hidden completion-percentage" data-percentage="{{completionpercentage}}%">{{completionpercentage}}%</div>
+                            <canvas id="completion-widget-course-{{info.id}}-{{uniqueid}}"></canvas>
+                            <div class="course-info">
+                                <label class="course-title">{{info.fullname}}</label>
+                                <div class="datatable">
+                                    <table class="generaltable course-table-{{info.id}}" data-title="{{info.fullname}}">
+                                        <tr><td>Completed</td><td class="completed">{{report.completed}}</td></tr>
+                                        <tr><td>In Progress</td><td class="inprogress">{{report.inprogress}}</td></tr>
+                                        <tr><td>Not yet started</td><td class="notyetstarted">{{report.notyetstarted}}</td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/report.enrolled}}
+                {{/data.courses}}
+            </div>
+        </div>
+    </div>
+{{/data.coursecount}}
+{{^data.coursecount}}
+    {{#noresult}}{{{noresult}}}{{/noresult}}
+{{/data.coursecount}}
+
+{{#data.coursecount}}
+{{#js}}
+require(['jquery', 'dashaddon_course_completions/completion-chart'], function($, completionChart) {
+    completionChart.init('{{uniqueid}}', {{{data.dataset}}});
+});
+{{/js}}
+{{/data.coursecount}}

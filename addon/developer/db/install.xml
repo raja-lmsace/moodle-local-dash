@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/dash/addon/developer/db" VERSION="20231208" COMMENT="XMLDB file for Moodle dashaddon_developer"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="dashaddon_developer_layout" COMMENT="Custom layout">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Data source name"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="30" NOTNULL="true" DEFAULT="block" SEQUENCE="false" COMMENT="Defines where the custom layout can be used"/>
+        <FIELD NAME="mustache_template" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Mustache template code"/>
+        <FIELD NAME="supports_field_visibility" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Layout supports conditional field visibility"/>
+        <FIELD NAME="supports_filtering" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Layout supports filtering"/>
+        <FIELD NAME="supports_pagination" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Layout supports pagination"/>
+        <FIELD NAME="supports_sorting" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Layout supports sorting"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="dashaddon_developer_source" COMMENT="dashaddon_developer_source table retrofitted from MySQL">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="idnumber" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="maintable" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="joinrepeats" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="enablejoins" TYPE="int" LENGTH="9" NOTNULL="false" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="tablejoins" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="tablejoinsalias" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="tablejoinon" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="placeholderfields" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fieldrepeats" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="selectfield" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fieldattribute" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="attributevalue" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="enableconditions" TYPE="int" LENGTH="9" NOTNULL="false" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="conditionrepeats" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="conditionfield" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="operator" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="operatorcondition" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="conditionvalue" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="customcondition" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="18" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="mdl_dashcustdatasour_idn_uix" TYPE="unique" FIELDS="idnumber"/>
+        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

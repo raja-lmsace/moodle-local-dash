@@ -1,0 +1,9 @@
+@media (min-width: 992px) {
+    .block_dash .dash-block-content .activity-completion-widget .chart-area .chart-image {
+        width: 40vw;
+    }
+}
+
+.drawer-right .block_dash .dash-block-content .activity-completion-widget {
+    overflow: auto;
+}

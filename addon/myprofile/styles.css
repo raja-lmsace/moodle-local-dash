@@ -1,0 +1,162 @@
+/* My Profile */
+.block_dash .dash-container .learner-dashboard-block .dashboard-profile {
+    margin-right: 15px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.block_dash .dash-container .learner-dashboard-block .dashboard-profile .img {
+    width: 100%;
+    margin-right: 20px;
+}
+
+.block_dash .dash-container .dash-block-content .learner-dashboard-block .dashboard-profile img.img-responsive {
+    max-height: none;
+    border-radius: 50%;
+}
+
+.block_dash .dash-container .learner-dashboard-block .dashboard-profile .profile-info {
+    width: 100%;
+}
+
+.block_dash .dash-container .learner-dashboard-block .dashboard-profile .profile-info p {
+    margin-bottom: 5px;
+}
+
+.block_dash .dash-container .learner-dashboard-block .dashboard-stats-block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.block_dash .dash-container .learner-dashboard-block .dashboard-stats-block .dash-myprofile-status {
+    flex: 1 1 30%;
+    border-radius: 5px;
+    background: #fbfbfb;
+    padding: 15px;
+}
+
+.block_dash .dash-container .learner-dashboard-block .dashboard-stats-block .dash-myprofile-status.dash-streak-highlight {
+    background: #ffbc6d;
+}
+
+.block_dash .dash-container .learner-dashboard-block .dashboard-stats-block .dash-myprofile-status p {
+    margin-bottom: 0;
+}
+
+.block_dash .dash-container .learner-dashboard-block .dashboard-stats-block .dash-myprofile-status p b {
+    font-size: 30px;
+    line-height: 30px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.block_dash .dash-container .learner-dashboard-block .dashboard-stats-block .dash-myprofile-status p b span {
+    font-weight: 600;
+}
+
+.block_dash .dash-container .learner-dashboard-block .dashboard-stats-block .dash-myprofile-status p span {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* drawer */
+.drawer .block_dash .dash-container .learner-dashboard-block .learner-profile-block {
+    display: block;
+}
+
+.drawer .block_dash .dash-container .learner-dashboard-block .dashboard-profile .img {
+    width: 40%;
+}
+
+/* End of drawer */
+
+@media (min-width: 768px) {
+    .block_dash .dash-container .learner-dashboard-block .dashboard-profile {
+        width: 45%;
+    }
+
+    .block_dash .dash-container .learner-dashboard-block .dashboard-stats-block {
+        width: 55%;
+    }
+
+    .block_dash .dash-container .learner-dashboard-block .learner-profile-block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .drawer .block_dash .dash-container .learner-dashboard-block .dashboard-profile {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .drawer .block_dash .dash-container .learner-dashboard-block .dashboard-stats-block {
+        width: 100%;
+    }
+
+    .drawer .block_dash .dash-container .learner-dashboard-block .dashboard-profile {
+        display: block;
+    }
+
+    .drawer .block_dash .dash-container .learner-dashboard-block .dashboard-profile .img {
+        margin: 15px auto;
+    }
+
+    .drawer .block_dash .dash-container .learner-dashboard-block .dashboard-profile .profile-info {
+        text-align: center;
+    }
+}
+
+@media (max-width: 767px) {
+    .block_dash .dash-container .learner-dashboard-block .dashboard-profile {
+        flex-direction: column;
+    }
+
+    .block_dash .dash-container .learner-dashboard-block .dashboard-profile .img {
+        width: 40%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .block_dash .dash-container .learner-dashboard-block .dashboard-profile .profile-info {
+        text-align: center;
+    }
+}
+
+/* End of My Profile */
+
+/* Boost union region block profile widget */
+/* To align the learner info and skill stats in a separate row*/
+body.limitedwidth .main-inner-wrapper .theme-block-region .block-region .block_dash .learner-profile-block {
+    display: block;
+}
+
+/* Align the full width of the learner info */
+body.limitedwidth .main-inner-wrapper .theme-block-region .block-region .block_dash .learner-profile-block .dashboard-profile {
+    width: 100%;
+    display: block;
+}
+
+/* Align the profile image center, added margin bottom and removed the margin right */
+body.limitedwidth .main-inner-wrapper .theme-block-region .block-region .block_dash .learner-profile-block .dashboard-profile .img {
+    text-align: center;
+    margin-right: 0;
+    margin-bottom: 15px;
+}
+
+/* Reduced the profile image of the width */
+body.limitedwidth .main-inner-wrapper .theme-block-region .block-region .block_dash .learner-profile-block .dashboard-profile .img img {
+    width: 40%;
+}
+
+/* Align the profile info to center */
+body.limitedwidth .main-inner-wrapper .theme-block-region .block-region .block_dash .learner-profile-block .dashboard-profile .profile-info {
+    text-align: center;
+}
+
+/* Align the full width of the learner stats */
+body.limitedwidth .main-inner-wrapper .theme-block-region .block-region .block_dash .learner-profile-block .dashboard-stats-block {
+    width: 100%;
+}

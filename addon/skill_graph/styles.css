@@ -1,0 +1,146 @@
+.skill-graph-legend li span {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 8px;
+    vertical-align: middle;
+}
+
+.skill-graph-legend ul {
+    font-weight: 500;
+    list-style: none;
+    text-align: left;
+}
+
+.skill-graph-legend {
+    float: right;
+}
+
+/*
+ * Skill progress style 2
+ */
+.competency-progress-dash-widget .competency-image-wrapper {
+    width: 50px;
+    height: 50px;
+}
+
+.competency-progress-dash-widget img.competency-image {
+    border-radius: 50px;
+}
+
+.competency-progress-dash-widget .competency-items-wrapper .competency-item {
+    width: 100%;
+    margin-bottom: 30px;
+
+}
+
+.competency-progress-dash-widget .competency-items-wrapper .competency-item .competency-info {
+    width: 75%;
+}
+
+.competency-progress-dash-widget .competency-items-wrapper .competency-item .competency-basic-info {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.competency-progress-dash-widget .competency-items-wrapper .competency-item .competency-info .competency-name {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.competency-progress-dash-widget .competency-items-wrapper .competency-item .competency-info .progress-bar-placeholder {
+    border: 1px solid #ccc;
+    height: 23px;
+    padding: 2px;
+}
+
+.competency-progress-dash-widget .competency-item .competency-basic-info .competency-progress-info {
+
+    width: 100%;
+    align-items: center;
+}
+
+.competency-progress-dash-widget .competency-item .competency-basic-info .competency-progress-info .competency-progress-text {
+    font-weight: 700;
+    padding: 0;
+
+}
+
+.competency-progress-dash-widget .competency-item .competency-basic-info .competency-progress-info .competency-progress {
+    margin-bottom: 0;
+}
+
+.competency-progress-dash-widget .competency-item .competency-info .progress-bar-placeholder .progress-bar {
+    height: 100%;
+}
+
+.competency-progress-dash-widget .competency-items-wrapper .competency-item .competency-image-wrapper {
+    margin: 0 10px;
+}
+
+/* Progress */
+.competency-progress-dash-widget .donut-competency-progress {
+    position: absolute;
+    height: 185px;
+    width: 185px;
+    cursor: pointer;
+    top: 50%;
+    left: 50%;
+    margin: -80px 0 0 -80px;
+}
+
+.competency-progress-dash-widget .competency-framework-progress {
+    position: relative;
+    height: 250px;
+    margin-bottom: 20px;
+}
+
+.competency-progress-dash-widget .progress-circle {
+    transform: rotate(-90deg);
+}
+
+.competency-progress-dash-widget .progress-circle-back {
+    fill: none;
+    stroke: #d2d2d2;
+    stroke-width: 20px;
+}
+
+.competency-progress-dash-widget .progress-circle-prog {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 12px;
+    stroke-dashoffset: 0;
+    transition: stroke-dasharray 0.7s linear 0s;
+}
+
+.competency-progress-dash-widget .competency-total-info {
+    width: 100%;
+    position: absolute;
+    top: 35%;
+    text-align: center;
+}
+
+.competency-progress-dash-widget .donut-competency-progress .competency-total-info {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.competency-progress-dash-widget .donut-competency-progress .competency-total-info .competency-framework-percent i {
+    margin-left: 5px;
+}
+
+/* Make the page full height */
+#page-local-dash-addon-skill_graph-competencylist #page {
+    min-height: 89vh;
+}
+
+.drawer .competency-progress-dash-widget .competency-item .competency-basic-info .competency-progress-info .competency-progress {
+    flex: 0 0 75%;
+    max-width: 75%;
+}
+
+.drawer .competency-progress-dash-widget .competency-item .competency-basic-info .competency-progress-text {
+    flex: 0 0 25%;
+    max-width: 25%;
+}
