@@ -217,6 +217,7 @@ jobs:
           moodle-plugin-ci add-plugin --clone https://github.com/moodleworkplace/moodle-mod_coursecertificate.git --branch ${{ matrix.cert-branch }}
           moodle-plugin-ci add-plugin --clone https://github.com/raja-lmsace/moodle-enrol-credit.git
           moodle-plugin-ci add-plugin --clone https://github.com/catalyst/moodle-mod_subcourse.git --branch MOODLE_405_STABLE
+          moodle-plugin-ci add-plugin --clone https://github.com/raja-lmsace/moodle-customfield_multicategory.git --branch main
 
       - name: Install moodle-plugin-ci
         run: moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
