@@ -298,7 +298,7 @@ class dashboard extends persistent {
     public function process_onboard_navigation() {
         global $OUTPUT, $PAGE;
         $inculdeblocks = !empty($this->get('includedblocks')) ? json_decode($this->get('includedblocks')) : [];
-        if (empty($inculdeblocks)) {
+        if (!is_array($inculdeblocks) || empty($inculdeblocks)) {
             return '';
         }
         $blocksoptions = \dashaddon_dashboard\helper::get_dashaddondash_pageblocks($this->get('shortname'));
