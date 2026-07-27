@@ -22,7 +22,6 @@ Feature: Enable the masonry layout in dash block on the dashboard page and view 
     And I am on the "block_dash > Default Dashboard" page
     And I turn dash block editing mode on
     And I create dash "Courses" datasource
-    # And I configure the "New Dash" block
     And I click on "#action-menu-toggle-0" "css_element" in the ".block_dash" "css_element"
     And I click on "Configure New Dash block" "link" in the "#action-menu-0-menu" "css_element"
     #And I should see "Configure New Dash block" in the ".modal-dialog .modal-header" "css_element"
@@ -52,12 +51,9 @@ Feature: Enable the masonry layout in dash block on the dashboard page and view 
   Scenario: Check the masonry settings
     Given the following "custom field categories" exist:
       | name          | component   | area   | itemid |
-      | Other         | core_course | course | 0      |
-      | Dash settings | core_course | course | 1      |
+      | Dash settings | core_course | course | 0      |
     And the following "custom fields" exist:
       | name      | category      | type     | shortname | configdata                             |
-      | Field 1   | Other         | checkbox | checkbox  |                                        |
-      | Field 2   | Other         | date     | date      |                                        |
       | Grid size | Dash settings | select   | gridsize  | {"options":"Wide\nTall\nSquare"}       |
       | Promotion | Dash settings | select   | promotion | {"options":"Featured\nNormal\nDimmed"} |
     And I log in as "admin"
@@ -70,7 +66,7 @@ Feature: Enable the masonry layout in dash block on the dashboard page and view 
     And I click on "Layout" "link"
     And I set the field "Layout" to "Masonry"
     And I set the field "Search box" to "1"
-    And I set the field "Styling options" to "c_f_gridsize, c_f_promotion"
+    And I set the field "Styling options" to "Grid size, Promotion"
     # Heading field remains on the Fields tab
     And I click on "Fields" "link"
     And I set the field "Heading field" to "course: Full name"

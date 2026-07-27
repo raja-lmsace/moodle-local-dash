@@ -143,4 +143,23 @@ class behat_local_dash extends behat_base {
         global $CFG;
         $this->evaluate_script("window.scrollTo(0, document.body.scrollHeight);");
     }
+
+    /**
+     * Set config values only when the running Moodle branch is at or above the given minimum.
+     * Use this for settings introduced in a specific Moodle version so the step is silently
+     * skipped on older installations.
+     *
+     * @Given /^the following config values are set as admin on moodle "(?P<minbranch>\d+)" or above:$/
+     * @param string $minbranch Minimum Moodle branch number, e.g. "502" for Moodle 5.2.
+     * @param TableNode $table Two-column table: | config_name | value |
+     */
+    public function set_config_values_for_min_version(string $minbranch, \Behat\Gherkin\Node\TableNode $table): void {
+        global $CFG;
+        if ($CFG->branch < (int) $minbranch) {
+            return;
+        }
+        foreach ($table->getRows() as [$name, $value]) {
+            set_config($name, $value);
+        }
+    }
 }

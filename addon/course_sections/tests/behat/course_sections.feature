@@ -201,15 +201,15 @@ Feature: Dash program to course sections
     And I set the field "config_preferences[filters][c_course][enabled]" to "1"
     And I set the field "config_preferences[filters][c_course][courseids][]" to "C2"
     And I press "Save changes"
-    And I should see "Course 2"
+    And I should see "Course 2" in the ".course-sections-block" "css_element"
 
     And I log out
 
     And I log in as "student1"
     And I am on "Course 1" course homepage
     And I navigate to "Dash-dashboard" in current page administration
-    And I should see "Course 2"
-    And I should not see "Course 1"
+    And I should see "Course 2" in the ".course-sections-block" "css_element"
+    And I should not see "Course 1" in the ".course-sections-block" "css_element"
     And I log out
 
     And I log in as "admin"
@@ -222,12 +222,12 @@ Feature: Dash program to course sections
     And I set the field "config_preferences[filters][c_course][enabled]" to "0"
     And I set the field "config_preferences[filters][current_course][enabled]" to "1"
     And I press "Save changes"
-    And I should see "Course 1"
-    And I should not see "Course 2"
+    And I should see "Course 1" in the ".course-sections-block" "css_element"
+    And I should not see "Course 2" in the ".course-sections-block" "css_element"
     And I log out
 
     And I log in as "student1"
     And I am on "Course 1" course homepage
     And I navigate to "Dash-dashboard" in current page administration
-    And I should see "Course 1"
-    And I should not see "Course 2"
+    And I should see "Course 1" in the ".course-sections-block" "css_element"
+    And I should not see "Course 2" in the ".course-sections-block" "css_element"

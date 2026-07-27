@@ -93,12 +93,11 @@ Feature: Add activities widget in dash block
     | Test choice 2     | Test choice 02 description | choice2   | Activity | Choice      | Communication   |                     |
     | Test page 1       | Test page 01 description   | page      | Resource | Page        | Content         | ##+5day##%d/%m/%y## |
     | Test assignment 1 | Test assign 01 description | assign1   | Activity | Assignment  | Assessment      |                     |
-    Then I click on "//a[contains(text(), 'Test choice 1')]" "xpath" in the "Test choice 1" "table_row"
+    Then I click on "(.//a[contains(text(), 'Test choice 1')])[1]" "xpath" in the ".dash-table" "css_element"
     And I should see "Test choice 1"
     And I press "Mark as done"
     Then I follow "Dashboard"
-    # Then I click on ".dash-table tbody tr:nth-child(5) td:nth-child(5) a" "css_element"
-    Then I click on "//a[contains(text(), 'Test page 1')]" "xpath" in the "Test page 1" "table_row"
+    Then I click on "(.//a[contains(text(), 'Test page 1')])[1]" "xpath" in the ".dash-table" "css_element"
     And I should see "Test page 1"
     # Then I wait "10" seconds
     And I press "Mark as done"

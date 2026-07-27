@@ -27,6 +27,10 @@ Feature: Add a dashboard data source in dash block
       | student2 | C1     | student |
       | teacher1 | C1     | teacher |
       | student2 | C2     | student |
+    And the following config values are set as admin:
+      | forcelogin | 0 |
+    And the following config values are set as admin on moodle "502" or above:
+      | enablemyhome | 1 |
     And I log in as "admin"
     And I am on "Course 1" course homepage
     And I turn dash block editing mode on
@@ -439,6 +443,8 @@ Feature: Add a dashboard data source in dash block
     And I add the "Dash" block
     And I click on "Dashboard" "radio"
     And I log out
+    And I am on homepage
+    And I am on "Course 1" course homepage
     When I click on "Public dashboard" "link"
     Then I should see "Public dashboard"
     And "Learning Path" "block" should exist

@@ -511,7 +511,7 @@ Feature: Add learning path widget in dash block
   Scenario: learning path block course appearance
     Given I log in as "admin"
     And I am on the "Course 3" "enrolment methods" page
-    And I click on "Enable" "link" in the "Self enrolment (Student)" "table_row"
+    And I click on "Enable" "link" in the "Self enrolment" "table_row"
 
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I turn dash block editing mode on

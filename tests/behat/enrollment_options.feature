@@ -192,7 +192,7 @@ Feature: Enrolment options field displays correct label based on user enrolment 
   Scenario: Multiple enrolment methods displays Multiple options label
     Given I log in as "admin"
     And I am on the "Course Guest" "enrolment methods" page
-    And I click on "Enable" "link" in the "Self enrolment (Student)" "table_row"
+    And I click on "Enable" "link" in the "Self enrolment" "table_row"
     And I navigate to "Plugins > Enrolments > Manage enrol plugins" in site administration
     And I click on "Enable" "link" in the "Course credit enrolment" "table_row"
     And I add "Course credit enrolment" enrolment method in "Course Guest" dashwith:
