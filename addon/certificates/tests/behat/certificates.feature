@@ -22,13 +22,13 @@ Feature: Dash program to show the list of course data certificate
         | Course 3 | C3        | CAT03    |  1               |
     And the following certificate templates exist:
         | name          | Course category | shared  |
-        | Certificate1  | CAT01           | 1       |
+        | Certificate 1 | CAT01           | 1       |
         | Certificate02 |                 | 1       |
         | Certificate3  | CAT02           | 1       |
         | Certificate4  | CAT03           | 1       |
     And the following "activities" exist:
         | activity          | name               | course | idnumber |  intro           | section | completion | template      |
-        | coursecertificate | Test certificate1  | C1     | cert1    | Page certificate | 1       | 1          | Certificate1  |
+        | coursecertificate | Test certificate1  | C1     | cert1    | Page certificate | 1       | 1          | Certificate 1 |
         | coursecertificate | Test certificate01 | C1     | cert01   | Page certificate | 1       | 1          | Certificate02 |
         | coursecertificate | Test certificate2  | C2     | cert2    | Page certificate | 2       | 1          | Certificate3  |
         | coursecertificate | Test certificate3  | C3     | cert3    | Page certificate | 1       | 1          | Certificate4  |
