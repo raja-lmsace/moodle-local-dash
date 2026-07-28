@@ -73,21 +73,15 @@ Feature: Dash program to show the list of course data certificate
     And I open "Test certificate1" actions menu
     And I click on "Edit settings" "link" in the "Test certificate1" activity
     And I set the following fields to these values:
-        | Expiry date type | Select date     |
-        | expirydateabsolute[day]    | 14    |
-        | expirydateabsolute[month]  | April |
-        | expirydateabsolute[year]   | 2024  |
-        | expirydateabsolute[hour]   | 09    |
-        | expirydateabsolute[minute] | 00    |
         | template        | Certificate 1    |
     And I press "Save and return to course"
     And I open "Test certificate01" actions menu
     And I click on "Edit settings" "link" in the "Test certificate01" activity
     And I set the following fields to these values:
-        | Expiry date type | After |
-        | id_expirydaterelative_number   | 5     |
-        | id_expirydaterelative_timeunit | days  |
-        | template        | Certificate02    |
+        | Expiry date type               | After            |
+        | id_expirydaterelative_number   | 5                |
+        | id_expirydaterelative_timeunit | days             |
+        | template                       | Certificate02    |
     And I wait "5" seconds
     And I press "Save and display"
     And I am on "Course 2" course homepage
