@@ -21,16 +21,17 @@ Feature: Dash program to show the list of course data certificate
         | Course 2 | C2        | CAT02    |  1               |
         | Course 3 | C3        | CAT03    |  1               |
     And the following certificate templates exist:
-        | name          | Course category |
-        | Certificate02 |                 |
-        | Certificate3  | CAT02           |
-        | Certificate4  | CAT03           |
+        | name          | Course category | shared  |
+        | Certificate1  | CAT01           | 1       |
+        | Certificate02 |                 | 1       |
+        | Certificate3  | CAT02           | 1       |
+        | Certificate4  | CAT03           | 1       |
     And the following "activities" exist:
-        | activity          | name               | course | idnumber |  intro           | section | completion |
-        | coursecertificate | Test certificate1  | C1     | cert1    | Page certificate | 1       | 1          |
-        | coursecertificate | Test certificate01 | C1     | cert01   | Page certificate | 1       | 1          |
-        | coursecertificate | Test certificate2  | C2     | cert2    | Page certificate | 2       | 1          |
-        | coursecertificate | Test certificate3  | C3     | cert3    | Page certificate | 1       | 1          |
+        | activity          | name               | course | idnumber |  intro           | section | completion | template      |
+        | coursecertificate | Test certificate1  | C1     | cert1    | Page certificate | 1       | 1          | Certificate1  |
+        | coursecertificate | Test certificate01 | C1     | cert01   | Page certificate | 1       | 1          | Certificate02 |
+        | coursecertificate | Test certificate2  | C2     | cert2    | Page certificate | 2       | 1          | Certificate3  |
+        | coursecertificate | Test certificate3  | C3     | cert3    | Page certificate | 1       | 1          | Certificate4  |
     And the following "users" exist:
         | username | firstname | lastname | email                |
         | student1 | Student   | First    | student1@example.com |
@@ -68,37 +69,38 @@ Feature: Dash program to show the list of course data certificate
     And I should see "Certificate3"
     And I should see "Certificate4"
     #---Expiry date---#
-    And I am on "Course 1" course homepage
-    And I turn dash block editing mode on
-    And I open "Test certificate1" actions menu
-    And I click on "Edit settings" "link" in the "Test certificate1" activity
-    And I set the following fields to these values:
-        | template        | Certificate 1    |
-    And I press "Save and return to course"
-    And I open "Test certificate01" actions menu
-    And I click on "Edit settings" "link" in the "Test certificate01" activity
-    And I set the following fields to these values:
-        | Expiry date type               | After            |
-        | id_expirydaterelative_number   | 5                |
-        | id_expirydaterelative_timeunit | days             |
-        | template                       | Certificate02    |
-    And I wait "5" seconds
-    And I press "Save and display"
-    And I am on "Course 2" course homepage
-    And I open "Test certificate2" actions menu
-    And I click on "Edit settings" "link" in the "Test certificate2" activity
-    And I set the field "template" to "Certificate3"
-    And I wait "5" seconds
-    And I press "Save and display"
-    And I am on "Course 3" course homepage
-    And I open "Test certificate3" actions menu
-    And I click on "Edit settings" "link" in the "Test certificate3" activity
-    And I set the field "template" to "Certificate4"
-    And I wait "5" seconds
-    And I press "Save and display"
+    # And I am on "Course 1" course homepage
+    # And I turn dash block editing mode on
+    # And I open "Test certificate1" actions menu
+    # And I click on "Edit settings" "link" in the "Test certificate1" activity
+    # And I set the following fields to these values:
+    #     | template        | Certificate 1    |
+    # And I press "Save and return to course"
+    # And I open "Test certificate01" actions menu
+    # And I click on "Edit settings" "link" in the "Test certificate01" activity
+    # And I set the following fields to these values:
+    #     | Expiry date type               | After            |
+    #     | id_expirydaterelative_number   | 5                |
+    #     | id_expirydaterelative_timeunit | days             |
+    #     | template                       | Certificate02    |
+    # And I wait "5" seconds
+    # And I press "Save and display"
+    # And I am on "Course 2" course homepage
+    # And I open "Test certificate2" actions menu
+    # And I click on "Edit settings" "link" in the "Test certificate2" activity
+    # And I set the field "template" to "Certificate3"
+    # And I wait "5" seconds
+    # And I press "Save and display"
+    # And I am on "Course 3" course homepage
+    # And I open "Test certificate3" actions menu
+    # And I click on "Edit settings" "link" in the "Test certificate3" activity
+    # And I set the field "template" to "Certificate4"
+    # And I wait "5" seconds
+    # And I press "Save and display"
 
     #---Course Certificate dash block---#
     And I am on the "block_dash > Default Dashboard" page
+    And I turn dash block editing mode on
     And I add the "Dash" block
     And I click on "Course certificates" "radio"
     And I configure the "New Dash" block
